@@ -5,12 +5,14 @@ class AppStrings {
   static const String splashText = "bestkid";
 
   // Onboarding
-  static const String onboardingTitle1 = "Discover Kids Fashion Easily";
+  static const String onboardingTitle1 = "Discover Kids\nFashion Easily";
   static const String onboardingSubtitle1 = "Browse Thousands Of Quality Kids Clothing From Trusted Sellers Across Europe. Find The Perfect Style, Size, And Price In Seconds.";
-  static const String onboardingTitle2 = "Shop With Confidence";
+  static const String onboardingTitle2 = "Shop With\nConfidence";
   static const String onboardingSubtitle2 = "Enjoy Secure Payments, Clear Product Details, And Reliable Sellers Across Europe For A Safe And Easy Shopping Experience.";
   static const String next = "Next";
   static const String skip = "Skip";
+  static const String getStarted = "Get Started";
+  static const String skipWithArrow = "Skip";
 
   // Login
   static const String welcomeBack = "Welcome Back";
@@ -20,7 +22,9 @@ class AppStrings {
   static const String emailPlaceholder = "Enter your email address";
   static const String passwordPlaceholder = "********";
   static const String rememberMe = "Remember me";
-  static const String forgotPassword = "Forgot password?";
+  static const String forgotPassword = "Forgot Password";
+  static const String forgotPasswordSubtitle = "Enter your registered email address and we'll send you a verification code to reset your password.";
+  static const String sendVerificationCode = "Send Verification Code";
   static const String logIn = "Log In";
 
   // Signup

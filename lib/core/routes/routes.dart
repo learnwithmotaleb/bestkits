@@ -12,6 +12,10 @@ import 'package:get/get_instance/src/bindings_interface.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:get/get_navigation/src/routes/transitions_type.dart';
+import 'package:bestkits/presentation/onboard/screen/onboard_screen.dart';
+import 'package:bestkits/presentation/onboard/controller/onboard_controller.dart';
+import 'package:bestkits/presentation/auth/forgot_password/screen/forgot_password_screen.dart';
+import 'package:bestkits/presentation/auth/forgot_password/controller/forgot_password_controller.dart';
 
 import '../../presentation/splash/controller/splash_controller.dart';
 import '../../presentation/splash/screen/splash_screen.dart';
@@ -25,6 +29,14 @@ class AppRouter {
       transition: Transition.rightToLeft,
       binding: BindingsBuilder(() {
         Get.put(SplashController());
+      }),
+    ),
+    GetPage(
+      name: RoutePath.onboard,
+      page: () => const OnboardScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(OnboardController());
       }),
     ),
 
@@ -48,6 +60,15 @@ class AppRouter {
     ),
 
 
+
+    GetPage(
+      name: RoutePath.forgotPassword,
+      page: () => const ForgotPasswordScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(ForgotPasswordController());
+      }),
+    ),
 
     GetPage(
       name: RoutePath.otpScreen,
