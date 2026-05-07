@@ -44,58 +44,32 @@ class OnboardScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   // Skip Button
-                  GestureDetector(
-                    onTap: controller.skip,
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: Dimensions.w(24),
-                        vertical: Dimensions.h(12),
-                      ),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFFEF7E5),
-                        borderRadius: BorderRadius.circular(Dimensions.r(25)),
-                      ),
-                      child: Text(
-                        AppStrings.skip.tr,
-                        style: AppTextStyles.button.copyWith(
-                          color: const Color(0xFFFFB000),
-                          fontSize: Dimensions.fs(14),
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
+                  Expanded(
+                    child: AppButton(
+                      label: AppStrings.skip.tr,
+                      onPressed: controller.skip,
+                      backgroundColor: const Color(0xFFFEF7E5),
+                      textColor: const Color(0xFFFFB000),
+                      borderSideColor: const Color(0xFFFEF7E5),
+                      borderRadius: Dimensions.r(25),
+                      height: Dimensions.h(45),
                     ),
                   ),
-
+                  Dimensions.gapW(15),
                   // Next Button
-                  GestureDetector(
-                    onTap: controller.nextPage,
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: Dimensions.w(24),
-                        vertical: Dimensions.h(12),
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.blackColor,
-                        borderRadius: BorderRadius.circular(Dimensions.r(25)),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            controller.isLastPage ? AppStrings.next.tr : AppStrings.next.tr, // Just using Next for now
-                            style: AppTextStyles.button.copyWith(
-                              color: const Color(0xFFFFB000),
-                              fontSize: Dimensions.fs(14),
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                          Dimensions.gapW(8),
-                          Icon(
-                            Icons.arrow_forward,
-                            color: const Color(0xFFFFB000),
-                            size: Dimensions.w(16),
-                          ),
-                        ],
+                  Expanded(
+                    child: AppButton(
+                      label: controller.isLastPage ? AppStrings.getStarted.tr : AppStrings.next.tr,
+                      onPressed: controller.nextPage,
+                      backgroundColor: AppColors.blackColor,
+                      textColor: const Color(0xFFFFB000),
+                      borderSideColor: AppColors.blackColor,
+                      borderRadius: Dimensions.r(25),
+                      height: Dimensions.h(45),
+                      trailingIcon: Icon(
+                        Icons.arrow_forward,
+                        color: const Color(0xFFFFB000),
+                        size: Dimensions.w(16),
                       ),
                     ),
                   ),

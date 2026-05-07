@@ -1,13 +1,15 @@
-import 'package:flutter/cupertino.dart';
+import 'package:bestkits/core/routes/route_path.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_instance/src/extension_instance.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
-import 'package:get/get_utils/src/extensions/internacionalization.dart';
-
-import '../../../../../../core/responsive_layout/responsive_layout.dart';
-import '../../../../../../global/language/controller/language_controller.dart';
-import '../../../../../../utils/app_colors/app_colors.dart';
+import 'package:get/get.dart';
+import '../../../../../core/responsive_layout/dimensions.dart';
+import '../../../../../utils/app_colors/app_colors.dart';
+import '../controller/home_controller.dart';
+import '../widget/category_card.dart';
+import '../widget/home_banner.dart';
+import '../widget/home_header.dart';
+import '../widget/product_card.dart';
+import '../widget/section_title.dart';
+import '../widget/seller_banner.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -17,17 +19,119 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
-  final lc = Get.find<LanguageController>(); // ← find, not put
+  final controller = Get.put(HomeController());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-  body: Center(child: Text("Home Screen"),),
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Dimensions.gapH(10),
+              // Header
+              const HomeHeader(),
+              Dimensions.gapH(20),
+              
+              // Banner
+              const HomeBanner(),
+              Dimensions.gapH(30),
+
+              // Shop By Category
+              SectionTitle(
+                title: 'Shop By Category',
+                onTapViewAll: () {
+                  Get.toNamed(RoutePath.categoriesScreen);
+                },
+              ),
+              Dimensions.gapH(15),
+              SizedBox(
+                height: Dimensions.h(160),
+                child: ListView.builder(
+                  padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: controller.categories.length,
+                  itemBuilder: (context, index) {
+                    final category = controller.categories[index];
+                    return CategoryCard(
+                      name: category['name'],
+                      image: category['image'],
+                      items: category['items'],
+                    );
+                  },
+                ),
+              ),
+              Dimensions.gapH(30),
+
+              // Now Trending
+              SectionTitle(
+                title: 'Now Trending',
+                onTapViewAll: () {},
+              ),
+              Dimensions.gapH(15),
+              SizedBox(
+                height: Dimensions.h(280),
+                child: ListView.builder(
+                  padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: controller.trendingProducts.length,
+                  itemBuilder: (context, index) {
+                    final product = controller.trendingProducts[index];
+                    return ProductCard(product: product);
+                  },
+                ),
+              ),
+              Dimensions.gapH(30),
+
+              // Recently Viewed
+              SectionTitle(
+                title: 'Recently Viewed',
+                onTapViewAll: () {},
+              ),
+              Dimensions.gapH(15),
+              SizedBox(
+                height: Dimensions.h(280),
+                child: ListView.builder(
+                  padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: controller.recentlyViewed.length,
+                  itemBuilder: (context, index) {
+                    final product = controller.recentlyViewed[index];
+                    return ProductCard(product: product);
+                  },
+                ),
+              ),
+              Dimensions.gapH(30),
+
+              // New Arrivals
+              SectionTitle(
+                title: 'New Arrivals',
+                onTapViewAll: () {},
+              ),
+              Dimensions.gapH(15),
+              SizedBox(
+                height: Dimensions.h(280),
+                child: ListView.builder(
+                  padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: controller.trendingProducts.length, // Reusing trending for demo
+                  itemBuilder: (context, index) {
+                    final product = controller.trendingProducts[index];
+                    return ProductCard(product: product);
+                  },
+                ),
+              ),
+              
+              // Seller Banner
+              const SellerBanner(),
+              
+              Dimensions.gapH(20),
+            ],
+          ),
+        ),
+      ),
     );
   }
-
-
-
-
 }

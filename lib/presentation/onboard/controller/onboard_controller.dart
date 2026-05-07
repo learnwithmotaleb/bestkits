@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../core/routes/route_path.dart';
+import '../../../utils/assets_image/app_images.dart';
 import '../../../utils/static_strings/static_strings.dart';
 
 class OnboardController extends GetxController {
@@ -9,12 +10,12 @@ class OnboardController extends GetxController {
 
   final List<Map<String, String>> pages = [
     {
-      'image': 'assets/image/onboard1.jpg',
+      'image': AppImages.onboard1,
       'title': AppStrings.onboardingTitle1.tr,
       'subtitle': AppStrings.onboardingSubtitle1.tr,
     },
     {
-      'image': 'assets/image/onboard2.jpg',
+      'image': AppImages.onboard2,
       'title': AppStrings.onboardingTitle2.tr,
       'subtitle': AppStrings.onboardingSubtitle2.tr,
     },

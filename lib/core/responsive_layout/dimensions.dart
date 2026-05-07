@@ -155,7 +155,7 @@ class Dimensions {
   static double clampSpace(
       double value, {
         double min = 0,
-        double max = 80,
+        double max = 2000,
       }) {
     return value.clamp(min, max);
   }

@@ -2,38 +2,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AppImages {
+  AppImages._();
 
-  //==========================Here=====All==========Images=======================
-  static const String profileImage = "assets/images/profile_image.png";
-  static const String completeVerificationImage = "assets/images/complete_verification_image.png";
-  static const String welcomeImage = "assets/images/welcome_image.png";
-  static const String homeImage1 = "assets/images/home_image2.png";
-  static const String homeImage2 = "assets/images/home_image3.png";
-  static const String trackingImage = "assets/images/tracking_image.png";
-  static const String mapImage = "assets/images/map_image.png";
+  static const String _basePath = 'assets/images';
 
 
-
-  //==========================Here=====All==========Icons=======================
-
-  static const String appLogo = "assets/icons/app_logo.png";
-  static const String bike = "assets/icons/bike.png";
-  static const String shadowImage = "assets/icons/shadow_image.png";
-  static const String ios = "assets/icons/ios.png";
-  static const String google = "assets/icons/google.png";
-  static const String arabic = "assets/icons/arabic.png";
-  static const String english = "assets/icons/english.png";
-
-
-
-
-
-
-
-
-
-
-
-
-
+  static const String kidAccessor = "$_basePath/kids_accessor.png";
+  static const String kidsCollections = "$_basePath/kids_collections.png";
+  static const String kidsCottonHoddieTshirt = "$_basePath/kids_cotton_hoddie_t_shirt.png";
+  static const String kidsCottonHoodie = "$_basePath/kids_cotton_hoodie.png";
+  static const String kidsCottonSho = "$_basePath/kids_cotton_sho.png";
+  static const String kidCottonShoStand = "$_basePath/kids_cotton_sho_stand.png";
+  static const String kidShorts = "$_basePath/kids_shorts.png";
+  static const String onboard1 = "$_basePath/onboard1.png";
+  static const String onboard2 = "$_basePath/onboard2.png";
 }

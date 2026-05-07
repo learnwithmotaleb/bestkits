@@ -26,7 +26,7 @@ class BottomNavScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 _buildNavItem(0, Icons.home_outlined, Icons.home_filled, AppStrings.home.tr, controller),
-                _buildNavItem(1, Icons.search_outlined, Icons.search, AppStrings.browse.tr, controller),
+                _buildNavItem(1, Icons.search_outlined, Icons.search, AppStrings.search.tr, controller),
                 _buildNavItem(2, Icons.shopping_bag_outlined, Icons.shopping_bag, AppStrings.cart.tr, controller),
                 _buildNavItem(3, Icons.inventory_2_outlined, Icons.inventory_2, AppStrings.orders.tr, controller),
                 _buildNavItem(4, Icons.person_outline, Icons.person, AppStrings.profile.tr, controller),

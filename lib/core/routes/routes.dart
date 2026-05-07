@@ -12,7 +12,11 @@ import 'package:bestkits/presentation/auth/set_new_password/screen/set_new_passw
 import 'package:bestkits/presentation/auth/signup/controller/signup_controller.dart';
 import 'package:bestkits/presentation/auth/signup/screen/signup_screen.dart';
 import 'package:bestkits/presentation/bottom_nav/controller/bottom_nav_controller.dart';
+import 'package:bestkits/presentation/bottom_nav/page/home/pages/categories/controller/categories_controller.dart';
+import 'package:bestkits/presentation/bottom_nav/page/home/pages/categories/screen/categories_screen.dart';
 import 'package:bestkits/presentation/bottom_nav/screen/bottom_nav_screen.dart';
+import 'package:bestkits/presentation/product_details/controller/product_details_controller.dart';
+import 'package:bestkits/presentation/product_details/screen/product_details_screen.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/bindings_interface.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
@@ -110,6 +114,29 @@ class AppRouter {
       transition: Transition.rightToLeft,
       binding: BindingsBuilder(() {
         Get.put(BottomNavController());
+      }),
+    ),
+
+
+
+
+    GetPage(
+      name: RoutePath.categoriesScreen,
+      page: () => const CategoriesScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(CategoriesController());
+      }),
+    ),
+
+
+
+    GetPage(
+      name: RoutePath.productDetail,
+      page: () => const ProductDetailsScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(ProductDetailsController());
       }),
     ),
 

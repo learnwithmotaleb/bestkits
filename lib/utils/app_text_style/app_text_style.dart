@@ -7,42 +7,61 @@ class AppTextStyles {
 
   static const String nunito = "Nunito";
 
-  // 🔹 TITLE (Hero Headers)
-  static TextStyle title = TextStyle(
+  // 🔹 Headers
+  static TextStyle h1 = TextStyle(
     fontFamily: nunito,
-    fontSize: Dimensions.fs(24, tablet: 26, desktop: 28),
+    fontSize: Dimensions.fs(28),
+    fontWeight: FontWeight.w800,
+    color: AppColors.blackColor,
+  );
+
+  static TextStyle h2 = TextStyle(
+    fontFamily: nunito,
+    fontSize: Dimensions.fs(24),
     fontWeight: FontWeight.w700,
     color: AppColors.blackColor,
   );
 
-  // 🔹 SECTION TITLE
-  static TextStyle sectionTitle = TextStyle(
+  static TextStyle h3 = TextStyle(
     fontFamily: nunito,
-    fontSize: Dimensions.fs(18, tablet: 20, desktop: 22),
+    fontSize: Dimensions.fs(18),
     fontWeight: FontWeight.w700,
     color: AppColors.blackColor,
   );
 
-  // 🔹 BODY / SUBTITLE
-  static TextStyle body = TextStyle(
+  static TextStyle h4 = TextStyle(
     fontFamily: nunito,
-    fontSize: Dimensions.fs(14, tablet: 16, desktop: 18),
+    fontSize: Dimensions.fs(16),
+    fontWeight: FontWeight.w600,
+    color: AppColors.blackColor,
+  );
+
+  // 🔹 Aliases for existing styles
+  static TextStyle get title => h2;
+  static TextStyle get sectionTitle => h3;
+
+  // 🔹 Body / Subtitle
+  static TextStyle bodyText = TextStyle(
+    fontFamily: nunito,
+    fontSize: Dimensions.fs(14),
     fontWeight: FontWeight.w400,
     color: AppColors.darkGreyColor,
   );
 
-  // 🔹 HINT / LABEL
+  static TextStyle get body => bodyText;
+
+  // 🔹 Hint / Label
   static TextStyle hint = TextStyle(
     fontFamily: nunito,
-    fontSize: Dimensions.fs(14, tablet: 15, desktop: 16),
+    fontSize: Dimensions.fs(14),
     fontWeight: FontWeight.w400,
     color: AppColors.hintTextColor,
   );
 
-  // 🔹 BUTTON
+  // 🔹 Button
   static TextStyle button = TextStyle(
     fontFamily: nunito,
-    fontSize: Dimensions.fs(16, tablet: 18, desktop: 20),
+    fontSize: Dimensions.fs(16),
     fontWeight: FontWeight.w600,
     color: AppColors.whiteColor,
   );
