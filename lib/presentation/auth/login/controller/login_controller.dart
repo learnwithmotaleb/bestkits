@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../../core/routes/route_path.dart';
+
 class LoginController extends GetxController {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -17,8 +19,9 @@ class LoginController extends GetxController {
   }
 
   void login() {
-    // TODO: Implement login logic
+
     print("Logging in with: ${emailController.text}");
+    Get.toNamed(RoutePath.bottomNav);
   }
 
   @override

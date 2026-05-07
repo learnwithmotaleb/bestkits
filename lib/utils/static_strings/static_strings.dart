@@ -89,4 +89,12 @@ class AppStrings {
   static const String accountBlockedSubtitle = "Your account has been restricted by an administrator. For assistance with your account status, please contact";
   static const String supportEmail = "support@bestkid.com";
   static const String goBackLogin = "Go Back Login";
+  
+  // Bottom Nav
+  static const String home = "Home";
+  static const String browse = "Browse";
+  static const String search = "Search";
+  static const String cart = "Cart";
+  static const String orders = "Orders";
+  static const String profile = "Profile";
 }

@@ -13,4 +13,7 @@ class AppColors {
   static const Color textFieldBackgroundColor = Color(0xFFF5F5F5);
   static const Color hintColor = Color(0xFF9E9E9E);
   static const Color hintTextColor = Color(0xFF9E9E9E);
+  
+  static const Color navBarColor = Color(0xFFFEF7E5);
+  static const Color navBarBorderColor = Color(0xFFFFB000);
 }

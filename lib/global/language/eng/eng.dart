@@ -85,4 +85,10 @@ Map<String, String> english = {
   AppStrings.accountBlockedSubtitle: "Your account has been restricted by an administrator. For assistance with your account status, please contact",
   AppStrings.supportEmail: "support@bestkid.com",
   AppStrings.goBackLogin: "Go Back Login",
+  AppStrings.home: "Home",
+  AppStrings.browse: "Browse",
+  AppStrings.search: "Search",
+  AppStrings.cart: "Cart",
+  AppStrings.orders: "Orders",
+  AppStrings.profile: "Profile",
 };

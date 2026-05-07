@@ -11,6 +11,8 @@ import 'package:bestkits/presentation/auth/set_new_password/controller/set_new_p
 import 'package:bestkits/presentation/auth/set_new_password/screen/set_new_password_screen.dart';
 import 'package:bestkits/presentation/auth/signup/controller/signup_controller.dart';
 import 'package:bestkits/presentation/auth/signup/screen/signup_screen.dart';
+import 'package:bestkits/presentation/bottom_nav/controller/bottom_nav_controller.dart';
+import 'package:bestkits/presentation/bottom_nav/screen/bottom_nav_screen.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/bindings_interface.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
@@ -98,6 +100,16 @@ class AppRouter {
       transition: Transition.rightToLeft,
       binding: BindingsBuilder(() {
         Get.put(AccountBlockController());
+      }),
+    ),
+
+
+    GetPage(
+      name: RoutePath.bottomNav,
+      page: () => const BottomNavScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(BottomNavController());
       }),
     ),
 

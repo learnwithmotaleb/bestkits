@@ -11,6 +11,7 @@ class RoutePath {
   static const String otpScreen = '/OtpVerifyScreen';
   static const String setNewPassword = '/SetNewPasswordScreen';
   static const String accountBlock = '/AccountBlockScreen';
+  static const String bottomNav = '/BottomNavScreen';
 
 
 
