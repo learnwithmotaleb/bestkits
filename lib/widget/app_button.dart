@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'app_loading.dart';
 import 'package:get/get.dart';
 import '../../../utils/app_text_style/app_text_style.dart';
 import '../../../utils/app_colors/app_colors.dart';
@@ -54,7 +54,7 @@ class AppButton extends StatelessWidget {
         ),
         onPressed: isLoading ? null : onPressed,
         child: isLoading
-            ? SpinKitFadingFour(color: textColor, size: 24)
+            ? AppLoading(color: textColor, size: 24)
             : Row(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,

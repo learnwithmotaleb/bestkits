@@ -9,6 +9,9 @@ class RoutePath {
   static const String signup = '/SignupScreen';
   static const String forgotPassword = '/ForgotPasswordScreen';
   static const String otpScreen = '/OtpVerifyScreen';
+  static const String setNewPassword = '/SetNewPasswordScreen';
+  static const String accountBlock = '/AccountBlockScreen';
+
 
 
 

@@ -25,6 +25,10 @@ class AppStrings {
   static const String forgotPassword = "Forgot Password";
   static const String forgotPasswordSubtitle = "Enter your registered email address and we'll send you a verification code to reset your password.";
   static const String sendVerificationCode = "Send Verification Code";
+  static const String setNewPassword = "Set New Password";
+  static const String setNewPasswordSubtitle = "Create a new password for your account to continue securely.";
+  static const String newPassword = "New Password";
+  static const String updatePassword = "Update Password";
   static const String logIn = "Log In";
 
   // Signup
@@ -79,4 +83,10 @@ class AppStrings {
   static const String totalAmount = "Total Amount";
   static const String chat = "Chat";
   static const String typing = "Typing...";
+
+  // Account Block
+  static const String accountBlocked = "Account Blocked !";
+  static const String accountBlockedSubtitle = "Your account has been restricted by an administrator. For assistance with your account status, please contact";
+  static const String supportEmail = "support@bestkid.com";
+  static const String goBackLogin = "Go Back Login";
 }

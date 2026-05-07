@@ -1,10 +1,14 @@
 
 
 import 'package:bestkits/core/routes/route_path.dart';
+import 'package:bestkits/presentation/auth/account_block/controller/account_block_controller.dart';
+import 'package:bestkits/presentation/auth/account_block/screen/account_block_screen.dart';
 import 'package:bestkits/presentation/auth/login/controller/login_controller.dart';
 import 'package:bestkits/presentation/auth/login/screen/login_screen.dart';
 import 'package:bestkits/presentation/auth/opt_verify/controller/otp_verify_controller.dart';
 import 'package:bestkits/presentation/auth/opt_verify/screen/otp_verify_screen.dart';
+import 'package:bestkits/presentation/auth/set_new_password/controller/set_new_password_controller.dart';
+import 'package:bestkits/presentation/auth/set_new_password/screen/set_new_password_screen.dart';
 import 'package:bestkits/presentation/auth/signup/controller/signup_controller.dart';
 import 'package:bestkits/presentation/auth/signup/screen/signup_screen.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -76,6 +80,24 @@ class AppRouter {
       transition: Transition.rightToLeft,
       binding: BindingsBuilder(() {
         Get.put(OtpVerifyController());
+      }),
+    ),
+
+    GetPage(
+      name: RoutePath.setNewPassword,
+      page: () => const SetNewPasswordScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(SetNewPasswordController());
+      }),
+    ),
+
+    GetPage(
+      name: RoutePath.accountBlock,
+      page: () => const AccountBlockScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(AccountBlockController());
       }),
     ),
 

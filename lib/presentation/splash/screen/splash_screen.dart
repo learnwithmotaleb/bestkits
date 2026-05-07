@@ -8,42 +8,8 @@ import '../../../utils/app_icons/app_icons.dart';
 import '../../../widget/custom_svg_icon.dart';
 import '../controller/splash_controller.dart';
 
-class SplashScreen extends StatefulWidget {
+class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
-
-  @override
-  State<SplashScreen> createState() => _SplashScreenState();
-}
-
-class _SplashScreenState extends State<SplashScreen>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _animCtrl;
-  late final Animation<double> _fadeAnim;
-  late final Animation<double> _scaleAnim;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _animCtrl = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1200),
-    );
-
-    _fadeAnim = CurvedAnimation(parent: _animCtrl, curve: Curves.easeIn);
-
-    _scaleAnim = Tween<double>(begin: 0.90, end: 1.0).animate(
-      CurvedAnimation(parent: _animCtrl, curve: Curves.easeOut),
-    );
-
-    _animCtrl.forward();
-  }
-
-  @override
-  void dispose() {
-    _animCtrl.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,17 +26,9 @@ class _SplashScreenState extends State<SplashScreen>
 
   Widget _buildContent(BuildContext context, {required double logoWidth}) {
     return Center(
-      child: FadeTransition(
-        opacity: _fadeAnim,
-        child: ScaleTransition(
-          scale: _scaleAnim,
-          child: CustomSvgIcon(
-            icon: AppIcons.splash,
-            size: Dimensions.rs(logoWidth),
-            // We don't apply a color filter here to preserve the SVG's original design 
-            // unless specified, but for "bestkid" logo it should be as is.
-          ),
-        ),
+      child: CustomSvgIcon(
+        icon: AppIcons.splash,
+        size: Dimensions.rs(logoWidth),
       ),
     );
   }

@@ -26,7 +26,7 @@ class OnboardController extends GetxController {
 
   void nextPage() {
     if (isLastPage) {
-      Get.offNamed(RoutePath.login);
+      Get.offNamed(RoutePath.forgotPassword);
     } else {
       pageController.nextPage(
         duration: const Duration(milliseconds: 400),
@@ -35,7 +35,7 @@ class OnboardController extends GetxController {
     }
   }
 
-  void skip() => Get.offNamed(RoutePath.login);
+  void skip() => Get.offNamed(RoutePath.forgotPassword);
 
   @override
   void onClose() {

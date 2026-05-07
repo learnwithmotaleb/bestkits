@@ -24,6 +24,10 @@ Map<String, String> english = {
   AppStrings.rememberMe: "Remember me",
   AppStrings.forgotPassword: "Forgot password?",
   AppStrings.logIn: "Log In",
+  AppStrings.setNewPassword: "Set New Password",
+  AppStrings.setNewPasswordSubtitle: "Create a new password for your account to continue securely.",
+  AppStrings.newPassword: "New Password",
+  AppStrings.updatePassword: "Update Password",
 
   // Signup
   AppStrings.createYourAccount: "Create Your Account",
@@ -77,4 +81,8 @@ Map<String, String> english = {
   AppStrings.totalAmount: "Total Amount",
   AppStrings.chat: "Chat",
   AppStrings.typing: "Typing...",
+  AppStrings.accountBlocked: "Account Blocked !",
+  AppStrings.accountBlockedSubtitle: "Your account has been restricted by an administrator. For assistance with your account status, please contact",
+  AppStrings.supportEmail: "support@bestkid.com",
+  AppStrings.goBackLogin: "Go Back Login",
 };

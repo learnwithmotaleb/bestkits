@@ -7,7 +7,7 @@ class ForgotPasswordController extends GetxController {
 
   void sendVerificationCode() {
     // Logic to send code
-    // Get.toNamed(RoutePath.otpVerify); // Assuming this route exists
+    Get.toNamed(RoutePath.otpScreen, arguments: "forgot_password"); // Assuming this route exists
   }
 
   @override

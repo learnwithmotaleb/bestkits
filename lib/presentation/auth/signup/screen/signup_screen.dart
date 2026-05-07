@@ -152,7 +152,7 @@ class SignupScreen extends StatelessWidget {
               AppButton(
                 label: "Log In",
                 onPressed: () {
-                  Get.toNamed(RoutePath.otpScreen);
+                  Get.toNamed(RoutePath.otpScreen, arguments: "signup");
                 },
                 backgroundColor: AppColors.secondaryColor,
                 textColor: AppColors.primaryColor,
