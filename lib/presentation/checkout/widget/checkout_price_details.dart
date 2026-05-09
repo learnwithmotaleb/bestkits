@@ -43,7 +43,7 @@ class CheckoutPriceDetails extends StatelessWidget {
                                   item.name,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(fontSize: 12, color: Colors.grey),
+                                  style: const TextStyle(fontSize: 12, color: Colors.grey, fontStyle: FontStyle.italic),
                                 ),
                               ),
                               const SizedBox(width: 4),
@@ -53,6 +53,7 @@ class CheckoutPriceDetails extends StatelessWidget {
                                   fontSize: 11,
                                   color: AppColors.primaryColor,
                                   fontWeight: FontWeight.w700,
+                                  fontStyle: FontStyle.italic,
                                 ),
                               ),
                             ],
@@ -70,9 +71,9 @@ class CheckoutPriceDetails extends StatelessWidget {
               const SizedBox(height: 12),
 
               // Subtotal
-              _row('Subtotal', '€${controller.subtotal.toStringAsFixed(2)}'),
+              _row('Subtotal', null, '€${controller.subtotal.toStringAsFixed(2)}'),
               const SizedBox(height: 8),
-              _row('Shipping Fee', '€${controller.shippingTotal.toStringAsFixed(2)}'),
+              _row('Shipping Fee', 'x${controller.cartController.sellers.length}', '€${controller.shippingTotal.toStringAsFixed(2)}'),
               const SizedBox(height: 12),
               const Divider(height: 1, color: Color(0xFFF0F0F0)),
               const SizedBox(height: 12),
@@ -93,12 +94,28 @@ class CheckoutPriceDetails extends StatelessWidget {
         ));
   }
 
-  Widget _row(String label, String value) {
+  Widget _row(String label, String? suffix, String value) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
-        Text(value, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500)),
+        Row(
+          children: [
+            Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+            if (suffix != null) ...[
+              const SizedBox(width: 4),
+              Text(
+                suffix,
+                style: TextStyle(
+                  fontSize: 11,
+                  color: AppColors.primaryColor,
+                  fontWeight: FontWeight.w700,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ]
+          ],
+        ),
+        Text(value, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w800)),
       ],
     );
   }

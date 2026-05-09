@@ -15,11 +15,18 @@ import 'package:bestkits/presentation/bottom_nav/controller/bottom_nav_controlle
 import 'package:bestkits/presentation/bottom_nav/page/home/pages/categories/controller/categories_controller.dart';
 import 'package:bestkits/presentation/bottom_nav/page/home/pages/categories/screen/categories_screen.dart';
 import 'package:bestkits/presentation/bottom_nav/screen/bottom_nav_screen.dart';
+import 'package:bestkits/presentation/message/controller/message_controller.dart';
+import 'package:bestkits/presentation/message/page/chat/chat_controller/chat_controller.dart';
+import 'package:bestkits/presentation/message/page/chat/chat_screen/chat_screen.dart';
+import 'package:bestkits/presentation/message/screen/message_screen.dart';
+import 'package:bestkits/presentation/my_return/controller/my_return_controller.dart';
+import 'package:bestkits/presentation/my_return/screen/my_return_screen.dart';
 import 'package:bestkits/presentation/product_details/controller/product_details_controller.dart';
 import 'package:bestkits/presentation/product_details/screen/product_details_screen.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/bindings_interface.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:get/get_navigation/src/routes/transitions_type.dart';
 import 'package:bestkits/presentation/onboard/screen/onboard_screen.dart';
@@ -140,6 +147,39 @@ class AppRouter {
       }),
     ),
 
+
+
+    GetPage(
+      name: RoutePath.myReturn,
+      page: () => const MyReturnScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(MyReturnController());
+      }),
+    ),
+
+
+
+
+
+    GetPage(
+      name: RoutePath.message,
+      page: () => const MessageScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(MessageController());
+      }),
+    ),
+
+
+
+    GetPage(
+      name: RoutePath.chat,
+      page: () => ChatScreen(chatSummary: Get.arguments), // Grab the summary from Get.arguments
+      transition: Transition.rightToLeft,
+      // You don't actually need the binding here because ChatScreen already initializes
+      // the ChatController dynamically with a unique tag in its initState!
+    ),
 
 
 

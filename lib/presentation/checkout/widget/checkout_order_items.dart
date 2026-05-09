@@ -39,61 +39,68 @@ class CheckoutOrderItems extends StatelessWidget {
                     ),
                     Text(
                       'Total Amount : €${items.fold(0.0, (s, i) => s + double.parse(i.price) * i.quantity.value).toStringAsFixed(2)}',
-                      style: TextStyle(fontSize: 11, color: Colors.grey[500]),
+                      style: TextStyle(fontSize: 11, color: AppColors.blackColor),
                     ),
                   ],
                 ),
               ),
-              const Divider(height: 1),
+              const Divider(height: 2, thickness: 0.2,),
 
               // Products
-              ...items.map((item) => Obx(() => Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Image
-                        Container(
-                          width: 65,
-                          height: 65,
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFF5F5F5),
-                            borderRadius: BorderRadius.circular(10),
+              ...items.map((item) => Obx(() => Container(
+                margin: EdgeInsets.symmetric(vertical: 10),
+                decoration: BoxDecoration(
+                  border: Border.all(color: AppColors.greyColor.withOpacity(0.5), width: 1),
+                  borderRadius: BorderRadius.circular(10)
+                ),
+                child: Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Image
+                          Container(
+                            width: 65,
+                            height: 65,
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFF5F5F5),
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(color: AppColors.primaryColor, width: 1)
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(6),
+                              child: Image.asset(item.image, fit: BoxFit.contain),
+                            ),
                           ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(6),
-                            child: Image.asset(item.image, fit: BoxFit.contain),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  item.name,
+                                  style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, fontStyle: FontStyle.italic),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  'Quantity :- ${item.quantity.value} • Size / Variant :- ${item.selectedSize.value}',
+                                  style: TextStyle(fontSize: 11, color: Colors.grey[500]),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  '€${(double.parse(item.price) * item.quantity.value).toStringAsFixed(2)}',
+                                  style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w800),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                item.name,
-                                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, fontStyle: FontStyle.italic),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                'Quantity :- ${item.quantity.value} • Size / Variant :- ${item.selectedSize.value}',
-                                style: TextStyle(fontSize: 11, color: Colors.grey[500]),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                '€${(double.parse(item.price) * item.quantity.value).toStringAsFixed(2)}',
-                                style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w800),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ))),
+              ))),
 
               // Delivery selection
               if (controller.deliveryOptions.containsKey(seller)) ...[
-                const Divider(height: 1),
                 Obx(() => Column(
                       children: controller.deliveryOptions[seller]!.map((option) {
                         final isSelected = controller.selectedDelivery[seller] == option.type;
@@ -110,58 +117,94 @@ class CheckoutOrderItems extends StatelessWidget {
                                 width: 1.5,
                               ),
                             ),
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.local_shipping_outlined,
-                                  color: isSelected ? AppColors.primaryColor : Colors.grey,
-                                  size: 18,
-                                ),
-                                const SizedBox(width: 10),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Text(
-                                            option.label,
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.w700,
-                                              fontSize: 12,
-                                              color: isSelected ? AppColors.primaryColor : Colors.black,
-                                            ),
-                                          ),
-                                          const SizedBox(width: 6),
-                                          Container(
-                                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
-                                            decoration: BoxDecoration(
-                                              color: isSelected ? AppColors.primaryColor.withOpacity(0.2) : Colors.grey[200],
-                                              borderRadius: BorderRadius.circular(4),
-                                            ),
-                                            child: Text(
-                                              option.badge,
-                                              style: TextStyle(fontSize: 8, color: isSelected ? AppColors.primaryColor : Colors.grey, fontWeight: FontWeight.w700),
-                                            ),
-                                          ),
-                                        ],
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    width: 16,
+                                    height: 16,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                        color: isSelected ? AppColors.primaryColor : Colors.grey,
+                                        width: 1.5,
                                       ),
-                                      const SizedBox(height: 2),
-                                      Text('Delivery Partner: ${option.partner}', style: TextStyle(fontSize: 10, color: Colors.grey[500])),
-                                      Text('Estimated Time: ${option.time}', style: TextStyle(fontSize: 10, color: Colors.grey[500])),
-                                    ],
+                                    ),
+                                    child: isSelected
+                                        ? Center(
+                                            child: Container(
+                                              width: 8,
+                                              height: 8,
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: AppColors.primaryColor,
+                                              ),
+                                            ),
+                                          )
+                                        : null,
                                   ),
-                                ),
-                                Text(
-                                  '€${option.price}',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w700,
-                                    color: isSelected ? AppColors.primaryColor : Colors.black,
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Text(
+                                              option.label,
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.w800,
+                                                fontStyle: FontStyle.italic,
+                                                fontSize: 13,
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                            const SizedBox(width: 4),
+                                            Text(
+                                              option.badge,
+                                              style: TextStyle(fontSize: 9, color: Colors.grey[400]),
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 4),
+                                        RichText(
+                                          text: TextSpan(
+                                            style: TextStyle(fontSize: 10, color: Colors.grey[400], fontStyle: FontStyle.italic),
+                                            children: [
+                                              const TextSpan(text: 'Delivery Partner - '),
+                                              TextSpan(
+                                                text: option.partner,
+                                                style: TextStyle(color: Colors.grey[700]),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        const SizedBox(height: 2),
+                                        RichText(
+                                          text: TextSpan(
+                                            style: TextStyle(fontSize: 10, color: Colors.grey[400], fontStyle: FontStyle.italic),
+                                            children: [
+                                              const TextSpan(text: 'Estimated Time - '),
+                                              TextSpan(
+                                                text: option.time,
+                                                style: TextStyle(color: Colors.grey[700]),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
+                                  Text(
+                                    '€${option.price}',
+                                    style: const TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w800,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ],
+                              ),
                           ),
                         );
                       }).toList(),

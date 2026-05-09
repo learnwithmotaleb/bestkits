@@ -14,6 +14,9 @@ class RoutePath {
   static const String bottomNav = '/BottomNavScreen';
   static const String categoriesScreen = '/CategoriesScreen';
   static const String productDetail = '/ProductDetailsScreen';
+  static const String myReturn = '/MyReturnScreen';
+  static const String message = '/MessageScreen';
+  static const String chat = '/ChatScreen';
 
 
 

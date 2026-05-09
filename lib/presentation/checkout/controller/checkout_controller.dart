@@ -51,28 +51,20 @@ class CheckoutController extends GetxController {
       const DeliveryOption(
         type: 'domestic',
         label: 'Domestic Delivery',
-        badge: 'Domestic',
+        badge: '(Inside Country)',
         partner: 'Bulgarian Post',
         time: '2-4 Business Days',
-        price: '6.99',
-      ),
-      const DeliveryOption(
-        type: 'international',
-        label: 'International Delivery',
-        badge: 'International',
-        partner: 'DHL Express',
-        time: '5-10 Business Days',
-        price: '12.80',
+        price: '4.99',
       ),
     ],
     'Tochici Clothing': [
       const DeliveryOption(
         type: 'international',
         label: 'International Delivery',
-        badge: 'International',
+        badge: '(Outside Country)',
         partner: 'DHL Express',
         time: '5-10 Business Days',
-        price: '12.80',
+        price: '12.99',
       ),
     ],
   };

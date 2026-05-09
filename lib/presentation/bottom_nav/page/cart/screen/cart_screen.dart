@@ -56,57 +56,68 @@ class CartScreen extends StatelessWidget {
             // My Cart count + Empty Cart row
             Padding(
               padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
-              child: Obx(() => Row(
-                    children: [
-                      const Text(
-                        'My Cart',
-                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
-                      ),
-                      const SizedBox(width: 8),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                        decoration: BoxDecoration(
-                          color: AppColors.navBarColor,
-                          borderRadius: BorderRadius.circular(6),
-                          border: Border.all(color: AppColors.primaryColor.withOpacity(0.4)),
-                        ),
-                        child: Text(
-                          '${controller.totalItemCount}'.padLeft(2, '0'),
-                          style: TextStyle(
-                            color: AppColors.primaryColor,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 12,
+              child: Obx(() => Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: AppColors.greyColor,width: 1,
+                    
+                  ),
+                  borderRadius: BorderRadius.circular(10)
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 15.0,horizontal: 5),
+                  child: Row(
+                        children: [
+                          const Text(
+                            'My Cart',
+                            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
                           ),
-                        ),
-                      ),
-                      const Spacer(),
-                      GestureDetector(
-                        onTap: () => _showEmptyCartDialog(context, controller),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFFEE2E2),
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(color: Colors.red.withOpacity(0.3)),
-                          ),
-                          child: Row(
-                            children: const [
-                              Icon(Icons.shopping_bag_outlined, color: Colors.red, size: 14),
-                              SizedBox(width: 5),
-                              Text(
-                                'Empty Cart',
-                                style: TextStyle(
-                                  color: Colors.red,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                          const SizedBox(width: 8),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: AppColors.navBarColor,
+                              borderRadius: BorderRadius.circular(6),
+                              border: Border.all(color: AppColors.primaryColor.withOpacity(0.4)),
+                            ),
+                            child: Text(
+                              '${controller.totalItemCount}'.padLeft(2, '0'),
+                              style: TextStyle(
+                                color: AppColors.primaryColor,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 12,
                               ),
-                            ],
+                            ),
                           ),
-                        ),
+                          const Spacer(),
+                          GestureDetector(
+                            onTap: () => _showEmptyCartDialog(context, controller),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFFEE2E2),
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(color: Colors.red.withOpacity(0.3)),
+                              ),
+                              child: Row(
+                                children: const [
+                                  Icon(Icons.shopping_bag_outlined, color: Colors.red, size: 14),
+                                  SizedBox(width: 5),
+                                  Text(
+                                    'Empty Cart',
+                                    style: TextStyle(
+                                      color: Colors.red,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  )),
+                ),
+              )),
             ),
             const SizedBox(height: 16),
 

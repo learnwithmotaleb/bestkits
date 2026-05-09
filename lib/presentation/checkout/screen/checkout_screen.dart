@@ -66,30 +66,40 @@ class CheckoutScreen extends StatelessWidget {
                     // Order Summary header row
                     Obx(() {
                       final count = controller.cartController.totalItemCount;
-                      return Row(
-                        children: [
-                          const Text(
-                            'Order Summary',
-                            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+                      return Container(
+                        padding: EdgeInsets.symmetric(horizontal: 10,vertical: 15),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            width: 1,
+                            color: AppColors.greyColor,
                           ),
-                          const SizedBox(width: 8),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                            decoration: BoxDecoration(
-                              color: AppColors.navBarColor,
-                              borderRadius: BorderRadius.circular(6),
-                              border: Border.all(color: AppColors.primaryColor.withOpacity(0.4)),
+                          borderRadius: BorderRadius.circular(10)
+                        ),
+                        child: Row(
+                          children: [
+                            const Text(
+                              'Order Summary',
+                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800, fontStyle: FontStyle.italic),
                             ),
-                            child: Text(
-                              '$count'.padLeft(2, '0'),
-                              style: TextStyle(
-                                color: AppColors.primaryColor,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 12,
+                            const SizedBox(width: 8),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                              decoration: BoxDecoration(
+                                color: Colors.transparent,
+                                borderRadius: BorderRadius.circular(4),
+                                border: Border.all(color: AppColors.primaryColor, width: 1),
+                              ),
+                              child: Text(
+                                '$count'.padLeft(2, '0'),
+                                style: TextStyle(
+                                  color: AppColors.primaryColor,
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 12,
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       );
                     }),
                     const SizedBox(height: 14),
@@ -121,8 +131,6 @@ class CheckoutScreen extends StatelessWidget {
                                       text: 'Terms & Conditions',
                                       style: TextStyle(
                                         color: AppColors.primaryColor,
-                                        fontWeight: FontWeight.w700,
-                                        decoration: TextDecoration.underline,
                                       ),
                                     ),
                                     const TextSpan(text: ' And '),
@@ -130,8 +138,6 @@ class CheckoutScreen extends StatelessWidget {
                                       text: 'Privacy Policy',
                                       style: TextStyle(
                                         color: AppColors.primaryColor,
-                                        fontWeight: FontWeight.w700,
-                                        decoration: TextDecoration.underline,
                                       ),
                                     ),
                                     const TextSpan(text: ' Of BestKid.'),
@@ -167,7 +173,7 @@ class CheckoutScreen extends StatelessWidget {
                           backgroundColor: const Color(0xFF1A1A1A),
                           textColor: AppColors.primaryColor,
                           borderSideColor: const Color(0xFF1A1A1A),
-                          leadingIcon: Icon(Icons.bolt, color: AppColors.primaryColor, size: 18),
+                          leadingIcon: Icon(Icons.sell, color: AppColors.primaryColor, size: 18),
                           borderRadius: 12,
                           height: 52,
                         )),

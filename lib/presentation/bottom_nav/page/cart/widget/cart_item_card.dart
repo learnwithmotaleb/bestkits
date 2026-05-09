@@ -27,6 +27,8 @@ class CartItemCard extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: const Color(0xFFF5F5F5),
                       borderRadius: BorderRadius.circular(10),
+                        border: Border.all(width: 1, color: AppColors.primaryColor)
+
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(8),

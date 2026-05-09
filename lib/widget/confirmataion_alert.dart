@@ -197,6 +197,121 @@ class AppAlerts {
       ),
     );
   }
+
+  static void warning({
+    required String title,
+    required String message,
+    required VoidCallback onConfirm,
+    String confirmLabel = 'Yes, Continue',
+    String cancelLabel = 'Cancel',
+    VoidCallback? onCancel,
+  }) {
+    Get.dialog(
+      _AlertWrapper(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: AppColors.redColor.withOpacity(0.05),
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  border: Border.all(color: AppColors.redColor, width: 1.5),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(Icons.priority_high,
+                    color: AppColors.redColor, size: 16),
+              ),
+            ),
+            SizedBox(height: Dimensions.h(16)),
+            Text(
+              title,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontFamily: 'Nunito',
+                fontSize: 16,
+                fontWeight: FontWeight.w800,
+                color: AppColors.blackColor,
+              ),
+            ),
+            SizedBox(height: Dimensions.h(8)),
+            Text(
+              message,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontFamily: 'Nunito',
+                fontSize: 12,
+                color: AppColors.darkGreyColor,
+                height: 1.5,
+              ),
+            ),
+            SizedBox(height: Dimensions.h(24)),
+            Row(
+              children: [
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      Get.back();
+                      onCancel?.call();
+                    },
+                    child: Container(
+                      height: Dimensions.h(44),
+                      decoration: BoxDecoration(
+                        color: AppColors.whiteColor,
+                        borderRadius: BorderRadius.circular(Dimensions.r(8)),
+                        border: Border.all(
+                            color: AppColors.greyColor.withOpacity(0.3)),
+                      ),
+                      alignment: Alignment.center,
+                      child: Text(
+                        cancelLabel,
+                        style: TextStyle(
+                          fontFamily: 'Nunito',
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.greyColor,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(width: Dimensions.w(12)),
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      Get.back();
+                      onConfirm();
+                    },
+                    child: Container(
+                      height: Dimensions.h(44),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF1A1A1A),
+                        borderRadius: BorderRadius.circular(Dimensions.r(8)),
+                      ),
+                      alignment: Alignment.center,
+                      child: Text(
+                        confirmLabel,
+                        style: TextStyle(
+                          fontFamily: 'Nunito',
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.primaryColor,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 class _AlertWrapper extends StatelessWidget {
