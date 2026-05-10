@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import '../../../../../widget/confirmataion_alert.dart';
+import '../../../../../widget/app_alert.dart';
 
 class ProfileController extends GetxController {
 

@@ -1,3 +1,4 @@
+import 'package:bestkits/core/routes/route_path.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../core/responsive_layout/dimensions.dart';
@@ -33,6 +34,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               decoration: BoxDecoration(
                 color: AppColors.primaryColor.withOpacity(0.2),
                 shape: BoxShape.circle,
+
               ),
               child: const Icon(Icons.arrow_back, color: AppColors.blackColor, size: 20),
             ),
@@ -58,7 +60,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ProfileMenuItem(
               icon: Icons.person_outline,
               label: 'My Profile',
-              onTap: () {},
+              onTap: () {
+                Get.toNamed(RoutePath.myProfile);
+              },
             ),
             ProfileMenuItem(
               icon: Icons.chat_bubble_outline,
@@ -73,7 +77,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ProfileMenuItem(
               icon: Icons.settings_outlined,
               label: 'Account Setting',
-              onTap: () {},
+              onTap: () {
+                Get.toNamed(RoutePath.accountSetting);
+              },
             ),
             SizedBox(height: Dimensions.h(10)),
             Align(
@@ -127,6 +133,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           decoration: BoxDecoration(
             color: AppColors.primaryColor.withOpacity(0.15),
             borderRadius: BorderRadius.circular(Dimensions.r(24)),
+              border: Border.all(color: AppColors.greyColor.withOpacity(0.5), width: 1)
           ),
           alignment: Alignment.center,
           child: const Text(

@@ -1,6 +1,7 @@
 
 
 import 'package:bestkits/core/routes/route_path.dart';
+import 'package:bestkits/presentation/account_setting/screen/account_setting_screen.dart';
 import 'package:bestkits/presentation/auth/account_block/controller/account_block_controller.dart';
 import 'package:bestkits/presentation/auth/account_block/screen/account_block_screen.dart';
 import 'package:bestkits/presentation/auth/login/controller/login_controller.dart';
@@ -19,10 +20,14 @@ import 'package:bestkits/presentation/message/controller/message_controller.dart
 import 'package:bestkits/presentation/message/page/chat/chat_controller/chat_controller.dart';
 import 'package:bestkits/presentation/message/page/chat/chat_screen/chat_screen.dart';
 import 'package:bestkits/presentation/message/screen/message_screen.dart';
+import 'package:bestkits/presentation/my_profile/controller/my_profile_controller.dart';
+import 'package:bestkits/presentation/my_profile/screen/my_profile_screen.dart';
 import 'package:bestkits/presentation/my_return/controller/my_return_controller.dart';
 import 'package:bestkits/presentation/my_return/screen/my_return_screen.dart';
 import 'package:bestkits/presentation/product_details/controller/product_details_controller.dart';
 import 'package:bestkits/presentation/product_details/screen/product_details_screen.dart';
+import 'package:bestkits/presentation/update_profile/controller/update_profile_controller.dart';
+import 'package:bestkits/presentation/update_profile/screen/update_profile_screen.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/bindings_interface.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
@@ -34,6 +39,7 @@ import 'package:bestkits/presentation/onboard/controller/onboard_controller.dart
 import 'package:bestkits/presentation/auth/forgot_password/screen/forgot_password_screen.dart';
 import 'package:bestkits/presentation/auth/forgot_password/controller/forgot_password_controller.dart';
 
+import '../../presentation/account_setting/controller/account_setting_controller.dart';
 import '../../presentation/splash/controller/splash_controller.dart';
 import '../../presentation/splash/screen/splash_screen.dart';
 
@@ -181,6 +187,35 @@ class AppRouter {
       // the ChatController dynamically with a unique tag in its initState!
     ),
 
+
+    GetPage(
+      name: RoutePath.myProfile,
+      page: () => const MyProfileScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(MyProfileController());
+      }),
+    ),
+
+
+    GetPage(
+      name: RoutePath.updateProfile,
+      page: () => const UpdateProfileScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(UpdateProfileController());
+      }),
+    ),
+
+
+    GetPage(
+      name: RoutePath.accountSetting,
+      page: () => const AccountSettingScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(AccountSettingController());
+      }),
+    ),
 
 
 

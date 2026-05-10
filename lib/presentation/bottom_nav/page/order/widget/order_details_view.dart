@@ -8,7 +8,7 @@ import '../controller/order_controller.dart';
 import '../../../../../widget/app_button.dart';
 import '../../../../../widget/app_bottom_sheet.dart';
 import '../../../../../widget/app_text_field.dart';
-import '../../../../../widget/confirmataion_alert.dart';
+import '../../../../../widget/app_alert.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'dart:io';
 

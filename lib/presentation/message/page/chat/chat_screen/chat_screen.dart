@@ -8,7 +8,7 @@ import '../../../../../../core/responsive_layout/dimensions.dart';
 import '../../../../../../utils/app_colors/app_colors.dart';
 import '../../../../../../widget/app_button.dart';
 import '../../../../../../widget/app_bottom_sheet.dart';
-import '../../../../../../widget/confirmataion_alert.dart';
+import '../../../../../../widget/app_alert.dart';
 import '../chat_controller/chat_controller.dart';
 
 class ChatScreen extends StatefulWidget {

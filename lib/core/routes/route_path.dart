@@ -17,6 +17,11 @@ class RoutePath {
   static const String myReturn = '/MyReturnScreen';
   static const String message = '/MessageScreen';
   static const String chat = '/ChatScreen';
+  static const String myProfile = '/MyProfileScreen';
+  static const String updateProfile = '/UpdateProfileController';
+  static const String accountSetting = '/AccountSettingScreen';
+
+
 
 
 
