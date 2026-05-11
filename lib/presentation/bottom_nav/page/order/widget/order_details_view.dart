@@ -32,26 +32,31 @@ class OrderDetailsView extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '- ${AppStrings.orderIdLabel.tr}: ${order.orderId}',
-                          style: const TextStyle(
-                              fontWeight: FontWeight.w800,
-                              fontSize: 13,
-                              fontStyle: FontStyle.italic),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          order.date,
-                          style: TextStyle(
-                              fontSize: 11,
-                              color: Colors.grey[400],
-                              fontStyle: FontStyle.italic),
-                        ),
-                      ],
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '- ${AppStrings.orderIdLabel.tr}: ${order.orderId}',
+                            style: const TextStyle(
+                                fontWeight: FontWeight.w800,
+                                fontSize: 13,
+                                fontStyle: FontStyle.italic),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            order.date,
+                            style: TextStyle(
+                                fontSize: 11,
+                                color: Colors.grey[400],
+                                fontStyle: FontStyle.italic),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
                     ),
+                    const SizedBox(width: 8),
                     Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8, vertical: 4),

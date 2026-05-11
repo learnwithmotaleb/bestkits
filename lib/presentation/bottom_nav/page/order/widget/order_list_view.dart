@@ -23,6 +23,7 @@ class OrderListView extends StatelessWidget {
               const SizedBox(height: 10),
               Text(
                 '${AppStrings.noOrderFound.tr} (${controller.tabs[controller.selectedTab.value].tr})',
+                textAlign: TextAlign.center,
                 style: const TextStyle(color: Colors.grey, fontSize: 16, fontWeight: FontWeight.w600, fontStyle: FontStyle.italic),
               )
             ],
@@ -49,10 +50,14 @@ class OrderListView extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      '- ${AppStrings.orderIdLabel.tr}: ${order.orderId}',
-                      style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 13, fontStyle: FontStyle.italic),
+                    Expanded(
+                      child: Text(
+                        '- ${AppStrings.orderIdLabel.tr}: ${order.orderId}',
+                        style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 13, fontStyle: FontStyle.italic),
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
+                    const SizedBox(width: 8),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
