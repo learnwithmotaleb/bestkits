@@ -417,4 +417,9 @@ class AppStrings {
   static const String location = "Location";
   static const String noReturnRequestsFound = "No Return Requests Found";
   static const String viewDetails = "View Details >>";
+
+  // Notifications
+  static const String notifications = "Notifications";
+  static const String noNotificationsFound = "No Notifications Found";
+  static const String markAllAsRead = "Mark all as read";
 }

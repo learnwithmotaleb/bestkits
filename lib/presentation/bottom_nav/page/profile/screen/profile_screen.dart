@@ -82,6 +82,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Get.toNamed(RoutePath.accountSetting);
               },
             ),
+
             SizedBox(height: Dimensions.h(10)),
             Align(
               alignment: Alignment.centerLeft,
@@ -99,17 +100,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ProfileMenuItem(
               icon: Icons.gavel_outlined,
               label: AppStrings.termsCondition.tr,
-              onTap: () {},
+              onTap: () {
+                Get.toNamed(RoutePath.termsCondition);
+              },
             ),
             ProfileMenuItem(
               icon: Icons.privacy_tip_outlined,
               label: AppStrings.privacyPolicy.tr,
-              onTap: () {},
+              onTap: () {
+                Get.toNamed(RoutePath.privacyPolicy);
+              },
             ),
             ProfileMenuItem(
               icon: Icons.business_outlined,
               label: AppStrings.legalCompanyInfo.tr,
-              onTap: () {},
+              onTap: () {
+                Get.toNamed(RoutePath.legalCompanyInfo);
+              },
+            ),
+            ProfileMenuItem(
+              icon: Icons.help_outlined,
+              label: AppStrings.helpSupport.tr,
+              onTap: () {
+                Get.toNamed(RoutePath.helpSupport);
+              },
             ),
             SizedBox(height: Dimensions.h(10)),
             ProfileMenuItem(

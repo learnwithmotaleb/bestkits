@@ -375,4 +375,10 @@ Map<String, String> bulgarian = {
   AppStrings.location: "Местоположение",
   AppStrings.noReturnRequestsFound: "Не са намерени заявки за връщане",
   AppStrings.viewDetails: "Преглед на подробностите >>",
-};
+  AppStrings.notifications: "Известия",
+  AppStrings.noNotificationsFound: "Няма намерени известия",
+  AppStrings.markAllAsRead: "Маркирай всички като прочетени",
+  AppStrings.privacyPolicy: "Политика за поверителност",
+  AppStrings.termsCondition: "Общи условия",
+  AppStrings.legalCompanyInfo: "Правна и фирмена информация",
+};

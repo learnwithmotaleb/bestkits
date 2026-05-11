@@ -22,4 +22,9 @@ class RoutePath {
   static const String manageAddress = '/ManageAddressScreen';
   static const String currencyPreference = '/CurrencyPreferenceScreen';
   static const String languagePreference = '/LanguagePreferenceScreen';
+  static const String termsCondition = '/TermsConditionScreen';
+  static const String privacyPolicy = '/PrivacyPolicyScreen';
+  static const String notification = '/NotificationScreen';
+  static const String legalCompanyInfo = '/LegalCompanyScreen';
+  static const String helpSupport = '/HelpSupportScreen';
 }

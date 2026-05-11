@@ -1,3 +1,4 @@
+import 'package:bestkits/core/routes/route_path.dart';
 import 'package:bestkits/utils/static_strings/static_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -51,16 +52,21 @@ class HomeHeader extends StatelessWidget {
             ),
           ),
           // Notification Bell
-          Container(
-            padding: EdgeInsets.all(Dimensions.w(8)),
-            decoration: BoxDecoration(
-              color: AppColors.navBarColor,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              Icons.notifications_none_rounded,
-              color: AppColors.primaryColor,
-              size: Dimensions.icon(24),
+          GestureDetector(
+            onTap: (){
+              Get.toNamed(RoutePath.notification);
+            },
+            child: Container(
+              padding: EdgeInsets.all(Dimensions.w(8)),
+              decoration: BoxDecoration(
+                color: AppColors.navBarColor,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.notifications_none_rounded,
+                color: AppColors.primaryColor,
+                size: Dimensions.icon(24),
+              ),
             ),
           ),
         ],

@@ -20,8 +20,12 @@ import 'package:bestkits/presentation/change_password/controller/change_password
 import 'package:bestkits/presentation/change_password/screen/change_password_screen.dart';
 import 'package:bestkits/presentation/currency_preference/controller/currency_preference_controller.dart';
 import 'package:bestkits/presentation/currency_preference/screen/currency_preference_screen.dart';
+import 'package:bestkits/presentation/help_support/controller/help_support_controller.dart';
+import 'package:bestkits/presentation/help_support/screen/help_support_screen.dart';
 import 'package:bestkits/presentation/language_preference/controller/language_preference_controller.dart';
 import 'package:bestkits/presentation/language_preference/screen/language_preference_screen.dart';
+import 'package:bestkits/presentation/legal_company_info/controller/legal_company_controller.dart';
+import 'package:bestkits/presentation/legal_company_info/screen/legal_company_screen.dart';
 import 'package:bestkits/presentation/manage_address/controller/manage_address_controller.dart';
 import 'package:bestkits/presentation/manage_address/screen/manage_address_screen.dart';
 import 'package:bestkits/presentation/message/controller/message_controller.dart';
@@ -34,8 +38,14 @@ import 'package:bestkits/presentation/my_profile/controller/my_profile_controlle
 import 'package:bestkits/presentation/my_profile/screen/my_profile_screen.dart';
 import 'package:bestkits/presentation/my_return/controller/my_return_controller.dart';
 import 'package:bestkits/presentation/my_return/screen/my_return_screen.dart';
+import 'package:bestkits/presentation/notification/controller/notification_controller.dart';
+import 'package:bestkits/presentation/notification/screen/notification_screen.dart';
+import 'package:bestkits/presentation/privacy_policy/controller/privacy_policy_controller.dart';
+import 'package:bestkits/presentation/privacy_policy/screen/privacy_policy_screen.dart';
 import 'package:bestkits/presentation/product_details/controller/product_details_controller.dart';
 import 'package:bestkits/presentation/product_details/screen/product_details_screen.dart';
+import 'package:bestkits/presentation/terms_condition/controller/terms_condition_controller.dart';
+import 'package:bestkits/presentation/terms_condition/screen/terms_condition_screen.dart';
 import 'package:bestkits/presentation/update_profile/controller/update_profile_controller.dart';
 import 'package:bestkits/presentation/update_profile/screen/update_profile_screen.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -275,6 +285,64 @@ class AppRouter {
       transition: Transition.rightToLeft,
       binding: BindingsBuilder(() {
         Get.put(LanguagePreferenceController());
+      }),
+    ),
+
+
+
+  GetPage(
+      name: RoutePath.termsCondition,
+      page: () => const TermsConditionScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(TermsConditionController());
+      }),
+    ),
+
+
+
+  GetPage(
+      name: RoutePath.privacyPolicy,
+      page: () => const PrivacyPolicyScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(PrivacyPolicyController());
+      }),
+    ),
+
+
+
+  GetPage(
+      name: RoutePath.notification,
+      page: () => const NotificationScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(NotificationController());
+      }),
+    ),
+
+
+
+
+  GetPage(
+      name: RoutePath.legalCompanyInfo,
+      page: () => const LegalCompanyScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(LegalCompanyController());
+      }),
+    ),
+
+
+
+
+
+  GetPage(
+      name: RoutePath.helpSupport,
+      page: () => const HelpSupportScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(HelpSupportController());
       }),
     ),
 

@@ -367,4 +367,10 @@ Map<String, String> english = {
   AppStrings.location: "Location",
   AppStrings.noReturnRequestsFound: "No Return Requests Found",
   AppStrings.viewDetails: "View Details >>",
+  AppStrings.notifications: "Notifications",
+  AppStrings.noNotificationsFound: "No Notifications Found",
+  AppStrings.markAllAsRead: "Mark all as read",
+  AppStrings.privacyPolicy: "Privacy Policy",
+  AppStrings.termsCondition: "Terms & Conditions",
+  AppStrings.legalCompanyInfo: "Legal & Company Info",
 };
