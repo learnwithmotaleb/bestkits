@@ -1,3 +1,4 @@
+import 'package:bestkits/widget/custom_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../core/responsive_layout/dimensions.dart';
@@ -22,41 +23,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF9F9F9),
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leadingWidth: Dimensions.w(70),
-        leading: Padding(
-          padding: EdgeInsets.only(left: Dimensions.w(20)),
-          child: Center(
-            child: GestureDetector(
-              onTap: () => Get.back(),
-              child: Container(
-                height: Dimensions.h(40),
-                width: Dimensions.h(40),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: AppColors.primaryColor.withOpacity(0.1),
-                ),
-                child: Icon(
-                  Icons.arrow_back,
-                  color: AppColors.blackColor.withOpacity(0.7),
-                  size: Dimensions.rs(20),
-                ),
-              ),
-            ),
-          ),
-        ),
-        title: Text(
-          AppStrings.changePassword.tr,
-          style: AppTextStyles.h2.copyWith(
-            fontWeight: FontWeight.w700,
-            fontSize: Dimensions.fs(18),
-            color: AppColors.blackColor.withOpacity(0.8),
-            fontStyle: FontStyle.italic,
-          ),
-        ),
-        centerTitle: true,
+      appBar: CommonAppBar(
+        title: AppStrings.changePassword.tr,
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(

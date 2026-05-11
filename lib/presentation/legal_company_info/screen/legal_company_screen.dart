@@ -1,7 +1,4 @@
-
-// ─────────────────────────────────────────────
-// screen/legal_company_screen.dart
-// ─────────────────────────────────────────────
+import 'package:bestkits/widget/custom_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../core/responsive_layout/dimensions.dart';
@@ -20,35 +17,8 @@ class LegalCompanyScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
-      appBar: AppBar(
-        elevation: 0,
-        scrolledUnderElevation: 0,
-        leadingWidth: Dimensions.w(64),
-        leading: Padding(
-          padding: EdgeInsets.only(left: Dimensions.w(16), top: 8, bottom: 8),
-          child: GestureDetector(
-            onTap: () => Get.back(),
-            child: Container(
-              decoration: const BoxDecoration(
-                color: Color(0xFFEEEBE2),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                Icons.arrow_back,
-                color: AppColors.blackColor.withOpacity(0.54),
-                size: 20,
-              ),
-            ),
-          ),
-        ),
-        title: Text(
-          AppStrings.legalCompanyInfo.tr,
-          style: AppTextStyles.h3.copyWith(
-            fontStyle: FontStyle.italic,
-            letterSpacing: -0.3,
-          ),
-        ),
-        centerTitle: true,
+      appBar: CommonAppBar(
+        title: AppStrings.legalCompanyInfo.tr,
       ),
       body: LegalCompanyInfoWidget(fields: controller.companyFields),
     );

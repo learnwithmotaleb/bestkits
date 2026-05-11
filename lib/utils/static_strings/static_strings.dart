@@ -67,6 +67,7 @@ class AppStrings {
   static const String newPassword = "New Password";
   static const String updatePassword = "Update Password";
   static const String logIn = "Log In";
+  static const String signup = "Sign Up";
 
   // Signup
   static const String createYourAccount = "Create Your Account";
@@ -450,4 +451,13 @@ class AppStrings {
   static const String notifications = "Notifications";
   static const String noNotificationsFound = "No Notifications Found";
   static const String markAllAsRead = "Mark all as read";
+
+  // No Internet
+  static const String noInternetConnection = "No Internet Connection";
+  static const String checkYourInternet = "Please check your internet";
+
+  // Snackbar
+  static const String success = "Success";
+  static const String error = "Error";
+  static const String info = "Info";
 }

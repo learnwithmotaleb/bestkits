@@ -1,3 +1,4 @@
+import 'package:bestkits/widget/custom_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:bestkits/core/responsive_layout/dimensions.dart';
@@ -50,13 +51,15 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: Dimensions.pSym(h: 24, v: 24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: Dimensions.h(60)),
+      appBar: const CommonAppBar(
+        title: "",
+      ),
+      body: SingleChildScrollView(
+        padding: Dimensions.pSym(h: 24, v: 24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: Dimensions.h(20)),
               
               Text(
                 AppStrings.verifyYourOtp.tr,
@@ -114,7 +117,6 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
             ],
           ),
         ),
-      ),
     );
   }
 

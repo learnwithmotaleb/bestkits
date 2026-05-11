@@ -65,4 +65,8 @@ class AppTextStyles {
     fontWeight: FontWeight.w600,
     color: AppColors.whiteColor,
   );
+
+  static TextStyle appBarTitle = h3.copyWith(
+    fontStyle: FontStyle.italic,
+  );
 }

@@ -1,3 +1,4 @@
+import 'package:bestkits/widget/custom_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../core/responsive_layout/dimensions.dart';
@@ -17,13 +18,8 @@ class ForgotPasswordScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
-      appBar: AppBar(
-        backgroundColor: AppColors.backgroundColor,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.blackColor),
-          onPressed: () => Get.back(),
-        ),
+      appBar: const CommonAppBar(
+        title: "",
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),

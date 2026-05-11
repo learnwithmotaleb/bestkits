@@ -151,7 +151,7 @@ class SignupScreen extends StatelessWidget {
 
               // Sign Up Button (Labelled "Log In" as per Figma)
               AppButton(
-                label: AppStrings.logIn.tr,
+                label: AppStrings.createAccount.tr,
                 onPressed: () {
                   Get.toNamed(RoutePath.otpScreen, arguments: "signup");
                 },
@@ -178,7 +178,7 @@ class SignupScreen extends StatelessWidget {
                       ),
                       children: [
                         TextSpan(
-                          text: AppStrings.signIn.tr,
+                          text: AppStrings.signup.tr,
                           style: AppTextStyles.body.copyWith(
                             color: AppColors.primaryColor,
                             fontWeight: FontWeight.bold,

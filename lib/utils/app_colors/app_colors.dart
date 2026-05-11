@@ -16,4 +16,7 @@ class AppColors {
 
   static const Color navBarColor = Color(0xFFFEF7E5);
   static const Color navBarBorderColor = Color(0xFFFFB000);
+
+  static const Color appBarBtnColor = Color(0xFFFEF7E5);
+  static const Color appBarBtnBorderColor = Color(0xFFF1F1F1);
 }

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../../../../core/responsive_layout/dimensions.dart';
 import '../../../../utils/app_colors/app_colors.dart';
 import '../../../../utils/static_strings/static_strings.dart';
+import '../../../../widget/custom_appbar.dart';
 import '../controller/terms_condition_controller.dart';
 import '../widget/legal_content_widget.dart';
 
@@ -15,33 +16,8 @@ class TermsConditionScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: GestureDetector(
-            onTap: () => Get.back(),
-            child: Container(
-              decoration: const BoxDecoration(
-                color: Color(0xFFF9F7EF),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(Icons.arrow_back,
-                  color: Colors.black54, size: 20),
-            ),
-          ),
-        ),
-        title: Text(
-          AppStrings.termsCondition.tr,
-          style: const TextStyle(
-            color: Colors.black,
-            fontSize: 18,
-            fontWeight: FontWeight.w800,
-            fontStyle: FontStyle.italic,
-          ),
-        ),
-        centerTitle: true,
+      appBar: CommonAppBar(
+        title: AppStrings.termsCondition.tr,
       ),
       body: LegalContentWidget(htmlContent: controller.termsText),
     );

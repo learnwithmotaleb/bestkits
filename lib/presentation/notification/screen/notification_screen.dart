@@ -1,4 +1,5 @@
 import 'package:bestkits/utils/static_strings/static_strings.dart';
+import 'package:bestkits/widget/custom_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../core/responsive_layout/dimensions.dart';
@@ -15,32 +16,8 @@ class NotificationScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: GestureDetector(
-            onTap: () => Get.back(),
-            child: Container(
-              decoration: const BoxDecoration(
-                color: Color(0xFFF9F7EF), // Light cream for back button
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(Icons.arrow_back, color: Colors.black54, size: 20),
-            ),
-          ),
-        ),
-        title: Text(
-          AppStrings.notifications.tr,
-          style: const TextStyle(
-            color: Colors.black,
-            fontSize: 18,
-            fontWeight: FontWeight.w800,
-            fontStyle: FontStyle.italic,
-          ),
-        ),
-        centerTitle: true,
+      appBar: CommonAppBar(
+        title: AppStrings.notifications.tr,
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 16.0),
@@ -52,7 +29,8 @@ class NotificationScreen extends StatelessWidget {
                   color: const Color(0xFF1A1A1A), // Dark background for eye icon
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: const Icon(Icons.visibility, color: AppColors.primaryColor, size: 18),
+                child: const Icon(Icons.visibility,
+                    color: AppColors.primaryColor, size: 18),
               ),
             ),
           ),

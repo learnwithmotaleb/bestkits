@@ -5,6 +5,7 @@ import '../../../utils/app_colors/app_colors.dart';
 import '../../../utils/app_text_style/app_text_style.dart';
 import '../../../utils/static_strings/static_strings.dart';
 import '../../../widget/app_button.dart';
+import '../../../widget/custom_appbar.dart';
 import '../../bottom_nav/page/cart/controller/cart_controller.dart';
 import '../controller/checkout_controller.dart';
 import '../widget/checkout_address_section.dart';
@@ -20,47 +21,16 @@ class CheckoutScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8F8F8),
+      appBar: CommonAppBar(
+        title: AppStrings.checkout.tr,
+      ),
       body: SafeArea(
         child: Column(
           children: [
-            // ── Header ──────────────────────────────────────────────
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: Dimensions.w(20),
-                vertical: Dimensions.h(14),
-              ),
-              child: Row(
-                children: [
-                  GestureDetector(
-                    onTap: () => Get.back(),
-                    child: Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: AppColors.navBarColor,
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(Icons.arrow_back, size: 18, color: Colors.black54),
-                    ),
-                  ),
-                  const Spacer(),
-                  Text(
-                    AppStrings.checkout.tr,
-                    style: AppTextStyles.h3.copyWith(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
-                      fontStyle: FontStyle.italic,
-                    ),
-                  ),
-                  const Spacer(),
-                  const SizedBox(width: 38),
-                ],
-              ),
-            ),
-
             // ── Scrollable Body ─────────────────────────────────────
             Expanded(
               child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(horizontal: Dimensions.w(16)),
+                padding: EdgeInsets.symmetric(horizontal: Dimensions.w(16), vertical: Dimensions.h(16)),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

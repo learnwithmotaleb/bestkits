@@ -1,5 +1,6 @@
 import 'package:bestkits/core/routes/route_path.dart';
 import 'package:bestkits/utils/static_strings/static_strings.dart';
+import 'package:bestkits/widget/custom_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../core/responsive_layout/dimensions.dart';
@@ -23,34 +24,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        centerTitle: true,
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 20),
-          child: GestureDetector(
-            onTap: () => Get.back(),
-            child: Container(
-              decoration: BoxDecoration(
-                color: AppColors.primaryColor.withOpacity(0.2),
-                shape: BoxShape.circle,
-
-              ),
-              child: const Icon(Icons.arrow_back, color: AppColors.blackColor, size: 20),
-            ),
-          ),
-        ),
-        title: Text(
-          AppStrings.profile.tr,
-          style: const TextStyle(
-            color: AppColors.blackColor,
-            fontFamily: 'Nunito',
-            fontSize: 18,
-            fontWeight: FontWeight.w800,
-            fontStyle: FontStyle.italic,
-          ),
-        ),
+      appBar: CommonAppBar(
+        title: AppStrings.profile.tr,
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: Dimensions.w(24), vertical: Dimensions.h(20)),

@@ -5,9 +5,9 @@ import '../../../../utils/app_colors/app_colors.dart';
 import '../../../../utils/app_text_style/app_text_style.dart';
 import '../../../widget/app_button.dart';
 import '../../../widget/app_text_field.dart';
+import '../../../widget/custom_appbar.dart';
 import '../controller/help_support_controller.dart';
 import '../widget/faq_item_widget.dart';
-
 
 import '../../../utils/static_strings/static_strings.dart';
 
@@ -20,35 +20,8 @@ class HelpSupportScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor:AppColors.backgroundColor,
-      appBar: AppBar(
-        elevation: 0,
-        scrolledUnderElevation: 0,
-        leadingWidth: Dimensions.w(64),
-        leading: Padding(
-          padding: EdgeInsets.only(left: Dimensions.w(16), top: 8, bottom: 8),
-          child: GestureDetector(
-            onTap: () => Get.back(),
-            child: Container(
-              decoration: const BoxDecoration(
-                color: Color(0xFFEEEBE2),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                Icons.arrow_back,
-                color: AppColors.blackColor.withOpacity(0.54),
-                size: 20,
-              ),
-            ),
-          ),
-        ),
-        title: Text(
-          AppStrings.helpSupport.tr,
-          style: AppTextStyles.h3.copyWith(
-            fontStyle: FontStyle.italic,
-            letterSpacing: -0.3,
-          ),
-        ),
-        centerTitle: true,
+      appBar: CommonAppBar(
+        title: AppStrings.helpSupport.tr,
       ),
       body: Form(
         key: controller.formKey,

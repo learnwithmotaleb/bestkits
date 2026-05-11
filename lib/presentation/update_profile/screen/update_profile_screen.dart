@@ -1,3 +1,4 @@
+import 'package:bestkits/widget/custom_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -19,33 +20,8 @@ class UpdateProfileScreen extends GetView<UpdateProfileController> {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF9F9F9),
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        centerTitle: true,
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 16.0, top: 8.0, bottom: 8.0),
-          child: Container(
-            decoration: BoxDecoration(
-              color: AppColors.navBarColor,
-              shape: BoxShape.circle,
-              border: Border.all(color: AppColors.greyColor.withOpacity(0.2)),
-            ),
-            child: IconButton(
-              icon: const Icon(Icons.arrow_back, color: AppColors.blackColor, size: 20),
-              onPressed: () => Get.back(),
-              padding: EdgeInsets.zero,
-            ),
-          ),
-        ),
-        title: Text(
-          AppStrings.myProfile.tr,
-          style: AppTextStyles.h3.copyWith(
-            fontWeight: FontWeight.w700,
-            fontStyle: FontStyle.italic,
-            color: AppColors.darkGreyColor,
-          ),
-        ),
+      appBar: CommonAppBar(
+        title: AppStrings.myProfile.tr,
       ),
       body: SingleChildScrollView(
         padding: Dimensions.pSym(h: 20, v: 24),

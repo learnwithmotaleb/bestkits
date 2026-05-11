@@ -1,3 +1,4 @@
+import 'package:bestkits/core/routes/route_path.dart';
 import 'package:bestkits/utils/static_strings/static_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -234,23 +235,28 @@ class ProductTabsSection extends StatelessWidget {
         ),
         const SizedBox(height: 15),
         // Message Button
-        Container(
-          width: double.infinity,
-          height: 45,
-          decoration: BoxDecoration(
-            color: const Color(0xFF1A1A1A),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.message_outlined, color: AppColors.primaryColor, size: 18),
-              const SizedBox(width: 10),
-              Text(
-                AppStrings.messageSeller.tr,
-                style: TextStyle(color: AppColors.primaryColor, fontWeight: FontWeight.w700, fontSize: 14),
-              ),
-            ],
+        GestureDetector(
+          onTap: (){
+            Get.toNamed(RoutePath.message);
+          },
+          child: Container(
+            width: double.infinity,
+            height: 45,
+            decoration: BoxDecoration(
+              color:AppColors.blackColor,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.message_outlined, color: AppColors.primaryColor, size: 18),
+                const SizedBox(width: 10),
+                Text(
+                  AppStrings.messageSeller.tr,
+                  style: TextStyle(color: AppColors.primaryColor, fontWeight: FontWeight.w700, fontSize: 14),
+                ),
+              ],
+            ),
           ),
         ),
         const SizedBox(height: 20),

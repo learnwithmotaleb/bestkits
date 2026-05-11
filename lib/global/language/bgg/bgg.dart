@@ -196,7 +196,8 @@ Map<String, String> bulgarian = {
   AppStrings.sellerCanceledOrder: "продавачът е анулирал тази поръчка",
   AppStrings.termsOfService: "Общи условия",
   AppStrings.alreadyHaveAccount: "Вече имате акаунт? ",
-  AppStrings.signIn: "Влезте !",
+  AppStrings.signIn: "Влезте",
+  AppStrings.signup: "Регистрация",
   AppStrings.noAccountYet: "Все още нямате акаунт? ",
   AppStrings.createAnAccount: "Създайте акаунт !",
   AppStrings.enterEmailAddress: "Въведете вашия имейл адрес",
@@ -393,6 +394,8 @@ Map<String, String> bulgarian = {
   AppStrings.notifications: "Известия",
   AppStrings.noNotificationsFound: "Няма намерени известия",
   AppStrings.markAllAsRead: "Маркирай всички като прочетени",
+  AppStrings.noInternetConnection: "Няма интернет връзка",
+  AppStrings.checkYourInternet: "Моля, проверете вашия интернет",
   AppStrings.privacyPolicy: "Политика за поверителност",
   AppStrings.termsCondition: "Общи условия",
   AppStrings.legalCompanyInfo: "Правна и фирмена информация",
@@ -407,4 +410,4 @@ Map<String, String> bulgarian = {
   AppStrings.registeredAddressValue: "Предстои потвърждение – България",
   AppStrings.jurisdictionValue: "България / Европейски съюз",
 };
-
+

@@ -1,4 +1,5 @@
 import 'package:bestkits/utils/static_strings/static_strings.dart';
+import 'package:bestkits/widget/custom_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../core/responsive_layout/dimensions.dart';
@@ -16,52 +17,22 @@ class OrderScreen extends StatelessWidget {
     final controller = Get.put(OrderController());
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F8F8),
-      body: SafeArea(
-        child: Column(
-          children: [
-            // ── Header ──────────────────────────────────────────────
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: Dimensions.w(20),
-                vertical: Dimensions.h(14),
-              ),
-              child: Obx(() {
-                final isDetailsView = controller.selectedOrder.value != null;
-                return Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        if (isDetailsView) {
-                          controller.backToList();
-                        } else {
-                          // Usually Get.back() if pushed, but here maybe just stays or nothing.
-                        }
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: AppColors.navBarColor,
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(Icons.arrow_back, size: 18, color: Colors.black54),
-                      ),
-                    ),
-                    const Spacer(),
-                    Text(
-                      AppStrings.myOrders.tr,
-                      style: AppTextStyles.h3.copyWith(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w700,
-                        fontStyle: FontStyle.italic,
-                      ),
-                    ),
-                    const Spacer(),
-                    const SizedBox(width: 38),
-                  ],
-                );
-              }),
-            ),
+      backgroundColor:AppColors.backgroundColor,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: CommonAppBar(
+          title: AppStrings.myOrders.tr,
+          onBack: () {
+            if (controller.selectedOrder.value != null) {
+              controller.backToList();
+            } else {
+              Get.back();
+            }
+          },
+        ),
+      ),
+      body: Column(
+        children: [
 
             // ── Tabs ────────────────────────────────────────────────
             Obx(() {
@@ -79,7 +50,7 @@ class OrderScreen extends StatelessWidget {
                           margin: EdgeInsets.only(right: index < controller.tabs.length - 1 ? 8 : 0),
                           decoration: BoxDecoration(
                             color: controller.selectedTab.value == index ? const Color(0xFF1A1A1A) : Colors.white,
-                            borderRadius: BorderRadius.circular(20),
+                            borderRadius: BorderRadius.circular(10),
                             border: Border.all(
                               color: controller.selectedTab.value == index ? const Color(0xFF1A1A1A) : Colors.grey.withOpacity(0.2),
                             ),
@@ -118,7 +89,7 @@ class OrderScreen extends StatelessWidget {
             ),
           ],
         ),
-      ),
+
     );
   }
 }
