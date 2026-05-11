@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../utils/app_colors/app_colors.dart';
-import '../../../../../utils/app_text_style/app_text_style.dart';
+import '../../../../../utils/static_strings/static_strings.dart';
 
 import '../controller/checkout_controller.dart';
 
@@ -38,7 +38,7 @@ class CheckoutOrderItems extends StatelessWidget {
                       style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, fontStyle: FontStyle.italic),
                     ),
                     Text(
-                      'Total Amount : €${items.fold(0.0, (s, i) => s + double.parse(i.price) * i.quantity.value).toStringAsFixed(2)}',
+                      '${AppStrings.totalAmount.tr} : €${items.fold(0.0, (s, i) => s + double.parse(i.price) * i.quantity.value).toStringAsFixed(2)}',
                       style: TextStyle(fontSize: 11, color: AppColors.blackColor),
                     ),
                   ],
@@ -48,7 +48,7 @@ class CheckoutOrderItems extends StatelessWidget {
 
               // Products
               ...items.map((item) => Obx(() => Container(
-                margin: EdgeInsets.symmetric(vertical: 10),
+                margin: const EdgeInsets.symmetric(vertical: 10),
                 decoration: BoxDecoration(
                   border: Border.all(color: AppColors.greyColor.withOpacity(0.5), width: 1),
                   borderRadius: BorderRadius.circular(10)
@@ -83,7 +83,7 @@ class CheckoutOrderItems extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
-                                  'Quantity :- ${item.quantity.value} • Size / Variant :- ${item.selectedSize.value}',
+                                  '${AppStrings.quantity.tr} :- ${item.quantity.value} • ${AppStrings.size.tr} / ${AppStrings.variant.tr} :- ${item.selectedSize.value}',
                                   style: TextStyle(fontSize: 11, color: Colors.grey[500]),
                                 ),
                                 const SizedBox(height: 4),
@@ -171,7 +171,7 @@ class CheckoutOrderItems extends StatelessWidget {
                                           text: TextSpan(
                                             style: TextStyle(fontSize: 10, color: Colors.grey[400], fontStyle: FontStyle.italic),
                                             children: [
-                                              const TextSpan(text: 'Delivery Partner - '),
+                                              TextSpan(text: '${AppStrings.deliveryPartner.tr} - '),
                                               TextSpan(
                                                 text: option.partner,
                                                 style: TextStyle(color: Colors.grey[700]),
@@ -184,7 +184,7 @@ class CheckoutOrderItems extends StatelessWidget {
                                           text: TextSpan(
                                             style: TextStyle(fontSize: 10, color: Colors.grey[400], fontStyle: FontStyle.italic),
                                             children: [
-                                              const TextSpan(text: 'Estimated Time - '),
+                                              TextSpan(text: '${AppStrings.estimatedTime.tr} - '),
                                               TextSpan(
                                                 text: option.time,
                                                 style: TextStyle(color: Colors.grey[700]),

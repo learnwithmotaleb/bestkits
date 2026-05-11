@@ -16,10 +16,20 @@ import 'package:bestkits/presentation/bottom_nav/controller/bottom_nav_controlle
 import 'package:bestkits/presentation/bottom_nav/page/home/pages/categories/controller/categories_controller.dart';
 import 'package:bestkits/presentation/bottom_nav/page/home/pages/categories/screen/categories_screen.dart';
 import 'package:bestkits/presentation/bottom_nav/screen/bottom_nav_screen.dart';
+import 'package:bestkits/presentation/change_password/controller/change_password_controller.dart';
+import 'package:bestkits/presentation/change_password/screen/change_password_screen.dart';
+import 'package:bestkits/presentation/currency_preference/controller/currency_preference_controller.dart';
+import 'package:bestkits/presentation/currency_preference/screen/currency_preference_screen.dart';
+import 'package:bestkits/presentation/language_preference/controller/language_preference_controller.dart';
+import 'package:bestkits/presentation/language_preference/screen/language_preference_screen.dart';
+import 'package:bestkits/presentation/manage_address/controller/manage_address_controller.dart';
+import 'package:bestkits/presentation/manage_address/screen/manage_address_screen.dart';
 import 'package:bestkits/presentation/message/controller/message_controller.dart';
 import 'package:bestkits/presentation/message/page/chat/chat_controller/chat_controller.dart';
 import 'package:bestkits/presentation/message/page/chat/chat_screen/chat_screen.dart';
 import 'package:bestkits/presentation/message/screen/message_screen.dart';
+import 'package:bestkits/presentation/my_address/controller/my_address_controller.dart';
+import 'package:bestkits/presentation/my_address/screen/my_address_screen.dart';
 import 'package:bestkits/presentation/my_profile/controller/my_profile_controller.dart';
 import 'package:bestkits/presentation/my_profile/screen/my_profile_screen.dart';
 import 'package:bestkits/presentation/my_return/controller/my_return_controller.dart';
@@ -214,6 +224,57 @@ class AppRouter {
       transition: Transition.rightToLeft,
       binding: BindingsBuilder(() {
         Get.put(AccountSettingController());
+      }),
+    ),
+
+
+    GetPage(
+      name: RoutePath.changePassword,
+      page: () => const ChangePasswordScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(ChangePasswordController());
+      }),
+    ),
+
+    GetPage(
+      name: RoutePath.myAddress,
+      page: () => const MyAddressScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(MyAddressController());
+      }),
+    ),
+
+
+
+  GetPage(
+      name: RoutePath.manageAddress,
+      page: () => const ManageAddressScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(ManageAddressController());
+      }),
+    ),
+
+
+
+  GetPage(
+      name: RoutePath.currencyPreference,
+      page: () => const CurrencyPreferenceScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(CurrencyPreferenceController());
+      }),
+    ),
+
+
+  GetPage(
+      name: RoutePath.languagePreference,
+      page: () => const LanguagePreferenceScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(LanguagePreferenceController());
       }),
     ),
 

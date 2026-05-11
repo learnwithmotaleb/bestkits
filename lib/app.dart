@@ -45,7 +45,7 @@ class MyApp extends StatelessWidget {
         // Global Wrappers
         builder: (context, child) {
           return Directionality(
-            textDirection: lc.isEnglish ? TextDirection.ltr : TextDirection.rtl,
+            textDirection: TextDirection.ltr,
             child: InternetWrapper(
               child: child ?? const SizedBox(),
             ),

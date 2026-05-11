@@ -97,4 +97,45 @@ class AppStrings {
   static const String cart = "Cart";
   static const String orders = "Orders";
   static const String profile = "Profile";
+
+  static const String accountSetting = "Account Settings";
+  static const String deleteAccount = "Delete account";
+  
+  // Delete Account Dialogs
+  static const String deleteYourAccount = "Delete Your account !";
+  static const String deleteAccountSubtitle = "This action is permanent.\nYour BestKid account, order history, and saved activity will be permanently removed and cannot be recovered.";
+  static const String confirm = "Confirm";
+  static const String cancel = "Cancel";
+  static const String confirmAccountDeletion = "Confirm Account Deletion";
+  static const String oldPassword = "Old Password";
+  static const String deleteSecurityNote = "For security reasons, we need your password to continue. Once deleted, your account and associated data cannot be restored.";
+  static const String confirmAndDelete = "Confirm & delete";
+  static const String accountDeletedSuccess = "Account deleted successfully";
+  static const String saveTheChanges = "Save The Changes";
+  static const String changePasswordAlertTitle = "Change Password !";
+  static const String changePasswordAlertSubtitle = "Are you sure you want to update your password? You will need to use the new password the next time you log in.";
+  static const String passwordChangedSuccess = "Password changed successfully";
+  
+  // Checkout
+  static const String checkout = "Checkout";
+  static const String orderSummary = "Order Summary";
+  static const String iAgreeToThe = "I Agree To The ";
+  static const String andText = " And ";
+  static const String ofBestKid = " Of BestKid.";
+  static const String proceedToPay = "Proceed To Pay";
+  static const String orderPlaced = "Order Placed!";
+  static const String orderPlacedSuccess = "Your order has been placed successfully.";
+  static const String deliveryAddress = "Delivery Address";
+  static const String priceDetails = "Price Details";
+  static const String subtotal = "Subtotal";
+  static const String shippingFee = "Shipping Fee";
+  static const String total = "Total";
+  static const String quantity = "Quantity";
+  static const String variant = "Variant";
+  static const String deliveryPartner = "Delivery Partner";
+  static const String estimatedTime = "Estimated Time";
+  static const String switchCurrency = "Switch Currency";
+  static const String currencyAlertTitle = "Change Currency !";
+  static const String currencyAlertSubtitle = "Are you sure you want to change your currency preference?";
+  static const String currencyUpdatedSuccess = "Currency preference updated successfully";
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../utils/app_colors/app_colors.dart';
+import '../../../../../utils/static_strings/static_strings.dart';
 
 import '../controller/checkout_controller.dart';
 
@@ -21,9 +22,9 @@ class CheckoutPriceDetails extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                '- Price Details',
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800, fontStyle: FontStyle.italic),
+              Text(
+                '- ${AppStrings.priceDetails.tr}',
+                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800, fontStyle: FontStyle.italic),
               ),
               const SizedBox(height: 14),
               const Divider(height: 1, color: Color(0xFFF0F0F0)),
@@ -71,9 +72,9 @@ class CheckoutPriceDetails extends StatelessWidget {
               const SizedBox(height: 12),
 
               // Subtotal
-              _row('Subtotal', null, '€${controller.subtotal.toStringAsFixed(2)}'),
+              _row(AppStrings.subtotal.tr, null, '€${controller.subtotal.toStringAsFixed(2)}'),
               const SizedBox(height: 8),
-              _row('Shipping Fee', 'x${controller.cartController.sellers.length}', '€${controller.shippingTotal.toStringAsFixed(2)}'),
+              _row(AppStrings.shippingFee.tr, 'x${controller.cartController.sellers.length}', '€${controller.shippingTotal.toStringAsFixed(2)}'),
               const SizedBox(height: 12),
               const Divider(height: 1, color: Color(0xFFF0F0F0)),
               const SizedBox(height: 12),
@@ -82,7 +83,7 @@ class CheckoutPriceDetails extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('Total', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800)),
+                  Text(AppStrings.total.tr, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800)),
                   Text(
                     '€${controller.total.toStringAsFixed(2)}',
                     style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800),

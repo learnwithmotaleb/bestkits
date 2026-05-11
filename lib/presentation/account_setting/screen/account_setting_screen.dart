@@ -1,3 +1,5 @@
+import 'package:bestkits/core/routes/route_path.dart';
+import 'package:bestkits/utils/static_strings/static_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -29,14 +31,15 @@ class AccountSettingScreen extends GetView<AccountSettingController> {
               border: Border.all(color: AppColors.greyColor.withOpacity(0.2)),
             ),
             child: IconButton(
-              icon: const Icon(Icons.arrow_back, color: AppColors.blackColor, size: 20),
+              icon: const Icon(Icons.arrow_back,
+                  color: AppColors.blackColor, size: 20),
               onPressed: () => Get.back(),
               padding: EdgeInsets.zero,
             ),
           ),
         ),
         title: Text(
-          "Account Settings",
+         AppStrings.accountSetting.tr,
           style: AppTextStyles.h3.copyWith(
             fontWeight: FontWeight.w700,
             fontStyle: FontStyle.italic,
@@ -49,36 +52,36 @@ class AccountSettingScreen extends GetView<AccountSettingController> {
         child: Column(
           children: [
             AccountSettingTile(
-              title: "My Addresses",
+              title: AppStrings.myAddresses.tr,
               icon: Icons.location_on_outlined,
               onTap: () {
-                // Navigate to My Addresses
+                Get.toNamed(RoutePath.myAddress);
               },
             ),
             AccountSettingTile(
-              title: "Language Preference",
+              title: AppStrings.languagePreference.tr,
               icon: Icons.g_translate_outlined,
               onTap: () {
-                // Navigate to Language Preference
+                Get.toNamed(RoutePath.languagePreference);
               },
             ),
             AccountSettingTile(
-              title: "Currency Preference",
+              title: AppStrings.currencyPreference.tr,
               icon: Icons.euro_symbol_outlined,
               onTap: () {
-                // Navigate to Currency Preference
+                Get.toNamed(RoutePath.currencyPreference);
               },
             ),
             AccountSettingTile(
-              title: "Change Password",
+              title: AppStrings.changePassword.tr,
               icon: Icons.lock_outline,
               onTap: () {
-                // Navigate to Change Password
+                Get.toNamed(RoutePath.changePassword);
               },
             ),
             SizedBox(height: Dimensions.h(8)),
             AccountSettingTile(
-              title: "Delete account",
+              title: AppStrings.deleteAccount.tr,
               icon: Icons.person_remove_outlined,
               isDestructive: true,
               onTap: () {

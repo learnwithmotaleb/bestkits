@@ -1,8 +1,5 @@
-
 // lib/core/routes/route_path.dart
 class RoutePath {
-
-
   static const String splash = '/SplashScreen';
   static const String onboard = '/OnboardScreen';
   static const String login = '/LoginScreen';
@@ -20,17 +17,9 @@ class RoutePath {
   static const String myProfile = '/MyProfileScreen';
   static const String updateProfile = '/UpdateProfileController';
   static const String accountSetting = '/AccountSettingScreen';
-
-
-
-
-
-
-
-
-
-
-
-
-
+  static const String changePassword = '/ChangePasswordScreen';
+  static const String myAddress = '/MyAddressScreen';
+  static const String manageAddress = '/ManageAddressScreen';
+  static const String currencyPreference = '/CurrencyPreferenceScreen';
+  static const String languagePreference = '/LanguagePreferenceScreen';
 }

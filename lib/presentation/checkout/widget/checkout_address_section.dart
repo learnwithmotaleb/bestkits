@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../utils/app_colors/app_colors.dart';
-import '../../../../../utils/app_text_style/app_text_style.dart';
+import '../../../../../utils/static_strings/static_strings.dart';
 import '../controller/checkout_controller.dart';
 
 class CheckoutAddressSection extends StatelessWidget {
@@ -25,9 +25,9 @@ class CheckoutAddressSection extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                '- Delivery Address',
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800, fontStyle: FontStyle.italic),
+              Text(
+                '- ${AppStrings.deliveryAddress.tr}',
+                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800, fontStyle: FontStyle.italic),
               ),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -41,7 +41,7 @@ class CheckoutAddressSection extends StatelessWidget {
                     Icon(Icons.location_on_outlined, color: AppColors.primaryColor, size: 14),
                     const SizedBox(width: 5),
                     Text(
-                      'Manage Addresses',
+                      AppStrings.manageAddresses.tr,
                       style: TextStyle(
                         color: AppColors.primaryColor,
                         fontSize: 11,

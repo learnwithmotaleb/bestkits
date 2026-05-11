@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../../../core/responsive_layout/dimensions.dart';
 import '../../../utils/app_colors/app_colors.dart';
 import '../../../utils/app_text_style/app_text_style.dart';
+import '../../../utils/static_strings/static_strings.dart';
 import '../../../widget/app_button.dart';
 import '../../bottom_nav/page/cart/controller/cart_controller.dart';
 import '../controller/checkout_controller.dart';
@@ -43,7 +44,7 @@ class CheckoutScreen extends StatelessWidget {
                   ),
                   const Spacer(),
                   Text(
-                    'Checkout',
+                    AppStrings.checkout.tr,
                     style: AppTextStyles.h3.copyWith(
                       fontSize: 18,
                       fontWeight: FontWeight.w700,
@@ -67,7 +68,7 @@ class CheckoutScreen extends StatelessWidget {
                     Obx(() {
                       final count = controller.cartController.totalItemCount;
                       return Container(
-                        padding: EdgeInsets.symmetric(horizontal: 10,vertical: 15),
+                        padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 15),
                         decoration: BoxDecoration(
                           border: Border.all(
                             width: 1,
@@ -77,9 +78,9 @@ class CheckoutScreen extends StatelessWidget {
                         ),
                         child: Row(
                           children: [
-                            const Text(
-                              'Order Summary',
-                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800, fontStyle: FontStyle.italic),
+                            Text(
+                              AppStrings.orderSummary.tr,
+                              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800, fontStyle: FontStyle.italic),
                             ),
                             const SizedBox(width: 8),
                             Container(
@@ -126,21 +127,21 @@ class CheckoutScreen extends StatelessWidget {
                                 text: TextSpan(
                                   style: const TextStyle(fontSize: 11, color: Colors.grey),
                                   children: [
-                                    const TextSpan(text: 'I Agree To The '),
+                                    TextSpan(text: AppStrings.iAgreeToThe.tr),
                                     TextSpan(
-                                      text: 'Terms & Conditions',
+                                      text: AppStrings.termsCondition.tr,
                                       style: TextStyle(
                                         color: AppColors.primaryColor,
                                       ),
                                     ),
-                                    const TextSpan(text: ' And '),
+                                    TextSpan(text: AppStrings.andText.tr),
                                     TextSpan(
-                                      text: 'Privacy Policy',
+                                      text: AppStrings.privacyPolicy.tr,
                                       style: TextStyle(
                                         color: AppColors.primaryColor,
                                       ),
                                     ),
-                                    const TextSpan(text: ' Of BestKid.'),
+                                    TextSpan(text: AppStrings.ofBestKid.tr),
                                   ],
                                 ),
                               ),
@@ -155,12 +156,12 @@ class CheckoutScreen extends StatelessWidget {
 
                     // Proceed To Pay button
                     Obx(() => AppButton(
-                          label: 'Proceed To Pay',
+                          label: AppStrings.proceedToPay.tr,
                           onPressed: controller.termsAgreed.value
                               ? () {
                                   Get.snackbar(
-                                    'Order Placed!',
-                                    'Your order has been placed successfully.',
+                                    AppStrings.orderPlaced.tr,
+                                    AppStrings.orderPlacedSuccess.tr,
                                     snackPosition: SnackPosition.TOP,
                                     backgroundColor: const Color(0xFF1A1A1A),
                                     colorText: AppColors.primaryColor,

@@ -1,0 +1,152 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../../../core/responsive_layout/dimensions.dart';
+import '../../../utils/app_colors/app_colors.dart';
+import '../../../utils/app_text_style/app_text_style.dart';
+import '../../../widget/app_button.dart';
+import '../controller/currency_preference_controller.dart';
+
+class CurrencyPreferenceScreen extends StatefulWidget {
+  const CurrencyPreferenceScreen({super.key});
+
+  @override
+  State<CurrencyPreferenceScreen> createState() => _CurrencyPreferenceScreenState();
+}
+
+class _CurrencyPreferenceScreenState extends State<CurrencyPreferenceScreen> {
+  final CurrencyPreferenceController controller = Get.put(CurrencyPreferenceController());
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFFF9F9F9),
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leadingWidth: Dimensions.w(70),
+        leading: Padding(
+          padding: EdgeInsets.only(left: Dimensions.w(20)),
+          child: Center(
+            child: GestureDetector(
+              onTap: () => Get.back(),
+              child: Container(
+                height: Dimensions.h(40),
+                width: Dimensions.h(40),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: AppColors.primaryColor.withOpacity(0.1),
+                ),
+                child: Icon(
+                  Icons.arrow_back,
+                  color: AppColors.blackColor.withOpacity(0.7),
+                  size: Dimensions.rs(20),
+                ),
+              ),
+            ),
+          ),
+        ),
+        title: Text(
+          "Currency Preference",
+          style: AppTextStyles.h2.copyWith(
+            fontWeight: FontWeight.w700,
+            fontSize: Dimensions.fs(18),
+            color: AppColors.blackColor.withOpacity(0.8),
+            fontStyle: FontStyle.italic,
+          ),
+        ),
+        centerTitle: true,
+      ),
+      body: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: Dimensions.w(20),
+          vertical: Dimensions.h(20),
+        ),
+        child: Column(
+          children: [
+            Expanded(
+              child: ListView.separated(
+                itemCount: controller.currencies.length,
+                separatorBuilder: (context, index) => SizedBox(height: Dimensions.h(16)),
+                itemBuilder: (context, index) {
+                  final currency = controller.currencies[index];
+                  return Obx(() {
+                    final isSelected = controller.selectedCurrency.value == currency['name'];
+                    return GestureDetector(
+                      onTap: () => controller.selectCurrency(currency['name']!),
+                      child: Container(
+                        padding: EdgeInsets.all(Dimensions.r(12)),
+                        decoration: BoxDecoration(
+                          color: isSelected ? AppColors.primaryColor.withOpacity(0.1) : AppColors.whiteColor,
+                          borderRadius: BorderRadius.circular(Dimensions.r(10)),
+                          border: Border.all(
+                            color: isSelected ? AppColors.primaryColor : AppColors.greyColor.withOpacity(0.2),
+                            width: 1,
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              height: Dimensions.h(32),
+                              width: Dimensions.h(32),
+                              decoration: BoxDecoration(
+                                color: AppColors.blackColor,
+                                borderRadius: BorderRadius.circular(Dimensions.r(6)),
+                              ),
+                              alignment: Alignment.center,
+                              child: Text(
+                                currency['symbol']!,
+                                style: TextStyle(
+                                  color: AppColors.primaryColor,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: Dimensions.fs(14),
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: Dimensions.w(12)),
+                            Text(
+                              currency['name']!,
+                              style: AppTextStyles.body.copyWith(
+                                fontWeight: FontWeight.w700,
+                                fontSize: Dimensions.fs(14),
+                                color: AppColors.blackColor,
+                              ),
+                            ),
+                            const Spacer(),
+                            if (isSelected)
+                              Icon(
+                                Icons.wb_sunny_rounded,
+                                color: AppColors.primaryColor,
+                                size: Dimensions.rs(18),
+                              )
+                            else
+                              Container(
+                                height: Dimensions.h(18),
+                                width: Dimensions.h(18),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(color: AppColors.greyColor.withOpacity(0.5)),
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                    );
+                  });
+                },
+              ),
+            ),
+            Obx(() => AppButton(
+              label: "Switch Currency",
+              onPressed: controller.isChanged ? controller.switchCurrency : null,
+              backgroundColor: const Color(0xFF1A1A1A),
+              textColor: AppColors.primaryColor,
+              borderRadius: Dimensions.r(8),
+              height: Dimensions.h(50),
+            )),
+            SizedBox(height: Dimensions.h(20)),
+          ],
+        ),
+      ),
+    );
+  }
+}
