@@ -1,7 +1,6 @@
-import 'package:get/get.dart';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../utils/static_strings/static_strings.dart';
 
 class FaqItem {
   final String question;
@@ -17,16 +16,27 @@ class HelpSupportController extends GetxController {
 
   final RxInt expandedIndex = (-1).obs;
 
-  final List<FaqItem> faqs = const [
+  final List<FaqItem> faqs = [
     FaqItem(
-      question: '— How does BestKid ensure product safety and quality?',
-      answer:
-      'All listings go through clear seller guidelines and community-based trust signals such as ratings and reviews. Sellers are encouraged to provide accurate descriptions and real product images, helping buyers make informed and confident decisions.',
+      question: AppStrings.faqQuestion1.tr,
+      answer: AppStrings.faqAnswer1.tr,
     ),
-    FaqItem(question: '— How does the payment system work?'),
-    FaqItem(question: '— Can I return or refund a product if I am not satisfied?'),
-    FaqItem(question: '— How does BestKid ensure product safety and quality?'),
-    FaqItem(question: '— What fees or commission does BestKid charge?'),
+    FaqItem(
+      question: AppStrings.faqQuestion2.tr,
+      answer: AppStrings.faqAnswerDefault.tr,
+    ),
+    FaqItem(
+      question: AppStrings.faqQuestion3.tr,
+      answer: AppStrings.faqAnswerDefault.tr,
+    ),
+    FaqItem(
+      question: AppStrings.faqQuestion4.tr,
+      answer: AppStrings.faqAnswerDefault.tr,
+    ),
+    FaqItem(
+      question: AppStrings.faqQuestion5.tr,
+      answer: AppStrings.faqAnswerDefault.tr,
+    ),
   ];
 
   void toggleFaq(int index) {

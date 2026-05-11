@@ -137,6 +137,22 @@ class AppStrings {
   static const String contactSupport = "Contact & Support";
   static const String aboutUs = "About Us";
   static const String faqs = "FAQs";
+  static const String frequentlyAskedQuestions = "Frequently Asked Questions";
+  static const String faqQuestion1 = "How does BestKid ensure product safety and quality?";
+  static const String faqAnswer1 = "All listings go through clear seller guidelines and community-based trust signals such as ratings and reviews. Sellers are encouraged to provide accurate descriptions and real product images, helping buyers make informed and confident decisions.";
+  static const String faqQuestion2 = "How does the payment system work?";
+  static const String faqQuestion3 = "Can I return or refund a product if I am not satisfied?";
+  static const String faqQuestion4 = "How does BestKid ensure product safety and quality?";
+  static const String faqQuestion5 = "What fees or commission does BestKid charge?";
+  static const String faqAnswerDefault = "We are working on providing detailed answers for this question. Please contact support for immediate assistance.";
+
+  static const String reasonForContact = "Reason For Contact";
+  static const String reasonForContactHint = "Enter the Reason for Contact";
+  static const String descriptionHint = "Please describe your issue or question in detail";
+  static const String sendMessage = "Send message";
+  static const String pleaseEnterReason = "Please enter a reason";
+  static const String pleaseEnterDescription = "Please enter a description";
+
   static const String privacyPolicy = "Privacy Policy";
   static const String termsCondition = "Terms & Condition";
   static const String logout = "Logout";
@@ -265,6 +281,18 @@ class AppStrings {
   static const String messages = "Messages";
   static const String more = "More";
   static const String legalCompanyInfo = "Legal & Company Info";
+  static const String companyName = "Company Name";
+  static const String businessType = "Business Type";
+  static const String registeredAddress = "Registered Address";
+  static const String jurisdiction = "Jurisdiction";
+  static const String contactEmailLabel = "Contact Email";
+  static const String officialWebsite = "Official Website";
+
+  static const String companyNameValue = "BestKid";
+  static const String businessTypeValue = "Online Marketplace Platform";
+  static const String registeredAddressValue = "To be confirmed – Bulgaria";
+  static const String jurisdictionValue = "Bulgaria / European Union";
+
 
   static const String accountSetting = "Account Settings";
   static const String deleteAccount = "Delete account";

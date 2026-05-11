@@ -3,6 +3,8 @@
 // widget/legal_company_info_widget.dart
 // ─────────────────────────────────────────────
 import 'package:flutter/material.dart';
+import '../../../utils/app_colors/app_colors.dart';
+import '../../../utils/app_text_style/app_text_style.dart';
 import '../../../../core/responsive_layout/dimensions.dart';
 
 class LegalCompanyInfoWidget extends StatelessWidget {
@@ -15,10 +17,10 @@ class LegalCompanyInfoWidget extends StatelessWidget {
     return ListView.separated(
       padding: EdgeInsets.symmetric(
         horizontal: Dimensions.w(18),
-        vertical: Dimensions.h(4),
+        vertical: Dimensions.h(20),
       ),
       itemCount: fields.length,
-      separatorBuilder: (_, __) => SizedBox(height: Dimensions.h(10)),
+      separatorBuilder: (_, __) => SizedBox(height: Dimensions.h(12)),
       itemBuilder: (context, index) {
         final field = fields[index];
         return _InfoCard(
@@ -41,36 +43,41 @@ class _InfoCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: Dimensions.w(16),
-        vertical: Dimensions.h(12),
+        vertical: Dimensions.h(14),
       ),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(Dimensions.r(14)),
+        color: AppColors.whiteColor,
+        borderRadius: BorderRadius.circular(Dimensions.r(16)),
         border: Border.all(
-          color: Colors.black.withOpacity(0.1),
-          width: 0.5,
+          color: AppColors.blackColor.withOpacity(0.08),
+          width: 0.8,
         ),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.blackColor.withOpacity(0.02),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             label,
-            style: TextStyle(
-              fontSize: Dimensions.fs(11),
-              color: const Color(0xFF999999),
+            style: AppTextStyles.bodyText.copyWith(
+              fontSize: Dimensions.fs(12),
+              color: AppColors.greyColor,
               fontWeight: FontWeight.w600,
-              letterSpacing: 0.2,
             ),
           ),
-          SizedBox(height: Dimensions.h(4)),
+          SizedBox(height: Dimensions.h(6)),
           Text(
             value,
-            style: TextStyle(
+            style: AppTextStyles.h4.copyWith(
               fontSize: Dimensions.fs(15),
-              color: const Color(0xFF1A1A1A),
-              fontWeight: FontWeight.w700,
               fontStyle: FontStyle.italic,
+              color: AppColors.blackColor.withOpacity(0.9),
             ),
           ),
         ],

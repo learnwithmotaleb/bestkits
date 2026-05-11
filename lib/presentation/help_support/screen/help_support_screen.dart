@@ -9,6 +9,8 @@ import '../controller/help_support_controller.dart';
 import '../widget/faq_item_widget.dart';
 
 
+import '../../../utils/static_strings/static_strings.dart';
+
 class HelpSupportScreen extends StatelessWidget {
   const HelpSupportScreen({super.key});
 
@@ -17,13 +19,13 @@ class HelpSupportScreen extends StatelessWidget {
     final controller = Get.find<HelpSupportController>();
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F3EC),
+      backgroundColor:AppColors.backgroundColor,
       appBar: AppBar(
-        backgroundColor: const Color(0xFFF5F3EC),
         elevation: 0,
         scrolledUnderElevation: 0,
+        leadingWidth: Dimensions.w(64),
         leading: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: EdgeInsets.only(left: Dimensions.w(16), top: 8, bottom: 8),
           child: GestureDetector(
             onTap: () => Get.back(),
             child: Container(
@@ -31,17 +33,19 @@ class HelpSupportScreen extends StatelessWidget {
                 color: Color(0xFFEEEBE2),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.arrow_back, color: Colors.black54, size: 20),
+              child: Icon(
+                Icons.arrow_back,
+                color: AppColors.blackColor.withOpacity(0.54),
+                size: 20,
+              ),
             ),
           ),
         ),
         title: Text(
-          'Help & Support',
-          style: TextStyle(
-            color: AppColors.blackColor,
-            fontSize: Dimensions.fs(18),
-            fontWeight: FontWeight.w800,
+          AppStrings.helpSupport.tr,
+          style: AppTextStyles.h3.copyWith(
             fontStyle: FontStyle.italic,
+            letterSpacing: -0.3,
           ),
         ),
         centerTitle: true,
@@ -51,18 +55,19 @@ class HelpSupportScreen extends StatelessWidget {
         child: ListView(
           padding: EdgeInsets.symmetric(
             horizontal: Dimensions.w(18),
-            vertical: Dimensions.h(8),
+            vertical: Dimensions.h(16),
           ),
           children: [
             // ── FAQ Section Header
             Text(
-              '— Frequently Asked Questions',
-              style: AppTextStyles.h3.copyWith(
+              "— ${AppStrings.frequentlyAskedQuestions.tr}",
+              style: AppTextStyles.h4.copyWith(
                 fontStyle: FontStyle.italic,
                 fontWeight: FontWeight.w800,
+                color: AppColors.blackColor.withOpacity(0.8),
               ),
             ),
-            SizedBox(height: Dimensions.h(14)),
+            SizedBox(height: Dimensions.h(18)),
 
             // ── FAQ Items
             Obx(() => Column(
@@ -76,20 +81,18 @@ class HelpSupportScreen extends StatelessWidget {
               }),
             )),
 
-            SizedBox(height: Dimensions.h(24)),
+            SizedBox(height: Dimensions.h(28)),
 
             // ── Contact Us Section
             ContactUsSection(controller: controller),
 
-            SizedBox(height: Dimensions.h(24)),
+            SizedBox(height: Dimensions.h(32)),
           ],
         ),
       ),
     );
   }
 }
-
-
 
 class ContactUsSection extends StatelessWidget {
   final HelpSupportController controller;
@@ -103,45 +106,46 @@ class ContactUsSection extends StatelessWidget {
       children: [
         // ── Section Header
         Text(
-          '— Contact Us',
-          style: AppTextStyles.h3.copyWith(
+          "— ${AppStrings.contactSupport.tr}",
+          style: AppTextStyles.h4.copyWith(
             fontStyle: FontStyle.italic,
             fontWeight: FontWeight.w800,
+            color: AppColors.blackColor.withOpacity(0.8),
           ),
         ),
-        SizedBox(height: Dimensions.h(16)),
+        SizedBox(height: Dimensions.h(20)),
 
         // ── Reason For Contact
         AppTextField(
           controller: controller.reasonController,
-          label: 'Reason For Contact',
-          hint: 'Enter the Reason for Contact',
-          validator: (v) => (v == null || v.isEmpty) ? 'Please enter a reason' : null,
+          label: AppStrings.reasonForContact.tr,
+          hint: AppStrings.reasonForContactHint.tr,
+          validator: (v) => (v == null || v.isEmpty) ? AppStrings.pleaseEnterReason.tr : null,
         ),
 
-        SizedBox(height: Dimensions.h(16)),
+        SizedBox(height: Dimensions.h(18)),
 
         // ── Description (multiline)
         AppTextField(
           controller: controller.descriptionController,
-          label: 'Description',
-          hint: 'Please describe your issue or question in detail',
+          label: AppStrings.description.tr,
+          hint: AppStrings.descriptionHint.tr,
           maxLines: 5,
           keyboardType: TextInputType.multiline,
-          validator: (v) => (v == null || v.isEmpty) ? 'Please enter a description' : null,
+          validator: (v) => (v == null || v.isEmpty) ? AppStrings.pleaseEnterDescription.tr : null,
         ),
 
-        SizedBox(height: Dimensions.h(24)),
+        SizedBox(height: Dimensions.h(32)),
 
         // ── Send Message Button
         AppButton(
-          label: 'Send message',
+          label: AppStrings.sendMessage.tr,
           onPressed: controller.sendMessage,
           backgroundColor: AppColors.blackColor,
           textColor: AppColors.primaryColor,
           borderSideColor: AppColors.blackColor,
-          height: Dimensions.h(52),
-          borderRadius: Dimensions.r(14),
+          height: Dimensions.h(54),
+          borderRadius: Dimensions.r(16),
         ),
       ],
     );

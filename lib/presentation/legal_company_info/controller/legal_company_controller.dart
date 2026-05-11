@@ -2,15 +2,17 @@
 // controller/legal_company_controller.dart
 // ─────────────────────────────────────────────
 import 'package:get/get.dart';
+import '../../../utils/static_strings/static_strings.dart';
+
 
 class LegalCompanyController extends GetxController {
   final List<Map<String, String>> companyFields = [
-    {'label': 'Company Name', 'value': 'BestKid'},
-    {'label': 'Business Type', 'value': 'Online Marketplace Platform'},
-    {'label': 'Registered Address', 'value': 'To be confirmed – Bulgaria'},
-    {'label': 'Jurisdiction', 'value': 'Bulgaria / European Union'},
-    {'label': 'Contact Email', 'value': 'support@bestkid.com'},
-    {'label': 'Official Website', 'value': 'https://www.bestkid.com'},
+    {'label': AppStrings.companyName.tr, 'value': AppStrings.companyNameValue.tr},
+    {'label': AppStrings.businessType.tr, 'value': AppStrings.businessTypeValue.tr},
+    {'label': AppStrings.registeredAddress.tr, 'value': AppStrings.registeredAddressValue.tr},
+    {'label': AppStrings.jurisdiction.tr, 'value': AppStrings.jurisdictionValue.tr},
+    {'label': AppStrings.contactEmailLabel.tr, 'value': AppStrings.supportEmail.tr},
+    {'label': AppStrings.officialWebsite.tr, 'value': 'https://www.bestkid.com'},
   ];
 }
 

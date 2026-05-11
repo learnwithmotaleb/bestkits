@@ -12,13 +12,16 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Get.find<SplashController>(); // ensure controller is alive
+    Get.find<SplashController>();
     return Scaffold(
-      backgroundColor: AppColors.whiteColor,
-      body: Center(
-        child: CustomSvgIcon(
-          icon: AppIcons.splash,
-          size: Dimensions.w(150),
+      backgroundColor: AppColors.backgroundColor,
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 25.0),
+        child: Center(
+          child: CustomSvgIcon(
+            icon: AppIcons.splash,
+            size: Dimensions.w(180),
+          ),
         ),
       ),
     );

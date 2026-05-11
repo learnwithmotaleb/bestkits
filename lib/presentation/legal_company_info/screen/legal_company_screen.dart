@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../core/responsive_layout/dimensions.dart';
 import '../../../utils/app_colors/app_colors.dart';
+import '../../../utils/app_text_style/app_text_style.dart';
+import '../../../utils/static_strings/static_strings.dart';
 import '../controller/legal_company_controller.dart';
 import '../widget/legal_company_info_widget.dart';
 
@@ -19,11 +21,11 @@ class LegalCompanyScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
-        backgroundColor: const Color(0xFFF5F3EC),
         elevation: 0,
         scrolledUnderElevation: 0,
+        leadingWidth: Dimensions.w(64),
         leading: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: EdgeInsets.only(left: Dimensions.w(16), top: 8, bottom: 8),
           child: GestureDetector(
             onTap: () => Get.back(),
             child: Container(
@@ -31,20 +33,17 @@ class LegalCompanyScreen extends StatelessWidget {
                 color: Color(0xFFEEEBE2),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.arrow_back,
-                color: Colors.black54,
+                color: AppColors.blackColor.withOpacity(0.54),
                 size: 20,
               ),
             ),
           ),
         ),
         title: Text(
-          'Legal & Company Info',
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: Dimensions.fs(18),
-            fontWeight: FontWeight.w800,
+          AppStrings.legalCompanyInfo.tr,
+          style: AppTextStyles.h3.copyWith(
             fontStyle: FontStyle.italic,
             letterSpacing: -0.3,
           ),

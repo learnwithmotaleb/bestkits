@@ -25,7 +25,7 @@ class SignupScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: Dimensions.h(40)),
-              
+
               // Title
               Text(
                 AppStrings.createYourAccount.tr,
@@ -36,7 +36,7 @@ class SignupScreen extends StatelessWidget {
                 ),
               ),
               SizedBox(height: Dimensions.h(8)),
-              
+
               // Subtitle
               Text(
                 AppStrings.signupSubtitle.tr,
@@ -44,9 +44,9 @@ class SignupScreen extends StatelessWidget {
                   color: AppColors.greyColor,
                 ),
               ),
-              
+
               SizedBox(height: Dimensions.h(32)),
-              
+
               // Full Name
               AppTextField(
                 controller: controller.nameController,
@@ -54,9 +54,9 @@ class SignupScreen extends StatelessWidget {
                 hint: AppStrings.enterFullName.tr,
                 keyboardType: TextInputType.name,
               ),
-              
+
               SizedBox(height: Dimensions.h(20)),
-              
+
               // Email Address
               AppTextField(
                 controller: controller.emailController,
@@ -64,9 +64,9 @@ class SignupScreen extends StatelessWidget {
                 hint: AppStrings.enterEmailAddress.tr,
                 keyboardType: TextInputType.emailAddress,
               ),
-              
+
               SizedBox(height: Dimensions.h(20)),
-              
+
               // Phone Number
               AppTextField(
                 controller: controller.phoneController,
@@ -74,9 +74,9 @@ class SignupScreen extends StatelessWidget {
                 hint: AppStrings.enterPhoneNumber.tr,
                 keyboardType: TextInputType.phone,
               ),
-              
+
               SizedBox(height: Dimensions.h(20)),
-              
+
               // Password
               AppTextField(
                 controller: controller.passwordController,
@@ -84,9 +84,9 @@ class SignupScreen extends StatelessWidget {
                 hint: "••••••••",
                 obscure: true,
               ),
-              
+
               SizedBox(height: Dimensions.h(20)),
-              
+
               // Confirm Password
               AppTextField(
                 controller: controller.confirmPasswordController,
@@ -94,25 +94,25 @@ class SignupScreen extends StatelessWidget {
                 hint: "••••••••",
                 obscure: true,
               ),
-              
+
               SizedBox(height: Dimensions.h(16)),
-              
+
               // Terms & Conditions
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Obx(() => SizedBox(
-                    height: 24,
-                    width: 24,
-                    child: Checkbox(
-                      value: controller.agreeToTerms.value,
-                      onChanged: controller.toggleAgreeToTerms,
-                      activeColor: AppColors.primaryColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                    ),
-                  )),
+                        height: 24,
+                        width: 24,
+                        child: Checkbox(
+                          value: controller.agreeToTerms.value,
+                          onChanged: controller.toggleAgreeToTerms,
+                          activeColor: AppColors.primaryColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                        ),
+                      )),
                   SizedBox(width: Dimensions.w(8)),
                   Expanded(
                     child: RichText(
@@ -146,9 +146,9 @@ class SignupScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              
+
               SizedBox(height: Dimensions.h(32)),
-              
+
               // Sign Up Button (Labelled "Log In" as per Figma)
               AppButton(
                 label: AppStrings.logIn.tr,
@@ -161,9 +161,9 @@ class SignupScreen extends StatelessWidget {
                 borderRadius: Dimensions.r(12),
                 height: Dimensions.h(56),
               ),
-              
+
               SizedBox(height: Dimensions.h(24)),
-              
+
               // Footer
               Center(
                 child: GestureDetector(
