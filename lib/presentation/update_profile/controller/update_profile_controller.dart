@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../../utils/static_strings/static_strings.dart';
 import '../../../widget/app_alert.dart';
 
 class UpdateProfileController extends GetxController {
@@ -19,16 +20,16 @@ class UpdateProfileController extends GetxController {
         selectedImage.value = File(image.path);
       }
     } catch (e) {
-      AppAlerts.error(message: "Failed to pick image: $e");
+      AppAlerts.error(message: "${AppStrings.failedToPickImage.tr}: $e");
     }
   }
 
   void showConfirmationDialog() {
     AppAlerts.warning(
-      title: "Save Profile Changes !",
-      message: "Are you sure you want to update your profile information? Your changes will be applied immediately.",
-      confirmLabel: "Confirm",
-      cancelLabel: "Cancel",
+      title: AppStrings.saveProfileAlertTitle.tr,
+      message: AppStrings.saveProfileAlertSubtitle.tr,
+      confirmLabel: AppStrings.confirm.tr,
+      cancelLabel: AppStrings.cancel.tr,
       onConfirm: () {
         // Handle profile update
       },

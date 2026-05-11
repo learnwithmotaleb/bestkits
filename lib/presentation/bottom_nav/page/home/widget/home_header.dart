@@ -1,4 +1,6 @@
+import 'package:bestkits/utils/static_strings/static_strings.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../../../../../core/responsive_layout/dimensions.dart';
 import '../../../../../utils/app_colors/app_colors.dart';
 import '../../../../../utils/app_text_style/app_text_style.dart';
@@ -32,14 +34,14 @@ class HomeHeader extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Hello Roberts Junior',
+                  '${AppStrings.hello.tr} Roberts Junior',
                   style: AppTextStyles.h3.copyWith(
                     fontSize: Dimensions.fs(18),
                     fontWeight: FontWeight.w700,
                   ),
                 ),
                 Text(
-                  'Welcome to BestKid',
+                  AppStrings.welcomeToBestKid.tr,
                   style: AppTextStyles.bodyText.copyWith(
                     fontSize: Dimensions.fs(12),
                     color: Colors.grey,

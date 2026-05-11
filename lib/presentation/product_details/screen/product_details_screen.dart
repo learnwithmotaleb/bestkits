@@ -1,3 +1,4 @@
+import 'package:bestkits/utils/static_strings/static_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../core/responsive_layout/dimensions.dart';
@@ -50,7 +51,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   ),
                   const Spacer(),
                   Text(
-                    'Product Details',
+                    AppStrings.productDetailsHeader.tr,
                     style: AppTextStyles.h3.copyWith(
                       fontSize: Dimensions.fs(18),
                       fontWeight: FontWeight.w700,
@@ -84,7 +85,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Related Products',
+                          AppStrings.relatedProducts.tr,
                           style: AppTextStyles.h4.copyWith(
                             fontSize: 16,
                             fontWeight: FontWeight.w700,
@@ -92,7 +93,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           ),
                         ),
                         Text(
-                          'View all',
+                          AppStrings.seeAll.tr,
                           style: TextStyle(
                             color: Colors.grey[400],
                             fontSize: 12,

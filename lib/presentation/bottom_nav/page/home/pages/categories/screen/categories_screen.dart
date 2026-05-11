@@ -1,3 +1,4 @@
+import 'package:bestkits/utils/static_strings/static_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../../../core/responsive_layout/dimensions.dart';
@@ -48,7 +49,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                   ),
                   const Spacer(),
                   Text(
-                    'Categories',
+                    AppStrings.categories.tr,
                     style: AppTextStyles.h3.copyWith(
                       fontSize: Dimensions.fs(20),
                       fontWeight: FontWeight.w700,

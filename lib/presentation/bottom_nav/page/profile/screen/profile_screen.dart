@@ -1,4 +1,5 @@
 import 'package:bestkits/core/routes/route_path.dart';
+import 'package:bestkits/utils/static_strings/static_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../core/responsive_layout/dimensions.dart';
@@ -40,9 +41,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
         ),
-        title: const Text(
-          "Profile",
-          style: TextStyle(
+        title: Text(
+          AppStrings.profile.tr,
+          style: const TextStyle(
             color: AppColors.blackColor,
             fontFamily: 'Nunito',
             fontSize: 18,
@@ -59,24 +60,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
             SizedBox(height: Dimensions.h(30)),
             ProfileMenuItem(
               icon: Icons.person_outline,
-              label: 'My Profile',
+              label: AppStrings.myProfile.tr,
               onTap: () {
                 Get.toNamed(RoutePath.myProfile);
               },
             ),
             ProfileMenuItem(
               icon: Icons.chat_bubble_outline,
-              label: 'Messages',
+              label: AppStrings.messages.tr,
               onTap: () => Get.to(() => const MessageScreen()),
             ),
             ProfileMenuItem(
               icon: Icons.assignment_return_outlined,
-              label: 'My Returns',
+              label: AppStrings.myReturns.tr,
               onTap: () => Get.to(() => const MyReturnScreen()),
             ),
             ProfileMenuItem(
               icon: Icons.settings_outlined,
-              label: 'Account Setting',
+              label: AppStrings.accountSetting.tr,
               onTap: () {
                 Get.toNamed(RoutePath.accountSetting);
               },
@@ -85,7 +86,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                'More',
+                AppStrings.more.tr,
                 style: TextStyle(
                   fontFamily: 'Nunito',
                   fontSize: 12,
@@ -97,23 +98,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
             SizedBox(height: Dimensions.h(16)),
             ProfileMenuItem(
               icon: Icons.gavel_outlined,
-              label: 'Terms & Condition',
+              label: AppStrings.termsCondition.tr,
               onTap: () {},
             ),
             ProfileMenuItem(
               icon: Icons.privacy_tip_outlined,
-              label: 'Privacy policy',
+              label: AppStrings.privacyPolicy.tr,
               onTap: () {},
             ),
             ProfileMenuItem(
               icon: Icons.business_outlined,
-              label: 'Legal & Company Info',
+              label: AppStrings.legalCompanyInfo.tr,
               onTap: () {},
             ),
             SizedBox(height: Dimensions.h(10)),
             ProfileMenuItem(
               icon: Icons.logout,
-              label: 'Log Out',
+              label: AppStrings.logout.tr,
               isDestructive: true,
               onTap: () => controller.logout(),
             ),
@@ -136,8 +137,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               border: Border.all(color: AppColors.greyColor.withOpacity(0.5), width: 1)
           ),
           alignment: Alignment.center,
-          child: const Text(
-            'R',
+          child: Text(
+            AppStrings.dummyUserName.tr[0].toUpperCase(),
             style: TextStyle(
               fontFamily: 'Nunito',
               fontSize: 40,
@@ -148,9 +149,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
         SizedBox(height: Dimensions.h(16)),
-        const Text(
-          "Roberts Junior",
-          style: TextStyle(
+        Text(
+          AppStrings.dummyUserName.tr,
+          style: const TextStyle(
             fontFamily: 'Nunito',
             fontSize: 16,
             fontWeight: FontWeight.w800,

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../../../core/responsive_layout/dimensions.dart';
 import '../../../utils/app_colors/app_colors.dart';
 import '../../../utils/app_text_style/app_text_style.dart';
+import '../../../utils/static_strings/static_strings.dart';
 import '../../../widget/app_button.dart';
 import '../controller/language_preference_controller.dart';
 
@@ -46,7 +47,7 @@ class _LanguagePreferenceScreenState extends State<LanguagePreferenceScreen> {
           ),
         ),
         title: Text(
-          "Language Preference",
+          AppStrings.languagePreference.tr,
           style: AppTextStyles.h2.copyWith(
             fontWeight: FontWeight.w700,
             fontSize: Dimensions.fs(18),
@@ -65,18 +66,18 @@ class _LanguagePreferenceScreenState extends State<LanguagePreferenceScreen> {
           children: [
             _buildLanguageItem(
               code: "EN",
-              name: "English",
+              name: AppStrings.english.tr,
               langKey: "en",
             ),
             SizedBox(height: Dimensions.h(16)),
             _buildLanguageItem(
               code: "BG",
-              name: "Bulgarian",
+              name: AppStrings.bulgarian.tr,
               langKey: "bg",
             ),
             const Spacer(),
             Obx(() => AppButton(
-              label: "Switch Language",
+              label: AppStrings.switchLanguage.tr,
               onPressed: controller.isChanged ? controller.switchLanguage : null,
               backgroundColor: const Color(0xFF1A1A1A),
               textColor: AppColors.primaryColor,
@@ -120,7 +121,7 @@ class _LanguagePreferenceScreenState extends State<LanguagePreferenceScreen> {
                   style: TextStyle(
                     color: AppColors.primaryColor,
                     fontWeight: FontWeight.bold,
-                    fontSize: Dimensions.fs(10),
+                    fontSize: Dimensions.fs(12),
                   ),
                 ),
               ),

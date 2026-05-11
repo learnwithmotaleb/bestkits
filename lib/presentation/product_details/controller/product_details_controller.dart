@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../utils/assets_image/app_images.dart';
+import '../../../../utils/static_strings/static_strings.dart';
 
 class ProductDetailsController extends GetxController {
   // Image selection
@@ -22,7 +23,7 @@ class ProductDetailsController extends GetxController {
 
   // Tab selection
   final selectedTabIndex = 0.obs;
-  final List<String> tabs = ['Description', 'Reviews (05)', 'Seller'];
+  final List<String> tabs = [AppStrings.description, AppStrings.reviews, AppStrings.sellerLabel];
 
   // Dummy Reviews
   final List<Map<String, dynamic>> reviews = [
@@ -31,14 +32,14 @@ class ProductDetailsController extends GetxController {
       'initials': 'MB',
       'rating': '4.9/5.0',
       'date': '22 Feb 2024',
-      'content': 'Very comfortable and lightweight sneakers. My son has been wearing them almost every day and they still look great. The fit is perfect and easy to put on. Definitely a good purchase.',
+      'content': AppStrings.dummyReview1,
     },
     {
       'name': 'Noah Hoffmann',
       'initials': 'NH',
       'rating': '4.8/5.0',
       'date': '02 Feb 2024',
-      'content': 'Good quality overall and the design looks really nice. The material feels durable and suitable for daily use. Delivery was smooth and packaging was proper. Happy with the purchase.',
+      'content': AppStrings.dummyReview2,
     },
   ];
 

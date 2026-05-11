@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../core/responsive_layout/dimensions.dart';
 import '../../../../utils/app_colors/app_colors.dart';
+import '../../../../utils/static_strings/static_strings.dart';
 import '../../../../widget/app_text_field.dart';
 import '../controller/message_controller.dart';
 import '../page/chat/chat_screen/chat_screen.dart';
@@ -40,9 +41,9 @@ class _MessageScreenState extends State<MessageScreen> {
             ),
           ),
         ),
-        title: const Text(
-          "Chats",
-          style: TextStyle(
+        title: Text(
+          AppStrings.chat.tr,
+          style: const TextStyle(
             color: AppColors.blackColor,
             fontFamily: 'Nunito',
             fontSize: 18,
@@ -58,9 +59,9 @@ class _MessageScreenState extends State<MessageScreen> {
             padding: EdgeInsets.symmetric(horizontal: Dimensions.w(24)),
             child: AppTextField(
               controller: TextEditingController(),
-              hint: 'Search',
+              hint: AppStrings.search.tr,
               prefixIcon:
-                  const Icon(Icons.search, color: Colors.grey, size: 20),
+                   const Icon(Icons.search, color: Colors.grey, size: 20),
               onChanged: (val) => controller.searchQuery.value = val,
             ),
           ),

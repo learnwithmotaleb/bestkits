@@ -1,3 +1,4 @@
+import 'package:bestkits/utils/static_strings/static_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../core/responsive_layout/dimensions.dart';
@@ -37,15 +38,15 @@ class MyReturnDetailsView extends StatelessWidget {
             Divider(height: 1, color: AppColors.greyColor.withOpacity(0.2)),
             _buildItemsList(),
             _buildReturnDetails(),
-            if (returnModel.statusTab == 'Rejected') _buildRejectedDetails(),
-            if (returnModel.statusTab == 'Accepted') _buildReturnAddress(),
+            if (returnModel.statusTab == AppStrings.rejected) _buildRejectedDetails(),
+            if (returnModel.statusTab == AppStrings.accepted) _buildReturnAddress(),
             Padding(
               padding: EdgeInsets.all(Dimensions.w(16)),
               child: Row(
                 children: [
                   Expanded(
                     child: AppButton(
-                      label: "<< Back to My Returns",
+                      label: AppStrings.backToMyReturns.tr,
                       onPressed: () => Get.find<MyReturnController>().backToList(),
                       backgroundColor: const Color(0xFF1A1A1A),
                       textColor: AppColors.primaryColor,
@@ -69,26 +70,21 @@ class MyReturnDetailsView extends StatelessWidget {
     Color badgeColor;
     Color badgeTextColor;
 
-    switch (returnModel.returnStatus) {
-      case 'In Review':
-        badgeColor = AppColors.primaryColor.withOpacity(0.15);
-        badgeTextColor = AppColors.primaryColor;
-        break;
-      case 'Processing':
-        badgeColor = Colors.blue.withOpacity(0.1);
-        badgeTextColor = Colors.blue;
-        break;
-      case 'Completed':
-        badgeColor = Colors.green.withOpacity(0.1);
-        badgeTextColor = Colors.green;
-        break;
-      case 'Rejected':
-        badgeColor = Colors.red.withOpacity(0.1);
-        badgeTextColor = Colors.red;
-        break;
-      default:
-        badgeColor = Colors.grey.withOpacity(0.1);
-        badgeTextColor = Colors.grey;
+    if (returnModel.returnStatus == AppStrings.inReview) {
+      badgeColor = AppColors.primaryColor.withOpacity(0.15);
+      badgeTextColor = AppColors.primaryColor;
+    } else if (returnModel.returnStatus == AppStrings.processing) {
+      badgeColor = Colors.blue.withOpacity(0.1);
+      badgeTextColor = Colors.blue;
+    } else if (returnModel.returnStatus == AppStrings.completed) {
+      badgeColor = Colors.green.withOpacity(0.1);
+      badgeTextColor = Colors.green;
+    } else if (returnModel.returnStatus == AppStrings.rejected) {
+      badgeColor = Colors.red.withOpacity(0.1);
+      badgeTextColor = Colors.red;
+    } else {
+      badgeColor = Colors.grey.withOpacity(0.1);
+      badgeTextColor = Colors.grey;
     }
 
     return Padding(
@@ -102,7 +98,7 @@ class MyReturnDetailsView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "- Order ID: ${returnModel.orderId}",
+                  "- ${AppStrings.orderIdLabel.tr}: ${returnModel.orderId}",
                   style: const TextStyle(
                     fontFamily: 'Nunito',
                     fontSize: 14,
@@ -130,7 +126,7 @@ class MyReturnDetailsView extends StatelessWidget {
               borderRadius: BorderRadius.circular(Dimensions.r(20)),
             ),
             child: Text(
-              "• ${returnModel.returnStatus}",
+              "• ${returnModel.returnStatus.tr}",
               style: TextStyle(
                 fontFamily: 'Nunito',
                 fontSize: 10,
@@ -151,7 +147,7 @@ class MyReturnDetailsView extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "- Order Summary ( ${returnModel.sellerName} )",
+            "- ${AppStrings.orderSummary.tr} ( ${returnModel.sellerName} )",
             style: const TextStyle(
               fontFamily: 'Nunito',
               fontSize: 14,
@@ -163,7 +159,7 @@ class MyReturnDetailsView extends StatelessWidget {
           SizedBox(height: Dimensions.h(8)),
           RichText(
             text: TextSpan(
-              text: "Total Amount :- ",
+              text: "${AppStrings.totalAmount.tr} :- ",
               style: TextStyle(
                 fontFamily: 'Nunito',
                 fontSize: 12,
@@ -228,7 +224,7 @@ class MyReturnDetailsView extends StatelessWidget {
                       ),
                       SizedBox(height: Dimensions.h(4)),
                       Text(
-                        "Quantity :- ${item.quantity.toString().padLeft(2, '0')} • Size / Variant :- ${item.variant}",
+                        "${AppStrings.quantity.tr} :- ${item.quantity.toString().padLeft(2, '0')} • ${AppStrings.variant.tr} :- ${item.variant}",
                         style: TextStyle(
                           fontFamily: 'Nunito',
                           fontSize: 10,
@@ -268,9 +264,9 @@ class MyReturnDetailsView extends StatelessWidget {
         children: [
           Padding(
             padding: EdgeInsets.all(Dimensions.w(16)),
-            child: const Text(
-              "Return Details",
-              style: TextStyle(
+            child: Text(
+              AppStrings.returnDetails.tr,
+              style: const TextStyle(
                 fontFamily: 'Nunito',
                 fontSize: 12,
                 fontWeight: FontWeight.w700,
@@ -285,9 +281,9 @@ class MyReturnDetailsView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  "Return Reason",
-                  style: TextStyle(
+                Text(
+                  AppStrings.returnReason.tr,
+                  style: const TextStyle(
                     fontFamily: 'Nunito',
                     fontSize: 12,
                     fontWeight: FontWeight.w700,
@@ -305,9 +301,9 @@ class MyReturnDetailsView extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: Dimensions.h(16)),
-                const Text(
-                  "Submitted On",
-                  style: TextStyle(
+                Text(
+                  AppStrings.submittedOn.tr,
+                  style: const TextStyle(
                     fontFamily: 'Nunito',
                     fontSize: 12,
                     fontWeight: FontWeight.w700,
@@ -325,9 +321,9 @@ class MyReturnDetailsView extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: Dimensions.h(16)),
-                const Text(
-                  "Evidence",
-                  style: TextStyle(
+                Text(
+                  AppStrings.evidence.tr,
+                  style: const TextStyle(
                     fontFamily: 'Nunito',
                     fontSize: 12,
                     fontWeight: FontWeight.w700,
@@ -352,9 +348,9 @@ class MyReturnDetailsView extends StatelessWidget {
                   }).toList(),
                 ),
                 SizedBox(height: Dimensions.h(16)),
-                const Text(
-                  "Message",
-                  style: TextStyle(
+                Text(
+                  AppStrings.message.tr,
+                  style: const TextStyle(
                     fontFamily: 'Nunito',
                     fontSize: 12,
                     fontWeight: FontWeight.w700,
@@ -406,9 +402,9 @@ class MyReturnDetailsView extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      "Seller Rejected This Request",
-                      style: TextStyle(
+                    Text(
+                      AppStrings.sellerRejectedRequest.tr,
+                      style: const TextStyle(
                         fontFamily: 'Nunito',
                         fontSize: 12,
                         fontWeight: FontWeight.w800,
@@ -418,7 +414,7 @@ class MyReturnDetailsView extends StatelessWidget {
                     ),
                     SizedBox(height: Dimensions.h(4)),
                     Text(
-                      "On ${returnModel.rejectedOn ?? ''}",
+                      "${AppStrings.onDate.tr} ${returnModel.rejectedOn ?? ''}",
                       style: TextStyle(
                         fontFamily: 'Nunito',
                         fontSize: 10,
@@ -441,9 +437,9 @@ class MyReturnDetailsView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                "Reason For Rejection",
-                style: TextStyle(
+              Text(
+                AppStrings.reasonForRejection.tr,
+                style: const TextStyle(
                   fontFamily: 'Nunito',
                   fontSize: 12,
                   fontWeight: FontWeight.w700,
@@ -475,9 +471,9 @@ class MyReturnDetailsView extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            "- Return Address",
-            style: TextStyle(
+          Text(
+            "- ${AppStrings.returnAddress.tr}",
+            style: const TextStyle(
               fontFamily: 'Nunito',
               fontSize: 14,
               fontWeight: FontWeight.w800,
@@ -508,9 +504,9 @@ class MyReturnDetailsView extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        "Location",
-                        style: TextStyle(
+                      Text(
+                        AppStrings.location.tr,
+                        style: const TextStyle(
                           fontFamily: 'Nunito',
                           fontSize: 14,
                           fontWeight: FontWeight.w800,

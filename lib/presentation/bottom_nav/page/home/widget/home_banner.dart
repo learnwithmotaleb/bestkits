@@ -1,3 +1,4 @@
+import 'package:bestkits/utils/static_strings/static_strings.dart';
 import 'package:flutter/material.dart';
 import '../../../../../core/responsive_layout/dimensions.dart';
 import '../../../../../utils/app_colors/app_colors.dart';
@@ -44,7 +45,7 @@ class HomeBanner extends StatelessWidget {
                       borderRadius: BorderRadius.circular(Dimensions.r(20)),
                     ),
                     child: Text(
-                      'Limited Time Offer',
+                      AppStrings.limitedTimeOffer.tr,
                       style: TextStyle(
                         color: AppColors.primaryColor,
                         fontSize: Dimensions.fs(10),
@@ -57,23 +58,23 @@ class HomeBanner extends StatelessWidget {
                     text: TextSpan(
                       style: AppTextStyles.h2.copyWith(fontSize: Dimensions.fs(20), color: Colors.black),
                       children: [
-                        const TextSpan(text: 'Up to '),
+                        TextSpan(text: AppStrings.upTo.tr),
                         TextSpan(
-                          text: '40% OFF',
+                          text: AppStrings.discount40.tr,
                           style: TextStyle(color: AppColors.primaryColor, fontWeight: FontWeight.w800),
                         ),
                       ],
                     ),
                   ),
                   Text(
-                    'Spring Kids Collection Sale',
+                    AppStrings.springSale.tr,
                     style: AppTextStyles.h4.copyWith(fontSize: Dimensions.fs(14)),
                   ),
                   Dimensions.gapH(5),
                   SizedBox(
                     width: Dimensions.w(150),
                     child: Text(
-                      'Fresh styles for every little moment — shop the latest looks at unbeatable prices.',
+                      AppStrings.bannerSubtitle.tr,
                       style: TextStyle(fontSize: Dimensions.fs(8), color: Colors.grey),
                     ),
                   ),

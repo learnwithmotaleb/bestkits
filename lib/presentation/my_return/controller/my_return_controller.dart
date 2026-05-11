@@ -1,13 +1,14 @@
 import 'package:get/get.dart';
 import '../../../../../utils/assets_image/app_images.dart';
+import '../../../../../utils/static_strings/static_strings.dart';
 import '../../bottom_nav/page/order/controller/order_controller.dart';
 
 class ReturnModel {
   final String id;
   final String orderId;
   final String date;
-  final String statusTab; // 'Return Requests', 'Accepted', 'Rejected'
-  final String returnStatus; // 'In Review', 'Processing', 'Completed', 'Rejected'
+  final String statusTab; // AppStrings key
+  final String returnStatus; // AppStrings key
   final String sellerName;
   final double totalAmount;
   final List<OrderItem> items;
@@ -39,7 +40,11 @@ class ReturnModel {
 }
 
 class MyReturnController extends GetxController {
-  final List<String> tabs = ['Return Requests', 'Accepted', 'Rejected'];
+  final List<String> tabs = [
+    AppStrings.returnRequests,
+    AppStrings.accepted,
+    AppStrings.rejected
+  ];
   final RxInt selectedTab = 0.obs;
 
   final Rx<ReturnModel?> selectedReturn = Rx<ReturnModel?>(null);
@@ -49,8 +54,8 @@ class MyReturnController extends GetxController {
       id: '1',
       orderId: 'KDF143625879',
       date: '27 Aug 2020 - 08:30 AM',
-      statusTab: 'Return Requests',
-      returnStatus: 'In Review',
+      statusTab: AppStrings.returnRequests,
+      returnStatus: AppStrings.inReview,
       sellerName: 'Mayoral Reseller',
       totalAmount: 520.00,
       returnReason: 'Damage Product',
@@ -82,8 +87,8 @@ class MyReturnController extends GetxController {
       id: '2',
       orderId: 'DDF143625869',
       date: '27 Aug 2020 - 08:30 AM',
-      statusTab: 'Return Requests',
-      returnStatus: 'In Review',
+      statusTab: AppStrings.returnRequests,
+      returnStatus: AppStrings.inReview,
       sellerName: 'Mayoral Reseller',
       totalAmount: 260.00,
       returnReason: 'Damage Product',
@@ -106,8 +111,8 @@ class MyReturnController extends GetxController {
       id: '3',
       orderId: 'KDF143625879',
       date: '27 Aug 2020 - 08:30 AM',
-      statusTab: 'Accepted',
-      returnStatus: 'Processing',
+      statusTab: AppStrings.accepted,
+      returnStatus: AppStrings.processing,
       sellerName: 'Mayoral Reseller',
       totalAmount: 520.00,
       returnReason: 'Damage Product',
@@ -133,8 +138,8 @@ class MyReturnController extends GetxController {
       id: '4',
       orderId: 'DDF143625869',
       date: '27 Aug 2020 - 08:30 AM',
-      statusTab: 'Accepted',
-      returnStatus: 'Completed',
+      statusTab: AppStrings.accepted,
+      returnStatus: AppStrings.completed,
       sellerName: 'Mayoral Reseller',
       totalAmount: 260.00,
       returnReason: 'Damage Product',
@@ -158,8 +163,8 @@ class MyReturnController extends GetxController {
       id: '5',
       orderId: 'KDF143625879',
       date: '27 Aug 2020 - 08:30 AM',
-      statusTab: 'Rejected',
-      returnStatus: 'Rejected',
+      statusTab: AppStrings.rejected,
+      returnStatus: AppStrings.rejected,
       sellerName: 'Mayoral Reseller',
       totalAmount: 520.00,
       returnReason: 'Damage Product',
@@ -208,4 +213,4 @@ class MyReturnController extends GetxController {
   void backToList() {
     selectedReturn.value = null;
   }
-}
+}

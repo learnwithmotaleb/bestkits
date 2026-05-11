@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../../../core/responsive_layout/dimensions.dart';
 import '../../../utils/app_colors/app_colors.dart';
 import '../../../utils/app_text_style/app_text_style.dart';
+import '../../../utils/static_strings/static_strings.dart';
 import '../../../widget/app_button.dart';
 import '../../../widget/app_text_field.dart';
 import '../controller/manage_address_controller.dart';
@@ -47,7 +48,7 @@ class _ManageAddressScreenState extends State<ManageAddressScreen> {
           ),
         ),
         title: Text(
-          "Manage Addresses",
+          AppStrings.manageAddresses.tr,
           style: AppTextStyles.h2.copyWith(
             fontWeight: FontWeight.w700,
             fontSize: Dimensions.fs(18),
@@ -67,21 +68,21 @@ class _ManageAddressScreenState extends State<ManageAddressScreen> {
           children: [
             AppTextField(
               controller: controller.nameController,
-              label: "Address Name",
-              hint: "e.g. Home, Office",
+              label: AppStrings.addressName.tr,
+              hint: AppStrings.addressNameHint.tr,
               radius: Dimensions.r(8),
             ),
             SizedBox(height: Dimensions.h(20)),
             AppTextField(
               controller: controller.addressController,
-              label: "Address",
-              hint: "Enter full address (street, city, postal code)",
+              label: AppStrings.deliveryAddress.tr,
+              hint: AppStrings.enterFullAddress.tr,
               maxLines: 1,
               radius: Dimensions.r(8),
             ),
             SizedBox(height: Dimensions.h(30)),
             Obx(() => AppButton(
-              label: "Save The Changes",
+              label: AppStrings.saveTheChanges.tr,
               onPressed: controller.isLoading.value ? null : controller.saveChanges,
               isLoading: controller.isLoading.value,
               backgroundColor: const Color(0xFF1A1A1A),

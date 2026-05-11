@@ -61,7 +61,7 @@ class ReviewCard extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            review['content'],
+            review['content'].tr,
             style: TextStyle(
               fontSize: 11,
               color: Colors.grey[600],

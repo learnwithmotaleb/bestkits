@@ -2,7 +2,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:bestkits/utils/app_colors/app_colors.dart';
 import 'package:bestkits/utils/app_text_style/app_text_style.dart';
+import 'package:bestkits/utils/static_strings/static_strings.dart';
 import 'package:bestkits/core/responsive_layout/dimensions.dart';
+import 'package:get/get_utils/src/extensions/internacionalization.dart';
 
 class TimerWidget extends StatefulWidget {
   const TimerWidget({super.key, required this.onResendCode});
@@ -67,7 +69,7 @@ class _TimerWidgetState extends State<TimerWidget> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          "Didn't receive the code?",
+          AppStrings.didNotReceiveCode.tr,
           style: AppTextStyles.body.copyWith(
             fontSize: Dimensions.fs(14),
             color: AppColors.greyColor,
@@ -82,8 +84,8 @@ class _TimerWidgetState extends State<TimerWidget> {
               : null,
           child: Text(
             showResend
-                ? "Resend Code"
-                : "Resend in ${formatTime(totalTimeInSeconds)}",
+                ? AppStrings.resendCode.tr
+                : "${AppStrings.resendIn.tr} ${formatTime(totalTimeInSeconds)}",
             style: AppTextStyles.body.copyWith(
                 fontSize: Dimensions.fs(14),
                 fontWeight: FontWeight.w600,

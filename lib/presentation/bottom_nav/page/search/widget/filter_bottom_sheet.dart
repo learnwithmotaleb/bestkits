@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../../../../../core/responsive_layout/dimensions.dart';
 import '../../../../../utils/app_colors/app_colors.dart';
 import '../../../../../utils/app_text_style/app_text_style.dart';
+import '../../../../../utils/static_strings/static_strings.dart';
 import '../../../../../widget/bottom_sheet_textfield.dart';
 import '../../../../../widget/app_button.dart';
 import '../controller/search_controller.dart';
@@ -47,7 +48,7 @@ class FilterBottomSheet extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Filter',
+                    AppStrings.filter.tr,
                     style: AppTextStyles.h2.copyWith(fontSize: 22),
                   ),
                   GestureDetector(
@@ -58,7 +59,7 @@ class FilterBottomSheet extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               Text(
-                'Refine products by category, size, brand, price, and more.',
+                AppStrings.filterSubtitle.tr,
                 style: TextStyle(fontSize: 12, color: Colors.grey[500]),
               ),
               const SizedBox(height: 20),
@@ -66,32 +67,32 @@ class FilterBottomSheet extends StatelessWidget {
 
               BottomSheetTextField(
                 controller: controller.categoryController,
-                label: 'Select Category',
+                label: AppStrings.selectCategory.tr,
                 items: controller.categories,
-                hint: 'Select Category',
+                hint: AppStrings.selectCategory.tr,
               ),
               const SizedBox(height: 18),
 
 
               BottomSheetTextField(
                 controller: controller.subcategoryController,
-                label: 'Select Subcategory',
+                label: AppStrings.selectSubcategory.tr,
                 items: controller.subcategories,
-                hint: 'Select Subcategory',
+                hint: AppStrings.selectSubcategory.tr,
               ),
               const SizedBox(height: 18),
 
 
               BottomSheetTextField(
                 controller: controller.sortByController,
-                label: 'Sort By',
+                label: AppStrings.sortBy.tr,
                 items: controller.sortByOptions,
-                hint: 'Sort By',
+                hint: AppStrings.sortBy.tr,
               ),
               const SizedBox(height: 18),
 
               // Price Range
-              Text('Price Range', style: AppTextStyles.h4.copyWith(fontSize: 14)),
+              Text(AppStrings.priceRange.tr, style: AppTextStyles.h4.copyWith(fontSize: 14)),
               const SizedBox(height: 12),
               Obx(() => Row(
                 children: [
@@ -154,7 +155,7 @@ class FilterBottomSheet extends StatelessWidget {
               const SizedBox(height: 18),
 
               // Sort By Rating
-              Text('Sort By', style: AppTextStyles.h4.copyWith(fontSize: 14)),
+              Text(AppStrings.sortBy.tr, style: AppTextStyles.h4.copyWith(fontSize: 14)),
               const SizedBox(height: 10),
               Obx(() => Wrap(
                 spacing: 8,
@@ -194,7 +195,7 @@ class FilterBottomSheet extends StatelessWidget {
                   // Reset Filter
                   Expanded(
                     child: AppButton(
-                      label: 'Reset Filter',
+                      label: AppStrings.resetFilter.tr,
                       onPressed: () {
                         controller.resetFilter();
                         Get.back();
@@ -209,7 +210,7 @@ class FilterBottomSheet extends StatelessWidget {
                   // Apply Filter
                   Expanded(
                     child: AppButton(
-                      label: 'Apply Filter',
+                      label: AppStrings.applyFilter.tr,
                       onPressed: () => controller.applyFilter(),
                       backgroundColor: AppColors.blackColor,
                       textColor: AppColors.primaryColor,

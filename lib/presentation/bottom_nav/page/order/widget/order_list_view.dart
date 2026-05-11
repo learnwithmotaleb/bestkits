@@ -1,3 +1,4 @@
+import 'package:bestkits/utils/static_strings/static_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../core/responsive_layout/dimensions.dart';
@@ -21,7 +22,7 @@ class OrderListView extends StatelessWidget {
               Icon(Icons.inbox, size: 60, color: Colors.grey[300]),
               const SizedBox(height: 10),
               Text(
-                "No ${controller.tabs[controller.selectedTab.value]} Order's Found",
+                '${AppStrings.noOrderFound.tr} (${controller.tabs[controller.selectedTab.value].tr})',
                 style: const TextStyle(color: Colors.grey, fontSize: 16, fontWeight: FontWeight.w600, fontStyle: FontStyle.italic),
               )
             ],
@@ -49,21 +50,21 @@ class OrderListView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      '- Order ID: ${order.orderId}',
+                      '- ${AppStrings.orderIdLabel.tr}: ${order.orderId}',
                       style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 13, fontStyle: FontStyle.italic),
                     ),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
-                        color: order.status == 'Complete' ? Colors.green.withOpacity(0.1) : (order.status == 'Canceled' ? Colors.red.withOpacity(0.1) : Colors.blue.withOpacity(0.1)),
+                        color: order.status == AppStrings.complete ? Colors.green.withOpacity(0.1) : (order.status == AppStrings.canceled ? Colors.red.withOpacity(0.1) : Colors.blue.withOpacity(0.1)),
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Text(
-                        order.status == 'Canceled' ? '• Canceled' : (order.status == 'Complete' ? '• Delivered' : '• Order Placed'),
+                        order.status == AppStrings.canceled ? '• ${AppStrings.canceled.tr}' : (order.status == AppStrings.complete ? '• ${AppStrings.delivered.tr}' : '• ${AppStrings.orderPlaced.tr}'),
                         style: TextStyle(
                           fontSize: 10,
                           fontWeight: FontWeight.w700,
-                          color: order.status == 'Complete' ? Colors.green : (order.status == 'Canceled' ? Colors.red : Colors.blue),
+                          color: order.status == AppStrings.complete ? Colors.green : (order.status == AppStrings.canceled ? Colors.red : Colors.blue),
                         ),
                       ),
                     ),
@@ -87,7 +88,7 @@ class OrderListView extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          'View Details >>',
+                          AppStrings.viewDetails.tr,
                           style: TextStyle(color: AppColors.primaryColor, fontSize: 12, fontWeight: FontWeight.w700),
                         ),
                       ],

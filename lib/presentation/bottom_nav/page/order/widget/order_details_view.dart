@@ -1,7 +1,6 @@
+import 'package:bestkits/utils/static_strings/static_strings.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import 'package:get/get.dart';
 import '../../../../../core/responsive_layout/dimensions.dart';
 import '../../../../../utils/app_colors/app_colors.dart';
 import '../controller/order_controller.dart';
@@ -16,7 +15,8 @@ class OrderDetailsView extends StatelessWidget {
   final OrderModel order;
   final OrderController controller;
 
-  const OrderDetailsView({super.key, required this.order, required this.controller});
+  const OrderDetailsView(
+      {super.key, required this.order, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -36,28 +36,43 @@ class OrderDetailsView extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '- Order ID: ${order.orderId}',
-                          style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 13, fontStyle: FontStyle.italic),
+                          '- ${AppStrings.orderIdLabel.tr}: ${order.orderId}',
+                          style: const TextStyle(
+                              fontWeight: FontWeight.w800,
+                              fontSize: 13,
+                              fontStyle: FontStyle.italic),
                         ),
                         const SizedBox(height: 4),
                         Text(
                           order.date,
-                          style: TextStyle(fontSize: 11, color: Colors.grey[400], fontStyle: FontStyle.italic),
+                          style: TextStyle(
+                              fontSize: 11,
+                              color: Colors.grey[400],
+                              fontStyle: FontStyle.italic),
                         ),
                       ],
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
-                        color: order.status == 'Complete' ? Colors.green.withOpacity(0.1) : (order.status == 'Canceled' ? Colors.red.withOpacity(0.1) : Colors.blue.withOpacity(0.1)),
+                        color: order.status == AppStrings.complete
+                            ? Colors.green.withOpacity(0.1)
+                            : (order.status == AppStrings.canceled
+                                ? Colors.red.withOpacity(0.1)
+                                : Colors.blue.withOpacity(0.1)),
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Text(
-                        order.subStatus,
+                        order.subStatus.tr,
                         style: TextStyle(
                           fontSize: 10,
                           fontWeight: FontWeight.w700,
-                          color: order.status == 'Complete' ? Colors.green : (order.status == 'Canceled' ? Colors.red : Colors.blue),
+                          color: order.status == AppStrings.complete
+                              ? Colors.green
+                              : (order.status == AppStrings.canceled
+                                  ? Colors.red
+                                  : Colors.blue),
                         ),
                       ),
                     ),
@@ -81,75 +96,102 @@ class OrderDetailsView extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            '- Order Summary ( ${order.sellerName} )',
-                            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w800, fontStyle: FontStyle.italic),
+                            '- ${AppStrings.orderSummary.tr} ( ${order.sellerName} )',
+                            style: const TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w800,
+                                fontStyle: FontStyle.italic),
                           ),
                         ],
                       ),
                       const SizedBox(height: 6),
                       Text(
-                        'Total Amount :- €${order.totalAmount.toStringAsFixed(2)}',
-                        style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Colors.grey),
+                        '${AppStrings.totalAmount.tr} :- €${order.totalAmount.toStringAsFixed(2)}',
+                        style: const TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.grey),
                       ),
                       const SizedBox(height: 16),
-                      
+
                       // Items
-                      ...order.items.map((item) => Container(
-                        margin: const EdgeInsets.only(bottom: 12),
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: AppColors.greyColor.withOpacity(0.2)),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 60,
-                              height: 60,
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFF5F5F5),
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(color: AppColors.primaryColor, width: 1),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(6),
-                                child: Image.asset(item.image, fit: BoxFit.contain, errorBuilder: (c,e,s) => const Icon(Icons.image, color: Colors.grey)),
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    item.name,
-                                    style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w800, fontStyle: FontStyle.italic),
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    'Quantity :- ${item.quantity.toString().padLeft(2, '0')} • Size / Variant :- ${item.variant}',
-                                    style: TextStyle(fontSize: 11, color: Colors.grey[500]),
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    '€${item.price.toStringAsFixed(2)}',
-                                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800),
-                                  ),
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-                      )).toList(),
+                      ...order.items
+                          .map((item) => Container(
+                                margin: const EdgeInsets.only(bottom: 12),
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color:
+                                          AppColors.greyColor.withOpacity(0.2)),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      width: 60,
+                                      height: 60,
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFFF5F5F5),
+                                        borderRadius: BorderRadius.circular(10),
+                                        border: Border.all(
+                                            color: AppColors.primaryColor,
+                                            width: 1),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(6),
+                                        child: Image.asset(item.image,
+                                            fit: BoxFit.contain,
+                                            errorBuilder: (c, e, s) =>
+                                                const Icon(Icons.image,
+                                                    color: Colors.grey)),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            item.name,
+                                            style: const TextStyle(
+                                                fontSize: 13,
+                                                fontWeight: FontWeight.w800,
+                                                fontStyle: FontStyle.italic),
+                                          ),
+                                          const SizedBox(height: 4),
+                                          Text(
+                                            '${AppStrings.quantity.tr} :- ${item.quantity.toString().padLeft(2, '0')} • ${AppStrings.sizeVariant.tr} :- ${item.variant}',
+                                            style: TextStyle(
+                                                fontSize: 11,
+                                                color: Colors.grey[500]),
+                                          ),
+                                          const SizedBox(height: 4),
+                                          Text(
+                                            '€${item.price.toStringAsFixed(2)}',
+                                            style: const TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w800),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ))
+                          .toList(),
                     ],
                   ),
                 ),
                 const SizedBox(height: 16),
 
                 // Delivery Address
-                const Text(
-                  '- Delivery Address',
-                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800, fontStyle: FontStyle.italic),
+                Text(
+                  '- ${AppStrings.deliveryAddress.tr}',
+                  style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w800,
+                      fontStyle: FontStyle.italic),
                 ),
                 const SizedBox(height: 10),
                 Row(
@@ -161,7 +203,8 @@ class OrderDetailsView extends StatelessWidget {
                         color: const Color(0xFF1A1A1A),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: const Icon(Icons.location_on_outlined, color: AppColors.primaryColor, size: 20),
+                      child: const Icon(Icons.location_on_outlined,
+                          color: AppColors.primaryColor, size: 20),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
@@ -169,22 +212,24 @@ class OrderDetailsView extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            order.locationTag,
-                            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w800),
+                            order.locationTag.tr,
+                            style: const TextStyle(
+                                fontSize: 13, fontWeight: FontWeight.w800),
                           ),
                           const SizedBox(height: 4),
                           Text(
                             order.location,
-                            style: TextStyle(fontSize: 11, color: Colors.grey[500]),
+                            style: TextStyle(
+                                fontSize: 11, color: Colors.grey[500]),
                           ),
                         ],
                       ),
                     ),
                   ],
                 ),
-                
+
                 // Extra UI based on status
-                if (order.status == 'Canceled') ...[
+                if (order.status == AppStrings.canceled) ...[
                   const SizedBox(height: 10),
                   Container(
                     padding: const EdgeInsets.all(12),
@@ -202,21 +247,27 @@ class OrderDetailsView extends StatelessWidget {
                             color: Colors.red.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          child: const Icon(Icons.error_outline, color: Colors.red, size: 20),
+                          child: const Icon(Icons.error_outline,
+                              color: Colors.red, size: 20),
                         ),
                         const SizedBox(width: 12),
                         Expanded(
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
-                                'seller canceled this order',
-                                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Colors.red),
+                              Text(
+                                AppStrings.sellerCanceledOrder.tr,
+                                style: const TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.red),
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                'On ${order.date}',
-                                style: TextStyle(fontSize: 10, color: Colors.grey[500], fontStyle: FontStyle.italic),
+                                '${AppStrings.onDate.tr} ${order.date}',
+                                style: TextStyle(
+                                    fontSize: 10,
+                                    color: Colors.grey[500],
+                                    fontStyle: FontStyle.italic),
                               ),
                             ],
                           ),
@@ -225,8 +276,9 @@ class OrderDetailsView extends StatelessWidget {
                     ),
                   ),
                 ],
-                
-                if (order.status == 'Complete' && order.isReviewed) ...[
+
+                if (order.status == AppStrings.complete &&
+                    order.isReviewed) ...[
                   const SizedBox(height: 10),
                   Container(
                     padding: const EdgeInsets.all(16),
@@ -246,42 +298,64 @@ class OrderDetailsView extends StatelessWidget {
                                 Container(
                                   padding: const EdgeInsets.all(8),
                                   decoration: BoxDecoration(
-                                    color: AppColors.primaryColor.withOpacity(0.1),
+                                    color:
+                                        AppColors.primaryColor.withOpacity(0.1),
                                     shape: BoxShape.circle,
-                                    border: Border.all(color: AppColors.primaryColor),
+                                    border: Border.all(
+                                        color: AppColors.primaryColor),
                                   ),
-                                  child: const Text('CV', style: TextStyle(fontSize: 10, color: AppColors.primaryColor, fontWeight: FontWeight.bold)),
+                                  child: Text(
+                                      AppStrings.dummyReviewerInitials.tr,
+                                      style: const TextStyle(
+                                          fontSize: 10,
+                                          color: AppColors.primaryColor,
+                                          fontWeight: FontWeight.bold)),
                                 ),
                                 const SizedBox(width: 10),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Text('Clara Vogel', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800, fontStyle: FontStyle.italic)),
+                                    Text(AppStrings.dummyReviewerName.tr,
+                                        style: const TextStyle(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w800,
+                                            fontStyle: FontStyle.italic)),
                                     const SizedBox(height: 2),
                                     Row(
                                       children: [
-                                        const Icon(Icons.star, color: AppColors.primaryColor, size: 12),
+                                        const Icon(Icons.star,
+                                            color: AppColors.primaryColor,
+                                            size: 12),
                                         const SizedBox(width: 4),
-                                        const Text('4.9/5.0', style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700)),
+                                        Text(AppStrings.dummyRating.tr,
+                                            style: const TextStyle(
+                                                fontSize: 10,
+                                                fontWeight: FontWeight.w700)),
                                       ],
                                     ),
                                   ],
                                 ),
                               ],
                             ),
-                            Text('28 Jan 2026', style: TextStyle(fontSize: 10, color: Colors.grey[400])),
+                            Text(AppStrings.dummyReviewDate.tr,
+                                style: TextStyle(
+                                    fontSize: 10, color: Colors.grey[400])),
                           ],
                         ),
                         const SizedBox(height: 12),
                         Text(
-                          'Exactly as described. The sneakers look clean and well-made, and the size fits perfectly. My child finds them very comfortable for school and outdoor play. Would recommend.',
-                          style: TextStyle(fontSize: 11, color: Colors.grey[600], fontStyle: FontStyle.italic, height: 1.5),
+                          AppStrings.dummyReview1.tr,
+                          style: TextStyle(
+                              fontSize: 11,
+                              color: Colors.grey[600],
+                              fontStyle: FontStyle.italic,
+                              height: 1.5),
                         ),
                       ],
                     ),
                   ),
                 ],
-                
+
                 const SizedBox(height: 30),
               ],
             ),
@@ -306,7 +380,7 @@ class OrderDetailsView extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  if (order.status != 'Canceled') ...[
+                  if (order.status != AppStrings.canceled) ...[
                     Expanded(
                       flex: 1,
                       child: _buildBackButton(),
@@ -323,7 +397,7 @@ class OrderDetailsView extends StatelessWidget {
                   ],
                 ],
               ),
-              if (order.status == 'Complete') ...[
+              if (order.status == AppStrings.complete) ...[
                 const SizedBox(height: 10),
                 if (!order.isReviewed)
                   Row(
@@ -331,12 +405,13 @@ class OrderDetailsView extends StatelessWidget {
                       Expanded(
                         flex: 1,
                         child: AppButton(
-                          label: "Leave A Review",
+                          label: AppStrings.leaveAReview.tr,
                           onPressed: () => _showReviewBottomSheet(context),
                           backgroundColor: Colors.white,
                           textColor: AppColors.primaryColor,
                           borderSideColor: AppColors.primaryColor,
-                          leadingIcon: const Icon(Icons.star_border, color: AppColors.primaryColor, size: 18),
+                          leadingIcon: const Icon(Icons.star_border,
+                              color: AppColors.primaryColor, size: 18),
                           height: 44,
                           borderRadius: 8,
                         ),
@@ -351,7 +426,7 @@ class OrderDetailsView extends StatelessWidget {
                       Expanded(
                         flex: 1,
                         child: AppButton(
-                          label: "Reviewed",
+                          label: AppStrings.reviewed.tr,
                           onPressed: null,
                           backgroundColor: Colors.white,
                           textColor: Colors.grey[400]!,
@@ -383,9 +458,12 @@ class OrderDetailsView extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  '- Write a Review',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, fontStyle: FontStyle.italic),
+                Text(
+                  '- ${AppStrings.writeAReview.tr}',
+                  style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w800,
+                      fontStyle: FontStyle.italic),
                 ),
                 GestureDetector(
                   onTap: () => Get.back(),
@@ -395,13 +473,16 @@ class OrderDetailsView extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             Text(
-              'Share your experience to help other buyers',
+              AppStrings.reviewInstruction.tr,
               style: TextStyle(fontSize: 12, color: Colors.grey[400]),
             ),
             const SizedBox(height: 24),
-            const Text(
-              'Select Stars To Provide Rating',
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, fontStyle: FontStyle.italic),
+            Text(
+              AppStrings.selectStars.tr,
+              style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                  fontStyle: FontStyle.italic),
             ),
             const SizedBox(height: 10),
             RatingBar.builder(
@@ -422,15 +503,18 @@ class OrderDetailsView extends StatelessWidget {
               },
             ),
             const SizedBox(height: 24),
-            const Text(
-              'Your Review',
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, fontStyle: FontStyle.italic),
+            Text(
+              AppStrings.yourReview.tr,
+              style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                  fontStyle: FontStyle.italic),
             ),
             const SizedBox(height: 10),
             AppTextField(
               controller: controller.reviewTextController,
               maxLines: 4,
-              hint: 'Share your feedback to help other customers make better\ndecisions. ( Maximum 300 words )',
+              hint: AppStrings.reviewPlaceholder.tr,
               hintTextStyle: TextStyle(fontSize: 12, color: Colors.grey[400]),
             ),
             const SizedBox(height: 24),
@@ -438,7 +522,7 @@ class OrderDetailsView extends StatelessWidget {
               children: [
                 Expanded(
                   child: AppButton(
-                    label: 'Cancel',
+                    label: AppStrings.cancel.tr,
                     onPressed: () => Get.back(),
                     backgroundColor: Colors.white,
                     textColor: Colors.grey,
@@ -450,7 +534,7 @@ class OrderDetailsView extends StatelessWidget {
                 const SizedBox(width: 12),
                 Expanded(
                   child: AppButton(
-                    label: 'Submit >>',
+                    label: AppStrings.submit.tr,
                     onPressed: () => Get.back(),
                     backgroundColor: const Color(0xFF1A1A1A),
                     textColor: AppColors.primaryColor,
@@ -469,7 +553,7 @@ class OrderDetailsView extends StatelessWidget {
 
   Widget _buildBackButton() {
     return AppButton(
-      label: "<< Back to My Order's",
+      label: AppStrings.backToMyOrders.tr,
       onPressed: controller.backToList,
       backgroundColor: const Color(0xFF1A1A1A),
       textColor: AppColors.primaryColor,
@@ -480,9 +564,9 @@ class OrderDetailsView extends StatelessWidget {
   }
 
   Widget _buildActionButton(BuildContext context, OrderModel order) {
-    if (order.status == 'Active Oder') {
+    if (order.status == AppStrings.activeOrder) {
       return AppButton(
-        label: "Cancel Orders",
+        label: AppStrings.cancelOrders.tr,
         onPressed: () {},
         backgroundColor: Colors.white,
         textColor: Colors.red,
@@ -490,14 +574,15 @@ class OrderDetailsView extends StatelessWidget {
         height: 44,
         borderRadius: 8,
       );
-    } else if (order.status == 'Complete') {
+    } else if (order.status == AppStrings.complete) {
       return AppButton(
-        label: "Return Request",
+        label: AppStrings.returnRequest.tr,
         onPressed: () => _showReturnRequestBottomSheet(context),
         backgroundColor: const Color(0xFF1A1A1A),
         textColor: AppColors.primaryColor,
         borderSideColor: const Color(0xFF1A1A1A),
-        leadingIcon: const Icon(Icons.keyboard_return, color: AppColors.primaryColor, size: 14),
+        leadingIcon: const Icon(Icons.keyboard_return,
+            color: AppColors.primaryColor, size: 14),
         height: 44,
         borderRadius: 8,
       );
@@ -517,9 +602,12 @@ class OrderDetailsView extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  '- Return Request',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, fontStyle: FontStyle.italic),
+                Text(
+                  '- ${AppStrings.returnRequest.tr}',
+                  style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w800,
+                      fontStyle: FontStyle.italic),
                 ),
                 GestureDetector(
                   onTap: () => Get.back(),
@@ -529,24 +617,30 @@ class OrderDetailsView extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             Text(
-              'Tell the seller what went wrong. They will review and respond.',
+              AppStrings.returnInstruction.tr,
               style: TextStyle(fontSize: 12, color: Colors.grey[400]),
             ),
             const SizedBox(height: 24),
-            const Text(
-              'Return Reason',
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, fontStyle: FontStyle.italic),
+            Text(
+              AppStrings.returnReason.tr,
+              style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                  fontStyle: FontStyle.italic),
             ),
             const SizedBox(height: 10),
             AppTextField(
               controller: TextEditingController(),
-              hint: 'Enter the Return Reason',
+              hint: AppStrings.returnReasonPlaceholder.tr,
               hintTextStyle: TextStyle(fontSize: 12, color: Colors.grey[400]),
             ),
             const SizedBox(height: 20),
-            const Text(
-              'Upload Return Evidence Images',
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, fontStyle: FontStyle.italic),
+            Text(
+              AppStrings.uploadEvidence.tr,
+              style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                  fontStyle: FontStyle.italic),
             ),
             const SizedBox(height: 10),
             GestureDetector(
@@ -561,31 +655,40 @@ class OrderDetailsView extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.image_outlined, color: Colors.grey[400], size: 18),
+                    Icon(Icons.image_outlined,
+                        color: Colors.grey[400], size: 18),
                     const SizedBox(width: 8),
-                    Text('Upload Images Here', style: TextStyle(color: Colors.grey[400], fontSize: 13)),
+                    Text(AppStrings.uploadImagesHere.tr,
+                        style:
+                            TextStyle(color: Colors.grey[400], fontSize: 13)),
                   ],
                 ),
               ),
             ),
             const SizedBox(height: 10),
             Obx(() => Wrap(
-              spacing: 10,
-              runSpacing: 10,
-              children: controller.returnEvidenceImages.asMap().entries.map((entry) {
-                return _buildMockImage(entry.value, entry.key);
-              }).toList(),
-            )),
+                  spacing: 10,
+                  runSpacing: 10,
+                  children: controller.returnEvidenceImages
+                      .asMap()
+                      .entries
+                      .map((entry) {
+                    return _buildMockImage(entry.value, entry.key);
+                  }).toList(),
+                )),
             const SizedBox(height: 20),
-            const Text(
-              'Describe Your Reason In A Few Words',
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, fontStyle: FontStyle.italic),
+            Text(
+              AppStrings.describeReason.tr,
+              style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                  fontStyle: FontStyle.italic),
             ),
             const SizedBox(height: 10),
             AppTextField(
               controller: TextEditingController(),
               maxLines: 4,
-              hint: 'Please provide as much detail as possible so we can assist\nyou quickly.',
+              hint: AppStrings.returnDetailPlaceholder.tr,
               hintTextStyle: TextStyle(fontSize: 12, color: Colors.grey[400]),
             ),
             const SizedBox(height: 24),
@@ -593,7 +696,7 @@ class OrderDetailsView extends StatelessWidget {
               children: [
                 Expanded(
                   child: AppButton(
-                    label: 'Cancel',
+                    label: AppStrings.cancel.tr,
                     onPressed: () => Get.back(),
                     backgroundColor: Colors.white,
                     textColor: Colors.grey,
@@ -605,12 +708,12 @@ class OrderDetailsView extends StatelessWidget {
                 const SizedBox(width: 12),
                 Expanded(
                   child: AppButton(
-                    label: 'Submit Request >>',
+                    label: AppStrings.submitRequest.tr,
                     onPressed: () {
                       Get.back(); // close bottom sheet
                       AppAlerts.warning(
-                        title: 'Return Request !',
-                        message: 'Are you sure you want to request a return for this\nproduct?',
+                        title: AppStrings.returnRequest.tr,
+                        message: AppStrings.returnConfirmSubtitle.tr,
                         onConfirm: () {},
                       );
                     },
@@ -647,7 +750,8 @@ class OrderDetailsView extends StatelessWidget {
                 child: Image.file(
                   File(path),
                   fit: BoxFit.cover,
-                  errorBuilder: (_, __, ___) => const Icon(Icons.image, color: Colors.grey),
+                  errorBuilder: (_, __, ___) =>
+                      const Icon(Icons.image, color: Colors.grey),
                 ),
               ),
             ),
@@ -671,5 +775,4 @@ class OrderDetailsView extends StatelessWidget {
       ),
     );
   }
-
 }

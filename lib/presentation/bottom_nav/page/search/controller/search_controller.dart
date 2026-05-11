@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../utils/assets_image/app_images.dart';
+import '../../../../../utils/static_strings/static_strings.dart';
 
 class AppSearchController extends GetxController {
   final searchTextController = TextEditingController();
@@ -13,7 +14,7 @@ class AppSearchController extends GetxController {
   final selectedSortBy = ''.obs;
   final priceRangeMin = 0.0.obs;
   final priceRangeMax = 100.0.obs;
-  final selectedRating = 'Any Rating'.obs;
+  final selectedRating = AppStrings.anyRating.tr.obs;
 
   // Category text controllers for bottom sheet fields
   final categoryController = TextEditingController();
@@ -22,79 +23,79 @@ class AppSearchController extends GetxController {
 
   // Filter data
   final List<String> categories = [
-    'Beanies & Hats',
-    'Swimwear',
-    'Pajama Sets',
-    'Cardigans & Sweaters',
-    'Denim & Jeans',
-    'Leggings',
-    'Underwear & Socks',
+    AppStrings.beaniesHats.tr,
+    AppStrings.swimwear.tr,
+    AppStrings.pajamaSets.tr,
+    AppStrings.cardigansSweaters.tr,
+    AppStrings.denimJeans.tr,
+    AppStrings.leggings.tr,
+    AppStrings.underwearSocks.tr,
   ];
 
   final List<String> subcategories = [
-    'Baseball Caps',
-    'Trench Coats',
-    'Flannel Shirts',
-    'Knitted Beanies',
-    'Gym Leggings',
-    'One-Piece Swimsuits',
+    AppStrings.baseballCaps.tr,
+    AppStrings.trenchCoats.tr,
+    AppStrings.flannelShirts.tr,
+    AppStrings.knittedBeanies.tr,
+    AppStrings.gymLeggings.tr,
+    AppStrings.onePieceSwimsuits.tr,
   ];
 
   final List<String> sortByOptions = [
-    'Newest First',
-    'Price: Low to High',
-    'Price: High to Low',
-    'Popular Items',
-    'In Stock Only',
-    'Discounted',
-    'Best Rated',
+    AppStrings.newestFirst.tr,
+    AppStrings.priceLowToHigh.tr,
+    AppStrings.priceHighToLow.tr,
+    AppStrings.popularItems.tr,
+    AppStrings.inStockOnly.tr,
+    AppStrings.discounted.tr,
+    AppStrings.bestRated.tr,
   ];
 
   final List<String> ratingOptions = [
-    'Any Rating',
-    'Up to ★1',
-    'Up to ★2',
-    'Up to ★3',
-    'Up to ★4',
-    'Only ★1',
+    AppStrings.anyRating.tr,
+    '${AppStrings.upToRating.tr} ★1',
+    '${AppStrings.upToRating.tr} ★2',
+    '${AppStrings.upToRating.tr} ★3',
+    '${AppStrings.upToRating.tr} ★4',
+    '${AppStrings.onlyRating.tr} ★1',
   ];
 
   // Dummy product data
   final List<Map<String, dynamic>> allProducts = [
     {
-      'name': 'Kids Cotton Hoodie...',
+      'name': AppStrings.dummySearchProductName.tr,
       'image': AppImages.kidsCottonHoodie,
       'price': '18.00',
       'oldPrice': '21.99',
       'rating': '4.5/5.0',
-      'material': 'Cotton Pull-On',
+      'material': AppStrings.dummyMaterial.tr,
       'discount': '20%',
     },
     {
-      'name': 'Kids Cotton Hoodie...',
+      'name': AppStrings.dummySearchProductName.tr,
       'image': AppImages.kidsCottonSho,
       'price': '18.00',
       'oldPrice': '21.99',
       'rating': '4.5/5.0',
-      'material': 'Cotton Pull-On',
+      'material': AppStrings.dummyMaterial.tr,
       'discount': '10%',
     },
     {
-      'name': 'Kids Cotton Hoodie...',
+      'name': AppStrings.dummySearchProductName.tr,
       'image': AppImages.kidsCottonHoddieTshirt,
       'price': '18.00',
       'oldPrice': '21.99',
       'rating': '4.5/5.0',
-      'material': 'Cotton Pull-On',
+      'material': AppStrings.dummyMaterial.tr,
       'discount': '20%',
     },
     {
-      'name': 'Kids Cotton Hoodie...',
+      'name': AppStrings.dummySearchProductName.tr,
       'image': AppImages.kidAccessor,
       'price': '38.00',
       'oldPrice': '45.99',
       'rating': '4.5/5.0',
-      'material': 'Cotton Pull-On',
+      'material': AppStrings.dummyMaterial.tr,
       'discount': '15%',
     },
   ];
@@ -143,7 +144,7 @@ class AppSearchController extends GetxController {
     selectedSortBy.value = '';
     priceRangeMin.value = 0;
     priceRangeMax.value = 100;
-    selectedRating.value = 'Any Rating';
+    selectedRating.value = AppStrings.anyRating.tr;
     filteredProducts.assignAll(allProducts);
   }
 

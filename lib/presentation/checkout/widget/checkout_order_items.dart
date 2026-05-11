@@ -151,7 +151,7 @@ class CheckoutOrderItems extends StatelessWidget {
                                         Row(
                                           children: [
                                             Text(
-                                              option.label,
+                                              option.label.tr,
                                               style: const TextStyle(
                                                 fontWeight: FontWeight.w800,
                                                 fontStyle: FontStyle.italic,
@@ -161,7 +161,7 @@ class CheckoutOrderItems extends StatelessWidget {
                                             ),
                                             const SizedBox(width: 4),
                                             Text(
-                                              option.badge,
+                                              option.badge.tr,
                                               style: TextStyle(fontSize: 9, color: Colors.grey[400]),
                                             ),
                                           ],
@@ -186,7 +186,7 @@ class CheckoutOrderItems extends StatelessWidget {
                                             children: [
                                               TextSpan(text: '${AppStrings.estimatedTime.tr} - '),
                                               TextSpan(
-                                                text: option.time,
+                                                text: '${option.time} ${AppStrings.businessDays.tr}',
                                                 style: TextStyle(color: Colors.grey[700]),
                                               ),
                                             ],

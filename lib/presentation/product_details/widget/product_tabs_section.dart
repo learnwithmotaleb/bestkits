@@ -1,3 +1,4 @@
+import 'package:bestkits/utils/static_strings/static_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../utils/app_colors/app_colors.dart';
@@ -21,6 +22,9 @@ class ProductTabsSection extends StatelessWidget {
             return Expanded(
               child: Obx(() {
                 final isSelected = controller.selectedTabIndex.value == index;
+                String tabLabel = controller.tabs[index].tr;
+                if (index == 1) tabLabel += " (05)";
+                
                 return GestureDetector(
                   onTap: () => controller.selectTab(index),
                   child: Container(
@@ -45,7 +49,7 @@ class ProductTabsSection extends StatelessWidget {
                     ),
                     alignment: Alignment.center,
                     child: Text(
-                      controller.tabs[index],
+                      tabLabel,
                       style: TextStyle(
                         color: isSelected ? AppColors.primaryColor : Colors.black,
                         fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
@@ -82,13 +86,13 @@ class ProductTabsSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Description:-',
-          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+        Text(
+          '${AppStrings.description.tr}:-',
+          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
         ),
         const SizedBox(height: 10),
         Text(
-          'Comfortable and lightweight side sneakers designed for everyday use. Made with breathable materials and a flexible sole to support active movement. Clean finish with a modern look, easy to match with any outfit.\n\nBrand new, unused condition.\nFrom a clean, smoke-free environment.\nComes with original packaging.',
+          AppStrings.dummyDescription.tr,
           style: TextStyle(
             fontSize: 12,
             color: Colors.grey[600],
@@ -96,21 +100,21 @@ class ProductTabsSection extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 20),
-        const Text(
-          'Details:-',
-          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+        Text(
+          '${AppStrings.detailsLabel.tr}:-',
+          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
         ),
         const SizedBox(height: 10),
-        _buildDetailRow('Online since:', '2024-04-20'),
-        _buildDetailRow('Category:', 'Kids'),
-        _buildDetailRow('Sub-category:', 'Sneakers'),
-        _buildDetailRow('Condition:', 'New'),
-        _buildDetailRow('Material:', 'Textile & Rubber'),
-        _buildDetailRow('Color:', 'Black'),
-        _buildDetailRow('Size:', 'EU 28'),
-        _buildDetailRow('Location:', 'Bulgaria'),
-        _buildDetailRow('Seller:', 'Sofia Kids Closet'),
-        _buildDetailRow('Reference:', '87456231'),
+        _buildDetailRow('${AppStrings.onlineSince.tr}:', '2024-04-20'),
+        _buildDetailRow('${AppStrings.category.tr}:', 'Kids'),
+        _buildDetailRow('${AppStrings.subCategory.tr}:', 'Sneakers'),
+        _buildDetailRow('${AppStrings.condition.tr}:', 'New'),
+        _buildDetailRow('${AppStrings.material.tr}:', 'Textile & Rubber'),
+        _buildDetailRow('${AppStrings.color.tr}:', 'Black'),
+        _buildDetailRow('${AppStrings.size.tr}:', 'EU 28'),
+        _buildDetailRow('${AppStrings.location.tr}:', 'Bulgaria'),
+        _buildDetailRow('${AppStrings.sellerLabel.tr}:', 'Sofia Kids Closet'),
+        _buildDetailRow('${AppStrings.reference.tr}:', '87456231'),
       ],
     );
   }
@@ -145,15 +149,15 @@ class ProductTabsSection extends StatelessWidget {
               color: const Color(0xFF1A1A1A),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: const Row(
+            child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'View More',
-                  style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600),
+                  AppStrings.viewMore.tr,
+                  style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600),
                 ),
-                SizedBox(width: 8),
-                Icon(Icons.arrow_forward_ios, color: Colors.white, size: 10),
+                const SizedBox(width: 8),
+                const Icon(Icons.arrow_forward_ios, color: Colors.white, size: 10),
               ],
             ),
           ),
@@ -200,9 +204,9 @@ class ProductTabsSection extends StatelessWidget {
                             color: const Color(0xFFE1F5FE),
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          child: const Text(
-                            '★ Professional Seller',
-                            style: TextStyle(color: Color(0xFF03A9F4), fontSize: 8, fontWeight: FontWeight.w700),
+                          child: Text(
+                            '★ ${AppStrings.professionalSeller.tr}',
+                            style: const TextStyle(color: Color(0xFF03A9F4), fontSize: 8, fontWeight: FontWeight.w700),
                           ),
                         ),
                       ],
@@ -243,22 +247,22 @@ class ProductTabsSection extends StatelessWidget {
               Icon(Icons.message_outlined, color: AppColors.primaryColor, size: 18),
               const SizedBox(width: 10),
               Text(
-                'Message Seller',
+                AppStrings.messageSeller.tr,
                 style: TextStyle(color: AppColors.primaryColor, fontWeight: FontWeight.w700, fontSize: 14),
               ),
             ],
           ),
         ),
         const SizedBox(height: 20),
-        const Text(
-          'Seller Overview:',
-          style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
+        Text(
+          '${AppStrings.sellerOverview.tr}:',
+          style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
         ),
         const SizedBox(height: 12),
         // Stats
-        _buildSellerStat(Icons.star_border, 'Total Rating ( 128 Reviews )', '4.9/5.0'),
-        _buildSellerStat(Icons.shopping_bag_outlined, 'Items Sold', '1680 Sold', highlight: true),
-        _buildSellerStat(Icons.category_outlined, 'Total Items', '56 Products', highlight: true),
+        _buildSellerStat(Icons.star_border, '${AppStrings.totalRating.tr} ( 128 ${AppStrings.reviews.tr} )', '4.9/5.0'),
+        _buildSellerStat(Icons.shopping_bag_outlined, AppStrings.itemsSold.tr, '1680 ${AppStrings.sold.tr}', highlight: true),
+        _buildSellerStat(Icons.category_outlined, AppStrings.totalItems.tr, '56 ${AppStrings.products.tr}', highlight: true),
       ],
     );
   }

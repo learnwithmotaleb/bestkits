@@ -1,3 +1,4 @@
+import 'package:bestkits/utils/static_strings/static_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../core/responsive_layout/dimensions.dart';
@@ -48,7 +49,7 @@ class OrderScreen extends StatelessWidget {
                     ),
                     const Spacer(),
                     Text(
-                      "My Order's",
+                      AppStrings.myOrders.tr,
                       style: AppTextStyles.h3.copyWith(
                         fontSize: 18,
                         fontWeight: FontWeight.w700,
@@ -85,7 +86,7 @@ class OrderScreen extends StatelessWidget {
                           ),
                           alignment: Alignment.center,
                           child: Text(
-                            controller.tabs[index],
+                            controller.tabs[index].tr,
                             style: TextStyle(
                               color: controller.selectedTab.value == index ? AppColors.primaryColor : Colors.grey,
                               fontWeight: FontWeight.w700,

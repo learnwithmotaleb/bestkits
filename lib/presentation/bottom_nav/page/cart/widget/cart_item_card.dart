@@ -1,3 +1,4 @@
+import 'package:bestkits/utils/static_strings/static_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../utils/app_colors/app_colors.dart';
@@ -67,12 +68,12 @@ class CartItemCard extends StatelessWidget {
                                 ),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
-                                  children: const [
-                                    Icon(Icons.delete_outline, color: Colors.red, size: 14),
-                                    SizedBox(width: 4),
+                                  children: [
+                                    const Icon(Icons.delete_outline, color: Colors.red, size: 14),
+                                    const SizedBox(width: 4),
                                     Text(
-                                      'Remove',
-                                      style: TextStyle(
+                                      AppStrings.remove.tr,
+                                      style: const TextStyle(
                                         color: Colors.red,
                                         fontSize: 11,
                                         fontWeight: FontWeight.w600,
@@ -113,7 +114,7 @@ class CartItemCard extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    'Size / Variant :- ',
+                    '${AppStrings.sizeVariant.tr} :- ',
                     style: TextStyle(fontSize: 12, color: Colors.grey[600], fontWeight: FontWeight.w500),
                   ),
                   Container(
@@ -140,7 +141,7 @@ class CartItemCard extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    'Quantity :- ',
+                    '${AppStrings.quantityLabel.tr} :- ',
                     style: TextStyle(fontSize: 12, color: Colors.grey[600], fontWeight: FontWeight.w500),
                   ),
                   Container(

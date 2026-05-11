@@ -4,11 +4,46 @@ class AppStrings {
   // Splash
   static const String splashText = "bestkid";
 
+  // Categories
+  static const String categories = "Categories";
+  static const String itemsCountLabel = "Items";
+  static const String underwearAndSocks = "Underwear & Socks";
+  static const String sleepwearAndSwaddles = "Sleepwear & Swaddles";
+  static const String leggings = "Leggings";
+  static const String pajamaSets = "Pajama Sets";
+  static const String pufferJackets = "Puffer Jackets";
+  static const String shortsAndSkirts = "Shorts & Skirts";
+  static const String moreLabel = "More";
+  static const String kidsShorts = "Kid's Shorts";
+  static const String kidsAccessories = "Kids Accessories";
+  static const String kidsCollection = "Kids Collection";
+  static const String cottonPullOn = "Cotton Pull-On";
+  static const String shopByCategory = "Shop By Category";
+  static const String nowTrending = "Now Trending";
+  static const String recentlyViewed = "Recently Viewed";
+  static const String newArrivals = "New Arrivals";
+  static const String viewAll = "View All";
+  static const String hello = "Hello";
+  static const String welcomeToBestKid = "Welcome to BestKid";
+  static const String limitedTimeOffer = "Limited Time Offer";
+  static const String upTo = "Up to ";
+  static const String discount40 = "40% OFF";
+  static const String springSale = "Spring Kids Collection Sale";
+  static const String bannerSubtitle =
+      "Fresh styles for every little moment — shop the latest looks at unbeatable prices.";
+  static const String sellerBannerTitle =
+      "Scale your brand with a platform built for high-volume sales.";
+  static const String sellerBannerSubtitle =
+      "Join a community of 5,000+ top-tier vendors dedicated to childhood wonder. From secure payments to smart analytics, we provide the tools to scale your kids' brand. Don't let your best-sellers sit on the shelf—put them in front of parents who care.";
+  static const String startSellingNow = "Start Selling Now";
+
   // Onboarding
   static const String onboardingTitle1 = "Discover Kids\nFashion Easily";
-  static const String onboardingSubtitle1 = "Browse Thousands Of Quality Kids Clothing From Trusted Sellers Across Europe. Find The Perfect Style, Size, And Price In Seconds.";
+  static const String onboardingSubtitle1 =
+      "Browse Thousands Of Quality Kids Clothing From Trusted Sellers Across Europe. Find The Perfect Style, Size, And Price In Seconds.";
   static const String onboardingTitle2 = "Shop With\nConfidence";
-  static const String onboardingSubtitle2 = "Enjoy Secure Payments, Clear Product Details, And Reliable Sellers Across Europe For A Safe And Easy Shopping Experience.";
+  static const String onboardingSubtitle2 =
+      "Enjoy Secure Payments, Clear Product Details, And Reliable Sellers Across Europe For A Safe And Easy Shopping Experience.";
   static const String next = "Next";
   static const String skip = "Skip";
   static const String getStarted = "Get Started";
@@ -23,10 +58,12 @@ class AppStrings {
   static const String passwordPlaceholder = "********";
   static const String rememberMe = "Remember me";
   static const String forgotPassword = "Forgot Password";
-  static const String forgotPasswordSubtitle = "Enter your registered email address and we'll send you a verification code to reset your password.";
+  static const String forgotPasswordSubtitle =
+      "Enter your registered email address and we'll send you a verification code to reset your password.";
   static const String sendVerificationCode = "Send Verification Code";
   static const String setNewPassword = "Set New Password";
-  static const String setNewPasswordSubtitle = "Create a new password for your account to continue securely.";
+  static const String setNewPasswordSubtitle =
+      "Create a new password for your account to continue securely.";
   static const String newPassword = "New Password";
   static const String updatePassword = "Update Password";
   static const String logIn = "Log In";
@@ -37,12 +74,12 @@ class AppStrings {
   static const String fullName = "Full Name";
   static const String phoneNumber = "Phone Number";
   static const String confirmPassword = "Confirm Password";
-  static const String termsAgreement = "I agree to the Terms of Service and Privacy Policy";
+  static const String termsAgreement =
+      "I agree to the Terms of Service and Privacy Policy";
   static const String createAccount = "Create Account";
 
   // Home Screen
   static const String searchProducts = "Search products...";
-  static const String categories = "Categories";
   static const String boy = "Boy";
   static const String girl = "Girl";
   static const String baby = "Baby";
@@ -58,7 +95,35 @@ class AppStrings {
   static const String condition = "Condition";
   static const String material = "Material";
   static const String description = "Description";
+  static const String productDetailsHeader = "Product Details";
+  static const String relatedProducts = "Related Products";
   static const String addToCart = "Add to Cart";
+  static const String orderNow = "Order Now";
+  static const String reviews = "Reviews";
+  static const String active = "Active";
+  static const String off = "off";
+  static const String dummyCategory = "kids sneakers";
+  static const String dummyProductName = "Kids Cotton Hoodie – Soft Fit";
+  static const String dummyDescription =
+      "Comfortable and lightweight side sneakers designed for everyday use. Made with breathable materials and a flexible sole to support active movement. Clean finish with a modern look, easy to match with any outfit.\n\nBrand new, unused condition.\nFrom a clean, smoke-free environment.\nComes with original packaging.";
+  static const String dummyReview1 =
+      "Very comfortable and lightweight sneakers. My son has been wearing them almost every day and they still look great. The fit is perfect and easy to put on. Definitely a good purchase.";
+  static const String dummyReview2 =
+      "Good quality overall and the design looks really nice. The material feels durable and suitable for daily use. Delivery was smooth and packaging was proper. Happy with the purchase.";
+  static const String detailsLabel = "Details";
+  static const String onlineSince = "Online since";
+  static const String category = "Category";
+  static const String subCategory = "Sub-category";
+  static const String color = "Color";
+  static const String sellerLabel = "Seller";
+  static const String reference = "Reference";
+  static const String viewMore = "View More";
+  static const String sellerOverview = "Seller Overview";
+  static const String totalRating = "Total Rating";
+  static const String itemsSold = "Items Sold";
+  static const String totalItems = "Total Items";
+  static const String sold = "Sold";
+  static const String products = "Products";
 
   // Profile & Settings
   static const String myProfile = "My Profile";
@@ -75,6 +140,15 @@ class AppStrings {
   static const String privacyPolicy = "Privacy Policy";
   static const String termsCondition = "Terms & Condition";
   static const String logout = "Logout";
+  static const String logoutTitle = "Log out !";
+  static const String logoutConfirmSubtitle =
+      "Are you sure you want to log out?";
+  static const String logoutButton = "Log Out";
+  static const String dummyUserName = "Roberts Junior";
+  static const String dummyReviewerName = "Clara Vogel";
+  static const String dummyReviewerInitials = "CV";
+  static const String dummyReviewDate = "28 Jan 2026";
+  static const String dummyRating = "4.9/5.0";
 
   // My Orders / Chat
   static const String myOrders = "My Orders";
@@ -83,13 +157,104 @@ class AppStrings {
   static const String totalAmount = "Total Amount";
   static const String chat = "Chat";
   static const String typing = "Typing...";
+  static const String activeOrder = "Active Order";
+  static const String complete = "Complete";
+  static const String canceled = "Canceled";
+  static const String delivered = "Delivered";
+  static const String locationTag = "Location";
+  static const String noOrderFound = "No Orders Found";
+  static const String myOrdersHeader = "My Orders";
+  static const String leaveAReview = "Leave A Review";
+  static const String reviewed = "Reviewed";
+  static const String writeAReview = "Write a Review";
+  static const String reviewInstruction =
+      "Share your experience to help other buyers";
+  static const String selectStars = "Select Stars To Provide Rating";
+  static const String yourReview = "Your Review";
+  static const String reviewPlaceholder =
+      "Share your feedback to help other customers make better\ndecisions. ( Maximum 300 words )";
+  static const String submit = "Submit >>";
+  static const String backToMyOrders = "<< Back to My Orders";
+  static const String cancelOrders = "Cancel Orders";
+  static const String returnRequest = "Return Request";
+  static const String returnInstruction =
+      "Tell the seller what went wrong. They will review and respond.";
+  static const String returnReasonPlaceholder = "Enter the Return Reason";
+  static const String uploadEvidence = "Upload Return Evidence Images";
+  static const String uploadImagesHere = "Upload Images Here";
+  static const String describeReason = "Describe Your Reason In A Few Words";
+  static const String returnDetailPlaceholder =
+      "Please provide as much detail as possible so we can assist\nyou quickly.";
+  static const String submitRequest = "Submit Request >>";
+  static const String returnConfirmSubtitle =
+      "Are you sure you want to request a return for this\nproduct?";
+  static const String sellerCanceledOrder = "seller canceled this order";
+  static const String termsOfService = "Terms of Service";
+  static const String alreadyHaveAccount = "Already have an account? ";
+  static const String signIn = "Sign In !";
+  static const String noAccountYet = "No account yet? ";
+  static const String createAnAccount = "Create an account !";
+
+  static const String enterEmailAddress = "Enter your email address";
+
+  static const String verifyYourOtp = "Verify Your OTP";
+  static const String otpSubtitle =
+      "Enter the 6-digit verification code sent to your email address.";
+  static const String verificationCode = "Verification Code";
+  static const String verifyCode = "Verify Code";
+  static const String didNotReceiveCode = "Didn't receive the code?";
+  static const String resendCode = "Resend Code";
+  static const String resendIn = "Resend in";
+
+  static const String dummyOrderProductName = "D.D. Step - Comfort";
 
   // Account Block
   static const String accountBlocked = "Account Blocked !";
-  static const String accountBlockedSubtitle = "Your account has been restricted by an administrator. For assistance with your account status, please contact";
+  static const String accountBlockedSubtitle =
+      "Your account has been restricted by an administrator. For assistance with your account status, please contact";
   static const String supportEmail = "support@bestkid.com";
   static const String goBackLogin = "Go Back Login";
-  
+
+  static const String searchPlaceholder = "Search for products...";
+  static const String noMatchesFound = "We Couldn't Find Any Matches.";
+  static const String filter = "Filter";
+  static const String filterSubtitle =
+      "Refine products by category, size, brand, price, and more.";
+  static const String selectCategory = "Select Category";
+  static const String selectSubcategory = "Select Subcategory";
+  static const String sortBy = "Sort By";
+  static const String priceRange = "Price Range";
+  static const String resetFilter = "Reset Filter";
+  static const String applyFilter = "Apply Filter";
+  static const String anyRating = "Any Rating";
+  static const String upToRating = "Up to";
+  static const String onlyRating = "Only";
+  static const String newestFirst = "Newest First";
+  static const String priceLowToHigh = "Price: Low to High";
+  static const String priceHighToLow = "Price: High to Low";
+  static const String popularItems = "Popular Items";
+  static const String inStockOnly = "In Stock Only";
+  static const String discounted = "Discounted";
+  static const String bestRated = "Best Rated";
+
+  static const String dummySearchProductName = "Kids Cotton Hoodie...";
+  static const String dummyMaterial = "Cotton Pull-On";
+
+  static const String beaniesHats = "Beanies & Hats";
+  static const String swimwear = "Swimwear";
+  static const String cardigansSweaters = "Cardigans & Sweaters";
+  static const String denimJeans = "Denim & Jeans";
+  static const String underwearSocks = "Underwear & Socks";
+
+  static const String baseballCaps = "Baseball Caps";
+  static const String trenchCoats = "Trench Coats";
+  static const String flannelShirts = "Flannel Shirts";
+  static const String knittedBeanies = "Knitted Beanies";
+  static const String gymLeggings = "Gym Leggings";
+  static const String onePieceSwimsuits = "One-Piece Swimsuits";
+
+  static const String onDate = "On";
+
   // Bottom Nav
   static const String home = "Home";
   static const String browse = "Browse";
@@ -97,34 +262,64 @@ class AppStrings {
   static const String cart = "Cart";
   static const String orders = "Orders";
   static const String profile = "Profile";
+  static const String messages = "Messages";
+  static const String more = "More";
+  static const String legalCompanyInfo = "Legal & Company Info";
 
   static const String accountSetting = "Account Settings";
   static const String deleteAccount = "Delete account";
-  
+
   // Delete Account Dialogs
   static const String deleteYourAccount = "Delete Your account !";
-  static const String deleteAccountSubtitle = "This action is permanent.\nYour BestKid account, order history, and saved activity will be permanently removed and cannot be recovered.";
+  static const String deleteAccountSubtitle =
+      "This action is permanent.\nYour BestKid account, order history, and saved activity will be permanently removed and cannot be recovered.";
   static const String confirm = "Confirm";
   static const String cancel = "Cancel";
   static const String confirmAccountDeletion = "Confirm Account Deletion";
   static const String oldPassword = "Old Password";
-  static const String deleteSecurityNote = "For security reasons, we need your password to continue. Once deleted, your account and associated data cannot be restored.";
+  static const String deleteSecurityNote =
+      "For security reasons, we need your password to continue. Once deleted, your account and associated data cannot be restored.";
   static const String confirmAndDelete = "Confirm & delete";
   static const String accountDeletedSuccess = "Account deleted successfully";
   static const String saveTheChanges = "Save The Changes";
   static const String changePasswordAlertTitle = "Change Password !";
-  static const String changePasswordAlertSubtitle = "Are you sure you want to update your password? You will need to use the new password the next time you log in.";
+  static const String changePasswordAlertSubtitle =
+      "Are you sure you want to update your password? You will need to use the new password the next time you log in.";
   static const String passwordChangedSuccess = "Password changed successfully";
-  
+
+  // Cart
+  static const String cartTitle = "Cart Title";
+  static const String myCart = "My Cart";
+  static const String emptyCart = "Empty Cart";
+  static const String cartEmptyMessage = "Your cart is empty";
+  static const String emptyCartConfirmTitle = "Empty Cart?";
+  static const String emptyCartConfirmSubtitle =
+      "Are you sure you want to remove all items from your cart?";
+  static const String yesEmpty = "Yes, Empty";
+  static const String proceedToCheckout = "Proceed To Checkout";
+  static const String continueShopping = "Continue Shopping";
+  static const String remove = "Remove";
+  static const String sizeVariant = "Size / Variant";
+  static const String quantityLabel = "Quantity";
+
   // Checkout
   static const String checkout = "Checkout";
+  static const String domesticDelivery = "Domestic Delivery";
+  static const String internationalDelivery = "International Delivery";
+  static const String insideCountry = "(Inside Country)";
+  static const String outsideCountry = "(Outside Country)";
+  static const String businessDays = "Business Days";
+  static const String homeTag = "Home Tag";
+  static const String office = "Office";
+  static const String selected = "Selected";
   static const String orderSummary = "Order Summary";
   static const String iAgreeToThe = "I Agree To The ";
   static const String andText = " And ";
   static const String ofBestKid = " Of BestKid.";
   static const String proceedToPay = "Proceed To Pay";
   static const String orderPlaced = "Order Placed!";
-  static const String orderPlacedSuccess = "Your order has been placed successfully.";
+  static const String orderPlacedSuccess =
+      "Your order has been placed successfully.";
   static const String deliveryAddress = "Delivery Address";
   static const String priceDetails = "Price Details";
   static const String subtotal = "Subtotal";
@@ -136,6 +331,90 @@ class AppStrings {
   static const String estimatedTime = "Estimated Time";
   static const String switchCurrency = "Switch Currency";
   static const String currencyAlertTitle = "Change Currency !";
-  static const String currencyAlertSubtitle = "Are you sure you want to change your currency preference?";
-  static const String currencyUpdatedSuccess = "Currency preference updated successfully";
+  static const String currencyAlertSubtitle =
+      "Are you sure you want to change your currency preference?";
+  static const String currencyUpdatedSuccess =
+      "Currency preference updated successfully";
+  static const String switchLanguage = "Switch Language";
+  static const String languageAlertTitle = "Change Language !";
+  static const String languageAlertSubtitle =
+      "Are you sure you want to change your language preference?";
+  static const String languageUpdatedSuccess =
+      "Language preference updated successfully";
+  static const String english = "English";
+  static const String bulgarian = "Bulgarian";
+  static const String addressName = "Address Name";
+  static const String addressNameHint = "e.g. Home, Office";
+  static const String enterFullAddress =
+      "Enter full address (street, city, postal code)";
+  static const String updateAddressAlertTitle = "Update Address !";
+  static const String saveAddressAlertTitle = "Save Address !";
+  static const String updateAddressAlertSubtitle =
+      "Are you sure you want to update this address?";
+  static const String saveAddressAlertSubtitle =
+      "Are you sure you want to save this new address?";
+  static const String addressUpdatedSuccess = "Address updated successfully";
+  static const String addressSavedSuccess = "Address saved successfully";
+
+  // Messages & Chat
+  static const String professionalSeller = "Professional Seller";
+  static const String blockedSellerTitle = "You have blocked this seller";
+  static const String blockedSellerSubtitle =
+      "You can't send or receive messages in this conversation.";
+  static const String unblockSeller = "Unblock Seller";
+  static const String messagingUnavailableTitle = "Messaging is unavailable";
+  static const String messagingUnavailableSubtitle =
+      "You can no longer send messages in this conversation.";
+  static const String deleteConversation = "Delete Conversation";
+  static const String enterAMessage = "Enter a message..";
+  static const String options = "Options";
+  static const String block = "Block";
+  static const String unblock = "Unblock";
+  static const String delete = "Delete";
+  static const String unblockSellerTitle = "Unblock This Seller !";
+  static const String blockSellerTitle = "Block This Seller !";
+  static const String unblockSellerSubtitle =
+      "Do you want to Unblock this Seller and allow messages again?";
+  static const String blockSellerSubtitle =
+      "Are you sure you want to block this Seller? You won't be able to send or receive messages with each other.";
+  static const String deleteConversationTitle = "Delete Conversation !";
+  static const String deleteConversationSubtitle =
+      "This will permanently remove this chat from your messages.";
+  static const String today = "TODAY";
+  static const String justNow = "Just now";
+  static const String addAddress = "Add Address";
+  static const String deleteAddressAlertTitle = "Delete Address !";
+  static const String deleteAddressAlertSubtitle =
+      "Are you sure you want to delete this address?";
+  static const String enterFullName = "Enter your full name";
+  static const String enterPhoneNumber = "Enter your phone number";
+  static const String emailUpdateRestriction =
+      "Email updates are restricted for customer accounts, as the email address is directly linked to authentication, security verification, and order records.";
+  static const String saveProfileAlertTitle = "Save Profile Changes !";
+  static const String saveProfileAlertSubtitle =
+      "Are you sure you want to update your profile information? Your changes will be applied immediately.";
+  static const String failedToPickImage = "Failed to pick image";
+  static const String addressDeletedSuccess = "Address deleted successfully";
+
+  // Returns
+  static const String myReturns = "My Returns";
+  static const String returnRequests = "Return Requests";
+  static const String accepted = "Accepted";
+  static const String rejected = "Rejected";
+  static const String inReview = "In Review";
+  static const String processing = "Processing";
+  static const String completed = "Completed";
+  static const String backToMyReturns = "<< Back to My Returns";
+  static const String orderIdLabel = "Order ID";
+  static const String returnDetails = "Return Details";
+  static const String returnReason = "Return Reason";
+  static const String submittedOn = "Submitted On";
+  static const String evidence = "Evidence";
+  static const String message = "Message";
+  static const String sellerRejectedRequest = "Seller Rejected This Request";
+  static const String reasonForRejection = "Reason For Rejection";
+  static const String returnAddress = "Return Address";
+  static const String location = "Location";
+  static const String noReturnRequestsFound = "No Return Requests Found";
+  static const String viewDetails = "View Details >>";
 }

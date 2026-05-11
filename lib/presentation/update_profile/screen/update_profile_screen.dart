@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../../../core/responsive_layout/dimensions.dart';
 import '../../../utils/app_colors/app_colors.dart';
 import '../../../utils/app_text_style/app_text_style.dart';
+import '../../../utils/static_strings/static_strings.dart';
 import '../../../widget/app_button.dart';
 import '../../../widget/app_text_field.dart';
 import '../controller/update_profile_controller.dart';
@@ -38,7 +39,7 @@ class UpdateProfileScreen extends GetView<UpdateProfileController> {
           ),
         ),
         title: Text(
-          "My Profile",
+          AppStrings.myProfile.tr,
           style: AppTextStyles.h3.copyWith(
             fontWeight: FontWeight.w700,
             fontStyle: FontStyle.italic,
@@ -74,7 +75,7 @@ class UpdateProfileScreen extends GetView<UpdateProfileController> {
                     alignment: Alignment.center,
                     child: controller.selectedImage.value == null
                         ? Text(
-                            "M",
+                            AppStrings.dummyUserName.tr[0].toUpperCase(),
                             style: AppTextStyles.h1.copyWith(
                               fontSize: Dimensions.fs(40),
                               fontStyle: FontStyle.italic,
@@ -110,15 +111,15 @@ class UpdateProfileScreen extends GetView<UpdateProfileController> {
             // Text Fields
             AppTextField(
               controller: controller.nameController,
-              label: "Full Name",
-              hint: "Enter your full name",
+              label: AppStrings.fullName.tr,
+              hint: AppStrings.enterFullName.tr,
             ),
             SizedBox(height: Dimensions.h(16)),
             
             AppTextField(
               controller: controller.phoneController,
-              label: "Phone Number",
-              hint: "Enter your phone number",
+              label: AppStrings.phoneNumber.tr,
+              hint: AppStrings.enterPhoneNumber.tr,
               keyboardType: TextInputType.phone,
             ),
             
@@ -126,7 +127,7 @@ class UpdateProfileScreen extends GetView<UpdateProfileController> {
             
             // Save Button
             AppButton(
-              label: "Save the changes",
+              label: AppStrings.saveTheChanges.tr,
               backgroundColor: AppColors.secondaryColor, // Black background
               textColor: AppColors.primaryColor, // Yellow text
               borderSideColor: Colors.transparent,
@@ -156,7 +157,7 @@ class UpdateProfileScreen extends GetView<UpdateProfileController> {
                 SizedBox(width: Dimensions.w(12)),
                 Expanded(
                   child: Text(
-                    "Email updates are restricted for customer accounts, as the email address is directly linked to authentication, security verification, and order records.",
+                    AppStrings.emailUpdateRestriction.tr,
                     style: AppTextStyles.body.copyWith(
                       color: AppColors.greyColor,
                       fontSize: Dimensions.fs(12),

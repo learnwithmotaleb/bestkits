@@ -86,7 +86,7 @@ class ProductCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      product['name'],
+                      product['name'].toString().tr,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: AppTextStyles.bodyText.copyWith(
@@ -108,7 +108,7 @@ class ProductCard extends StatelessWidget {
                               border: Border.all(color: AppColors.primaryColor.withOpacity(0.3)),
                             ),
                             child: Text(
-                              product['material'],
+                              product['material'].toString().tr,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(

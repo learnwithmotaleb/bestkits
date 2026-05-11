@@ -1,3 +1,4 @@
+import 'package:bestkits/utils/static_strings/static_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -33,7 +34,7 @@ class ChatController extends GetxController {
         text: 'Hey! I just wanted to confirm our meeting for tomorrow at 10am. Does that suit you?',
         isMine: false,
         time: '04:45 PM',
-        dateSeparator: 'TODAY',
+        dateSeparator: AppStrings.today.tr,
       ),
       ChatMessage(
         id: '2',
@@ -57,7 +58,7 @@ class ChatController extends GetxController {
           id: DateTime.now().millisecondsSinceEpoch.toString(),
           text: messageController.text.trim(),
           isMine: true,
-          time: 'Just now',
+          time: AppStrings.justNow.tr,
         ),
       );
       messageController.clear();
@@ -77,4 +78,4 @@ class ChatController extends GetxController {
     isUnavailable.value = true;
     isBlocked.value = false;
   }
-}
+}

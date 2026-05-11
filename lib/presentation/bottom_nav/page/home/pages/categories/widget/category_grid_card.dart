@@ -1,3 +1,4 @@
+import 'package:bestkits/utils/static_strings/static_strings.dart';
 import 'package:flutter/material.dart';
 import '../../../../../../../core/responsive_layout/dimensions.dart';
 import '../../../../../../../utils/app_colors/app_colors.dart';
@@ -66,7 +67,7 @@ class CategoryGridCard extends StatelessWidget {
                         border: Border.all(color: AppColors.primaryColor.withOpacity(0.3)),
                       ),
                       child: Text(
-                        category['itemsCount'],
+                        '${category['itemsCount']} ${AppStrings.itemsCountLabel.tr}',
                         style: TextStyle(
                           color: AppColors.primaryColor,
                           fontSize: 10,
@@ -87,7 +88,7 @@ class CategoryGridCard extends StatelessWidget {
                 children: [
                   // Category Name
                   Text(
-                    category['name'],
+                    category['name'].toString().tr,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: AppTextStyles.h4.copyWith(
@@ -132,7 +133,7 @@ class CategoryGridCard extends StatelessWidget {
         ),
       ),
       child: Text(
-        isMore ? '+ More' : label,
+        isMore ? '+ ${AppStrings.moreLabel.tr}' : label,
         style: TextStyle(
           color: isMore
               ? AppColors.primaryColor

@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import '../../../utils/static_strings/static_strings.dart';
 import '../../bottom_nav/page/cart/controller/cart_controller.dart';
 
 class DeliveryOption {
@@ -50,20 +51,20 @@ class CheckoutController extends GetxController {
     'Mayoral Reseller': [
       const DeliveryOption(
         type: 'domestic',
-        label: 'Domestic Delivery',
-        badge: '(Inside Country)',
+        label: AppStrings.domesticDelivery,
+        badge: AppStrings.insideCountry,
         partner: 'Bulgarian Post',
-        time: '2-4 Business Days',
+        time: '2-4',
         price: '4.99',
       ),
     ],
     'Tochici Clothing': [
       const DeliveryOption(
         type: 'international',
-        label: 'International Delivery',
-        badge: '(Outside Country)',
+        label: AppStrings.internationalDelivery,
+        badge: AppStrings.outsideCountry,
         partner: 'DHL Express',
-        time: '5-10 Business Days',
+        time: '5-10',
         price: '12.99',
       ),
     ],
@@ -75,19 +76,19 @@ class CheckoutController extends GetxController {
       name: 'Roberts Junior',
       phone: '+359 77 123 4567',
       address: '25 "Ivan Vazov" Street, Plovdiv 4000, Bulgaria',
-      tag: 'Home',
+      tag: AppStrings.homeTag,
     ),
     const AddressModel(
       name: 'Roberts Junior',
       phone: '+359 77 123 4567',
       address: '25 "Ivan Vazov" Street, Plovdiv 4000, Bulgaria',
-      tag: 'Office',
+      tag: AppStrings.office,
     ),
     const AddressModel(
       name: 'Roberts Junior',
       phone: '+359 77 123 4567',
       address: '25 "Ivan Vazov" Street, Plovdiv 4000, Bulgaria',
-      tag: 'Selected',
+      tag: AppStrings.selected,
     ),
   ];
 

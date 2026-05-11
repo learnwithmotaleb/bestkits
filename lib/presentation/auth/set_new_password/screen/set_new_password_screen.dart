@@ -75,7 +75,7 @@ class SetNewPasswordScreen extends StatelessWidget {
             Dimensions.gapH(8),
             AppTextField(
               controller: controller.confirmPasswordController,
-              hint: "P@ssw*rd", // Matching the design placeholder
+              hint: AppStrings.passwordPlaceholder.tr, // Matching the design placeholder
               obscure: true, // AppTextField handles toggle automatically
             ),
             

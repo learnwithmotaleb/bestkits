@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import '../../../global/language/controller/language_controller.dart';
+import '../../../utils/static_strings/static_strings.dart';
 import '../../../widget/app_alert.dart';
 
 class LanguagePreferenceController extends GetxController {
@@ -23,10 +24,10 @@ class LanguagePreferenceController extends GetxController {
 
   void switchLanguage() {
     AppAlerts.warning(
-      title: 'Change Language !',
-      message: 'Are you sure you want to change your language preference?',
-      confirmLabel: 'Confirm',
-      cancelLabel: 'Cancel',
+      title: AppStrings.languageAlertTitle.tr,
+      message: AppStrings.languageAlertSubtitle.tr,
+      confirmLabel: AppStrings.confirm.tr,
+      cancelLabel: AppStrings.cancel.tr,
       onConfirm: () {
         _performSwitch();
       },
@@ -36,7 +37,7 @@ class LanguagePreferenceController extends GetxController {
   void _performSwitch() async {
     await _lc.switchLanguage(selectedLanguage.value == 'en');
     initialLanguage = selectedLanguage.value;
-    AppAlerts.success(message: 'Language preference updated successfully');
+    AppAlerts.success(message: AppStrings.languageUpdatedSuccess.tr);
     Get.back();
   }
 }

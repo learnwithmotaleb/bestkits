@@ -1,4 +1,6 @@
+import 'package:bestkits/utils/static_strings/static_strings.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../../../../../core/responsive_layout/dimensions.dart';
 import '../../../../../utils/app_colors/app_colors.dart';
 import '../../../../../utils/app_text_style/app_text_style.dart';
@@ -31,7 +33,7 @@ class SectionTitle extends StatelessWidget {
           GestureDetector(
             onTap: onTapViewAll,
             child: Text(
-              'View all',
+              AppStrings.viewAll.tr,
               style: TextStyle(
                 color: AppColors.primaryColor,
                 fontSize: Dimensions.fs(12),

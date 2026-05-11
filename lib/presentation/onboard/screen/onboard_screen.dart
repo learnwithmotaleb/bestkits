@@ -29,8 +29,8 @@ class OnboardScreen extends StatelessWidget {
                 final page = controller.pages[index];
                 return OnboardPage(
                   image: page['image']!,
-                  title: page['title']!,
-                  subtitle: page['subtitle']!,
+                  title: page['title']!.tr,
+                  subtitle: page['subtitle']!.tr,
                 );
               },
             ),

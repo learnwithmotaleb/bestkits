@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../../../core/responsive_layout/dimensions.dart';
 import '../../../utils/app_colors/app_colors.dart';
 import '../../../utils/app_text_style/app_text_style.dart';
+import '../../../utils/static_strings/static_strings.dart';
 import '../../../widget/app_button.dart';
 import '../controller/my_address_controller.dart';
 
@@ -46,7 +47,7 @@ class _MyAddressScreenState extends State<MyAddressScreen> {
           ),
         ),
         title: Text(
-          "My Addresses",
+          AppStrings.myAddresses.tr,
           style: AppTextStyles.h2.copyWith(
             fontWeight: FontWeight.w700,
             fontSize: Dimensions.fs(18),
@@ -70,7 +71,7 @@ class _MyAddressScreenState extends State<MyAddressScreen> {
               child: SizedBox(
                 width: Dimensions.w(150),
                 child: AppButton(
-                  label: "Add Address",
+                  label: AppStrings.addAddress.tr,
                   onPressed: controller.goToAddAddress,
                   backgroundColor: const Color(0xFF1A1A1A),
                   textColor: AppColors.primaryColor,

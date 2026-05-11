@@ -1,3 +1,4 @@
+import 'package:bestkits/utils/static_strings/static_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../core/responsive_layout/dimensions.dart';
@@ -20,7 +21,7 @@ class ProductInfoSection extends StatelessWidget {
             border: Border.all(color: AppColors.primaryColor.withOpacity(0.5)),
           ),
           child: Text(
-            'kids sneakers',
+            AppStrings.dummyCategory.tr,
             style: TextStyle(
               color: AppColors.primaryColor,
               fontSize: 10,
@@ -31,7 +32,7 @@ class ProductInfoSection extends StatelessWidget {
         const SizedBox(height: 10),
         // Product Name
         Text(
-          'Kids Cotton Hoodie – Soft Fit',
+          AppStrings.dummyProductName.tr,
           style: AppTextStyles.h3.copyWith(
             fontSize: 20,
             fontWeight: FontWeight.w700,
@@ -50,7 +51,7 @@ class ProductInfoSection extends StatelessWidget {
             ),
             const SizedBox(width: 4),
             Text(
-              '[ 128 Reviews ]',
+              '[ 128 ${AppStrings.reviews.tr} ]',
               style: TextStyle(fontSize: 12, color: Colors.grey[400]),
             ),
             const Spacer(),
@@ -61,13 +62,13 @@ class ProductInfoSection extends StatelessWidget {
                 color: const Color(0xFFE8F5E9),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: const Row(
+              child: Row(
                 children: [
-                  CircleAvatar(radius: 2, backgroundColor: Color(0xFF4CAF50)),
-                  SizedBox(width: 4),
+                  const CircleAvatar(radius: 2, backgroundColor: Color(0xFF4CAF50)),
+                  const SizedBox(width: 4),
                   Text(
-                    'Active',
-                    style: TextStyle(color: Color(0xFF4CAF50), fontSize: 10, fontWeight: FontWeight.w600),
+                    AppStrings.active.tr,
+                    style: const TextStyle(color: Color(0xFF4CAF50), fontSize: 10, fontWeight: FontWeight.w600),
                   ),
                 ],
               ),
@@ -103,7 +104,7 @@ class ProductInfoSection extends StatelessWidget {
                 border: Border.all(color: AppColors.primaryColor.withOpacity(0.5)),
               ),
               child: Text(
-                '10% off',
+                '10% ${AppStrings.off.tr}',
                 style: TextStyle(
                   color: AppColors.primaryColor,
                   fontSize: 10,

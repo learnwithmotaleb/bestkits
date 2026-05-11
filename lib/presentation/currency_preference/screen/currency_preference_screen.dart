@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../../../core/responsive_layout/dimensions.dart';
 import '../../../utils/app_colors/app_colors.dart';
 import '../../../utils/app_text_style/app_text_style.dart';
+import '../../../utils/static_strings/static_strings.dart';
 import '../../../widget/app_button.dart';
 import '../controller/currency_preference_controller.dart';
 
@@ -46,7 +47,7 @@ class _CurrencyPreferenceScreenState extends State<CurrencyPreferenceScreen> {
           ),
         ),
         title: Text(
-          "Currency Preference",
+          AppStrings.currencyPreference.tr,
           style: AppTextStyles.h2.copyWith(
             fontWeight: FontWeight.w700,
             fontSize: Dimensions.fs(18),
@@ -136,7 +137,7 @@ class _CurrencyPreferenceScreenState extends State<CurrencyPreferenceScreen> {
               ),
             ),
             Obx(() => AppButton(
-              label: "Switch Currency",
+              label: AppStrings.switchCurrency.tr,
               onPressed: controller.isChanged ? controller.switchCurrency : null,
               backgroundColor: const Color(0xFF1A1A1A),
               textColor: AppColors.primaryColor,

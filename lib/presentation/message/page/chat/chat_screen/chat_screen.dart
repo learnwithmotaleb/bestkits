@@ -1,4 +1,5 @@
 import 'package:bestkits/presentation/message/controller/message_controller.dart';
+import 'package:bestkits/utils/static_strings/static_strings.dart';
 import 'package:bestkits/widget/app_text_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -90,9 +91,9 @@ class _ChatScreenState extends State<ChatScreen> {
                         color: Colors.purple.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: const Text(
-                        "• Professional Seller",
-                        style: TextStyle(
+                      child: Text(
+                        "• ${AppStrings.professionalSeller.tr}",
+                        style: const TextStyle(
                             fontSize: 8,
                             color: Colors.purple,
                             fontWeight: FontWeight.bold),
@@ -232,22 +233,22 @@ class _ChatScreenState extends State<ChatScreen> {
                     color: Colors.red),
               ),
               SizedBox(height: Dimensions.h(12)),
-              const Text(
-                "You have blocked this seller",
-                style: TextStyle(
+              Text(
+                AppStrings.blockedSellerTitle.tr,
+                style: const TextStyle(
                     fontFamily: 'Nunito',
                     fontSize: 14,
                     fontWeight: FontWeight.bold),
               ),
               SizedBox(height: Dimensions.h(4)),
               Text(
-                "You can't send or receive messages in this conversation.",
+                AppStrings.blockedSellerSubtitle.tr,
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 12, color: Colors.grey[400]),
               ),
               SizedBox(height: Dimensions.h(16)),
               AppButton(
-                label: "Unblock Seller",
+                label: AppStrings.unblockSeller.tr,
                 onPressed: () => controller.toggleBlock(),
                 backgroundColor: const Color(0xFF1A1A1A),
                 textColor: AppColors.primaryColor,
@@ -287,22 +288,22 @@ class _ChatScreenState extends State<ChatScreen> {
                     color: Colors.red),
               ),
               SizedBox(height: Dimensions.h(12)),
-              const Text(
-                "Messaging is unavailable",
-                style: TextStyle(
+              Text(
+                AppStrings.messagingUnavailableTitle.tr,
+                style: const TextStyle(
                     fontFamily: 'Nunito',
                     fontSize: 14,
                     fontWeight: FontWeight.bold),
               ),
               SizedBox(height: Dimensions.h(4)),
               Text(
-                "You can no longer send messages in this conversation.",
+                AppStrings.messagingUnavailableSubtitle.tr,
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 12, color: Colors.grey[400]),
               ),
               SizedBox(height: Dimensions.h(16)),
               AppButton(
-                label: "Delete Conversation",
+                label: AppStrings.deleteConversation.tr,
                 onPressed: () => controller.deleteConversation(),
                 backgroundColor: const Color(0xFF1A1A1A),
                 textColor: AppColors.primaryColor,
@@ -337,7 +338,7 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
               child: AppTextField(
                 controller: controller.messageController,
-                hint: "Enter a message..",
+                hint: AppStrings.enterAMessage.tr,
 
               ),
             ),
@@ -372,9 +373,9 @@ class _ChatScreenState extends State<ChatScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  'Options',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
+                Text(
+                  AppStrings.options.tr,
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
                 ),
                 GestureDetector(
                   onTap: () => Get.back(),
@@ -389,16 +390,18 @@ class _ChatScreenState extends State<ChatScreen> {
                 children: [
                   _buildOptionRow(
                     icon: blocked ? Icons.check_circle_outline : Icons.block,
-                    label: blocked ? 'Unblock' : 'Block',
+                    label: blocked ? AppStrings.unblock.tr : AppStrings.block.tr,
                     onTap: () {
                       Get.back();
                       AppAlerts.warning(
                         title: blocked
-                            ? 'Unblock This Seller !'
-                            : 'Block This Seller !',
+                            ? AppStrings.unblockSellerTitle.tr
+                            : AppStrings.blockSellerTitle.tr,
                         message: blocked
-                            ? 'Do you want to Unblock this Seller and allow messages again?'
-                            : "Are you sure you want to block this Seller? You won't be able to send or receive messages with each other.",
+                            ? AppStrings.unblockSellerSubtitle.tr
+                            : AppStrings.blockSellerSubtitle.tr,
+                        confirmLabel: AppStrings.confirm.tr,
+                        cancelLabel: AppStrings.cancel.tr,
                         onConfirm: () => controller.toggleBlock(),
                       );
                     },
@@ -407,14 +410,15 @@ class _ChatScreenState extends State<ChatScreen> {
                       height: 1, color: AppColors.greyColor.withOpacity(0.2)),
                   _buildOptionRow(
                     icon: Icons.delete_outline,
-                    label: 'Delete',
+                    label: AppStrings.delete.tr,
                     isDestructive: true,
                     onTap: () {
                       Get.back();
                       AppAlerts.warning(
-                        title: 'Delete Conversation !',
-                        message:
-                            'This will permanently remove this chat from your messages.',
+                        title: AppStrings.deleteConversationTitle.tr,
+                        message: AppStrings.deleteConversationSubtitle.tr,
+                        confirmLabel: AppStrings.confirm.tr,
+                        cancelLabel: AppStrings.cancel.tr,
                         onConfirm: () => controller.deleteConversation(),
                       );
                     },

@@ -1,3 +1,4 @@
+import 'package:bestkits/utils/static_strings/static_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../utils/app_colors/app_colors.dart';
@@ -31,9 +32,9 @@ class CartOrderSummary extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Title
-              const Text(
-                '- Order Summary',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, fontStyle: FontStyle.italic),
+              Text(
+                '- ${AppStrings.orderSummary.tr}',
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800, fontStyle: FontStyle.italic),
               ),
               const SizedBox(height: 14),
               const Divider(height: 1, color: Color(0xFFF0F0F0)),
@@ -81,7 +82,7 @@ class CartOrderSummary extends StatelessWidget {
               const SizedBox(height: 12),
 
               // Subtotal
-              _summaryRow('Subtotal', '€${controller.subtotal.toStringAsFixed(2)}'),
+              _summaryRow(AppStrings.subtotal.tr, '€${controller.subtotal.toStringAsFixed(2)}'),
               const SizedBox(height: 8),
 
               // Shipping
@@ -90,7 +91,7 @@ class CartOrderSummary extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      const Text('Shipping Fee ', style: TextStyle(fontSize: 13, color: Colors.grey)),
+                      Text('${AppStrings.shippingFee.tr} ', style: const TextStyle(fontSize: 13, color: Colors.grey)),
                       Text(
                         'x${controller.totalItemCount}',
                         style: TextStyle(
@@ -112,12 +113,12 @@ class CartOrderSummary extends StatelessWidget {
               const SizedBox(height: 12),
 
               // Total
-              _summaryRow('Total', '€${controller.total.toStringAsFixed(2)}', bold: true),
+              _summaryRow(AppStrings.total.tr, '€${controller.total.toStringAsFixed(2)}', bold: true),
               const SizedBox(height: 20),
 
               // Proceed to Checkout
               AppButton(
-                label: 'Proceed To Checkout',
+                label: AppStrings.proceedToCheckout.tr,
                 onPressed: () => Get.to(() => const CheckoutScreen()),
                 backgroundColor: const Color(0xFF1A1A1A),
                 textColor: AppColors.primaryColor,
@@ -130,7 +131,7 @@ class CartOrderSummary extends StatelessWidget {
 
               // Continue Shopping
               AppButton(
-                label: 'Continue Shopping',
+                label: AppStrings.continueShopping.tr,
                 onPressed: () => Get.back(),
                 backgroundColor: AppColors.navBarColor,
                 textColor: AppColors.primaryColor,

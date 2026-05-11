@@ -1,3 +1,4 @@
+import 'package:bestkits/utils/static_strings/static_strings.dart';
 import 'package:bestkits/core/routes/route_path.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -41,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
               // Shop By Category
               SectionTitle(
-                title: 'Shop By Category',
+                title: AppStrings.shopByCategory.tr,
                 onTapViewAll: () {
                   Get.toNamed(RoutePath.categoriesScreen);
                 },
@@ -56,9 +57,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   itemBuilder: (context, index) {
                     final category = controller.categories[index];
                     return CategoryCard(
-                      name: category['name'],
+                      name: category['name'].toString().tr,
                       image: category['image'],
-                      items: category['items'],
+                      items: '${category['items']} ${AppStrings.itemsCountLabel.tr}',
                     );
                   },
                 ),
@@ -67,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
               // Now Trending
               SectionTitle(
-                title: 'Now Trending',
+                title: AppStrings.nowTrending.tr,
                 onTapViewAll: () {},
               ),
               Dimensions.gapH(15),
@@ -87,7 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
               // Recently Viewed
               SectionTitle(
-                title: 'Recently Viewed',
+                title: AppStrings.recentlyViewed.tr,
                 onTapViewAll: () {},
               ),
               Dimensions.gapH(15),
@@ -107,7 +108,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
               // New Arrivals
               SectionTitle(
-                title: 'New Arrivals',
+                title: AppStrings.newArrivals.tr,
                 onTapViewAll: () {},
               ),
               Dimensions.gapH(15),

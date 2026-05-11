@@ -1,3 +1,4 @@
+import 'package:bestkits/utils/static_strings/static_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../core/responsive_layout/dimensions.dart';
@@ -18,7 +19,7 @@ class ProductActionSection extends StatelessWidget {
       children: [
         // Size Selection
         Text(
-          'Size / Variant -',
+          '${AppStrings.variant.tr} -',
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w600,
@@ -67,7 +68,7 @@ class ProductActionSection extends StatelessWidget {
 
         // Quantity Selection
         Text(
-          'Quantity -',
+          '${AppStrings.quantity.tr} -',
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w600,
@@ -113,7 +114,7 @@ class ProductActionSection extends StatelessWidget {
           children: [
             Expanded(
               child: AppButton(
-                label: 'Add to Cart',
+                label: AppStrings.addToCart.tr,
                 onPressed: () {},
                 backgroundColor: const Color(0xFF1A1A1A),
                 textColor: AppColors.primaryColor,
@@ -125,7 +126,7 @@ class ProductActionSection extends StatelessWidget {
             const SizedBox(width: 15),
             Expanded(
               child: AppButton(
-                label: 'Order Now',
+                label: AppStrings.orderNow.tr,
                 onPressed: () {},
                 backgroundColor: AppColors.primaryColor,
                 textColor: Colors.black,

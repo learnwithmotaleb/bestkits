@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:bestkits/core/responsive_layout/dimensions.dart';
 import 'package:bestkits/utils/app_colors/app_colors.dart';
 import 'package:bestkits/utils/app_text_style/app_text_style.dart';
+import 'package:bestkits/utils/static_strings/static_strings.dart';
 import 'package:bestkits/widget/app_button.dart';
 import '../controller/otp_verify_controller.dart';
 import '../widget/timer_widget.dart';
@@ -58,7 +59,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
               SizedBox(height: Dimensions.h(60)),
               
               Text(
-                "Verify Your OTP",
+                AppStrings.verifyYourOtp.tr,
                 style: AppTextStyles.title.copyWith(
                   fontSize: Dimensions.fs(32, tablet: 36, desktop: 40),
                   fontStyle: FontStyle.italic,
@@ -68,7 +69,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
               SizedBox(height: Dimensions.h(8)),
               
               Text(
-                "Enter the 6-digit verification code sent to your email address.",
+                AppStrings.otpSubtitle.tr,
                 style: AppTextStyles.body.copyWith(
                   color: AppColors.greyColor,
                 ),
@@ -77,7 +78,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
               SizedBox(height: Dimensions.h(40)),
               
               Text(
-                "Verification Code",
+                AppStrings.verificationCode.tr,
                 style: AppTextStyles.body.copyWith(
                   fontWeight: FontWeight.w600,
                   color: AppColors.blackColor.withOpacity(0.8),
@@ -101,7 +102,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
               SizedBox(height: Dimensions.h(32)),
               
               Obx(() => AppButton(
-                label: "Verify Code",
+                label: AppStrings.verifyCode.tr,
                 onPressed: controller.emailVerifyProcess,
                 isLoading: controller.isLoading.value,
                 backgroundColor: AppColors.secondaryColor,

@@ -1,3 +1,4 @@
+import 'package:bestkits/utils/static_strings/static_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -48,7 +49,7 @@ class OrderModel {
 }
 
 class OrderController extends GetxController {
-  final List<String> tabs = ['Active Oder', 'Complete', 'Canceled'];
+  final List<String> tabs = [AppStrings.activeOrder, AppStrings.complete, AppStrings.canceled];
   final RxInt selectedTab = 0.obs;
 
   final Rx<OrderModel?> selectedOrder = Rx<OrderModel?>(null);
@@ -58,23 +59,23 @@ class OrderController extends GetxController {
       id: '1',
       orderId: 'KDF143625879',
       date: '27 Aug 2020 - 08:30 AM',
-      status: 'Active Oder',
-      subStatus: 'Order Placed',
+      status: AppStrings.activeOrder,
+      subStatus: AppStrings.orderPlaced,
       sellerName: 'Mayoral Reseller',
       totalAmount: 520.00,
       location: '25 "Ivan Vazov" Street, Plovdiv 4000, Bulgaria',
-      locationTag: 'Location',
+      locationTag: AppStrings.locationTag,
       items: [
         OrderItem(
           image: AppImages.kidsCottonSho,
-          name: 'D.D. Step - Comfort',
+          name: AppStrings.dummyOrderProductName,
           quantity: 1,
           variant: 'S',
           price: 260.00,
         ),
         OrderItem(
           image: AppImages.kidsCottonSho,
-          name: 'D.D. Step - Comfort',
+          name: AppStrings.dummyOrderProductName,
           quantity: 1,
           variant: 'S',
           price: 260.00,
@@ -85,16 +86,16 @@ class OrderController extends GetxController {
       id: '2',
       orderId: 'DDF143625869',
       date: '27 Aug 2020 - 08:30 AM',
-      status: 'Active Oder',
-      subStatus: 'Order Placed',
+      status: AppStrings.activeOrder,
+      subStatus: AppStrings.orderPlaced,
       sellerName: 'Mayoral Reseller',
       totalAmount: 260.00,
       location: '25 "Ivan Vazov" Street, Plovdiv 4000, Bulgaria',
-      locationTag: 'Location',
+      locationTag: AppStrings.locationTag,
       items: [
         OrderItem(
           image: AppImages.kidsCottonSho,
-          name: 'D.D. Step - Comfort',
+          name: AppStrings.dummyOrderProductName,
           quantity: 1,
           variant: 'S',
           price: 260.00,
@@ -105,24 +106,24 @@ class OrderController extends GetxController {
       id: '3',
       orderId: 'KDF143625879',
       date: '27 Aug 2020 - 08:30 AM',
-      status: 'Complete',
-      subStatus: 'Delivered',
+      status: AppStrings.complete,
+      subStatus: AppStrings.delivered,
       sellerName: 'Mayoral Reseller',
       totalAmount: 520.00,
       location: '25 "Ivan Vazov" Street, Plovdiv 4000, Bulgaria',
-      locationTag: 'Location',
+      locationTag: AppStrings.locationTag,
       isReviewed: true,
       items: [
         OrderItem(
           image: AppImages.kidsCottonSho,
-          name: 'D.D. Step - Comfort',
+          name: AppStrings.dummyOrderProductName,
           quantity: 1,
           variant: 'S',
           price: 260.00,
         ),
         OrderItem(
           image: AppImages.kidsCottonSho,
-          name: 'D.D. Step - Comfort',
+          name: AppStrings.dummyOrderProductName,
           quantity: 1,
           variant: 'S',
           price: 260.00,
@@ -133,16 +134,16 @@ class OrderController extends GetxController {
       id: '4',
       orderId: 'DDF143625869',
       date: '27 Aug 2020 - 08:30 AM',
-      status: 'Complete',
-      subStatus: 'Delivered',
+      status: AppStrings.complete,
+      subStatus: AppStrings.delivered,
       sellerName: 'Mayoral Reseller',
       totalAmount: 260.00,
       location: '25 "Ivan Vazov" Street, Plovdiv 4000, Bulgaria',
-      locationTag: 'Location',
+      locationTag: AppStrings.locationTag,
       items: [
         OrderItem(
           image: AppImages.kidsCottonSho,
-          name: 'D.D. Step - Comfort',
+          name: AppStrings.dummyOrderProductName,
           quantity: 1,
           variant: 'S',
           price: 260.00,
@@ -153,23 +154,23 @@ class OrderController extends GetxController {
       id: '5',
       orderId: 'KDF143625879',
       date: '27 Aug 2020 - 08:30 AM',
-      status: 'Canceled',
-      subStatus: 'Canceled',
+      status: AppStrings.canceled,
+      subStatus: AppStrings.canceled,
       sellerName: 'Mayoral Reseller',
       totalAmount: 520.00,
       location: '25 "Ivan Vazov" Street, Plovdiv 4000, Bulgaria',
-      locationTag: 'Location',
+      locationTag: AppStrings.locationTag,
       items: [
         OrderItem(
           image: AppImages.kidsCottonSho,
-          name: 'D.D. Step - Comfort',
+          name: AppStrings.dummyOrderProductName,
           quantity: 1,
           variant: 'S',
           price: 260.00,
         ),
         OrderItem(
           image: AppImages.kidsCottonSho,
-          name: 'D.D. Step - Comfort',
+          name: AppStrings.dummyOrderProductName,
           quantity: 1,
           variant: 'S',
           price: 260.00,

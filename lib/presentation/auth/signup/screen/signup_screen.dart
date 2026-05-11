@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:bestkits/core/responsive_layout/dimensions.dart';
 import 'package:bestkits/utils/app_colors/app_colors.dart';
 import 'package:bestkits/utils/app_text_style/app_text_style.dart';
+import 'package:bestkits/utils/static_strings/static_strings.dart';
 import 'package:bestkits/widget/app_button.dart';
 import 'package:bestkits/widget/app_text_field.dart';
 import 'package:bestkits/core/routes/route_path.dart';
@@ -27,7 +28,7 @@ class SignupScreen extends StatelessWidget {
               
               // Title
               Text(
-                "Create Your Account",
+                AppStrings.createYourAccount.tr,
                 style: AppTextStyles.title.copyWith(
                   fontSize: Dimensions.fs(32, tablet: 36, desktop: 40),
                   fontStyle: FontStyle.italic,
@@ -38,7 +39,7 @@ class SignupScreen extends StatelessWidget {
               
               // Subtitle
               Text(
-                "Sign up to start using BestKid.",
+                AppStrings.signupSubtitle.tr,
                 style: AppTextStyles.body.copyWith(
                   color: AppColors.greyColor,
                 ),
@@ -49,8 +50,8 @@ class SignupScreen extends StatelessWidget {
               // Full Name
               AppTextField(
                 controller: controller.nameController,
-                label: "Full Name",
-                hint: "Enter your full name",
+                label: AppStrings.fullName.tr,
+                hint: AppStrings.enterFullName.tr,
                 keyboardType: TextInputType.name,
               ),
               
@@ -59,8 +60,8 @@ class SignupScreen extends StatelessWidget {
               // Email Address
               AppTextField(
                 controller: controller.emailController,
-                label: "Email Address",
-                hint: "Enter your email address",
+                label: AppStrings.emailAddress.tr,
+                hint: AppStrings.enterEmailAddress.tr,
                 keyboardType: TextInputType.emailAddress,
               ),
               
@@ -69,8 +70,8 @@ class SignupScreen extends StatelessWidget {
               // Phone Number
               AppTextField(
                 controller: controller.phoneController,
-                label: "Phone Number",
-                hint: "Enter your phone number",
+                label: AppStrings.phoneNumber.tr,
+                hint: AppStrings.enterPhoneNumber.tr,
                 keyboardType: TextInputType.phone,
               ),
               
@@ -79,7 +80,7 @@ class SignupScreen extends StatelessWidget {
               // Password
               AppTextField(
                 controller: controller.passwordController,
-                label: "Password",
+                label: AppStrings.password.tr,
                 hint: "••••••••",
                 obscure: true,
               ),
@@ -89,7 +90,7 @@ class SignupScreen extends StatelessWidget {
               // Confirm Password
               AppTextField(
                 controller: controller.confirmPasswordController,
-                label: "Confirm Password",
+                label: AppStrings.confirmPassword.tr,
                 hint: "••••••••",
                 obscure: true,
               ),
@@ -116,23 +117,23 @@ class SignupScreen extends StatelessWidget {
                   Expanded(
                     child: RichText(
                       text: TextSpan(
-                        text: "I agree to the ",
+                        text: AppStrings.iAgreeToThe.tr,
                         style: AppTextStyles.body.copyWith(
                           fontSize: Dimensions.fs(13),
                           color: AppColors.greyColor,
                         ),
                         children: [
                           TextSpan(
-                            text: "Terms of Service",
+                            text: AppStrings.termsOfService.tr,
                             style: AppTextStyles.body.copyWith(
                               fontSize: Dimensions.fs(13),
                               color: AppColors.primaryColor,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
-                          const TextSpan(text: " and "),
+                          TextSpan(text: AppStrings.andText.tr),
                           TextSpan(
-                            text: "Privacy Policy",
+                            text: AppStrings.privacyPolicy.tr,
                             style: AppTextStyles.body.copyWith(
                               fontSize: Dimensions.fs(13),
                               color: AppColors.primaryColor,
@@ -150,7 +151,7 @@ class SignupScreen extends StatelessWidget {
               
               // Sign Up Button (Labelled "Log In" as per Figma)
               AppButton(
-                label: "Log In",
+                label: AppStrings.logIn.tr,
                 onPressed: () {
                   Get.toNamed(RoutePath.otpScreen, arguments: "signup");
                 },
@@ -171,13 +172,13 @@ class SignupScreen extends StatelessWidget {
                   },
                   child: RichText(
                     text: TextSpan(
-                      text: "Already have an account? ",
+                      text: AppStrings.alreadyHaveAccount.tr,
                       style: AppTextStyles.body.copyWith(
                         color: AppColors.greyColor,
                       ),
                       children: [
                         TextSpan(
-                          text: "Sign In !",
+                          text: AppStrings.signIn.tr,
                           style: AppTextStyles.body.copyWith(
                             color: AppColors.primaryColor,
                             fontWeight: FontWeight.bold,

@@ -1,3 +1,4 @@
+import 'package:bestkits/utils/static_strings/static_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../core/responsive_layout/dimensions.dart';
@@ -44,9 +45,9 @@ class _MyReturnScreenState extends State<MyReturnScreen> {
             ),
           ),
         ),
-        title: const Text(
-          "My Returns",
-          style: TextStyle(
+        title: Text(
+          AppStrings.myReturns.tr,
+          style: const TextStyle(
             color: AppColors.blackColor,
             fontFamily: 'Nunito',
             fontSize: 18,
@@ -100,7 +101,7 @@ class _MyReturnScreenState extends State<MyReturnScreen> {
                   ),
                   alignment: Alignment.center,
                   child: Text(
-                    controller.tabs[index],
+                    controller.tabs[index].tr,
                     style: TextStyle(
                       fontFamily: 'Nunito',
                       color: isSelected

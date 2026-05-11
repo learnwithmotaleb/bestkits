@@ -1,3 +1,4 @@
+import 'package:bestkits/utils/static_strings/static_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -39,7 +40,7 @@ class MyProfileScreen extends GetView<MyProfileController> {
           ),
         ),
         title: Text(
-          "My Profile",
+          AppStrings.myProfile.tr,
           style: AppTextStyles.h3.copyWith(
             fontWeight: FontWeight.w700,
             fontStyle: FontStyle.italic,
@@ -66,7 +67,7 @@ class MyProfileScreen extends GetView<MyProfileController> {
               ),
               alignment: Alignment.center,
               child: Text(
-                "R",
+                AppStrings.dummyUserName.tr[0].toUpperCase(),
                 style: AppTextStyles.h1.copyWith(
                   fontSize: Dimensions.fs(40),
                   fontStyle: FontStyle.italic,
@@ -79,16 +80,16 @@ class MyProfileScreen extends GetView<MyProfileController> {
             // Text Fields
             AppTextField(
               controller: controller.nameController,
-              label: "Name",
-              hint: "Enter your name",
+              label: AppStrings.fullName.tr,
+              hint: AppStrings.enterFullName.tr,
               readOnly: true,
             ),
             SizedBox(height: Dimensions.h(16)),
             
             AppTextField(
               controller: controller.emailController,
-              label: "Email",
-              hint: "Enter your email",
+              label: AppStrings.emailAddress.tr,
+              hint: AppStrings.emailPlaceholder.tr,
               keyboardType: TextInputType.emailAddress,
               readOnly: true,
             ),
@@ -96,8 +97,8 @@ class MyProfileScreen extends GetView<MyProfileController> {
             
             AppTextField(
               controller: controller.phoneController,
-              label: "Contact Phone",
-              hint: "Enter your phone number",
+              label: AppStrings.phoneNumber.tr,
+              hint: AppStrings.enterPhoneNumber.tr,
               keyboardType: TextInputType.phone,
               readOnly: true,
             ),
@@ -106,7 +107,7 @@ class MyProfileScreen extends GetView<MyProfileController> {
             
             // Update Profile Button
             AppButton(
-              label: "Update Profile",
+              label: AppStrings.updateProfile.tr,
               backgroundColor: AppColors.secondaryColor, // Black background
               textColor: AppColors.primaryColor, // Yellow text
               borderSideColor: Colors.transparent,

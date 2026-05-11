@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../../../../../core/responsive_layout/dimensions.dart';
 import '../../../../../utils/app_colors/app_colors.dart';
 import '../../../../../utils/app_text_style/app_text_style.dart';
+import '../../../../../utils/static_strings/static_strings.dart';
 import '../controller/search_controller.dart';
 import '../widget/filter_bottom_sheet.dart';
 import '../widget/search_product_card.dart';
@@ -39,7 +40,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       child: TextField(
                         controller: controller.searchTextController,
                         decoration: InputDecoration(
-                          hintText: 'Search',
+                          hintText: AppStrings.search.tr,
                           hintStyle: TextStyle(
                             color: Colors.grey,
                             fontSize: Dimensions.fs(14),
@@ -118,7 +119,7 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
           SizedBox(height: Dimensions.h(20)),
           Text(
-            'Search for products...',
+            AppStrings.searchPlaceholder.tr,
             style: AppTextStyles.h4.copyWith(
               color: Colors.grey,
               fontWeight: FontWeight.w500,
@@ -150,7 +151,7 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
             SizedBox(height: Dimensions.h(30)),
             Text(
-              "We Couldn't Find Any Matches.",
+              AppStrings.noMatchesFound.tr,
               textAlign: TextAlign.center,
               style: AppTextStyles.h3.copyWith(
                 fontSize: Dimensions.fs(18),

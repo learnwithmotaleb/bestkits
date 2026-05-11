@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../utils/static_strings/static_strings.dart';
 import '../../../widget/app_alert.dart';
 
 class ManageAddressController extends GetxController {
@@ -28,12 +29,12 @@ class ManageAddressController extends GetxController {
 
   void saveChanges() {
     AppAlerts.warning(
-      title: isUpdate ? 'Update Address !' : 'Save Address !',
+      title: isUpdate ? AppStrings.updateAddressAlertTitle.tr : AppStrings.saveAddressAlertTitle.tr,
       message: isUpdate 
-          ? 'Are you sure you want to update this address?' 
-          : 'Are you sure you want to save this new address?',
-      confirmLabel: 'Confirm',
-      cancelLabel: 'Cancel',
+          ? AppStrings.updateAddressAlertSubtitle.tr 
+          : AppStrings.saveAddressAlertSubtitle.tr,
+      confirmLabel: AppStrings.confirm.tr,
+      cancelLabel: AppStrings.cancel.tr,
       onConfirm: () {
         _performSave();
       },
@@ -44,7 +45,7 @@ class ManageAddressController extends GetxController {
     isLoading.value = true;
     await Future.delayed(const Duration(seconds: 1));
     isLoading.value = false;
-    AppAlerts.success(message: isUpdate ? 'Address updated successfully' : 'Address saved successfully');
+    AppAlerts.success(message: isUpdate ? AppStrings.addressUpdatedSuccess.tr : AppStrings.addressSavedSuccess.tr);
     Get.back();
   }
 }

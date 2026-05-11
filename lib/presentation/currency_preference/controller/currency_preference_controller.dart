@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import '../../../utils/static_strings/static_strings.dart';
 import '../../../widget/app_alert.dart';
 
 class CurrencyPreferenceController extends GetxController {
@@ -20,10 +21,10 @@ class CurrencyPreferenceController extends GetxController {
 
   void switchCurrency() {
     AppAlerts.warning(
-      title: 'Change Currency !',
-      message: 'Are you sure you want to change your currency preference?',
-      confirmLabel: 'Confirm',
-      cancelLabel: 'Cancel',
+      title: AppStrings.currencyAlertTitle.tr,
+      message: AppStrings.currencyAlertSubtitle.tr,
+      confirmLabel: AppStrings.confirm.tr,
+      cancelLabel: AppStrings.cancel.tr,
       onConfirm: () {
         // Handle currency change logic here
         _performSwitch();
@@ -34,7 +35,7 @@ class CurrencyPreferenceController extends GetxController {
   void _performSwitch() async {
     // Simulate API call or local storage update
     await Future.delayed(const Duration(milliseconds: 500));
-    AppAlerts.success(message: 'Currency preference updated successfully');
+    AppAlerts.success(message: AppStrings.currencyUpdatedSuccess.tr);
     Get.back();
   }
 }

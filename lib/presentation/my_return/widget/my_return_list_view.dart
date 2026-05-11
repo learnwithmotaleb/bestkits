@@ -1,3 +1,4 @@
+import 'package:bestkits/utils/static_strings/static_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../core/responsive_layout/dimensions.dart';
@@ -29,7 +30,7 @@ class MyReturnListView extends GetView<MyReturnController> {
                 Icon(Icons.inbox_outlined, size: 48, color: Colors.grey[400]),
                 SizedBox(height: Dimensions.h(16)),
                 Text(
-                  "No Return Requests Found",
+                  AppStrings.noReturnRequestsFound.tr,
                   style: TextStyle(
                     fontFamily: 'Nunito',
                     fontSize: 12,
@@ -57,26 +58,21 @@ class MyReturnListView extends GetView<MyReturnController> {
     Color badgeColor;
     Color badgeTextColor;
 
-    switch (r.returnStatus) {
-      case 'In Review':
-        badgeColor = AppColors.primaryColor.withOpacity(0.15);
-        badgeTextColor = AppColors.primaryColor;
-        break;
-      case 'Processing':
-        badgeColor = Colors.blue.withOpacity(0.1);
-        badgeTextColor = Colors.blue;
-        break;
-      case 'Completed':
-        badgeColor = Colors.green.withOpacity(0.1);
-        badgeTextColor = Colors.green;
-        break;
-      case 'Rejected':
-        badgeColor = Colors.red.withOpacity(0.1);
-        badgeTextColor = Colors.red;
-        break;
-      default:
-        badgeColor = Colors.grey.withOpacity(0.1);
-        badgeTextColor = Colors.grey;
+    if (r.returnStatus == AppStrings.inReview) {
+      badgeColor = AppColors.primaryColor.withOpacity(0.15);
+      badgeTextColor = AppColors.primaryColor;
+    } else if (r.returnStatus == AppStrings.processing) {
+      badgeColor = Colors.blue.withOpacity(0.1);
+      badgeTextColor = Colors.blue;
+    } else if (r.returnStatus == AppStrings.completed) {
+      badgeColor = Colors.green.withOpacity(0.1);
+      badgeTextColor = Colors.green;
+    } else if (r.returnStatus == AppStrings.rejected) {
+      badgeColor = Colors.red.withOpacity(0.1);
+      badgeTextColor = Colors.red;
+    } else {
+      badgeColor = Colors.grey.withOpacity(0.1);
+      badgeTextColor = Colors.grey;
     }
 
     return Container(
@@ -107,7 +103,7 @@ class MyReturnListView extends GetView<MyReturnController> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "- Order ID: ${r.orderId}",
+                        "- ${AppStrings.orderIdLabel.tr}: ${r.orderId}",
                         style: const TextStyle(
                           fontFamily: 'Nunito',
                           fontSize: 14,
@@ -135,7 +131,7 @@ class MyReturnListView extends GetView<MyReturnController> {
                     borderRadius: BorderRadius.circular(Dimensions.r(20)),
                   ),
                   child: Text(
-                    "• ${r.returnStatus}",
+                    "• ${r.returnStatus.tr}",
                     style: TextStyle(
                       fontFamily: 'Nunito',
                       fontSize: 10,
@@ -154,7 +150,7 @@ class MyReturnListView extends GetView<MyReturnController> {
               children: [
                 Expanded(
                   child: AppButton(
-                    label: "View Details >>",
+                    label: AppStrings.viewDetails.tr,
                     onPressed: () => controller.viewReturnDetails(r),
                     backgroundColor: const Color(0xFF1A1A1A),
                     textColor: AppColors.primaryColor,

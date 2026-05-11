@@ -11,13 +11,13 @@ class OnboardController extends GetxController {
   final List<Map<String, String>> pages = [
     {
       'image': AppImages.onboard1,
-      'title': AppStrings.onboardingTitle1.tr,
-      'subtitle': AppStrings.onboardingSubtitle1.tr,
+      'title': AppStrings.onboardingTitle1,
+      'subtitle': AppStrings.onboardingSubtitle1,
     },
     {
       'image': AppImages.onboard2,
-      'title': AppStrings.onboardingTitle2.tr,
-      'subtitle': AppStrings.onboardingSubtitle2.tr,
+      'title': AppStrings.onboardingTitle2,
+      'subtitle': AppStrings.onboardingSubtitle2,
     },
   ];
 

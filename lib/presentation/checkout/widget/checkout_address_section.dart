@@ -128,7 +128,7 @@ class CheckoutAddressSection extends StatelessWidget {
                                           borderRadius: BorderRadius.circular(6),
                                         ),
                                         child: Text(
-                                          address.tag,
+                                          address.tag.tr,
                                           style: TextStyle(
                                             fontSize: 9,
                                             color: isSelected ? AppColors.primaryColor : Colors.grey,

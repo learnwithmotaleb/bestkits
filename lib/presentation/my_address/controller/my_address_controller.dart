@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import '../../../core/routes/route_path.dart';
+import '../../../utils/static_strings/static_strings.dart';
 import '../../../widget/app_alert.dart';
 
 class MyAddressController extends GetxController {
@@ -28,13 +29,13 @@ class MyAddressController extends GetxController {
 
   void deleteAddress(int index) {
     AppAlerts.warning(
-      title: 'Delete Address !',
-      message: 'Are you sure you want to delete this address?',
-      confirmLabel: 'Confirm',
-      cancelLabel: 'Cancel',
+      title: AppStrings.deleteAddressAlertTitle.tr,
+      message: AppStrings.deleteAddressAlertSubtitle.tr,
+      confirmLabel: AppStrings.confirm.tr,
+      cancelLabel: AppStrings.cancel.tr,
       onConfirm: () {
         addresses.removeAt(index);
-        AppAlerts.success(message: 'Address deleted successfully');
+        AppAlerts.success(message: AppStrings.addressDeletedSuccess.tr);
       },
     );
   }

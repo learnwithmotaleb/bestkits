@@ -1,3 +1,4 @@
+import 'package:bestkits/utils/static_strings/static_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../core/responsive_layout/dimensions.dart';
@@ -40,7 +41,7 @@ class CartScreen extends StatelessWidget {
                   ),
                   const Spacer(),
                   Text(
-                    'Cart',
+                    AppStrings.cartTitle.tr,
                     style: AppTextStyles.h3.copyWith(
                       fontSize: 18,
                       fontWeight: FontWeight.w700,
@@ -67,9 +68,9 @@ class CartScreen extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 15.0,horizontal: 5),
                   child: Row(
                         children: [
-                          const Text(
-                            'My Cart',
-                            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+                          Text(
+                            AppStrings.myCart.tr,
+                            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
                           ),
                           const SizedBox(width: 8),
                           Container(
@@ -99,12 +100,12 @@ class CartScreen extends StatelessWidget {
                                 border: Border.all(color: Colors.red.withOpacity(0.3)),
                               ),
                               child: Row(
-                                children: const [
-                                  Icon(Icons.shopping_bag_outlined, color: Colors.red, size: 14),
-                                  SizedBox(width: 5),
+                                children: [
+                                  const Icon(Icons.shopping_bag_outlined, color: Colors.red, size: 14),
+                                  const SizedBox(width: 5),
                                   Text(
-                                    'Empty Cart',
-                                    style: TextStyle(
+                                    AppStrings.emptyCart.tr,
+                                    style: const TextStyle(
                                       color: Colors.red,
                                       fontSize: 12,
                                       fontWeight: FontWeight.w600,
@@ -132,7 +133,7 @@ class CartScreen extends StatelessWidget {
                         Icon(Icons.shopping_cart_outlined, size: 80, color: Colors.grey[300]),
                         const SizedBox(height: 16),
                         Text(
-                          'Your cart is empty',
+                          AppStrings.cartEmptyMessage.tr,
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.grey[400],
@@ -176,19 +177,19 @@ class CartScreen extends StatelessWidget {
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('Empty Cart?', style: TextStyle(fontWeight: FontWeight.w700)),
-        content: const Text('Are you sure you want to remove all items from your cart?'),
+        title: Text(AppStrings.emptyCartConfirmTitle.tr, style: const TextStyle(fontWeight: FontWeight.w700)),
+        content: Text(AppStrings.emptyCartConfirmSubtitle.tr),
         actions: [
           TextButton(
             onPressed: () => Get.back(),
-            child: const Text('Cancel', style: TextStyle(color: Colors.grey)),
+            child: Text(AppStrings.cancel.tr, style: const TextStyle(color: Colors.grey)),
           ),
           TextButton(
             onPressed: () {
               controller.emptyCart();
               Get.back();
             },
-            child: const Text('Yes, Empty', style: TextStyle(color: Colors.red, fontWeight: FontWeight.w700)),
+            child: Text(AppStrings.yesEmpty.tr, style: const TextStyle(color: Colors.red, fontWeight: FontWeight.w700)),
           ),
         ],
       ),
