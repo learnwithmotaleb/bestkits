@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
         
         // Theme Configuration
         theme: lightTheme,
-        darkTheme: darkTheme,
+        darkTheme: lightTheme,
         themeMode: themeController.isInitialized.value
             ? themeController.mode.value
             : ThemeMode.system,

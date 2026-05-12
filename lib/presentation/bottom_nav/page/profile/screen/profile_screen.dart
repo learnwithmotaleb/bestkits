@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../core/responsive_layout/dimensions.dart';
 import '../../../../../utils/app_colors/app_colors.dart';
+import '../../../../../utils/app_icons/app_icons.dart';
 import '../controller/profile_controller.dart';
 import '../widget/profile_menu_item.dart';
 import '../../../../my_return/screen/my_return_screen.dart';
@@ -34,24 +35,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
             _buildProfileHeader(),
             SizedBox(height: Dimensions.h(30)),
             ProfileMenuItem(
-              icon: Icons.person_outline,
+              icon: AppIcons.profile,
               label: AppStrings.myProfile.tr,
               onTap: () {
                 Get.toNamed(RoutePath.myProfile);
               },
             ),
             ProfileMenuItem(
-              icon: Icons.chat_bubble_outline,
+              icon: AppIcons.message,
               label: AppStrings.messages.tr,
               onTap: () => Get.to(() => const MessageScreen()),
             ),
             ProfileMenuItem(
-              icon: Icons.assignment_return_outlined,
+              icon: AppIcons.my_return,
               label: AppStrings.myReturns.tr,
               onTap: () => Get.to(() => const MyReturnScreen()),
             ),
             ProfileMenuItem(
-              icon: Icons.settings_outlined,
+              icon: AppIcons.setting,
               label: AppStrings.accountSetting.tr,
               onTap: () {
                 Get.toNamed(RoutePath.accountSetting);
@@ -73,28 +74,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             SizedBox(height: Dimensions.h(16)),
             ProfileMenuItem(
-              icon: Icons.gavel_outlined,
+              icon: AppIcons.terms_condition,
               label: AppStrings.termsCondition.tr,
               onTap: () {
                 Get.toNamed(RoutePath.termsCondition);
               },
             ),
             ProfileMenuItem(
-              icon: Icons.privacy_tip_outlined,
+              icon: AppIcons.privacy_policy,
               label: AppStrings.privacyPolicy.tr,
               onTap: () {
                 Get.toNamed(RoutePath.privacyPolicy);
               },
             ),
             ProfileMenuItem(
-              icon: Icons.business_outlined,
+              icon: AppIcons.legal,
               label: AppStrings.legalCompanyInfo.tr,
               onTap: () {
                 Get.toNamed(RoutePath.legalCompanyInfo);
               },
             ),
             ProfileMenuItem(
-              icon: Icons.help_outlined,
+              icon: AppIcons.help_support,
               label: AppStrings.helpSupport.tr,
               onTap: () {
                 Get.toNamed(RoutePath.helpSupport);

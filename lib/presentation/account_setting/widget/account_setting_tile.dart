@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../core/responsive_layout/dimensions.dart';
 import '../../../../utils/app_colors/app_colors.dart';
@@ -6,7 +7,7 @@ import '../../../../utils/app_text_style/app_text_style.dart';
 
 class AccountSettingTile extends StatelessWidget {
   final String title;
-  final IconData icon;
+  final dynamic icon;
   final VoidCallback onTap;
   final bool isDestructive;
 
@@ -45,10 +46,10 @@ class AccountSettingTile extends StatelessWidget {
                   borderRadius: BorderRadius.circular(Dimensions.r(10)),
                 ),
                 alignment: Alignment.center,
-                child: Icon(
+                child: _buildIcon(
                   icon,
-                  color: AppColors.primaryColor,
-                  size: Dimensions.rs(20),
+                  AppColors.primaryColor,
+                  Dimensions.rs(20),
                 ),
               )
             else
@@ -56,10 +57,10 @@ class AccountSettingTile extends StatelessWidget {
                 width: Dimensions.rs(40),
                 height: Dimensions.rs(40),
                 alignment: Alignment.center,
-                child: Icon(
+                child: _buildIcon(
                   icon,
-                  color: AppColors.redColor,
-                  size: Dimensions.rs(20),
+                  AppColors.redColor,
+                  Dimensions.rs(20),
                 ),
               ),
             SizedBox(width: Dimensions.w(16)),
@@ -83,5 +84,19 @@ class AccountSettingTile extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget _buildIcon(dynamic icon, Color color, double size) {
+    if (icon is IconData) {
+      return Icon(icon, color: color, size: size);
+    } else if (icon is String) {
+      return SvgPicture.asset(
+        icon,
+        colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+        width: size,
+        height: size,
+      );
+    }
+    return const SizedBox.shrink();
   }
 }

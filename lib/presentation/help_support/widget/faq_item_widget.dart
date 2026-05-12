@@ -77,7 +77,7 @@ class FaqItemWidget extends StatelessWidget {
                   vertical: Dimensions.h(16),
                 ),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF9F7EF),
+                  color: AppColors.whiteColor,
                   borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(Dimensions.r(16)),
                     bottomRight: Radius.circular(Dimensions.r(16)),

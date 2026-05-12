@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../../../core/responsive_layout/dimensions.dart';
 import '../../../../../../utils/app_colors/app_colors.dart';
 
 class ProfileMenuItem extends StatelessWidget {
-  final IconData icon;
+  final dynamic icon;
   final String label;
   final VoidCallback onTap;
   final bool isDestructive;
@@ -22,12 +23,15 @@ class ProfileMenuItem extends StatelessWidget {
       onTap: onTap,
       child: Container(
         margin: EdgeInsets.only(bottom: Dimensions.h(12)),
-        padding: EdgeInsets.symmetric(horizontal: Dimensions.w(16), vertical: Dimensions.h(12)),
+        padding: EdgeInsets.symmetric(
+            horizontal: Dimensions.w(16), vertical: Dimensions.h(12)),
         decoration: BoxDecoration(
           color: isDestructive ? Colors.red.withOpacity(0.02) : Colors.white,
           borderRadius: BorderRadius.circular(Dimensions.r(12)),
           border: Border.all(
-            color: isDestructive ? Colors.red.withOpacity(0.3) : AppColors.greyColor.withOpacity(0.3),
+            color: isDestructive
+                ? Colors.red.withOpacity(0.3)
+                : AppColors.greyColor.withOpacity(0.3),
           ),
         ),
         child: Row(
@@ -35,13 +39,15 @@ class ProfileMenuItem extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: isDestructive ? Colors.red.withOpacity(0.1) : const Color(0xFF1A1A1A),
+                color: isDestructive
+                    ? Colors.red.withOpacity(0.1)
+                    : const Color(0xFF1A1A1A),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Icon(
+              child: _buildIcon(
                 icon,
-                color: isDestructive ? Colors.red : AppColors.primaryColor,
-                size: 20,
+                isDestructive ? Colors.red : AppColors.primaryColor,
+                20,
               ),
             ),
             SizedBox(width: Dimensions.w(16)),
@@ -63,5 +69,19 @@ class ProfileMenuItem extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget _buildIcon(dynamic icon, Color color, double size) {
+    if (icon is IconData) {
+      return Icon(icon, color: color, size: size);
+    } else if (icon is String) {
+      return SvgPicture.asset(
+        icon,
+        colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+        width: size,
+        height: size,
+      );
+    }
+    return const SizedBox.shrink();
   }
 }

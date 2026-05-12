@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 import '../../../../../core/responsive_layout/dimensions.dart';
 import '../../../../../utils/app_colors/app_colors.dart';
 import '../../../../../utils/app_text_style/app_text_style.dart';
+import '../../../../../core/widgets/app_svg.dart';
+import '../../../../../utils/app_icons/app_icons.dart';
 
 class HomeHeader extends StatelessWidget {
   const HomeHeader({super.key});
@@ -62,8 +64,8 @@ class HomeHeader extends StatelessWidget {
                 color: AppColors.navBarColor,
                 shape: BoxShape.circle,
               ),
-              child: Icon(
-                Icons.notifications_none_rounded,
+              child: AppSvg(
+                path: AppIcons.notification,
                 color: AppColors.primaryColor,
                 size: Dimensions.icon(24),
               ),

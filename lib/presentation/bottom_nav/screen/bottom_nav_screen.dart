@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import '../../../core/responsive_layout/dimensions.dart';
 import '../../../utils/app_colors/app_colors.dart';
+import '../../../utils/app_icons/app_icons.dart';
 import '../../../utils/static_strings/static_strings.dart';
 import '../controller/bottom_nav_controller.dart';
 
@@ -25,18 +27,24 @@ class BottomNavScreen extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _buildNavItem(0, Icons.home_outlined, Icons.home_filled, AppStrings.home.tr, controller),
-                _buildNavItem(1, Icons.search_outlined, Icons.search, AppStrings.search.tr, controller),
-                _buildNavItem(2, Icons.shopping_bag_outlined, Icons.shopping_bag, AppStrings.cart.tr, controller),
-                _buildNavItem(3, Icons.inventory_2_outlined, Icons.inventory_2, AppStrings.orders.tr, controller),
-                _buildNavItem(4, Icons.person_outline, Icons.person, AppStrings.profile.tr, controller),
+                _buildNavItem(0, AppIcons.home, AppIcons.home,
+                    AppStrings.home.tr, controller),
+                _buildNavItem(1, AppIcons.search_icon, AppIcons.search_icon,
+                    AppStrings.search.tr, controller),
+                _buildNavItem(2, AppIcons.cart, AppIcons.cart,
+                    AppStrings.cart.tr, controller),
+                _buildNavItem(3, AppIcons.order_icon, AppIcons.order_icon,
+                    AppStrings.orders.tr, controller),
+                _buildNavItem(4, AppIcons.profile, AppIcons.profile,
+                    AppStrings.profile.tr, controller),
               ],
             ),
           )),
     );
   }
 
-  Widget _buildNavItem(int index, IconData icon, IconData activeIcon, String label, BottomNavController controller) {
+  Widget _buildNavItem(int index, dynamic icon, dynamic activeIcon,
+      String label, BottomNavController controller) {
     final isSelected = controller.currentIndex.value == index;
 
     return GestureDetector(
@@ -51,16 +59,18 @@ class BottomNavScreen extends StatelessWidget {
             Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(
+                _buildIcon(
                   isSelected ? activeIcon : icon,
-                  color: isSelected ? Colors.transparent : AppColors.blackColor,
-                  size: Dimensions.icon(28),
+                  isSelected ? Colors.transparent : AppColors.blackColor,
+                  Dimensions.icon(28),
                 ),
                 SizedBox(height: Dimensions.h(4)),
                 Text(
                   label,
                   style: TextStyle(
-                    color: isSelected ? AppColors.primaryColor : AppColors.blackColor,
+                    color: isSelected
+                        ? AppColors.primaryColor
+                        : AppColors.blackColor,
                     fontSize: Dimensions.fs(12),
                     fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                   ),
@@ -79,18 +89,14 @@ class BottomNavScreen extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: AppColors.blackColor,
                         shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.2),
-                            blurRadius: 10,
-                            offset: const Offset(0, 5),
-                          ),
-                        ],
                       ),
-                      child: Icon(
-                        activeIcon,
-                        color: AppColors.primaryColor,
-                        size: Dimensions.icon(30),
+                      child: Padding(
+                        padding: const EdgeInsets.all(14.0),
+                        child: _buildIcon(
+                          activeIcon,
+                          AppColors.primaryColor,
+                          Dimensions.icon(10),
+                        ),
                       ),
                     ),
                   ],
@@ -100,5 +106,19 @@ class BottomNavScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget _buildIcon(dynamic icon, Color color, double size) {
+    if (icon is IconData) {
+      return Icon(icon, color: color, size: size);
+    } else if (icon is String) {
+      return SvgPicture.asset(
+        icon,
+        colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+        width: size,
+        height: size,
+      );
+    }
+    return const SizedBox.shrink();
   }
 }
