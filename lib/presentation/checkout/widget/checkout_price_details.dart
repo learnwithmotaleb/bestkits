@@ -75,6 +75,15 @@ class CheckoutPriceDetails extends StatelessWidget {
               _row(AppStrings.subtotal.tr, null, '€${controller.subtotal.toStringAsFixed(2)}'),
               const SizedBox(height: 8),
               _row(AppStrings.shippingFee.tr, 'x${controller.cartController.sellers.length}', '€${controller.shippingTotal.toStringAsFixed(2)}'),
+              if (controller.isCouponApplied.value) ...[
+                const SizedBox(height: 8),
+                _row(
+                  'Discount',
+                  '${controller.discountPercentage.value.toInt()}%',
+                  '-€${controller.discountAmount.toStringAsFixed(2)}',
+                  isDiscount: true,
+                ),
+              ],
               const SizedBox(height: 12),
               const Divider(height: 1, color: Color(0xFFF0F0F0)),
               const SizedBox(height: 12),
@@ -95,7 +104,7 @@ class CheckoutPriceDetails extends StatelessWidget {
         ));
   }
 
-  Widget _row(String label, String? suffix, String value) {
+  Widget _row(String label, String? suffix, String value, {bool isDiscount = false}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -108,7 +117,7 @@ class CheckoutPriceDetails extends StatelessWidget {
                 suffix,
                 style: TextStyle(
                   fontSize: 11,
-                  color: AppColors.primaryColor,
+                  color: isDiscount ? const Color(0xFF2E7D32) : AppColors.primaryColor,
                   fontWeight: FontWeight.w700,
                   fontStyle: FontStyle.italic,
                 ),
@@ -116,7 +125,14 @@ class CheckoutPriceDetails extends StatelessWidget {
             ]
           ],
         ),
-        Text(value, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w800)),
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w800,
+            color: isDiscount ? const Color(0xFF2E7D32) : Colors.black,
+          ),
+        ),
       ],
     );
   }

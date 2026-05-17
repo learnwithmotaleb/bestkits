@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../utils/static_strings/static_strings.dart';
 import '../../bottom_nav/page/cart/controller/cart_controller.dart';
@@ -45,6 +46,13 @@ class CheckoutController extends GetxController {
 
   // Terms agreed
   final RxBool termsAgreed = false.obs;
+
+  // Coupon state
+  final couponController = TextEditingController();
+  final RxBool isCouponApplied = false.obs;
+  final RxDouble discountPercentage = 0.0.obs;
+  final RxString couponError = ''.obs;
+  final RxString couponSuccess = ''.obs;
 
   // Delivery options per seller
   final Map<String, List<DeliveryOption>> deliveryOptions = {
@@ -111,6 +119,38 @@ class CheckoutController extends GetxController {
 
   void toggleTerms(bool? value) => termsAgreed.value = value ?? false;
 
+  void applyCoupon() {
+    final code = couponController.text.trim().toUpperCase();
+    if (code.isEmpty) {
+      couponError.value = 'Please enter a coupon code.';
+      couponSuccess.value = '';
+      isCouponApplied.value = false;
+      discountPercentage.value = 0.0;
+      return;
+    }
+
+    // Accepting common variations of the coupon code
+    if (code == 'BESTKITS10' || code == 'WELCOME10' || code == '10PERCENT' || code == 'COUPON10' || code == 'MOTALEB') {
+      isCouponApplied.value = true;
+      discountPercentage.value = 10.0;
+      couponError.value = '';
+      couponSuccess.value = '10% discount applied to your order.';
+    } else {
+      isCouponApplied.value = false;
+      discountPercentage.value = 0.0;
+      couponSuccess.value = '';
+      couponError.value = 'Invalid coupon code. Please try again.';
+    }
+  }
+
+  void removeCoupon() {
+    isCouponApplied.value = false;
+    discountPercentage.value = 0.0;
+    couponError.value = '';
+    couponSuccess.value = '';
+    couponController.clear();
+  }
+
   double get shippingTotal {
     double total = 0;
     for (final seller in cartController.sellers) {
@@ -122,6 +162,13 @@ class CheckoutController extends GetxController {
     return total;
   }
 
+  double get discountAmount => isCouponApplied.value ? (subtotal * (discountPercentage.value / 100.0)) : 0.0;
   double get subtotal => cartController.subtotal;
-  double get total => subtotal + shippingTotal;
+  double get total => subtotal - discountAmount + shippingTotal;
+
+  @override
+  void onClose() {
+    couponController.dispose();
+    super.onClose();
+  }
 }

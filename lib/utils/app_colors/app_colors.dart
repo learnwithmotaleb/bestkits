@@ -19,4 +19,5 @@ class AppColors {
 
   static const Color appBarBtnColor = Color(0xFFFEF7E5);
   static const Color appBarBtnBorderColor = Color(0xFFF1F1F1);
+  static const Color applyCouponCodeColor = Color(0xFF22C55E);
 }

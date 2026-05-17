@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'app_loading.dart';
-import 'package:get/get.dart';
 import '../../../utils/app_text_style/app_text_style.dart';
 import '../../../utils/app_colors/app_colors.dart';
 
@@ -16,6 +15,11 @@ class AppButton extends StatelessWidget {
   final Widget? leadingIcon;
   final Widget? trailingIcon;
   final bool isLoading;
+  final double? fontSize;
+  final EdgeInsetsGeometry? padding;
+  final FontWeight? fontWeight;
+
+  static int _lastClickTime = 0;
 
   const AppButton({
     super.key,
@@ -28,8 +32,11 @@ class AppButton extends StatelessWidget {
     this.borderRadius = 10,
     this.leadingIcon,
     this.trailingIcon,
-    this.borderSideColor = AppColors.primaryColor,
     this.isLoading = false,
+    this.borderSideColor = AppColors.primaryColor,
+    this.fontSize,
+    this.padding,
+    this.fontWeight,
   });
 
   @override
@@ -39,6 +46,7 @@ class AppButton extends StatelessWidget {
       width: width,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
+          padding: padding,
           backgroundColor: (onPressed == null || isLoading)
               ? AppColors.greyColor // disabled color
               : backgroundColor,
@@ -52,7 +60,18 @@ class AppButton extends StatelessWidget {
                 : BorderSide.none,
           ),
         ),
-        onPressed: isLoading ? null : onPressed,
+        onPressed: isLoading
+            ? null
+            : (onPressed == null
+                ? null
+                : () {
+                    final currentTime = DateTime.now().millisecondsSinceEpoch;
+                    if (currentTime - _lastClickTime < 500) {
+                      return; // Block duplicate rapid clicks
+                    }
+                    _lastClickTime = currentTime;
+                    onPressed!();
+                  }),
         child: isLoading
             ? AppLoading(color: textColor, size: 24)
             : Row(
@@ -68,6 +87,8 @@ class AppButton extends StatelessWidget {
                 label,
                 style: AppTextStyles.button.copyWith(
                   color: textColor,
+                  fontSize: fontSize,
+                  fontWeight: fontWeight,
                 ),
                 overflow: TextOverflow.ellipsis,
               ),
