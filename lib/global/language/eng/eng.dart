@@ -253,6 +253,7 @@ Map<String, String> english = {
   AppStrings.browse: "Browse",
   AppStrings.search: "Search",
   AppStrings.cart: "Cart",
+  AppStrings.favorite: "Favorite",
   AppStrings.orders: "Orders",
   AppStrings.profile: "Profile",
   AppStrings.messages: "Messages",

@@ -53,6 +53,25 @@ class HomeHeader extends StatelessWidget {
               ],
             ),
           ),
+          // Cart Icon
+          GestureDetector(
+            onTap: () {
+              Get.toNamed(RoutePath.cart);
+            },
+            child: Container(
+              padding: EdgeInsets.all(Dimensions.w(8)),
+              decoration: BoxDecoration(
+                color: AppColors.navBarColor,
+                shape: BoxShape.circle,
+              ),
+              child: AppSvg(
+                path: AppIcons.cart,
+                color: AppColors.primaryColor,
+                size: Dimensions.icon(24),
+              ),
+            ),
+          ),
+          Dimensions.gapW(10),
           // Notification Bell
           GestureDetector(
             onTap: (){

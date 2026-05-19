@@ -4,6 +4,7 @@ import '../../../../../utils/app_colors/app_colors.dart';
 import '../../../../../utils/app_text_style/app_text_style.dart';
 import 'package:get/get.dart';
 import '../../../../product_details/screen/product_details_screen.dart';
+import 'package:bestkits/presentation/favorite/controller/favourite_controller.dart';
 
 class ProductCard extends StatelessWidget {
   final Map<String, dynamic> product;
@@ -12,6 +13,8 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final favouriteController = Get.find<FavouriteController>();
+
     return GestureDetector(
       onTap: () => Get.to(() => const ProductDetailsScreen()),
       child: Container(
@@ -63,6 +66,37 @@ class ProductCard extends StatelessWidget {
                       ],
                     ),
                   ),
+                ),
+                Positioned(
+                  top: Dimensions.h(10),
+                  right: Dimensions.w(10),
+                  child: Obx(() {
+                    final isFav = favouriteController.isFavorite(product);
+                    return GestureDetector(
+                      onTap: () {
+                        favouriteController.toggleFavorite(product);
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(Dimensions.w(6)),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.05),
+                              blurRadius: 4,
+                              spreadRadius: 1,
+                            ),
+                          ],
+                        ),
+                        child: Icon(
+                          isFav ? Icons.favorite : Icons.favorite_border,
+                          size: Dimensions.icon(16),
+                          color: isFav ? Colors.red : Colors.grey,
+                        ),
+                      ),
+                    );
+                  }),
                 ),
               ],
             ),

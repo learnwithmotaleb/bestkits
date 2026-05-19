@@ -114,139 +114,141 @@ class _HomeBannerState extends State<HomeBanner> {
                             width: banner.image != null
                                 ? Dimensions.w(200)
                                 : double.infinity,
-                            child: Column(
-                              crossAxisAlignment: banner.image != null
-                                  ? CrossAxisAlignment.start
-                                  : CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                // Pill tag
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: Dimensions.w(10),
-                                    vertical: Dimensions.h(4),
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: isYellow
-                                        ? AppColors.primaryColor.withOpacity(0.1)
-                                        : const Color(0xFFE8F5E9),
-                                    borderRadius: BorderRadius.circular(Dimensions.r(20)),
-                                    border: Border.all(
-                                      color: isYellow
-                                          ? AppColors.primaryColor
-                                          : AppColors.applyCouponCodeColor,
-                                      width: 1,
+                            child: SingleChildScrollView(
+                              child: Column(
+                                crossAxisAlignment: banner.image != null
+                                    ? CrossAxisAlignment.start
+                                    : CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  // Pill tag
+                                  Container(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: Dimensions.w(10),
+                                      vertical: Dimensions.h(4),
                                     ),
-                                  ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      if (!isYellow) ...[
-                                        const Icon(
-                                          Icons.wb_sunny_outlined,
-                                          color: AppColors.applyCouponCodeColor,
-                                          size: 11,
-                                        ),
-                                        const SizedBox(width: 4),
-                                      ] else ...[
-                                        Container(
-                                          width: 5,
-                                          height: 5,
-                                          decoration: const BoxDecoration(
-                                            color: AppColors.primaryColor,
-                                            shape: BoxShape.circle,
+                                    decoration: BoxDecoration(
+                                      color: isYellow
+                                          ? AppColors.primaryColor.withOpacity(0.1)
+                                          : const Color(0xFFE8F5E9),
+                                      borderRadius: BorderRadius.circular(Dimensions.r(20)),
+                                      border: Border.all(
+                                        color: isYellow
+                                            ? AppColors.primaryColor
+                                            : AppColors.applyCouponCodeColor,
+                                        width: 1,
+                                      ),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        if (!isYellow) ...[
+                                          const Icon(
+                                            Icons.wb_sunny_outlined,
+                                            color: AppColors.applyCouponCodeColor,
+                                            size: 11,
+                                          ),
+                                          const SizedBox(width: 4),
+                                        ] else ...[
+                                          Container(
+                                            width: 5,
+                                            height: 5,
+                                            decoration: const BoxDecoration(
+                                              color: AppColors.primaryColor,
+                                              shape: BoxShape.circle,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 6),
+                                        ],
+                                        Text(
+                                          banner.tag,
+                                          style: TextStyle(
+                                            color: isYellow
+                                                ? AppColors.primaryColor
+                                                :AppColors.applyCouponCodeColor,
+                                            fontSize: Dimensions.fs(10),
+                                            fontWeight: FontWeight.w700,
                                           ),
                                         ),
-                                        const SizedBox(width: 6),
                                       ],
-                                      Text(
-                                        banner.tag,
-                                        style: TextStyle(
-                                          color: isYellow
-                                              ? AppColors.primaryColor
-                                              :AppColors.applyCouponCodeColor,
-                                          fontSize: Dimensions.fs(10),
-                                          fontWeight: FontWeight.w700,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Dimensions.gapH(10),
-
-                                // Title Text with styled highlights
-                                RichText(
-                                  textAlign: banner.image != null
-                                      ? TextAlign.start
-                                      : TextAlign.center,
-                                  text: TextSpan(
-                                    style: AppTextStyles.h2.copyWith(
-                                      fontSize: Dimensions.fs(20),
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w800,
                                     ),
-                                    children: [
-                                      TextSpan(
-                                        text: banner.title,
-                                        style: TextStyle(
-                                          color: !isYellow && banner.image == null
-                                              ? AppColors.primaryColor
-                                              : Colors.black,
-                                        ),
-                                      ),
-                                      TextSpan(
-                                        text: banner.titleHighlight,
-                                        style: TextStyle(
-                                          color: isYellow
-                                              ? AppColors.primaryColor
-                                              : (banner.image == null
-                                                  ? Colors.black
-                                                  : const Color(0xFF2E7D32)),
-                                        ),
-                                      ),
-                                    ],
                                   ),
-                                ),
-
-                                // Subtitle / Promo Code
-                                if (banner.subtitle.isNotEmpty) ...[
-                                  Dimensions.gapH(4),
+                                  Dimensions.gapH(10),
+                              
+                                  // Title Text with styled highlights
                                   RichText(
+                                    textAlign: banner.image != null
+                                        ? TextAlign.start
+                                        : TextAlign.center,
                                     text: TextSpan(
-                                      style: TextStyle(
-                                        fontSize: Dimensions.fs(12),
-                                        color: Colors.black87,
+                                      style: AppTextStyles.h2.copyWith(
+                                        fontSize: Dimensions.fs(20),
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w800,
                                       ),
                                       children: [
-                                        const TextSpan(text: 'Use Code: '),
                                         TextSpan(
-                                          text: banner.subtitle.replaceAll('Use Code: ', ''),
-                                          style: const TextStyle(
-                                            fontStyle: FontStyle.italic,
-                                            fontWeight: FontWeight.w800,
+                                          text: banner.title,
+                                          style: TextStyle(
+                                            color: !isYellow && banner.image == null
+                                                ? AppColors.primaryColor
+                                                : Colors.black,
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text: banner.titleHighlight,
+                                          style: TextStyle(
+                                            color: isYellow
+                                                ? AppColors.primaryColor
+                                                : (banner.image == null
+                                                    ? Colors.black
+                                                    : const Color(0xFF2E7D32)),
                                           ),
                                         ),
                                       ],
+                                    ),
+                                  ),
+                              
+                                  // Subtitle / Promo Code
+                                  if (banner.subtitle.isNotEmpty) ...[
+                                    Dimensions.gapH(4),
+                                    RichText(
+                                      text: TextSpan(
+                                        style: TextStyle(
+                                          fontSize: Dimensions.fs(12),
+                                          color: Colors.black87,
+                                        ),
+                                        children: [
+                                          const TextSpan(text: 'Use Code: '),
+                                          TextSpan(
+                                            text: banner.subtitle.replaceAll('Use Code: ', ''),
+                                            style: const TextStyle(
+                                              fontStyle: FontStyle.italic,
+                                              fontWeight: FontWeight.w800,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                  Dimensions.gapH(8),
+                              
+                                  // Long Description
+                                  Text(
+                                    banner.description,
+                                    textAlign: banner.image != null
+                                        ? TextAlign.start
+                                        : TextAlign.center,
+                                    maxLines: 3,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontSize: Dimensions.fs(8.5),
+                                      color: Colors.grey.shade600,
+                                      height: 1.3,
                                     ),
                                   ),
                                 ],
-                                Dimensions.gapH(8),
-
-                                // Long Description
-                                Text(
-                                  banner.description,
-                                  textAlign: banner.image != null
-                                      ? TextAlign.start
-                                      : TextAlign.center,
-                                  maxLines: 3,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontSize: Dimensions.fs(8.5),
-                                    color: Colors.grey.shade600,
-                                    height: 1.3,
-                                  ),
-                                ),
-                              ],
+                              ),
                             ),
                           ),
                         ),
