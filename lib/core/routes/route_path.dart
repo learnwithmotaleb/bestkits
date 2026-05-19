@@ -27,4 +27,6 @@ class RoutePath {
   static const String notification = '/NotificationScreen';
   static const String legalCompanyInfo = '/LegalCompanyScreen';
   static const String helpSupport = '/HelpSupportScreen';
+  static const String favorite = '/FavoriteScreen';
+  static const String cart = '/CartScreen';
 }

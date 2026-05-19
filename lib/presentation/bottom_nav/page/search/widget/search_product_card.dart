@@ -3,6 +3,7 @@ import '../../../../../utils/app_colors/app_colors.dart';
 import '../../../../../utils/app_text_style/app_text_style.dart';
 import 'package:get/get.dart';
 import '../../../../product_details/screen/product_details_screen.dart';
+import 'package:bestkits/presentation/favorite/controller/favourite_controller.dart';
 
 class SearchProductCard extends StatelessWidget {
   final Map<String, dynamic> product;
@@ -11,6 +12,8 @@ class SearchProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final favouriteController = Get.find<FavouriteController>();
+
     return GestureDetector(
       onTap: () => Get.to(() => const ProductDetailsScreen()),
       child: Container(
@@ -76,6 +79,37 @@ class SearchProductCard extends StatelessWidget {
                       ],
                     ),
                   ),
+                ),
+                Positioned(
+                  top: 8,
+                  right: 8,
+                  child: Obx(() {
+                    final isFav = favouriteController.isFavorite(product);
+                    return GestureDetector(
+                      onTap: () {
+                        favouriteController.toggleFavorite(product);
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.05),
+                              blurRadius: 4,
+                              spreadRadius: 1,
+                            ),
+                          ],
+                        ),
+                        child: Icon(
+                          isFav ? Icons.favorite : Icons.favorite_border,
+                          size: 14,
+                          color: isFav ? Colors.red : Colors.grey,
+                        ),
+                      ),
+                    );
+                  }),
                 ),
               ],
             ),

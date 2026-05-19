@@ -277,6 +277,7 @@ class AppStrings {
   static const String browse = "Browse";
   static const String search = "Search";
   static const String cart = "Cart";
+  static const String favorite = "Favorite";
   static const String orders = "Orders";
   static const String profile = "Profile";
   static const String messages = "Messages";

@@ -264,6 +264,7 @@ Map<String, String> bulgarian = {
   AppStrings.browse: "Разглеждане",
   AppStrings.search: "Търсене",
   AppStrings.cart: "Количка",
+  AppStrings.favorite: "Любими",
   AppStrings.orders: "Поръчки",
   AppStrings.profile: "Профил",
   AppStrings.messages: "Съобщения",

@@ -20,6 +20,9 @@ import 'package:bestkits/presentation/change_password/controller/change_password
 import 'package:bestkits/presentation/change_password/screen/change_password_screen.dart';
 import 'package:bestkits/presentation/currency_preference/controller/currency_preference_controller.dart';
 import 'package:bestkits/presentation/currency_preference/screen/currency_preference_screen.dart';
+import 'package:bestkits/presentation/favorite/controller/favourite_controller.dart';
+import 'package:bestkits/presentation/favorite/screen/favourite_screen.dart';
+import 'package:bestkits/presentation/bottom_nav/page/cart/screen/cart_screen.dart';
 import 'package:bestkits/presentation/help_support/controller/help_support_controller.dart';
 import 'package:bestkits/presentation/help_support/screen/help_support_screen.dart';
 import 'package:bestkits/presentation/language_preference/controller/language_preference_controller.dart';
@@ -147,6 +150,7 @@ class AppRouter {
       transition: Transition.rightToLeft,
       binding: BindingsBuilder(() {
         Get.put(BottomNavController());
+        Get.put(FavouriteController(), permanent: true);
       }),
     ),
 
@@ -346,9 +350,19 @@ class AppRouter {
       }),
     ),
 
+  GetPage(
+      name: RoutePath.favorite,
+      page: () => const FavouriteScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(FavouriteController());
+      }),
+    ),
 
-
-
-
+    GetPage(
+      name: RoutePath.cart,
+      page: () => const CartScreen(),
+      transition: Transition.rightToLeft,
+    ),
   ];
 }
