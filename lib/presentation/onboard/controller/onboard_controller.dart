@@ -19,6 +19,11 @@ class OnboardController extends GetxController {
       'title': AppStrings.onboardingTitle2,
       'subtitle': AppStrings.onboardingSubtitle2,
     },
+    {
+      'image': AppImages.onboard3,
+      'title': AppStrings.onboardingTitle3,
+      'subtitle': AppStrings.onboardingSubtitle3,
+    },
   ];
 
   bool get isLastPage => currentPage.value == pages.length - 1;

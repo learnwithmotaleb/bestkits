@@ -35,7 +35,7 @@ Map<String, String> english = {
   AppStrings.startSellingNow: "Start Selling Now",
 
   // Onboarding
-  AppStrings.onboardingTitle1: "Discover Kids Fashion Easily",
+  AppStrings.onboardingTitle1: "Buy & Sell Kids Fashion",
   AppStrings.onboardingSubtitle1:
       "Browse Thousands Of Quality Kids Clothing From Trusted Sellers Across Europe. Find The Perfect Style, Size, And Price In Seconds.",
   AppStrings.onboardingTitle2: "Shop With Confidence",

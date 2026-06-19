@@ -24,10 +24,10 @@ class OtpVerifyController extends GetxController {
           Get.toNamed(RoutePath.setNewPassword);
         } else if (flowType == "signup") {
           // If coming from signup, go to onboard
-          Get.offAllNamed(RoutePath.onboard);
+          Get.offAllNamed(RoutePath.stripeConnect);
         } else {
           // Default fallback
-          Get.offAllNamed(RoutePath.onboard);
+          Get.offAllNamed(RoutePath.stripeConnect);
         }
       });
     } else {

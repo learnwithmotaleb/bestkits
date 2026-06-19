@@ -35,7 +35,7 @@ Map<String, String> bulgarian = {
   AppStrings.startSellingNow: "Започнете да продавате сега",
 
   // Onboarding
-  AppStrings.onboardingTitle1: "Открийте лесно детска мода",
+  AppStrings.onboardingTitle1: "Купувайте и продавайте детска мода",
   AppStrings.onboardingSubtitle1:
   "Разгледайте хиляди качествени детски дрехи от доверени продавачи в Европа.",
   AppStrings.onboardingTitle2: "Пазарувайте с увереност",

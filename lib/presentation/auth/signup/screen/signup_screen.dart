@@ -178,7 +178,7 @@ class SignupScreen extends StatelessWidget {
                       ),
                       children: [
                         TextSpan(
-                          text: AppStrings.signup.tr,
+                          text: AppStrings.signIn.tr,
                           style: AppTextStyles.body.copyWith(
                             color: AppColors.primaryColor,
                             fontWeight: FontWeight.bold,

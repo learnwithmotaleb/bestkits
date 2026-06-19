@@ -16,5 +16,6 @@ class AppImages {
   static const String kidShorts = "$_basePath/kids_shorts.png";
   static const String onboard1 = "$_basePath/onboard1.png";
   static const String onboard2 = "$_basePath/onboard2.png";
+  static const String onboard3 = "$_basePath/onboard3.png";
   static const String homeBannerImage = "$_basePath/home_banner_image.png";
 }

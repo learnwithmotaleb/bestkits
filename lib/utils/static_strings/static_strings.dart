@@ -38,13 +38,16 @@ class AppStrings {
   static const String startSellingNow = "Start Selling Now";
 
   // Onboarding
-  static const String onboardingTitle1 = "Discover Kids\nFashion Easily";
+  static const String onboardingTitle1 = "Buy & Sell Kids Fashion";
   static const String onboardingSubtitle1 =
-      "Browse Thousands Of Quality Kids Clothing From Trusted Sellers Across Europe. Find The Perfect Style, Size, And Price In Seconds.";
-  static const String onboardingTitle2 = "Shop With\nConfidence";
+      "Discover Quality New And Pre-Loved Kids Fashion From Trusted Sellers Across Europe — All In One Simple Marketplace.";
+  static const String onboardingTitle2 = "Shop With Confidence";
   static const String onboardingSubtitle2 =
-      "Enjoy Secure Payments, Clear Product Details, And Reliable Sellers Across Europe For A Safe And Easy Shopping Experience.";
-  static const String next = "Next";
+      "Enjoy Secure Payments, Trusted Sellers, Clear Product Details, And A Safe Shopping Experience For Every Order.";
+  static const String onboardingTitle3 = "Start Selling In Minutes";
+  static const String onboardingSubtitle3 =
+      "List Products, Manage Orders, And Grow Your Store Easily With Tools Designed For Modern Sellers And Growing Families.";
+  static const String next = "Next \u2192";
   static const String skip = "Skip";
   static const String getStarted = "Get Started";
   static const String skipWithArrow = "Skip";
@@ -460,5 +463,22 @@ class AppStrings {
   // Snackbar
   static const String success = "Success";
   static const String error = "Error";
+  // Stripe Connect
+  static const String connectPaymentsStripe = "Connect Payments (Stripe)";
+  static const String connectStripeSubtitle = "Connect your Stripe account to receive payments securely from your sales.";
+  static const String securePayments = "Secure Payments";
+  static const String securePaymentsSubtitle = "Connect your Stripe account to receive secure payouts from your sales.";
+  static const String directBankPayouts = "Direct Bank Payouts";
+  static const String directBankPayoutsSubtitle = "Receive your earnings directly in your connected bank account.";
+  static const String fastSetup = "Fast Setup";
+  static const String fastSetupSubtitle = "Connect your account in just a few quick steps.";
+  static const String aboutBestKidPayments = "About BestKid Payments";
+  static const String aboutBestKidPaymentsSubtitle = "Sales payments are processed through Stripe and paid out to your connected account.";
+  static const String connectStripeAccount = "Connect Stripe Account";
+  static const String saveAndContinue = "Save & Continue";
+  static const String skipForNow = "Skip For Now \u00BB";
+  static const String stripeConnected = "Stripe Connected";
+  static const String stripeConnectionFailed = "Stripe Connection Failed - Retry";
+
   static const String info = "Info";
 }
