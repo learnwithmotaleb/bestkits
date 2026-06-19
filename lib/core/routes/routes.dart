@@ -65,8 +65,6 @@ import 'package:bestkits/presentation/auth/forgot_password/controller/forgot_pas
 import '../../presentation/account_setting/controller/account_setting_controller.dart';
 import '../../presentation/splash/controller/splash_controller.dart';
 import '../../presentation/splash/screen/splash_screen.dart';
-import 'package:bestkits/presentation/stripe_connect/controller/stripe_connect_controller.dart';
-import 'package:bestkits/presentation/stripe_connect/screen/stripe_connect_screen.dart';
 
 class AppRouter {
   static final List<GetPage<dynamic>> pages = [
@@ -365,14 +363,6 @@ class AppRouter {
       name: RoutePath.cart,
       page: () => const CartScreen(),
       transition: Transition.rightToLeft,
-    ),
-    GetPage(
-      name: RoutePath.stripeConnect,
-      page: () => const StripeConnectScreen(),
-      transition: Transition.rightToLeft,
-      binding: BindingsBuilder(() {
-        Get.put(StripeConnectController());
-      }),
     ),
   ];
 }
