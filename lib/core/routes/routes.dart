@@ -1,5 +1,3 @@
-
-
 import 'package:bestkits/core/routes/route_path.dart';
 import 'package:bestkits/presentation/account_setting/screen/account_setting_screen.dart';
 import 'package:bestkits/presentation/auth/account_block/controller/account_block_controller.dart';
@@ -47,6 +45,8 @@ import 'package:bestkits/presentation/privacy_policy/controller/privacy_policy_c
 import 'package:bestkits/presentation/privacy_policy/screen/privacy_policy_screen.dart';
 import 'package:bestkits/presentation/product_details/controller/product_details_controller.dart';
 import 'package:bestkits/presentation/product_details/screen/product_details_screen.dart';
+import 'package:bestkits/presentation/stripe_connect/controller/stripe_connect_controller.dart';
+import 'package:bestkits/presentation/stripe_connect/screen/stripe_connect_screen.dart';
 import 'package:bestkits/presentation/terms_condition/controller/terms_condition_controller.dart';
 import 'package:bestkits/presentation/terms_condition/screen/terms_condition_screen.dart';
 import 'package:bestkits/presentation/update_profile/controller/update_profile_controller.dart';
@@ -68,7 +68,6 @@ import '../../presentation/splash/screen/splash_screen.dart';
 
 class AppRouter {
   static final List<GetPage<dynamic>> pages = [
-
     GetPage(
       name: RoutePath.splash,
       page: () => const SplashScreen(),
@@ -85,7 +84,6 @@ class AppRouter {
         Get.put(OnboardController());
       }),
     ),
-
     GetPage(
       name: RoutePath.login,
       page: () => const LoginScreen(),
@@ -94,8 +92,6 @@ class AppRouter {
         Get.put(LoginController());
       }),
     ),
-
-
     GetPage(
       name: RoutePath.signup,
       page: () => const SignupScreen(),
@@ -104,9 +100,6 @@ class AppRouter {
         Get.put(SignupController());
       }),
     ),
-
-
-
     GetPage(
       name: RoutePath.forgotPassword,
       page: () => const ForgotPasswordScreen(),
@@ -115,7 +108,6 @@ class AppRouter {
         Get.put(ForgotPasswordController());
       }),
     ),
-
     GetPage(
       name: RoutePath.otpScreen,
       page: () => const OtpVerifyScreen(),
@@ -124,7 +116,6 @@ class AppRouter {
         Get.put(OtpVerifyController());
       }),
     ),
-
     GetPage(
       name: RoutePath.setNewPassword,
       page: () => const SetNewPasswordScreen(),
@@ -133,7 +124,6 @@ class AppRouter {
         Get.put(SetNewPasswordController());
       }),
     ),
-
     GetPage(
       name: RoutePath.accountBlock,
       page: () => const AccountBlockScreen(),
@@ -142,8 +132,6 @@ class AppRouter {
         Get.put(AccountBlockController());
       }),
     ),
-
-
     GetPage(
       name: RoutePath.bottomNav,
       page: () => const BottomNavScreen(),
@@ -153,10 +141,6 @@ class AppRouter {
         Get.put(FavouriteController(), permanent: true);
       }),
     ),
-
-
-
-
     GetPage(
       name: RoutePath.categoriesScreen,
       page: () => const CategoriesScreen(),
@@ -165,9 +149,6 @@ class AppRouter {
         Get.put(CategoriesController());
       }),
     ),
-
-
-
     GetPage(
       name: RoutePath.productDetail,
       page: () => const ProductDetailsScreen(),
@@ -176,9 +157,6 @@ class AppRouter {
         Get.put(ProductDetailsController());
       }),
     ),
-
-
-
     GetPage(
       name: RoutePath.myReturn,
       page: () => const MyReturnScreen(),
@@ -187,11 +165,6 @@ class AppRouter {
         Get.put(MyReturnController());
       }),
     ),
-
-
-
-
-
     GetPage(
       name: RoutePath.message,
       page: () => const MessageScreen(),
@@ -200,18 +173,14 @@ class AppRouter {
         Get.put(MessageController());
       }),
     ),
-
-
-
     GetPage(
       name: RoutePath.chat,
-      page: () => ChatScreen(chatSummary: Get.arguments), // Grab the summary from Get.arguments
+      page: () => ChatScreen(
+          chatSummary: Get.arguments), // Grab the summary from Get.arguments
       transition: Transition.rightToLeft,
       // You don't actually need the binding here because ChatScreen already initializes
       // the ChatController dynamically with a unique tag in its initState!
     ),
-
-
     GetPage(
       name: RoutePath.myProfile,
       page: () => const MyProfileScreen(),
@@ -220,8 +189,6 @@ class AppRouter {
         Get.put(MyProfileController());
       }),
     ),
-
-
     GetPage(
       name: RoutePath.updateProfile,
       page: () => const UpdateProfileScreen(),
@@ -230,8 +197,6 @@ class AppRouter {
         Get.put(UpdateProfileController());
       }),
     ),
-
-
     GetPage(
       name: RoutePath.accountSetting,
       page: () => const AccountSettingScreen(),
@@ -240,8 +205,6 @@ class AppRouter {
         Get.put(AccountSettingController());
       }),
     ),
-
-
     GetPage(
       name: RoutePath.changePassword,
       page: () => const ChangePasswordScreen(),
@@ -250,7 +213,6 @@ class AppRouter {
         Get.put(ChangePasswordController());
       }),
     ),
-
     GetPage(
       name: RoutePath.myAddress,
       page: () => const MyAddressScreen(),
@@ -259,10 +221,7 @@ class AppRouter {
         Get.put(MyAddressController());
       }),
     ),
-
-
-
-  GetPage(
+    GetPage(
       name: RoutePath.manageAddress,
       page: () => const ManageAddressScreen(),
       transition: Transition.rightToLeft,
@@ -270,10 +229,7 @@ class AppRouter {
         Get.put(ManageAddressController());
       }),
     ),
-
-
-
-  GetPage(
+    GetPage(
       name: RoutePath.currencyPreference,
       page: () => const CurrencyPreferenceScreen(),
       transition: Transition.rightToLeft,
@@ -281,9 +237,7 @@ class AppRouter {
         Get.put(CurrencyPreferenceController());
       }),
     ),
-
-
-  GetPage(
+    GetPage(
       name: RoutePath.languagePreference,
       page: () => const LanguagePreferenceScreen(),
       transition: Transition.rightToLeft,
@@ -291,10 +245,7 @@ class AppRouter {
         Get.put(LanguagePreferenceController());
       }),
     ),
-
-
-
-  GetPage(
+    GetPage(
       name: RoutePath.termsCondition,
       page: () => const TermsConditionScreen(),
       transition: Transition.rightToLeft,
@@ -302,10 +253,7 @@ class AppRouter {
         Get.put(TermsConditionController());
       }),
     ),
-
-
-
-  GetPage(
+    GetPage(
       name: RoutePath.privacyPolicy,
       page: () => const PrivacyPolicyScreen(),
       transition: Transition.rightToLeft,
@@ -313,10 +261,7 @@ class AppRouter {
         Get.put(PrivacyPolicyController());
       }),
     ),
-
-
-
-  GetPage(
+    GetPage(
       name: RoutePath.notification,
       page: () => const NotificationScreen(),
       transition: Transition.rightToLeft,
@@ -324,11 +269,7 @@ class AppRouter {
         Get.put(NotificationController());
       }),
     ),
-
-
-
-
-  GetPage(
+    GetPage(
       name: RoutePath.legalCompanyInfo,
       page: () => const LegalCompanyScreen(),
       transition: Transition.rightToLeft,
@@ -336,12 +277,7 @@ class AppRouter {
         Get.put(LegalCompanyController());
       }),
     ),
-
-
-
-
-
-  GetPage(
+    GetPage(
       name: RoutePath.helpSupport,
       page: () => const HelpSupportScreen(),
       transition: Transition.rightToLeft,
@@ -349,8 +285,7 @@ class AppRouter {
         Get.put(HelpSupportController());
       }),
     ),
-
-  GetPage(
+    GetPage(
       name: RoutePath.favorite,
       page: () => const FavouriteScreen(),
       transition: Transition.rightToLeft,
@@ -358,11 +293,18 @@ class AppRouter {
         Get.put(FavouriteController());
       }),
     ),
-
     GetPage(
       name: RoutePath.cart,
       page: () => const CartScreen(),
       transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: RoutePath.stripeConnect,
+      page: () => const StripeConnectScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(StripeConnectController());
+      }),
     ),
   ];
 }
