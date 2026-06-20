@@ -5,6 +5,7 @@ import '../../../../../core/responsive_layout/dimensions.dart';
 import '../../../../../utils/app_colors/app_colors.dart';
 import '../../../../../utils/app_text_style/app_text_style.dart';
 import '../../../../../widget/app_button.dart';
+import '../../../controller/bottom_nav_controller.dart';
 
 class SellerBanner extends StatelessWidget {
   const SellerBanner({super.key});
@@ -43,7 +44,14 @@ class SellerBanner extends StatelessWidget {
           Dimensions.gapH(20),
           AppButton(
             label: AppStrings.startSellingNow.tr,
-            onPressed: () {},
+            onPressed: () {
+              try {
+                final bottomNavController = Get.find<BottomNavController>();
+                bottomNavController.changeIndex(2); // Switch to Sell tab
+              } catch (e) {
+                // Fail-safe
+              }
+            },
             backgroundColor: AppColors.blackColor,
             textColor: AppColors.primaryColor,
             borderSideColor: AppColors.blackColor,

@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 import '../../../../../utils/assets_image/app_images.dart';
 
-
 class CartItem {
   final String name;
   final String image;
@@ -55,8 +54,7 @@ class CartController extends GetxController {
   ].obs;
 
   // Get unique sellers
-  List<String> get sellers =>
-      cartItems.map((e) => e.seller).toSet().toList();
+  List<String> get sellers => cartItems.map((e) => e.seller).toSet().toList();
 
   // Get items by seller
   List<CartItem> itemsBySeller(String seller) =>
@@ -64,8 +62,8 @@ class CartController extends GetxController {
 
   int get totalItemCount => cartItems.length;
 
-  double get subtotal =>
-      cartItems.fold(0, (sum, item) => sum + (double.parse(item.price) * item.quantity.value));
+  double get subtotal => cartItems.fold(
+      0, (sum, item) => sum + (double.parse(item.price) * item.quantity.value));
 
   double get shippingFee => 60.00;
 

@@ -279,6 +279,8 @@ class AppStrings {
   static const String home = "Home";
   static const String browse = "Browse";
   static const String search = "Search";
+  static const String shop = "Shop";
+  static const String sell = "Sell";
   static const String cart = "Cart";
   static const String favorite = "Favorite";
   static const String orders = "Orders";
@@ -481,4 +483,16 @@ class AppStrings {
   static const String stripeConnectionFailed = "Stripe Connection Failed - Retry";
 
   static const String info = "Info";
+  // Sell Page
+  static const String sellingItems = "Selling Items";
+  static const String activeProduct = "Active Product";
+  static const String inactiveProduct = "Inactive Product";
+  static const String noActiveProductFound = "No Active Product Found";
+  static const String noInactiveProductFound = "No Inactive Product Found";
+  
+  static const String deliveryInfoMissingTitle = "Delivery Information Missing !";
+  static const String deliveryInfoMissingSubtitle = "Complete your delivery settings to make your products available for purchase.";
+  static const String stripeAccountRequiredTitle = "Stripe Account Required !";
+  static const String stripeAccountRequiredSubtitle = "Connect your Stripe account before listing products and receiving payments.";
+
 }

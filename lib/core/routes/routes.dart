@@ -13,9 +13,15 @@ import 'package:bestkits/presentation/auth/signup/screen/signup_screen.dart';
 import 'package:bestkits/presentation/bottom_nav/controller/bottom_nav_controller.dart';
 import 'package:bestkits/presentation/bottom_nav/page/home/pages/categories/controller/categories_controller.dart';
 import 'package:bestkits/presentation/bottom_nav/page/home/pages/categories/screen/categories_screen.dart';
+import 'package:bestkits/presentation/bottom_nav/page/sell/controller/sell_controller.dart';
+import 'package:bestkits/presentation/bottom_nav/page/sell/page/update_product/controller/update_product_controller.dart';
+import 'package:bestkits/presentation/bottom_nav/page/sell/page/update_product/screen/update_product_screen.dart';
+import 'package:bestkits/presentation/bottom_nav/page/sell/screen/sell_screen.dart';
 import 'package:bestkits/presentation/bottom_nav/screen/bottom_nav_screen.dart';
 import 'package:bestkits/presentation/change_password/controller/change_password_controller.dart';
 import 'package:bestkits/presentation/change_password/screen/change_password_screen.dart';
+import 'package:bestkits/presentation/checkout/controller/checkout_controller.dart';
+import 'package:bestkits/presentation/checkout/screen/checkout_screen.dart';
 import 'package:bestkits/presentation/currency_preference/controller/currency_preference_controller.dart';
 import 'package:bestkits/presentation/currency_preference/screen/currency_preference_screen.dart';
 import 'package:bestkits/presentation/favorite/controller/favourite_controller.dart';
@@ -306,5 +312,34 @@ class AppRouter {
         Get.put(StripeConnectController());
       }),
     ),
+
+
+    GetPage(
+      name: RoutePath.checkOut,
+      page: () => const CheckoutScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(CheckoutController());
+      }),
+    ),
+
+    GetPage(
+      name: RoutePath.sell,
+      page: () => const SellScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(SellController());
+      }),
+    ),
+
+    GetPage(
+      name: RoutePath.updateProduct,
+      page: () => const UpdateProductScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(UpdateProductController());
+      }),
+    ),
+
   ];
 }

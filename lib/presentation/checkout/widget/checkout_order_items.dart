@@ -35,25 +35,33 @@ class CheckoutOrderItems extends StatelessWidget {
                   children: [
                     Text(
                       '- $seller',
-                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, fontStyle: FontStyle.italic),
+                      style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w700,
+                          fontStyle: FontStyle.italic),
                     ),
                     Text(
                       '${AppStrings.totalAmount.tr} : €${items.fold(0.0, (s, i) => s + double.parse(i.price) * i.quantity.value).toStringAsFixed(2)}',
-                      style: TextStyle(fontSize: 11, color: AppColors.blackColor),
+                      style:
+                          TextStyle(fontSize: 11, color: AppColors.blackColor),
                     ),
                   ],
                 ),
               ),
-              const Divider(height: 2, thickness: 0.2,),
+              const Divider(
+                height: 2,
+                thickness: 0.2,
+              ),
 
               // Products
               ...items.map((item) => Obx(() => Container(
-                margin: const EdgeInsets.symmetric(vertical: 10),
-                decoration: BoxDecoration(
-                  border: Border.all(color: AppColors.greyColor.withOpacity(0.5), width: 1),
-                  borderRadius: BorderRadius.circular(10)
-                ),
-                child: Padding(
+                    margin: const EdgeInsets.symmetric(vertical: 10),
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                            color: AppColors.greyColor.withOpacity(0.5),
+                            width: 1),
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Padding(
                       padding: const EdgeInsets.all(12),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -63,13 +71,14 @@ class CheckoutOrderItems extends StatelessWidget {
                             width: 65,
                             height: 65,
                             decoration: BoxDecoration(
-                              color: const Color(0xFFF5F5F5),
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(color: AppColors.primaryColor, width: 1)
-                            ),
+                                color: const Color(0xFFF5F5F5),
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                    color: AppColors.primaryColor, width: 1)),
                             child: Padding(
                               padding: const EdgeInsets.all(6),
-                              child: Image.asset(item.image, fit: BoxFit.contain),
+                              child:
+                                  Image.asset(item.image, fit: BoxFit.contain),
                             ),
                           ),
                           const SizedBox(width: 12),
@@ -79,17 +88,23 @@ class CheckoutOrderItems extends StatelessWidget {
                               children: [
                                 Text(
                                   item.name,
-                                  style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, fontStyle: FontStyle.italic),
+                                  style: const TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w700,
+                                      fontStyle: FontStyle.italic),
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
                                   '${AppStrings.quantity.tr} :- ${item.quantity.value} • ${AppStrings.size.tr} / ${AppStrings.variant.tr} :- ${item.selectedSize.value}',
-                                  style: TextStyle(fontSize: 11, color: Colors.grey[500]),
+                                  style: TextStyle(
+                                      fontSize: 11, color: Colors.grey[500]),
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
                                   '€${(double.parse(item.price) * item.quantity.value).toStringAsFixed(2)}',
-                                  style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w800),
+                                  style: const TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w800),
                                 ),
                               ],
                             ),
@@ -97,60 +112,71 @@ class CheckoutOrderItems extends StatelessWidget {
                         ],
                       ),
                     ),
-              ))),
+                  ))),
 
               // Delivery selection
               if (controller.deliveryOptions.containsKey(seller)) ...[
                 Obx(() => Column(
-                      children: controller.deliveryOptions[seller]!.map((option) {
-                        final isSelected = controller.selectedDelivery[seller] == option.type;
+                      children:
+                          controller.deliveryOptions[seller]!.map((option) {
+                        final isSelected =
+                            controller.selectedDelivery[seller] == option.type;
                         return GestureDetector(
-                          onTap: () => controller.selectDelivery(seller, option.type),
+                          onTap: () =>
+                              controller.selectDelivery(seller, option.type),
                           child: Container(
                             margin: const EdgeInsets.fromLTRB(12, 10, 12, 4),
                             padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
-                              color: isSelected ? AppColors.navBarColor : const Color(0xFFF9F9F9),
+                              color: isSelected
+                                  ? AppColors.navBarColor
+                                  : const Color(0xFFF9F9F9),
                               borderRadius: BorderRadius.circular(10),
                               border: Border.all(
-                                color: isSelected ? AppColors.primaryColor : Colors.transparent,
+                                color: isSelected
+                                    ? AppColors.primaryColor
+                                    : Colors.transparent,
                                 width: 1.5,
                               ),
                             ),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    width: 16,
-                                    height: 16,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                        color: isSelected ? AppColors.primaryColor : Colors.grey,
-                                        width: 1.5,
-                                      ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Container(
+                                  width: 16,
+                                  height: 16,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: isSelected
+                                          ? AppColors.primaryColor
+                                          : Colors.grey,
+                                      width: 1.5,
                                     ),
-                                    child: isSelected
-                                        ? Center(
-                                            child: Container(
-                                              width: 8,
-                                              height: 8,
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                color: AppColors.primaryColor,
-                                              ),
-                                            ),
-                                          )
-                                        : null,
                                   ),
-                                  const SizedBox(width: 10),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Text(
+                                  child: isSelected
+                                      ? Center(
+                                          child: Container(
+                                            width: 8,
+                                            height: 8,
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: AppColors.primaryColor,
+                                            ),
+                                          ),
+                                        )
+                                      : null,
+                                ),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Flexible(
+                                            child: Text(
                                               option.label.tr,
                                               style: const TextStyle(
                                                 fontWeight: FontWeight.w800,
@@ -159,52 +185,68 @@ class CheckoutOrderItems extends StatelessWidget {
                                                 color: Colors.black,
                                               ),
                                             ),
-                                            const SizedBox(width: 4),
-                                            Text(
-                                              option.badge.tr,
-                                              style: TextStyle(fontSize: 9, color: Colors.grey[400]),
+                                          ),
+                                          const SizedBox(width: 4),
+                                          Text(
+                                            option.badge.tr,
+                                            style: TextStyle(
+                                                fontSize: 9,
+                                                color: Colors.grey[400]),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 4),
+                                      RichText(
+                                        text: TextSpan(
+                                          style: TextStyle(
+                                              fontSize: 10,
+                                              color: Colors.grey[400],
+                                              fontStyle: FontStyle.italic),
+                                          children: [
+                                            TextSpan(
+                                                text:
+                                                    '${AppStrings.deliveryPartner.tr} - '),
+                                            TextSpan(
+                                              text: option.partner,
+                                              style: TextStyle(
+                                                  color: Colors.grey[700]),
                                             ),
                                           ],
                                         ),
-                                        const SizedBox(height: 4),
-                                        RichText(
-                                          text: TextSpan(
-                                            style: TextStyle(fontSize: 10, color: Colors.grey[400], fontStyle: FontStyle.italic),
-                                            children: [
-                                              TextSpan(text: '${AppStrings.deliveryPartner.tr} - '),
-                                              TextSpan(
-                                                text: option.partner,
-                                                style: TextStyle(color: Colors.grey[700]),
-                                              ),
-                                            ],
-                                          ),
+                                      ),
+                                      const SizedBox(height: 2),
+                                      RichText(
+                                        text: TextSpan(
+                                          style: TextStyle(
+                                              fontSize: 10,
+                                              color: Colors.grey[400],
+                                              fontStyle: FontStyle.italic),
+                                          children: [
+                                            TextSpan(
+                                                text:
+                                                    '${AppStrings.estimatedTime.tr} - '),
+                                            TextSpan(
+                                              text:
+                                                  '${option.time} ${AppStrings.businessDays.tr}',
+                                              style: TextStyle(
+                                                  color: Colors.grey[700]),
+                                            ),
+                                          ],
                                         ),
-                                        const SizedBox(height: 2),
-                                        RichText(
-                                          text: TextSpan(
-                                            style: TextStyle(fontSize: 10, color: Colors.grey[400], fontStyle: FontStyle.italic),
-                                            children: [
-                                              TextSpan(text: '${AppStrings.estimatedTime.tr} - '),
-                                              TextSpan(
-                                                text: '${option.time} ${AppStrings.businessDays.tr}',
-                                                style: TextStyle(color: Colors.grey[700]),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
-                                  Text(
-                                    '€${option.price}',
-                                    style: const TextStyle(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w800,
-                                      color: Colors.black,
-                                    ),
+                                ),
+                                Text(
+                                  '€${option.price}',
+                                  style: const TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w800,
+                                    color: Colors.black,
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
+                            ),
                           ),
                         );
                       }).toList(),

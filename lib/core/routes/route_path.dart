@@ -30,4 +30,7 @@ class RoutePath {
   static const String favorite = '/FavoriteScreen';
   static const String cart = '/CartScreen';
   static const String stripeConnect = '/StripeConnectScreen';
+  static const String checkOut = '/CheckoutScreen';
+  static const String sell = '/SellScreen';
+  static const String updateProduct = '/UpdateProductScreen';
 }

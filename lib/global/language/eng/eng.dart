@@ -402,5 +402,16 @@ Map<String, String> english = {
   AppStrings.businessTypeValue: "Online Marketplace Platform",
   AppStrings.registeredAddressValue: "To be confirmed – Bulgaria",
   AppStrings.jurisdictionValue: "Bulgaria / European Union",
+
+  // Sell Page
+  AppStrings.sellingItems: "Selling Items",
+  AppStrings.activeProduct: "Active Product",
+  AppStrings.inactiveProduct: "Inactive Product",
+  AppStrings.noActiveProductFound: "No Active Product Found",
+  AppStrings.noInactiveProductFound: "No Inactive Product Found",
+  AppStrings.deliveryInfoMissingTitle: "Delivery Information Missing !",
+  AppStrings.deliveryInfoMissingSubtitle: "Complete your delivery settings to make your products available for purchase.",
+  AppStrings.stripeAccountRequiredTitle: "Stripe Account Required !",
+  AppStrings.stripeAccountRequiredSubtitle: "Connect your Stripe account before listing products and receiving payments.",
 };
 

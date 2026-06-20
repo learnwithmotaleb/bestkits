@@ -1,28 +1,32 @@
-import 'package:bestkits/utils/static_strings/static_strings.dart';
-import 'package:bestkits/widget/custom_appbar.dart';
+import 'package:bestkits/presentation/bottom_nav/page/sell/page/update_product/controller/update_product_controller.dart';
+import 'package:bestkits/presentation/bottom_nav/page/sell/page/update_product/widget/product_action_section.dart';
+import 'package:bestkits/presentation/bottom_nav/page/sell/page/update_product/widget/product_image_section.dart';
+import 'package:bestkits/presentation/bottom_nav/page/sell/page/update_product/widget/product_info_section.dart';
+import 'package:bestkits/presentation/bottom_nav/page/sell/page/update_product/widget/product_tabs_section.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/src/extension_instance.dart';
+import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:get/get.dart';
-import '../../../../core/responsive_layout/dimensions.dart';
-import '../../../../utils/app_colors/app_colors.dart';
-import '../../../../utils/app_text_style/app_text_style.dart';
-import '../../../utils/assets_image/app_images.dart';
-import '../../bottom_nav/page/search/widget/search_product_card.dart';
-import '../controller/product_details_controller.dart';
-import '../widget/product_action_section.dart';
-import '../widget/product_image_section.dart';
-import '../widget/product_info_section.dart';
-import '../widget/product_tabs_section.dart';
-import '../../favorite/controller/favourite_controller.dart';
 
-class ProductDetailsScreen extends StatefulWidget {
-  const ProductDetailsScreen({super.key});
+import '../../../../../../../core/responsive_layout/dimensions.dart';
+import '../../../../../../../utils/app_colors/app_colors.dart';
+import '../../../../../../../utils/app_text_style/app_text_style.dart';
+import '../../../../../../../utils/assets_image/app_images.dart';
+import '../../../../../../../utils/static_strings/static_strings.dart';
+import '../../../../../../../widget/custom_appbar.dart';
+import '../../../../home/widget/product_card.dart';
+
+class UpdateProductScreen extends StatefulWidget {
+  const UpdateProductScreen({super.key});
 
   @override
-  State<ProductDetailsScreen> createState() => _ProductDetailsScreenState();
+  State<UpdateProductScreen> createState() => _UpdateProductScreenState();
 }
 
-class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
-  final controller = Get.put(ProductDetailsController());
+class _UpdateProductScreenState extends State<UpdateProductScreen> {
+  final controller = Get.put(UpdateProductController());
 
   @override
   Widget build(BuildContext context) {
@@ -30,22 +34,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       backgroundColor: AppColors.backgroundColor,
       appBar: CommonAppBar(
         title: AppStrings.productDetailsHeader.tr,
-        actions: [
-          Obx(() {
-            final favController = Get.find<FavouriteController>();
-            final isFav = favController.isFavorite(controller.product);
-            return IconButton(
-              onPressed: () {
-                favController.toggleFavorite(controller.product);
-              },
-              icon: Icon(
-                isFav ? Icons.favorite : Icons.favorite_border,
-                color: AppColors.redColor,
-              ),
-            );
-          }),
-          const SizedBox(width: 10),
-        ],
       ),
       body: Column(
         children: [
@@ -57,7 +45,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 children: [
                   ProductImageSection(controller: controller),
                   const SizedBox(height: 20),
-                  const ProductInfoSection(),
+                  ProductInfoSection(controller: controller),
                   const SizedBox(height: 10),
                   ProductActionSection(controller: controller),
                   const SizedBox(height: 10),
@@ -92,7 +80,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   Row(
                     children: [
                       Expanded(
-                        child: SearchProductCard(
+                        child: ProductCard(
                           product: {
                             'name': 'Kids Cotton Hoodie...',
                             'image': AppImages.kidsCottonHoodie,
@@ -102,11 +90,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             'material': 'Cotton Pull-On',
                             'discount': '20%',
                           },
+                          width: double.infinity,
+                          margin: EdgeInsets.zero,
                         ),
                       ),
                       const SizedBox(width: 15),
                       Expanded(
-                        child: SearchProductCard(
+                        child: ProductCard(
                           product: {
                             'name': 'Kids Cotton Hoodie...',
                             'image': AppImages.kidAccessor,
@@ -116,6 +106,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             'material': 'Cotton Pull-On',
                             'discount': '10%',
                           },
+                          width: double.infinity,
+                          margin: EdgeInsets.zero,
                         ),
                       ),
                     ],

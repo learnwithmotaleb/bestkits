@@ -35,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
               // Header
               const HomeHeader(),
               Dimensions.gapH(20),
-              
+
               // Banner
               const HomeBanner(),
               Dimensions.gapH(30),
@@ -59,7 +59,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     return CategoryCard(
                       name: category['name'].toString().tr,
                       image: category['image'],
-                      items: '${category['items']} ${AppStrings.itemsCountLabel.tr}',
+                      items:
+                          '${category['items']} ${AppStrings.itemsCountLabel.tr}',
                     );
                   },
                 ),
@@ -117,17 +118,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: ListView.builder(
                   padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
                   scrollDirection: Axis.horizontal,
-                  itemCount: controller.trendingProducts.length, // Reusing trending for demo
+                  itemCount: controller
+                      .trendingProducts.length, // Reusing trending for demo
                   itemBuilder: (context, index) {
                     final product = controller.trendingProducts[index];
                     return ProductCard(product: product);
                   },
                 ),
               ),
-              
+
               // Seller Banner
               const SellerBanner(),
-              
+
               Dimensions.gapH(20),
             ],
           ),

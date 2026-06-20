@@ -8,8 +8,15 @@ import 'package:bestkits/presentation/favorite/controller/favourite_controller.d
 
 class ProductCard extends StatelessWidget {
   final Map<String, dynamic> product;
+  final EdgeInsetsGeometry? margin;
+  final double? width;
 
-  const ProductCard({super.key, required this.product});
+  const ProductCard({
+    super.key,
+    required this.product,
+    this.margin,
+    this.width,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -18,8 +25,8 @@ class ProductCard extends StatelessWidget {
     return GestureDetector(
       onTap: () => Get.to(() => const ProductDetailsScreen()),
       child: Container(
-      width: Dimensions.w(170),
-      margin: EdgeInsets.only(right: Dimensions.w(15)),
+      width: width ?? Dimensions.w(170),
+      margin: margin ?? EdgeInsets.only(right: Dimensions.w(15)),
       decoration: BoxDecoration(
         color: const Color(0xFFF9F9F9),
         borderRadius: BorderRadius.circular(Dimensions.r(15)),

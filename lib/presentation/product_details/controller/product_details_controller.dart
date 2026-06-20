@@ -21,6 +21,17 @@ class ProductDetailsController extends GetxController {
   // Quantity selection
   final quantity = 1.obs;
 
+  // Dummy product for favorite toggle
+  final Map<String, dynamic> product = {
+    'name': AppStrings.dummyProductName,
+    'image': AppImages.kidsCottonSho,
+    'price': '18.00',
+    'oldPrice': '21.99',
+    'rating': '4.9/5.0',
+    'material': AppStrings.dummyMaterial,
+    'discount': '20%',
+  };
+
   // Tab selection
   final selectedTabIndex = 0.obs;
   final List<String> tabs = [AppStrings.description, AppStrings.reviews, AppStrings.sellerLabel];

@@ -6,7 +6,7 @@ import '../../../../../utils/app_text_style/app_text_style.dart';
 import '../../../../../utils/static_strings/static_strings.dart';
 import '../controller/search_controller.dart';
 import '../widget/filter_bottom_sheet.dart';
-import '../widget/search_product_card.dart';
+import '../../home/widget/product_card.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -83,10 +83,6 @@ class _SearchScreenState extends State<SearchScreen> {
             // Search Content
             Expanded(
               child: Obx(() {
-                if (!controller.isSearching.value) {
-                  return _buildEmptyState();
-                }
-
                 if (controller.filteredProducts.isEmpty) {
                   return _buildNoMatchesState();
                 }
@@ -96,36 +92,6 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildEmptyState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            padding: EdgeInsets.all(Dimensions.w(30)),
-            decoration: BoxDecoration(
-              color: Colors.grey.withOpacity(0.05),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              Icons.search,
-              size: Dimensions.icon(60),
-              color: Colors.grey.withOpacity(0.3),
-            ),
-          ),
-          SizedBox(height: Dimensions.h(20)),
-          Text(
-            AppStrings.searchPlaceholder.tr,
-            style: AppTextStyles.h4.copyWith(
-              color: Colors.grey,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -179,8 +145,10 @@ class _SearchScreenState extends State<SearchScreen> {
       ),
       itemCount: controller.filteredProducts.length,
       itemBuilder: (context, index) {
-        return SearchProductCard(
+        return ProductCard(
           product: controller.filteredProducts[index],
+          width: double.infinity,
+          margin: EdgeInsets.zero,
         );
       },
     );

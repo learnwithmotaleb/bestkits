@@ -14,7 +14,6 @@ class CategoryGridCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final favouriteController = Get.find<FavouriteController>();
 
     return GestureDetector(
       onTap: () => Get.to(() => const ProductDetailsScreen()),
@@ -80,37 +79,7 @@ class CategoryGridCard extends StatelessWidget {
                     ),
                   ),
                   // Favorite Icon
-                  Positioned(
-                    top: 8,
-                    left: 8,
-                    child: Obx(() {
-                      final isFav = favouriteController.isCategoryFavorite(category);
-                      return GestureDetector(
-                        onTap: () {
-                          favouriteController.toggleCategoryFavorite(category);
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.all(5),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.05),
-                                blurRadius: 4,
-                                spreadRadius: 1,
-                              ),
-                            ],
-                          ),
-                          child: Icon(
-                            isFav ? Icons.favorite : Icons.favorite_border,
-                            size: 14,
-                            color: isFav ? Colors.red : Colors.grey,
-                          ),
-                        ),
-                      );
-                    }),
-                  ),
+
                 ],
               ),
             ),

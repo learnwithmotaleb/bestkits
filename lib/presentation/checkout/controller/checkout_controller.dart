@@ -36,7 +36,7 @@ class AddressModel {
 }
 
 class CheckoutController extends GetxController {
-  final CartController cartController = Get.find<CartController>();
+  final CartController cartController = Get.put(CartController());
 
   // Selected delivery per seller
   final RxMap<String, String> selectedDelivery = <String, String>{}.obs;

@@ -1,15 +1,13 @@
-import 'package:bestkits/core/routes/route_path.dart';
 import 'package:bestkits/utils/static_strings/static_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../../core/responsive_layout/dimensions.dart';
-import '../../../../utils/app_colors/app_colors.dart';
-import '../../../../utils/app_text_style/app_text_style.dart';
-import '../../../../widget/app_button.dart';
-import '../controller/product_details_controller.dart';
+import '../../../../../../../utils/app_colors/app_colors.dart';
+import '../../../../../../../widget/app_button.dart';
+import '../controller/update_product_controller.dart';
+import '../screen/order_details_screen.dart';
 
 class ProductActionSection extends StatelessWidget {
-  final ProductDetailsController controller;
+  final UpdateProductController controller;
 
   const ProductActionSection({super.key, required this.controller});
 
@@ -20,7 +18,7 @@ class ProductActionSection extends StatelessWidget {
       children: [
         // Size Selection
         Text(
-          '${AppStrings.variant.tr} -',
+          '${AppStrings.sizeVariant.tr} -',
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w600,
@@ -69,51 +67,6 @@ class ProductActionSection extends StatelessWidget {
             },
           ),
         ),
-        const SizedBox(height: 20),
-
-        // Quantity Selection
-        Text(
-          '${AppStrings.quantity.tr} -',
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-            color: Colors.grey[600],
-          ),
-        ),
-        const SizedBox(height: 10),
-        Container(
-          width: 150,
-          height: 45,
-          decoration: BoxDecoration(
-            color: const Color(0xFF1A1A1A),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Row(
-            children: [
-              IconButton(
-                onPressed: controller.decrementQuantity,
-                icon:
-                    Icon(Icons.remove, color: AppColors.primaryColor, size: 18),
-              ),
-              Expanded(
-                child: Container(
-                  height: double.infinity,
-                  color: Colors.white,
-                  alignment: Alignment.center,
-                  child: Obx(() => Text(
-                        '${controller.quantity.value}',
-                        style: const TextStyle(
-                            fontWeight: FontWeight.w700, fontSize: 16),
-                      )),
-                ),
-              ),
-              IconButton(
-                onPressed: controller.incrementQuantity,
-                icon: Icon(Icons.add, color: AppColors.primaryColor, size: 18),
-              ),
-            ],
-          ),
-        ),
         const SizedBox(height: 25),
 
         // Buttons Row
@@ -121,21 +74,13 @@ class ProductActionSection extends StatelessWidget {
           children: [
             Expanded(
               child: AppButton(
-                label: AppStrings.addToCart.tr,
+                label: 'Update Product',
                 onPressed: () {
-                  //show alert added successfully to cart
-                  Get.snackbar(
-                    'Success',
-                    'Product added to cart successfully',
-                    backgroundColor: Colors.green,
-                    colorText: Colors.white,
-                    snackPosition: SnackPosition.BOTTOM,
-                  );
-                  print("Add To Cart Button Clicked");
+                  controller.updateProduct();
                 },
                 backgroundColor: const Color(0xFF1A1A1A),
                 textColor: AppColors.primaryColor,
-                leadingIcon: Icon(Icons.shopping_bag_outlined,
+                leadingIcon: Icon(Icons.edit_outlined,
                     color: AppColors.primaryColor, size: 18),
                 borderRadius: 12,
                 height: 50,
@@ -144,15 +89,14 @@ class ProductActionSection extends StatelessWidget {
             const SizedBox(width: 15),
             Expanded(
               child: AppButton(
-                label: AppStrings.orderNow.tr,
+                label: "View Order's",
                 onPressed: () {
-                  Get.toNamed(RoutePath.checkOut);
-                  print("Order Button Clicked");
+                  Get.to(() => const OrderDetailsScreen());
                 },
                 backgroundColor: AppColors.primaryColor,
                 textColor: Colors.black,
-                leadingIcon:
-                    const Icon(Icons.bolt, color: Colors.black, size: 18),
+                leadingIcon: const Icon(Icons.assignment_outlined,
+                    color: Colors.black, size: 18),
                 borderRadius: 12,
                 height: 50,
                 borderSideColor: AppColors.primaryColor,

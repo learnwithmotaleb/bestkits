@@ -410,5 +410,16 @@ Map<String, String> bulgarian = {
   AppStrings.businessTypeValue: "Платформа за онлайн пазар",
   AppStrings.registeredAddressValue: "Предстои потвърждение – България",
   AppStrings.jurisdictionValue: "България / Европейски съюз",
+
+  // Sell Page
+  AppStrings.sellingItems: "Продавани артикули",
+  AppStrings.activeProduct: "Активен продукт",
+  AppStrings.inactiveProduct: "Неактивен продукт",
+  AppStrings.noActiveProductFound: "Няма намерени активни продукти",
+  AppStrings.noInactiveProductFound: "Няма намерени неактивни продукти",
+  AppStrings.deliveryInfoMissingTitle: "Липсва информация за доставка !",
+  AppStrings.deliveryInfoMissingSubtitle: "Попълнете настройките за доставка, за да направите продуктите си достъпни за закупуване.",
+  AppStrings.stripeAccountRequiredTitle: "Изисква се акаунт в Stripe !",
+  AppStrings.stripeAccountRequiredSubtitle: "Свържете вашия Stripe акаунт, преди да изброите продукти и да получавате плащания.",
 };
 
