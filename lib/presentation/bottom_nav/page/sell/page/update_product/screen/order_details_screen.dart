@@ -15,24 +15,49 @@ class OrderDetailsScreen extends StatefulWidget {
 }
 
 class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
-  // Current order status state
-  final RxString orderStatus = "Order Placed".obs;
+  // Current confirmed order status (reactive)
+  final RxString orderStatus = 'Order Placed'.obs;
 
-  // Status select list (from Image 6)
+  // Available statuses
   final List<String> statuses = [
-    "Pending",
-    "Confirmed",
-    "Shipped",
-    "Delivered",
-    "Canceled",
+    'Pending',
+    'Confirmed',
+    'Shipped',
+    'Delivered',
+    'Canceled',
   ];
 
+  // ── helpers ────────────────────────────────────────────────────────────────
+
+  Color _statusColor(String status) {
+    switch (status) {
+      case 'Confirmed':
+      case 'Delivered':
+        return const Color(0xFF4CAF50);
+      case 'Canceled':
+        return Colors.red;
+      default:
+        return Colors.orange;
+    }
+  }
+
+  // ── bottom sheet ───────────────────────────────────────────────────────────
+
   void _showUpdateStatusBottomSheet() {
-    final selectedTempStatus = orderStatus.value.obs;
+    // Temp reactive selection (starts at current status or first status)
+    final tempSelected = (statuses.contains(orderStatus.value)
+            ? orderStatus.value
+            : statuses.first)
+        .obs;
 
     Get.bottomSheet(
       Container(
-        padding: EdgeInsets.all(Dimensions.w(20)),
+        padding: EdgeInsets.fromLTRB(
+          Dimensions.w(20),
+          Dimensions.h(20),
+          Dimensions.w(20),
+          Dimensions.h(20),
+        ),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.only(
@@ -44,15 +69,15 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header Row
+            // ── Header ──────────────────────────────────────────────────────
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Update Order Status",
+                  '- Update Order Status',
                   style: AppTextStyles.h3.copyWith(
-                    fontSize: Dimensions.fs(18),
-                    fontWeight: FontWeight.w700,
+                    fontSize: Dimensions.fs(16),
+                    fontWeight: FontWeight.w800,
                   ),
                 ),
                 GestureDetector(
@@ -63,70 +88,97 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                       color: Colors.grey[200],
                       shape: BoxShape.circle,
                     ),
-                    child:
-                        const Icon(Icons.close, size: 18, color: Colors.black),
+                    child: const Icon(Icons.close, size: 18, color: Colors.black),
                   ),
                 ),
               ],
             ),
-            Dimensions.gapH(8),
+            Dimensions.gapH(6),
             Text(
-              "Update the current order status to keep the customer informed about the delivery progress.",
+              'Update the current order status to keep the customer informed about the delivery progress.',
               style: TextStyle(
-                fontSize: Dimensions.fs(12),
+                fontSize: Dimensions.fs(11),
                 color: Colors.grey[600],
                 height: 1.5,
               ),
             ),
-            Dimensions.gapH(20),
+            Dimensions.gapH(16),
 
-            // Dropdown/Select
+            // ── Label ───────────────────────────────────────────────────────
             Text(
-              "Order Status (Select)",
+              'Order Status (Select)',
               style: TextStyle(
                 fontSize: Dimensions.fs(12),
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w700,
                 color: Colors.grey[800],
               ),
             ),
-            Dimensions.gapH(8),
-            Obx(() => Container(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: Dimensions.w(15), vertical: Dimensions.h(4)),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey.withOpacity(0.3)),
-                    borderRadius: BorderRadius.circular(Dimensions.r(10)),
-                  ),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      value: selectedTempStatus.value,
-                      isExpanded: true,
-                      icon: const Icon(Icons.keyboard_arrow_down),
-                      items: statuses.map((String status) {
-                        return DropdownMenuItem<String>(
-                          value: status,
-                          child: Text(
-                            status,
-                            style: const TextStyle(fontWeight: FontWeight.w500),
-                          ),
-                        );
-                      }).toList(),
-                      onChanged: (newVal) {
-                        if (newVal != null) {
-                          selectedTempStatus.value = newVal;
-                        }
-                      },
-                    ),
-                  ),
+            Dimensions.gapH(10),
+
+            // ── Radio list ──────────────────────────────────────────────────
+            Obx(() => Column(
+                  children: statuses.map((status) {
+                    final isSelected = tempSelected.value == status;
+                    return GestureDetector(
+                      onTap: () => tempSelected.value = status,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: Dimensions.h(6)),
+                        child: Row(
+                          children: [
+                            // Radio circle
+                            Container(
+                              width: Dimensions.w(20),
+                              height: Dimensions.w(20),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: isSelected
+                                      ? AppColors.primaryColor
+                                      : Colors.grey.shade400,
+                                  width: 2,
+                                ),
+                              ),
+                              child: isSelected
+                                  ? Center(
+                                      child: Container(
+                                        width: Dimensions.w(10),
+                                        height: Dimensions.w(10),
+                                        decoration: const BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: AppColors.primaryColor,
+                                        ),
+                                      ),
+                                    )
+                                  : null,
+                            ),
+                            Dimensions.gapW(12),
+                            Text(
+                              status,
+                              style: TextStyle(
+                                fontSize: Dimensions.fs(13),
+                                fontWeight: isSelected
+                                    ? FontWeight.w700
+                                    : FontWeight.w500,
+                                color: isSelected
+                                    ? Colors.black
+                                    : Colors.grey[700],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }).toList(),
                 )),
 
-            Dimensions.gapH(24),
+            Dimensions.gapH(20),
 
-            // Update button
+            // ── Update button ────────────────────────────────────────────────
             GestureDetector(
               onTap: () {
+                final chosen = tempSelected.value;
                 Get.back(); // close bottom sheet
-                _showConfirmUpdateDialog(selectedTempStatus.value);
+                _showConfirmUpdateDialog(chosen);
               },
               child: Container(
                 width: double.infinity,
@@ -136,13 +188,24 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                   borderRadius: BorderRadius.circular(Dimensions.r(12)),
                 ),
                 alignment: Alignment.center,
-                child: Text(
-                  "Update >>",
-                  style: TextStyle(
-                    color: AppColors.primaryColor,
-                    fontSize: Dimensions.fs(14),
-                    fontWeight: FontWeight.w700,
-                  ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Update',
+                      style: TextStyle(
+                        color: AppColors.primaryColor,
+                        fontSize: Dimensions.fs(14),
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    Dimensions.gapW(6),
+                    Icon(
+                      Icons.double_arrow_rounded,
+                      color: AppColors.primaryColor,
+                      size: Dimensions.icon(16),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -155,22 +218,31 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
     );
   }
 
+  // ── confirm dialog ─────────────────────────────────────────────────────────
+
   void _showConfirmUpdateDialog(String newStatus) {
     AppAlerts.warning(
-      title: "Update Order Status !",
+      title: 'Update Order Status !',
       message:
-          "Are you sure you want to update this order status? The customer will be notified immediately.",
-      confirmLabel: "Confirm",
-      cancelLabel: "Cancel",
+          'Are you sure you want to update this order status? The customer will be notified immediately.',
+      confirmLabel: 'Confirm',
+      cancelLabel: 'Cancel',
       onConfirm: () {
         orderStatus.value = newStatus;
-        AppAlerts.success(message: "Order status updated successfully");
+        AppAlerts.success(message: 'Order status updated successfully');
       },
     );
   }
 
+  // ── build ──────────────────────────────────────────────────────────────────
+
   @override
   Widget build(BuildContext context) {
+    // Accept arguments if passed from ProductOrder screen
+    final args = Get.arguments as Map<String, dynamic>?;
+    final orderId = args?['orderId'] as String? ?? 'KDF143625879';
+    final orderDate = args?['date'] as String? ?? '27 Aug 2020 - 06:20 AM';
+
     return Scaffold(
       backgroundColor: const Color(0xFFF4F4F4),
       appBar: const CommonAppBar(
@@ -187,7 +259,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                 children: [
                   Dimensions.gapH(10),
 
-                  // Main Order Details Card
+                  // ── Main Order Details Card ──────────────────────────────
                   Container(
                     width: double.infinity,
                     padding: EdgeInsets.all(Dimensions.w(15)),
@@ -199,51 +271,48 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Order ID & Status Header
+                        // Order ID & Status
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "- Order ID: KDF143625879",
-                                  style: TextStyle(
-                                    fontSize: Dimensions.fs(13),
-                                    fontWeight: FontWeight.w800,
-                                    color: Colors.black,
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '- Order ID: $orderId',
+                                    style: TextStyle(
+                                      fontSize: Dimensions.fs(13),
+                                      fontWeight: FontWeight.w800,
+                                      color: Colors.black,
+                                    ),
                                   ),
-                                ),
-                                Dimensions.gapH(4),
-                                Text(
-                                  "27 Aug 2020 - 06:20 AM",
-                                  style: TextStyle(
-                                    fontSize: Dimensions.fs(10),
-                                    color: Colors.grey[500],
+                                  Dimensions.gapH(4),
+                                  Text(
+                                    orderDate,
+                                    style: TextStyle(
+                                      fontSize: Dimensions.fs(10),
+                                      color: Colors.grey[500],
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                             Obx(() {
                               final status = orderStatus.value;
-                              Color badgeColor = Colors.orange;
-                              if (status == "Confirmed" ||
-                                  status == "Delivered") {
-                                badgeColor = const Color(0xFF4CAF50);
-                              } else if (status == "Canceled") {
-                                badgeColor = Colors.red;
-                              }
+                              final badgeColor = _statusColor(status);
                               return Container(
                                 padding: EdgeInsets.symmetric(
-                                    horizontal: Dimensions.w(8),
-                                    vertical: Dimensions.h(4)),
+                                  horizontal: Dimensions.w(8),
+                                  vertical: Dimensions.h(4),
+                                ),
                                 decoration: BoxDecoration(
                                   color: badgeColor.withOpacity(0.1),
                                   borderRadius:
                                       BorderRadius.circular(Dimensions.r(20)),
                                 ),
                                 child: Text(
-                                  "• $status",
+                                  '• $status',
                                   style: TextStyle(
                                     color: badgeColor,
                                     fontSize: Dimensions.fs(9),
@@ -294,7 +363,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "D.D. Step – Comfort",
+                                      'D.D. Step – Comfort',
                                       style: TextStyle(
                                         fontSize: Dimensions.fs(12),
                                         fontWeight: FontWeight.w800,
@@ -303,7 +372,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                                     ),
                                     Dimensions.gapH(4),
                                     Text(
-                                      "Quantity :- 01 • Size / Variant :- S",
+                                      'Quantity :- 01 • Size / Variant :- S',
                                       style: TextStyle(
                                         fontSize: Dimensions.fs(10),
                                         color: Colors.grey[500],
@@ -312,7 +381,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                                     ),
                                     Dimensions.gapH(6),
                                     Text(
-                                      "€260.00",
+                                      '€260.00',
                                       style: TextStyle(
                                         fontSize: Dimensions.fs(13),
                                         fontWeight: FontWeight.w800,
@@ -331,9 +400,9 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
 
                   Dimensions.gapH(20),
 
-                  // Ordered By section
+                  // ── Ordered By ──────────────────────────────────────────
                   Text(
-                    "- Ordered By",
+                    '- Ordered By',
                     style: TextStyle(
                       fontSize: Dimensions.fs(13),
                       fontWeight: FontWeight.w800,
@@ -362,7 +431,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "Roberts Junior",
+                                'Roberts Junior',
                                 style: TextStyle(
                                   fontWeight: FontWeight.w700,
                                   fontSize: Dimensions.fs(13),
@@ -370,7 +439,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                               ),
                               Dimensions.gapH(4),
                               Text(
-                                "robert@junior.com",
+                                'robert@junior.com',
                                 style: TextStyle(
                                   color: Colors.grey[500],
                                   fontSize: Dimensions.fs(11),
@@ -379,12 +448,11 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                             ],
                           ),
                         ),
-                        // Message Button
                         GestureDetector(
                           onTap: () {
                             Get.snackbar(
-                              "Chat Info",
-                              "Message customer feature is selected",
+                              'Chat Info',
+                              'Message customer feature is selected',
                               backgroundColor: AppColors.primaryColor,
                               colorText: Colors.black,
                             );
@@ -409,9 +477,9 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
 
                   Dimensions.gapH(20),
 
-                  // Delivery Address section
+                  // ── Delivery Address ────────────────────────────────────
                   Text(
-                    "- Delivery Address",
+                    '- Delivery Address',
                     style: TextStyle(
                       fontSize: Dimensions.fs(13),
                       fontWeight: FontWeight.w800,
@@ -433,7 +501,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                         Row(
                           children: [
                             Text(
-                              "Roberts Junior",
+                              'Roberts Junior',
                               style: TextStyle(
                                 fontSize: Dimensions.fs(13),
                                 fontWeight: FontWeight.w700,
@@ -448,7 +516,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                                 borderRadius: BorderRadius.circular(4),
                               ),
                               child: Text(
-                                "• Home",
+                                '• Home',
                                 style: TextStyle(
                                   color: AppColors.primaryColor,
                                   fontSize: Dimensions.fs(8),
@@ -460,7 +528,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                         ),
                         Dimensions.gapH(8),
                         Text(
-                          "+359 77 123 4567",
+                          '+359 77 123 4567',
                           style: TextStyle(
                             fontSize: Dimensions.fs(11),
                             color: Colors.grey[700],
@@ -468,7 +536,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                         ),
                         Dimensions.gapH(4),
                         Text(
-                          "25 \"Ivan Vazov\" Street, Plovdiv 4000, Bulgaria",
+                          '25 "Ivan Vazov" Street, Plovdiv 4000, Bulgaria',
                           style: TextStyle(
                             fontSize: Dimensions.fs(11),
                             color: Colors.grey[500],
@@ -480,7 +548,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                   ),
                   Dimensions.gapH(30),
 
-                  // Bottom Button
+                  // ── Update Order Status button ───────────────────────────
                   GestureDetector(
                     onTap: _showUpdateStatusBottomSheet,
                     child: Container(
@@ -492,7 +560,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                       ),
                       alignment: Alignment.center,
                       child: Text(
-                        "Update Order Status",
+                        'Update Order Status',
                         style: TextStyle(
                           color: AppColors.primaryColor,
                           fontSize: Dimensions.fs(14),

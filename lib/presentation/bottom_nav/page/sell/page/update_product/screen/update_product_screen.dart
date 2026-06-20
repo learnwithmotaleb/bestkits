@@ -52,67 +52,7 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
                   ProductTabsSection(controller: controller),
                   const SizedBox(height: 30),
 
-                  // Related Products Header
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        AppStrings.relatedProducts.tr,
-                        style: AppTextStyles.h4.copyWith(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                          fontStyle: FontStyle.italic,
-                        ),
-                      ),
-                      Text(
-                        AppStrings.seeAll.tr,
-                        style: TextStyle(
-                          color: Colors.grey[400],
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 15),
 
-                  // Related Products Grid (2 items as per design)
-                  Row(
-                    children: [
-                      Expanded(
-                        child: ProductCard(
-                          product: {
-                            'name': 'Kids Cotton Hoodie...',
-                            'image': AppImages.kidsCottonHoodie,
-                            'price': '18.00',
-                            'oldPrice': '21.99',
-                            'rating': '4.5/5.0',
-                            'material': 'Cotton Pull-On',
-                            'discount': '20%',
-                          },
-                          width: double.infinity,
-                          margin: EdgeInsets.zero,
-                        ),
-                      ),
-                      const SizedBox(width: 15),
-                      Expanded(
-                        child: ProductCard(
-                          product: {
-                            'name': 'Kids Cotton Hoodie...',
-                            'image': AppImages.kidAccessor,
-                            'price': '18.00',
-                            'oldPrice': '21.99',
-                            'rating': '4.5/5.0',
-                            'material': 'Cotton Pull-On',
-                            'discount': '10%',
-                          },
-                          width: double.infinity,
-                          margin: EdgeInsets.zero,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 40),
                 ],
               ),
             ),

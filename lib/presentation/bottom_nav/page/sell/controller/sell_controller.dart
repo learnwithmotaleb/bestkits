@@ -3,15 +3,14 @@ import 'package:flutter/material.dart';
 import '../../../../../widget/app_alert.dart';
 import '../../../../../utils/static_strings/static_strings.dart';
 import '../../../../../utils/assets_image/app_images.dart';
+import '../page/update_product/screen/add_product.dart';
 
 class SellController extends GetxController {
   final RxBool isActiveTab = true.obs;
 
-  // Track alternate clicks to show different warnings (for demonstration)
-  int _warningToggle = 0;
-
   // Dummy products
-  final RxList<Map<String, dynamic>> activeProducts = <Map<String, dynamic>>[
+  final RxList<Map<String, dynamic>> activeProducts =
+      <Map<String, dynamic>>[
     {
       'name': 'Kids Cotton Hoodie...',
       'image': AppImages.kidAccessor,
@@ -58,28 +57,6 @@ class SellController extends GetxController {
   }
 
   void onAddProductTap() {
-    // Alternate between showing Delivery Information Missing and Stripe Account Required
-    if (_warningToggle % 2 == 0) {
-      AppAlerts.warning(
-        title: AppStrings.deliveryInfoMissingTitle.tr,
-        message: AppStrings.deliveryInfoMissingSubtitle.tr,
-        confirmLabel: 'Confirm',
-        cancelLabel: 'Cancel',
-        onConfirm: () {
-          // Typically navigate to Delivery settings
-        },
-      );
-    } else {
-      AppAlerts.warning(
-        title: AppStrings.stripeAccountRequiredTitle.tr,
-        message: AppStrings.stripeAccountRequiredSubtitle.tr,
-        confirmLabel: 'Confirm',
-        cancelLabel: 'Cancel',
-        onConfirm: () {
-          // Typically navigate to Stripe settings
-        },
-      );
-    }
-    _warningToggle++;
+    Get.to(() => const AddProduct());
   }
 }

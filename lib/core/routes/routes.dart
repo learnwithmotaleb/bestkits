@@ -15,7 +15,14 @@ import 'package:bestkits/presentation/bottom_nav/page/home/pages/categories/cont
 import 'package:bestkits/presentation/bottom_nav/page/home/pages/categories/screen/categories_screen.dart';
 import 'package:bestkits/presentation/bottom_nav/page/sell/controller/sell_controller.dart';
 import 'package:bestkits/presentation/bottom_nav/page/sell/page/update_product/controller/update_product_controller.dart';
+import 'package:bestkits/presentation/bottom_nav/page/sell/page/update_product/screen/update_product.dart';
+import 'package:bestkits/presentation/bottom_nav/page/sell/page/update_product/screen/update_product_price.dart';
 import 'package:bestkits/presentation/bottom_nav/page/sell/page/update_product/screen/update_product_screen.dart';
+import 'package:bestkits/presentation/bottom_nav/page/sell/page/update_product/screen/product_order.dart';
+import 'package:bestkits/presentation/bottom_nav/page/sell/page/update_product/screen/order_details_screen.dart';
+import 'package:bestkits/presentation/bottom_nav/page/sell/page/update_product/screen/add_product.dart';
+import 'package:bestkits/presentation/bottom_nav/page/sell/page/update_product/screen/add_product_price.dart';
+import 'package:bestkits/presentation/bottom_nav/page/sell/page/update_product/controller/add_product_controller.dart';
 import 'package:bestkits/presentation/bottom_nav/page/sell/screen/sell_screen.dart';
 import 'package:bestkits/presentation/bottom_nav/screen/bottom_nav_screen.dart';
 import 'package:bestkits/presentation/change_password/controller/change_password_controller.dart';
@@ -312,8 +319,6 @@ class AppRouter {
         Get.put(StripeConnectController());
       }),
     ),
-
-
     GetPage(
       name: RoutePath.checkOut,
       page: () => const CheckoutScreen(),
@@ -322,7 +327,6 @@ class AppRouter {
         Get.put(CheckoutController());
       }),
     ),
-
     GetPage(
       name: RoutePath.sell,
       page: () => const SellScreen(),
@@ -331,7 +335,6 @@ class AppRouter {
         Get.put(SellController());
       }),
     ),
-
     GetPage(
       name: RoutePath.updateProduct,
       page: () => const UpdateProductScreen(),
@@ -340,6 +343,42 @@ class AppRouter {
         Get.put(UpdateProductController());
       }),
     ),
+    GetPage(
+      name: RoutePath.productOrder,
+      page: () => const ProductOrder(),
+      transition: Transition.rightToLeft,
+    ),
+    GetPage(
+      name: RoutePath.orderDetails,
+      page: () => const OrderDetailsScreen(),
+      transition: Transition.rightToLeft,
+    ),
 
+    GetPage(
+      name: RoutePath.updateProductSell,
+      page: () => const UpdateProduct(),
+      transition: Transition.rightToLeft,
+    ),
+
+    GetPage(
+      name: RoutePath.updateProductPrice,
+      page: () => const UpdateProductPrice(),
+      transition: Transition.rightToLeft,
+    ),
+
+    GetPage(
+      name: RoutePath.addProduct,
+      page: () => const AddProduct(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(AddProductController());
+      }),
+    ),
+
+    GetPage(
+      name: RoutePath.addProductPrice,
+      page: () => const AddProductPrice(),
+      transition: Transition.rightToLeft,
+    ),
   ];
 }

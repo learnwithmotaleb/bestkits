@@ -56,13 +56,17 @@ class _SellScreenState extends State<SellScreen> {
             Expanded(
               child: Obx(() {
                 final isAct = controller.isActiveTab.value;
-                final list = isAct ? controller.activeProducts : controller.inactiveProducts;
+                final list = isAct
+                    ? controller.activeProducts
+                    : controller.inactiveProducts;
 
                 if (list.isEmpty) {
                   return Column(
                     children: [
                       SellEmptyState(
-                        message: isAct ? AppStrings.noActiveProductFound.tr : AppStrings.noInactiveProductFound.tr,
+                        message: isAct
+                            ? AppStrings.noActiveProductFound.tr
+                            : AppStrings.noInactiveProductFound.tr,
                       ),
                     ],
                   );
@@ -82,7 +86,6 @@ class _SellScreenState extends State<SellScreen> {
                       product: list[index],
                       width: double.infinity,
                       margin: EdgeInsets.zero,
-
                     );
                   },
                 );
@@ -94,4 +97,3 @@ class _SellScreenState extends State<SellScreen> {
     );
   }
 }
-

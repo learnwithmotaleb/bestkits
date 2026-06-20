@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import '../../../../../../../utils/app_colors/app_colors.dart';
 import '../../../../../../../widget/app_button.dart';
 import '../controller/update_product_controller.dart';
-import '../screen/order_details_screen.dart';
 
 class ProductActionSection extends StatelessWidget {
   final UpdateProductController controller;
@@ -91,7 +90,7 @@ class ProductActionSection extends StatelessWidget {
               child: AppButton(
                 label: "View Order's",
                 onPressed: () {
-                  Get.to(() => const OrderDetailsScreen());
+                  controller.viewOrders();
                 },
                 backgroundColor: AppColors.primaryColor,
                 textColor: Colors.black,
