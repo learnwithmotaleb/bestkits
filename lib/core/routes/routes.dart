@@ -31,6 +31,13 @@ import 'package:bestkits/presentation/checkout/controller/checkout_controller.da
 import 'package:bestkits/presentation/checkout/screen/checkout_screen.dart';
 import 'package:bestkits/presentation/currency_preference/controller/currency_preference_controller.dart';
 import 'package:bestkits/presentation/currency_preference/screen/currency_preference_screen.dart';
+import 'package:bestkits/presentation/customer_order/controller/customer_order_controller.dart';
+import 'package:bestkits/presentation/customer_order/screen/customer_order_details.dart';
+import 'package:bestkits/presentation/customer_order/screen/customer_order_screen.dart';
+import 'package:bestkits/presentation/delivery_options/controller/delivery_options_controller.dart';
+import 'package:bestkits/presentation/delivery_options/screen/delivery_options_screen.dart';
+import 'package:bestkits/presentation/earnings/controller/earning_controller.dart';
+import 'package:bestkits/presentation/earnings/screen/earning_screen.dart';
 import 'package:bestkits/presentation/favorite/controller/favourite_controller.dart';
 import 'package:bestkits/presentation/favorite/screen/favourite_screen.dart';
 import 'package:bestkits/presentation/bottom_nav/page/cart/screen/cart_screen.dart';
@@ -58,6 +65,9 @@ import 'package:bestkits/presentation/privacy_policy/controller/privacy_policy_c
 import 'package:bestkits/presentation/privacy_policy/screen/privacy_policy_screen.dart';
 import 'package:bestkits/presentation/product_details/controller/product_details_controller.dart';
 import 'package:bestkits/presentation/product_details/screen/product_details_screen.dart';
+import 'package:bestkits/presentation/return_order/controller/return_order_controller.dart';
+import 'package:bestkits/presentation/return_order/screen/return_order_details.dart';
+import 'package:bestkits/presentation/return_order/screen/return_order_screen.dart';
 import 'package:bestkits/presentation/stripe_connect/controller/stripe_connect_controller.dart';
 import 'package:bestkits/presentation/stripe_connect/screen/stripe_connect_screen.dart';
 import 'package:bestkits/presentation/terms_condition/controller/terms_condition_controller.dart';
@@ -380,5 +390,53 @@ class AppRouter {
       page: () => const AddProductPrice(),
       transition: Transition.rightToLeft,
     ),
+    GetPage(
+      name: RoutePath.customerOrder,
+      page: () => const CustomerOrderScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(CustomerOrderController());
+      }),
+    ),
+
+    GetPage(
+      name: RoutePath.customerOrderDetails,
+      page: () => const CustomerOrderDetails(),
+      transition: Transition.rightToLeft,
+    ),
+
+    GetPage(
+      name: RoutePath.returnOrder,
+      page: () => const ReturnOrderScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(ReturnOrderController());
+      }),
+    ),
+
+    GetPage(
+      name: RoutePath.returnOrderDetails,
+      page: () => const ReturnOrderDetails(),
+      transition: Transition.rightToLeft,
+    ),
+
+    GetPage(
+      name: RoutePath.earning,
+      page: () => const EarningScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(EarningController());
+      }),
+    ),
+
+    GetPage(
+      name: RoutePath.deliveryOption,
+      page: () => const DeliveryOptionsScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(DeliveryOptionsController());
+      }),
+    ),
+
   ];
 }

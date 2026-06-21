@@ -39,4 +39,10 @@ class RoutePath {
   static const String updateProductPrice = '/UpdateProductPrice';
   static const String addProduct = '/AddProduct';
   static const String addProductPrice = '/AddProductPrice';
+  static const String customerOrder = '/CustomerOrderScreen';
+  static const String customerOrderDetails = '/CustomerOrderDetails';
+  static const String returnOrder = '/ReturnOrderScreen';
+  static const String returnOrderDetails = '/ReturnOrderDetails';
+  static const String earning = '/EarningScreen';
+  static const String deliveryOption = '/DeliveryOptionsScreen';
 }

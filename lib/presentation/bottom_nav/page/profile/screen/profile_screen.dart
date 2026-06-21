@@ -1,4 +1,7 @@
 import 'package:bestkits/core/routes/route_path.dart';
+import 'package:bestkits/presentation/customer_order/screen/customer_order_screen.dart';
+import 'package:bestkits/presentation/delivery_options/screen/delivery_options_screen.dart';
+import 'package:bestkits/presentation/return_order/screen/return_order_screen.dart';
 import 'package:bestkits/utils/static_strings/static_strings.dart';
 import 'package:bestkits/widget/custom_appbar.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +9,8 @@ import 'package:get/get.dart';
 import '../../../../../core/responsive_layout/dimensions.dart';
 import '../../../../../utils/app_colors/app_colors.dart';
 import '../../../../../utils/app_icons/app_icons.dart';
+import '../../../../earnings/screen/earning_screen.dart';
+import '../../order/screen/order_screen.dart';
 import '../controller/profile_controller.dart';
 import '../widget/profile_menu_item.dart';
 import '../../../../my_return/screen/my_return_screen.dart';
@@ -46,11 +51,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               label: AppStrings.messages.tr,
               onTap: () => Get.to(() => const MessageScreen()),
             ),
-            ProfileMenuItem(
-              icon: AppIcons.my_return,
-              label: AppStrings.myReturns.tr,
-              onTap: () => Get.to(() => const MyReturnScreen()),
-            ),
+
             ProfileMenuItem(
               icon: AppIcons.setting,
               label: AppStrings.accountSetting.tr,
@@ -60,6 +61,64 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
 
             SizedBox(height: Dimensions.h(10)),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                AppStrings.buying.tr,
+                style: TextStyle(
+                  fontFamily: 'Nunito',
+                  fontSize: 12,
+                  color: Colors.grey[500],
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ),
+            SizedBox(height: Dimensions.h(10)),
+            ProfileMenuItem(
+              icon: AppIcons.my_return,
+              label: AppStrings.myOrders.tr,
+              onTap: () => Get.to(() => const OrderScreen()),
+            ),
+            ProfileMenuItem(
+              icon: AppIcons.my_return,
+              label: AppStrings.myReturns.tr,
+              onTap: () => Get.to(() => const MyReturnScreen()),
+            ),
+            SizedBox(height: Dimensions.h(10)),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                AppStrings.selling.tr,
+                style: TextStyle(
+                  fontFamily: 'Nunito',
+                  fontSize: 12,
+                  color: Colors.grey[600],
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ),
+            SizedBox(height: Dimensions.h(16)),
+            ProfileMenuItem(
+              icon: AppIcons.my_return,
+              label: AppStrings.customerOrder.tr,
+              onTap: () => Get.to(() => const CustomerOrderScreen()),
+            ),
+            ProfileMenuItem(
+              icon: AppIcons.my_return,
+              label: AppStrings.returnOrder.tr,
+              onTap: () => Get.to(() => const ReturnOrderScreen()),
+            ),
+            ProfileMenuItem(
+              icon: AppIcons.my_return,
+              label: AppStrings.earning.tr,
+              onTap: () => Get.to(() => const EarningScreen()),
+            ),
+            ProfileMenuItem(
+              icon: AppIcons.my_return,
+              label: AppStrings.deliveryOption.tr,
+              onTap: () => Get.to(() => const DeliveryOptionsScreen()),
+            ),
+            SizedBox(height: Dimensions.h(16)),
             Align(
               alignment: Alignment.centerLeft,
               child: Text(

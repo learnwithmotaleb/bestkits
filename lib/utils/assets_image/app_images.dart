@@ -15,4 +15,5 @@ class AppImages {
   static const String onboard2 = "$_basePath/onboard2.png";
   static const String onboard3 = "$_basePath/onboard3.png";
   static const String homeBannerImage = "$_basePath/home_banner_image.png";
+  static const String profileImage = "$_basePath/motaleb.png";
 }

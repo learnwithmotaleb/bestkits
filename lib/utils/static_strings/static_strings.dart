@@ -287,6 +287,9 @@ class AppStrings {
   static const String profile = "Profile";
   static const String messages = "Messages";
   static const String more = "More";
+  static const String myOrder = "My Order";
+  static const String buying = "Buying";
+  static const String selling = "Selling";
   static const String legalCompanyInfo = "Legal & Company Info";
   static const String companyName = "Company Name";
   static const String businessType = "Business Type";
@@ -433,6 +436,10 @@ class AppStrings {
 
   // Returns
   static const String myReturns = "My Returns";
+  static const String customerOrder = "Customer Order's";
+  static const String returnOrder = "Return Orders";
+  static const String earning = "Earnings";
+  static const String deliveryOption = "Delivery Options";
   static const String returnRequests = "Return Requests";
   static const String accepted = "Accepted";
   static const String rejected = "Rejected";
