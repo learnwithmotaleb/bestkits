@@ -6,6 +6,7 @@ import '../../../utils/app_colors/app_colors.dart';
 import '../../../utils/app_text_style/app_text_style.dart';
 import '../../../widget/custom_appbar.dart';
 import '../../../widget/app_button.dart';
+import '../../../utils/static_strings/static_strings.dart';
 import '../controller/return_order_controller.dart';
 import 'return_order_details.dart';
 
@@ -23,7 +24,7 @@ class _ReturnOrderScreenState extends State<ReturnOrderScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
-      appBar: const CommonAppBar(title: "Return Orders"),
+      appBar: CommonAppBar(title: AppStrings.returnOrdersTitle.tr),
       body: Column(
         children: [
           SizedBox(height: Dimensions.h(10)),
@@ -56,7 +57,7 @@ class _ReturnOrderScreenState extends State<ReturnOrderScreen> {
                         ),
                       ),
                       child: Text(
-                        tab,
+                        tab.tr,
                         style: AppTextStyles.body.copyWith(
                           fontSize: Dimensions.fs(13),
                           fontWeight:
@@ -101,7 +102,7 @@ class _ReturnOrderScreenState extends State<ReturnOrderScreen> {
                                 color: AppColors.greyColor.withOpacity(0.5)),
                             SizedBox(height: Dimensions.h(12)),
                             Text(
-                              "No ${_ctrl.selectedTab.value} Return Orders Found",
+                              AppStrings.noReturnOrdersFound.tr,
                               style: AppTextStyles.body.copyWith(
                                 color: AppColors.greyColor,
                                 fontSize: Dimensions.fs(13),
@@ -142,7 +143,7 @@ class _ReturnOrderScreenState extends State<ReturnOrderScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "- Order ID: ${order['id']}",
+                                  "${AppStrings.orderIdLabelWithDash.tr}${order['id']}",
                                   style: AppTextStyles.body.copyWith(
                                     fontWeight: FontWeight.w700,
                                     fontSize: Dimensions.fs(13),
@@ -171,13 +172,13 @@ class _ReturnOrderScreenState extends State<ReturnOrderScreen> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Icon(
-                                    order['status'] == 'Rejected' ? Icons.remove : Icons.add,
+                                    order['status'] == AppStrings.rejected ? Icons.remove : Icons.add,
                                     size: 10,
                                     color: _getStatusTextColor(order['status']),
                                   ),
                                   SizedBox(width: Dimensions.w(2)),
                                   Text(
-                                    order['status'],
+                                    order['status'].toString().tr,
                                     style: AppTextStyles.body.copyWith(
                                       fontSize: Dimensions.fs(10),
                                       fontWeight: FontWeight.w600,
@@ -195,7 +196,7 @@ class _ReturnOrderScreenState extends State<ReturnOrderScreen> {
                             color: AppColors.greyColor.withOpacity(0.15)),
                         SizedBox(height: Dimensions.h(16)),
                         AppButton(
-                          label: 'View Details',
+                          label: AppStrings.viewDetailsBtn.tr,
                           onPressed: () {
                             Get.to(() => ReturnOrderDetails(orderData: order));
                           },
@@ -223,13 +224,13 @@ class _ReturnOrderScreenState extends State<ReturnOrderScreen> {
 
   Color _getStatusBgColor(String status) {
     switch (status) {
-      case 'In review':
+      case AppStrings.inReview:
         return Colors.orange.withOpacity(0.15);
-      case 'Processing':
+      case AppStrings.processing:
         return Colors.blue.withOpacity(0.15);
-      case 'Completed':
+      case AppStrings.completed:
         return Colors.green.withOpacity(0.15);
-      case 'Rejected':
+      case AppStrings.rejected:
         return Colors.red.withOpacity(0.15);
       default:
         return AppColors.greyColor.withOpacity(0.15);
@@ -238,13 +239,13 @@ class _ReturnOrderScreenState extends State<ReturnOrderScreen> {
 
   Color _getStatusTextColor(String status) {
     switch (status) {
-      case 'In review':
+      case AppStrings.inReview:
         return Colors.orange;
-      case 'Processing':
+      case AppStrings.processing:
         return Colors.blue;
-      case 'Completed':
+      case AppStrings.completed:
         return Colors.green;
-      case 'Rejected':
+      case AppStrings.rejected:
         return Colors.red;
       default:
         return AppColors.greyColor;

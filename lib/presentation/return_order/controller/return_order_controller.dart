@@ -1,22 +1,23 @@
 import 'package:get/get.dart';
 import '../../../utils/assets_image/app_images.dart';
+import '../../../utils/static_strings/static_strings.dart';
 
 class ReturnOrderController extends GetxController {
   final List<String> tabs = [
-    'In review',
-    'Processing',
-    'Completed',
-    'Rejected'
+    AppStrings.inReview,
+    AppStrings.processing,
+    AppStrings.completed,
+    AppStrings.rejected
   ];
   
-  final RxString selectedTab = 'In review'.obs;
+  final RxString selectedTab = AppStrings.inReview.obs;
 
   // Mock data for return orders
   final RxList<Map<String, dynamic>> allOrders = <Map<String, dynamic>>[
     {
       'id': 'KDF143625879',
       'date': '27 Aug 2020 - 06:20 AM',
-      'status': 'In review',
+      'status': AppStrings.inReview,
       'product': {
         'name': 'D.D. Step - Comfort',
         'quantity': '01',
@@ -39,7 +40,7 @@ class ReturnOrderController extends GetxController {
     {
       'id': 'DDF143625869',
       'date': '27 Aug 2020 - 06:20 AM',
-      'status': 'Processing',
+      'status': AppStrings.processing,
       'product': {
         'name': 'Kids Cotton Hoodie',
         'quantity': '02',
@@ -61,7 +62,7 @@ class ReturnOrderController extends GetxController {
     {
       'id': 'KDF143625880',
       'date': '28 Aug 2020 - 08:30 AM',
-      'status': 'Completed',
+      'status': AppStrings.completed,
       'product': {
         'name': 'D.D. Step - Comfort',
         'quantity': '01',
@@ -81,7 +82,7 @@ class ReturnOrderController extends GetxController {
     {
       'id': 'KDF143625881',
       'date': '29 Aug 2020 - 09:00 AM',
-      'status': 'Rejected',
+      'status': AppStrings.rejected,
       'product': {
         'name': 'D.D. Step - Comfort',
         'quantity': '01',
@@ -117,12 +118,12 @@ class ReturnOrderController extends GetxController {
       
       final details = Map<String, dynamic>.from(updatedOrder['returnDetails']);
       
-      if (newStatus == 'Processing' && address != null) {
+      if (newStatus == AppStrings.processing && address != null) {
         updatedOrder['returnAddress'] = address;
-      } else if (newStatus == 'Completed') {
-        details['completedOn'] = 'Just now'; // Ideally use real date format
-      } else if (newStatus == 'Rejected') {
-        details['rejectedOn'] = 'Just now';
+      } else if (newStatus == AppStrings.completed) {
+        details['completedOn'] = AppStrings.justNow.tr; // Ideally use real date format
+      } else if (newStatus == AppStrings.rejected) {
+        details['rejectedOn'] = AppStrings.justNow.tr;
         details['rejectionNote'] = note ?? '';
       }
       

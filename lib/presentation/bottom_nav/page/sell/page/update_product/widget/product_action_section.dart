@@ -73,7 +73,7 @@ class ProductActionSection extends StatelessWidget {
           children: [
             Expanded(
               child: AppButton(
-                label: 'Update Product',
+                label: AppStrings.updateProductTitle.tr,
                 onPressed: () {
                   controller.updateProduct();
                 },
@@ -88,7 +88,7 @@ class ProductActionSection extends StatelessWidget {
             const SizedBox(width: 15),
             Expanded(
               child: AppButton(
-                label: "View Order's",
+                label: AppStrings.viewOrdersBtn.tr,
                 onPressed: () {
                   controller.viewOrders();
                 },

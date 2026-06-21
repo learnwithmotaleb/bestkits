@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../../../../../../../core/responsive_layout/dimensions.dart';
 import '../../../../../../../utils/app_colors/app_colors.dart';
 import '../../../../../../../utils/app_text_style/app_text_style.dart';
+import '../../../../../../../utils/static_strings/static_strings.dart';
 import '../../../../../../../widget/custom_appbar.dart';
 import 'order_details_screen.dart';
 
@@ -54,9 +55,9 @@ class _ProductOrderState extends State<ProductOrder> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF4F4F4),
-      appBar: const CommonAppBar(
-        title: "Product Order's",
-        backgroundColor: Color(0xFFF4F4F4),
+      appBar: CommonAppBar(
+        title: AppStrings.productOrdersTitle.tr,
+        backgroundColor: const Color(0xFFF4F4F4),
       ),
       body: ListView.separated(
         padding: EdgeInsets.symmetric(
@@ -89,7 +90,7 @@ class _ProductOrderState extends State<ProductOrder> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '- Order ID: ${order['orderId']}',
+                            '${AppStrings.orderIdLabelWithDash.tr}${order['orderId']}',
                             style: TextStyle(
                               fontSize: Dimensions.fs(13),
                               fontWeight: FontWeight.w800,
@@ -117,7 +118,7 @@ class _ProductOrderState extends State<ProductOrder> {
                         borderRadius: BorderRadius.circular(Dimensions.r(20)),
                       ),
                       child: Text(
-                        '• ${order['status']}',
+                        '• ${order['status'].toString().tr}',
                         style: TextStyle(
                           color: statusColor,
                           fontSize: Dimensions.fs(9),
@@ -146,7 +147,7 @@ class _ProductOrderState extends State<ProductOrder> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'View Details',
+                          AppStrings.viewDetailsBtn.tr,
                           style: TextStyle(
                             color: AppColors.primaryColor,
                             fontSize: Dimensions.fs(13),

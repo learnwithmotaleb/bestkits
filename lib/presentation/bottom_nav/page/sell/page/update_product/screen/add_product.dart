@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../../../../../utils/static_strings/static_strings.dart';
 
 import '../../../../../../../core/responsive_layout/dimensions.dart';
 import '../../../../../../../utils/app_colors/app_colors.dart';
@@ -146,7 +147,7 @@ class _AddProductState extends State<AddProduct> {
           setState(() {
             ctrl.text = val;
             // Clear sub-category if category changes
-            if (title == 'Product Category') {
+            if (title == AppStrings.productCategoryLabel.tr) {
               _subCategoryController.clear();
             }
           });
@@ -167,7 +168,7 @@ class _AddProductState extends State<AddProduct> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
-      appBar: const CommonAppBar(title: 'Add Product'),
+      appBar: CommonAppBar(title: AppStrings.addProductTitle.tr),
       body: Form(
         key: _formKey,
         child: Column(
@@ -182,7 +183,7 @@ class _AddProductState extends State<AddProduct> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // ── Upload Product Images ─────────────────────────────
-                    _SectionLabel(label: 'Upload Product Images'),
+                    _SectionLabel(label: AppStrings.uploadProductImages.tr),
                     SizedBox(height: Dimensions.h(10)),
                     _ImagePickerBox(
                       images: _ctrl.pickedImages,
@@ -192,45 +193,45 @@ class _AddProductState extends State<AddProduct> {
                     SizedBox(height: Dimensions.h(20)),
 
                     // ── Product Name ──────────────────────────────────────
-                    _SectionLabel(label: 'Product Name'),
+                    _SectionLabel(label: AppStrings.productNameLabel.tr),
                     SizedBox(height: Dimensions.h(8)),
                     AppTextField(
                       controller: _nameController,
-                      hint: 'Enter product name',
+                      hint: AppStrings.enterProductName.tr,
                       validator: (v) => (v == null || v.trim().isEmpty)
-                          ? 'Product name is required'
+                          ? AppStrings.productNameRequired.tr
                           : null,
                     ),
                     SizedBox(height: Dimensions.h(16)),
 
                     // ── Product Category ──────────────────────────────────
-                    _SectionLabel(label: 'Product Category'),
+                    _SectionLabel(label: AppStrings.productCategoryLabel.tr),
                     SizedBox(height: Dimensions.h(8)),
                     _DropdownField(
                       controller: _categoryController,
-                      hint: 'Select Category',
+                      hint: AppStrings.selectCategory.tr,
                       onTap: () => _openDropdown(
-                          'Product Category', _categories, _categoryController),
+                          AppStrings.productCategoryLabel.tr, _categories, _categoryController),
                     ),
                     SizedBox(height: Dimensions.h(16)),
 
                     // ── Product Sub-category ──────────────────────────────
-                    _SectionLabel(label: 'Product Sub-category'),
+                    _SectionLabel(label: AppStrings.productSubcategoryLabel.tr),
                     SizedBox(height: Dimensions.h(8)),
                     _DropdownField(
                       controller: _subCategoryController,
-                      hint: 'Select Sub-Category',
-                      onTap: () => _openDropdown('Product Sub-category',
+                      hint: AppStrings.selectSubcategory.tr,
+                      onTap: () => _openDropdown(AppStrings.productSubcategoryLabel.tr,
                           _subCategories, _subCategoryController),
                     ),
                     SizedBox(height: Dimensions.h(16)),
 
                     // ── Size / Variant ────────────────────────────────────
-                    _SectionLabel(label: 'Size / Variant'),
+                    _SectionLabel(label: AppStrings.sizeVariantLabel.tr),
                     SizedBox(height: Dimensions.h(8)),
                     AppTextField(
                       controller: _sizeController,
-                      hint: 'Enter sizes or variants separated by commas',
+                      hint: AppStrings.enterSizesCommas.tr,
                     ),
                     SizedBox(height: Dimensions.h(10)),
                     if (_allSizes.isNotEmpty)
@@ -242,15 +243,14 @@ class _AddProductState extends State<AddProduct> {
                     SizedBox(height: Dimensions.h(16)),
 
                     // ── Description ───────────────────────────────────────
-                    _SectionLabel(label: 'Description'),
+                    _SectionLabel(label: AppStrings.descriptionLabel.tr),
                     SizedBox(height: Dimensions.h(8)),
                     AppTextField(
                       controller: _descController,
-                      hint:
-                          'Describe the product, condition, material, size, features, and any important details buyers should know.',
+                      hint: AppStrings.describeProductDetails.tr,
                       maxLines: 5,
                       validator: (v) => (v == null || v.trim().isEmpty)
-                          ? 'Description is required'
+                          ? AppStrings.descriptionRequired.tr
                           : null,
                     ),
                     SizedBox(height: Dimensions.h(24)),
@@ -272,7 +272,7 @@ class _AddProductState extends State<AddProduct> {
                 ),
               ),
               child: AppButton(
-                label: 'Continue',
+                label: AppStrings.continueBtn.tr,
                 onPressed: _onContinue,
                 backgroundColor: AppColors.secondaryColor,
                 textColor: AppColors.primaryColor,
@@ -345,7 +345,7 @@ class _ImagePickerBox extends StatelessWidget {
                 Icon(Icons.add_photo_alternate_outlined,
                     color: AppColors.greyColor, size: Dimensions.icon(20)),
                 SizedBox(width: Dimensions.w(8)),
-                Text('Upload Images Here',
+                Text(AppStrings.uploadImagesHere.tr,
                     style: AppTextStyles.hint
                         .copyWith(fontSize: Dimensions.fs(13))),
               ],

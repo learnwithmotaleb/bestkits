@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import '../../../core/responsive_layout/dimensions.dart';
 import '../../../utils/app_colors/app_colors.dart';
 import '../../../utils/app_text_style/app_text_style.dart';
+import '../../../utils/static_strings/static_strings.dart';
 import '../../../widget/app_button.dart';
+import 'package:get/get.dart';
 
 class DeliveryOptionWidget extends StatelessWidget {
   final Map<String, dynamic> data;
@@ -31,7 +33,7 @@ class DeliveryOptionWidget extends StatelessWidget {
             child: Row(
               children: [
                 Text(
-                  data['type'],
+                  data['type'].toString().tr,
                   style: AppTextStyles.body.copyWith(
                     fontWeight: FontWeight.w700,
                     fontSize: Dimensions.fs(14),
@@ -40,7 +42,7 @@ class DeliveryOptionWidget extends StatelessWidget {
                 ),
                 SizedBox(width: Dimensions.w(4)),
                 Text(
-                  data['subtitle'],
+                  data['subtitle'].toString().tr,
                   style: AppTextStyles.body.copyWith(
                     color: AppColors.greyColor,
                     fontSize: Dimensions.fs(10),
@@ -58,17 +60,17 @@ class DeliveryOptionWidget extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildDetailRow('Delivery Partner', data['partner']),
+                _buildDetailRow(AppStrings.deliveryPartner.tr, data['partner']),
                 SizedBox(height: Dimensions.h(16)),
-                _buildDetailRow('Delivery Cost', '€${data['cost']}'),
+                _buildDetailRow(AppStrings.deliveryCost.tr, '€${data['cost']}'),
                 SizedBox(height: Dimensions.h(16)),
-                _buildDetailRow('Estimated Time', data['time']),
+                _buildDetailRow(AppStrings.estimatedTime.tr, data['time']),
                 
                 SizedBox(height: Dimensions.h(24)),
                 
                 // Update Button
                 AppButton(
-                  label: 'Update',
+                  label: AppStrings.update.tr,
                   onPressed: onUpdate,
                   backgroundColor: AppColors.blackColor,
                   textColor: AppColors.primaryColor,

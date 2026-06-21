@@ -29,18 +29,21 @@ Map<String, String> bulgarian = {
   AppStrings.upTo: "До ",
   AppStrings.discount40: "40% ОТСТЪПКА",
   AppStrings.springSale: "Разпродажба на пролетна детска колекция",
-  AppStrings.bannerSubtitle: "Свежи стилове за всеки малък момент — купете най-новите визии на несравними цени.",
-  AppStrings.sellerBannerTitle: "Мащабирайте марката си с платформа, изградена за голям обем продажби.",
-  AppStrings.sellerBannerSubtitle: "Присъединете се към общност от 5 000+ първокласни търговци, посветени на детското чудо. От сигурни плащания до интелигентен анализ, ние предоставяме инструментите за мащабиране на вашата детска марка. Не оставяйте най-продаваните си стоки на рафта — поставете ги пред родители, които се интересуват.",
+  AppStrings.bannerSubtitle:
+      "Свежи стилове за всеки малък момент — купете най-новите визии на несравними цени.",
+  AppStrings.sellerBannerTitle:
+      "Мащабирайте марката си с платформа, изградена за голям обем продажби.",
+  AppStrings.sellerBannerSubtitle:
+      "Присъединете се към общност от 5 000+ първокласни търговци, посветени на детското чудо. От сигурни плащания до интелигентен анализ, ние предоставяме инструментите за мащабиране на вашата детска марка. Не оставяйте най-продаваните си стоки на рафта — поставете ги пред родители, които се интересуват.",
   AppStrings.startSellingNow: "Започнете да продавате сега",
 
   // Onboarding
   AppStrings.onboardingTitle1: "Купувайте и продавайте детска мода",
   AppStrings.onboardingSubtitle1:
-  "Разгледайте хиляди качествени детски дрехи от доверени продавачи в Европа.",
+      "Разгледайте хиляди качествени детски дрехи от доверени продавачи в Европа.",
   AppStrings.onboardingTitle2: "Пазарувайте с увереност",
   AppStrings.onboardingSubtitle2:
-  "Насладете се на сигурни плащания и надеждни продавачи за безопасно пазаруване.",
+      "Насладете се на сигурни плащания и надеждни продавачи за безопасно пазаруване.",
   AppStrings.next: "Напред",
   AppStrings.skip: "Пропускане",
   AppStrings.getStarted: "Започнете",
@@ -48,8 +51,7 @@ Map<String, String> bulgarian = {
 
   // Login
   AppStrings.welcomeBack: "Добре дошли обратно",
-  AppStrings.loginSubtitle:
-  "Влезте, за да продължите да използвате BestKid",
+  AppStrings.loginSubtitle: "Влезте, за да продължите да използвате BestKid",
   AppStrings.emailAddress: "Имейл адрес",
   AppStrings.password: "Парола",
   AppStrings.emailPlaceholder: "Въведете вашия имейл адрес",
@@ -57,24 +59,22 @@ Map<String, String> bulgarian = {
   AppStrings.rememberMe: "Запомни ме",
   AppStrings.forgotPassword: "Забравена парола",
   AppStrings.forgotPasswordSubtitle:
-  "Въведете регистрирания си имейл адрес и ще ви изпратим код за потвърждение.",
+      "Въведете регистрирания си имейл адрес и ще ви изпратим код за потвърждение.",
   AppStrings.sendVerificationCode: "Изпрати код за потвърждение",
   AppStrings.setNewPassword: "Задайте нова парола",
-  AppStrings.setNewPasswordSubtitle:
-  "Създайте нова парола за вашия акаунт.",
+  AppStrings.setNewPasswordSubtitle: "Създайте нова парола за вашия акаунт.",
   AppStrings.newPassword: "Нова парола",
   AppStrings.updatePassword: "Актуализирай паролата",
   AppStrings.logIn: "Вход",
 
   // Signup
   AppStrings.createYourAccount: "Създайте акаунт",
-  AppStrings.signupSubtitle:
-  "Регистрирайте се, за да използвате BestKid",
+  AppStrings.signupSubtitle: "Регистрирайте се, за да използвате BestKid",
   AppStrings.fullName: "Пълно име",
   AppStrings.phoneNumber: "Телефонен номер",
   AppStrings.confirmPassword: "Потвърди паролата",
   AppStrings.termsAgreement:
-  "Съгласен съм с Общите условия и Политиката за поверителност",
+      "Съгласен съм с Общите условия и Политиката за поверителност",
   AppStrings.createAccount: "Създай акаунт",
 
   // Home Screen
@@ -103,9 +103,12 @@ Map<String, String> bulgarian = {
   AppStrings.off: "отстъпка",
   AppStrings.dummyCategory: "детски маратонки",
   AppStrings.dummyProductName: "Детско памучно горнище – мека кройка",
-  AppStrings.dummyDescription: "Комфортни и леки маратонки, проектирани за ежедневна употреба. Изработени от дишащи материали и гъвкава подметка за подпомагане на активното движение. Чист завършек с модерен вид, лесен за комбиниране с всяко облекло.\n\nЧисто нови, неизползвани.\nОт чиста среда без тютюнев дим.\nПредлага се с оригинална опаковка.",
-  AppStrings.dummyReview1: "Много удобни и леки маратонки. Синът ми ги носи почти всеки ден и все още изглеждат страхотно. Прилягането е перфектно и се обуват лесно. Определено добра покупка.",
-  AppStrings.dummyReview2: "Добро качество като цяло и дизайнът изглежда много добре. Материалът се чувства издръжлив и подходящ за ежедневна употреба. Доставката беше гладка и опаковката беше правилна. Доволен съм от покупката.",
+  AppStrings.dummyDescription:
+      "Комфортни и леки маратонки, проектирани за ежедневна употреба. Изработени от дишащи материали и гъвкава подметка за подпомагане на активното движение. Чист завършек с модерен вид, лесен за комбиниране с всяко облекло.\n\nЧисто нови, неизползвани.\nОт чиста среда без тютюнев дим.\nПредлага се с оригинална опаковка.",
+  AppStrings.dummyReview1:
+      "Много удобни и леки маратонки. Синът ми ги носи почти всеки ден и все още изглеждат страхотно. Прилягането е перфектно и се обуват лесно. Определено добра покупка.",
+  AppStrings.dummyReview2:
+      "Добро качество като цяло и дизайнът изглежда много добре. Материалът се чувства издръжлив и подходящ за ежедневна употреба. Доставката беше гладка и опаковката беше правилна. Доволен съм от покупката.",
   AppStrings.detailsLabel: "Подробности",
   AppStrings.onlineSince: "Онлайн от",
   AppStrings.category: "Категория",
@@ -134,13 +137,18 @@ Map<String, String> bulgarian = {
   AppStrings.aboutUs: "За нас",
   AppStrings.faqs: "Често задавани въпроси",
   AppStrings.frequentlyAskedQuestions: "Често задавани въпроси",
-  AppStrings.faqQuestion1: "Как BestKid гарантира безопасността и качеството на продуктите?",
-  AppStrings.faqAnswer1: "Всички обяви преминават през ясни насоки за продавачите и доверителни сигнали, базирани на общността, като оценки и отзиви. Продавачите се насърчават да предоставят точни описания и реални изображения на продуктите, помагайки на купувачите да вземат информирани и уверени решения.",
+  AppStrings.faqQuestion1:
+      "Как BestKid гарантира безопасността и качеството на продуктите?",
+  AppStrings.faqAnswer1:
+      "Всички обяви преминават през ясни насоки за продавачите и доверителни сигнали, базирани на общността, като оценки и отзиви. Продавачите се насърчават да предоставят точни описания и реални изображения на продуктите, помагайки на купувачите да вземат информирани и уверени решения.",
   AppStrings.faqQuestion2: "Как работи платежната система?",
-  AppStrings.faqQuestion3: "Мога ли да върна или получа възстановяване на сумата за продукт, ако не съм доволен?",
-  AppStrings.faqQuestion4: "Как BestKid гарантира безопасността и качеството на продуктите?",
+  AppStrings.faqQuestion3:
+      "Мога ли да върна или получа възстановяване на сумата за продукт, ако не съм доволен?",
+  AppStrings.faqQuestion4:
+      "Как BestKid гарантира безопасността и качеството на продуктите?",
   AppStrings.faqQuestion5: "Какви такси или комисионни начислява BestKid?",
-  AppStrings.faqAnswerDefault: "Работим по предоставянето на подробни отговори на този въпрос. Моля, свържете се с поддръжката за незабавна помощ.",
+  AppStrings.faqAnswerDefault:
+      "Работим по предоставянето на подробни отговори на този въпрос. Моля, свържете се с поддръжката за незабавна помощ.",
   AppStrings.reasonForContact: "Причина за контакт",
   AppStrings.reasonForContactHint: "Въведете причината за контакт",
   AppStrings.descriptionHint: "Моля, опишете вашия проблем или въпрос подробно",
@@ -177,22 +185,27 @@ Map<String, String> bulgarian = {
   AppStrings.leaveAReview: "Оставете отзив",
   AppStrings.reviewed: "Оценен",
   AppStrings.writeAReview: "Напишете отзив",
-  AppStrings.reviewInstruction: "Споделете опита си, за да помогнете на други купувачи",
+  AppStrings.reviewInstruction:
+      "Споделете опита си, за да помогнете на други купувачи",
   AppStrings.selectStars: "Изберете звезди, за да дадете оценка",
   AppStrings.yourReview: "Вашият отзив",
-  AppStrings.reviewPlaceholder: "Споделете вашето мнение, за да помогнете на другите клиенти да вземат по-добри решения. ( Максимум 300 думи )",
+  AppStrings.reviewPlaceholder:
+      "Споделете вашето мнение, за да помогнете на другите клиенти да вземат по-добри решения. ( Максимум 300 думи )",
   AppStrings.submit: "Изпрати >>",
   AppStrings.backToMyOrders: "<< Обратно към моите поръчки",
   AppStrings.cancelOrders: "Отказ на поръчки",
   AppStrings.returnRequest: "Заявка за връщане",
-  AppStrings.returnInstruction: "Кажете на продавача какво се е объркало. Той ще прегледа и ще отговори.",
+  AppStrings.returnInstruction:
+      "Кажете на продавача какво се е объркало. Той ще прегледа и ще отговори.",
   AppStrings.returnReasonPlaceholder: "Въведете причина за връщане",
   AppStrings.uploadEvidence: "Качете изображения като доказателство за връщане",
   AppStrings.uploadImagesHere: "Качете изображения тук",
   AppStrings.describeReason: "Опишете причината си с няколко думи",
-  AppStrings.returnDetailPlaceholder: "Моля, предоставете възможно най-много подробности, за да можем да ви съдействаме бързо.",
+  AppStrings.returnDetailPlaceholder:
+      "Моля, предоставете възможно най-много подробности, за да можем да ви съдействаме бързо.",
   AppStrings.submitRequest: "Изпрати заявка >>",
-  AppStrings.returnConfirmSubtitle: "Сигурни ли сте, че искате да поискате връщане на този продукт?",
+  AppStrings.returnConfirmSubtitle:
+      "Сигурни ли сте, че искате да поискате връщане на този продукт?",
   AppStrings.sellerCanceledOrder: "продавачът е анулирал тази поръчка",
   AppStrings.termsOfService: "Общи условия",
   AppStrings.alreadyHaveAccount: "Вече имате акаунт? ",
@@ -201,16 +214,19 @@ Map<String, String> bulgarian = {
   AppStrings.noAccountYet: "Все още нямате акаунт? ",
   AppStrings.createAnAccount: "Създайте акаунт !",
   AppStrings.enterEmailAddress: "Въведете вашия имейл адрес",
-  AppStrings.forgotPasswordSubtitle: "Въведете вашия имейл адрес и ние ще ви изпратим код за потвърждение, за да нулирате паролата си.",
+  AppStrings.forgotPasswordSubtitle:
+      "Въведете вашия имейл адрес и ние ще ви изпратим код за потвърждение, за да нулирате паролата си.",
   AppStrings.emailPlaceholder: "ime@email.com",
   AppStrings.sendVerificationCode: "Изпрати код за потвърждение",
   AppStrings.setNewPassword: "Задайте нова парола",
-  AppStrings.setNewPasswordSubtitle: "Създайте силна парола, за да защитите акаунта си и да гарантирате, че личната ви информация остава защитена.",
+  AppStrings.setNewPasswordSubtitle:
+      "Създайте силна парола, за да защитите акаунта си и да гарантирате, че личната ви информация остава защитена.",
   AppStrings.newPassword: "Нова парола",
   AppStrings.passwordPlaceholder: "••••••••",
   AppStrings.updatePassword: "Актуализиране на паролата",
   AppStrings.verifyYourOtp: "Потвърдете своя OTP",
-  AppStrings.otpSubtitle: "Въведете 6-цифрения код за потвърждение, изпратен на вашия имейл адрес.",
+  AppStrings.otpSubtitle:
+      "Въведете 6-цифрения код за потвърждение, изпратен на вашия имейл адрес.",
   AppStrings.verificationCode: "Код за потвърждение",
   AppStrings.verifyCode: "Потвърди кода",
   AppStrings.didNotReceiveCode: "Не получихте кода?",
@@ -221,13 +237,14 @@ Map<String, String> bulgarian = {
   // Account Block
   AppStrings.accountBlocked: "Акаунтът е блокиран!",
   AppStrings.accountBlockedSubtitle:
-  "Вашият акаунт е ограничен от администратор. За помощ се свържете с",
+      "Вашият акаунт е ограничен от администратор. За помощ се свържете с",
   AppStrings.supportEmail: "support@bestkid.com",
   AppStrings.goBackLogin: "Назад към вход",
   AppStrings.searchPlaceholder: "Търсене на продукти...",
   AppStrings.noMatchesFound: "Не можахме да намерим съвпадения.",
   AppStrings.filter: "Филтър",
-  AppStrings.filterSubtitle: "Прецизирайте продуктите по категория, размер, марка, цена и др.",
+  AppStrings.filterSubtitle:
+      "Прецизирайте продуктите по категория, размер, марка, цена и др.",
   AppStrings.selectCategory: "Изберете категория",
   AppStrings.selectSubcategory: "Изберете подкатегория",
   AppStrings.sortBy: "Сортиране по",
@@ -274,24 +291,29 @@ Map<String, String> bulgarian = {
   AppStrings.accountSetting: "Настройки на акаунта",
   AppStrings.deleteAccount: "Изтриване на акаунта",
   AppStrings.deleteYourAccount: "Изтриване на вашия акаунт !",
-  AppStrings.deleteAccountSubtitle: "Това действие е постоянно.\nВашият акаунт в BestKid, историята на поръчките и запазената активност ще бъдат окончателно премахнати и не могат да бъдат възстановени.",
+  AppStrings.deleteAccountSubtitle:
+      "Това действие е постоянно.\nВашият акаунт в BestKid, историята на поръчките и запазената активност ще бъдат окончателно премахнати и не могат да бъдат възстановени.",
   AppStrings.confirm: "Потвърждавам",
   AppStrings.cancel: "Отказ",
+  AppStrings.saveChanges: "Запазване на промените",
   AppStrings.confirmAccountDeletion: "Потвърдете изтриването на акаунта",
   AppStrings.oldPassword: "Стара парола",
-  AppStrings.deleteSecurityNote: "От съображения за сигурност се нуждаем от вашата парола, за да продължим. Веднъж изтрити, вашият акаунт и свързаните с него данни не могат да бъдат възстановени.",
+  AppStrings.deleteSecurityNote:
+      "От съображения за сигурност се нуждаем от вашата парола, за да продължим. Веднъж изтрити, вашият акаунт и свързаните с него данни не могат да бъдат възстановени.",
   AppStrings.confirmAndDelete: "Потвърдете и изтрийте",
   AppStrings.accountDeletedSuccess: "Акаунтът е изтрит успешно",
   AppStrings.saveTheChanges: "Запази промените",
   AppStrings.changePasswordAlertTitle: "Промяна на паролата !",
-  AppStrings.changePasswordAlertSubtitle: "Сигурни ли сте, че искате да актуализирате паролата си? Ще трябва да използвате новата парола при следващото влизане.",
+  AppStrings.changePasswordAlertSubtitle:
+      "Сигурни ли сте, че искате да актуализирате паролата си? Ще трябва да използвате новата парола при следващото влизане.",
   AppStrings.passwordChangedSuccess: "Паролата е променена успешно",
   AppStrings.cartTitle: "Количка",
   AppStrings.myCart: "Моята количка",
   AppStrings.emptyCart: "Изпразни количката",
   AppStrings.cartEmptyMessage: "Вашата количка е празна",
   AppStrings.emptyCartConfirmTitle: "Изпразване на количката?",
-  AppStrings.emptyCartConfirmSubtitle: "Сигурни ли сте, че искате да премахнете всички артикули от количката си?",
+  AppStrings.emptyCartConfirmSubtitle:
+      "Сигурни ли сте, че искате да премахнете всички артикули от количката си?",
   AppStrings.yesEmpty: "Да, изпразни",
   AppStrings.proceedToCheckout: "Продължете към плащане",
   AppStrings.continueShopping: "Продължете пазаруването",
@@ -325,29 +347,38 @@ Map<String, String> bulgarian = {
   AppStrings.estimatedTime: "Очаквано време",
   AppStrings.switchCurrency: "Смяна на валутата",
   AppStrings.currencyAlertTitle: "Промяна на валутата !",
-  AppStrings.currencyAlertSubtitle: "Сигурни ли сте, че искате да промените валутните си предпочитания?",
-  AppStrings.currencyUpdatedSuccess: "Валутните предпочитания са актуализирани успешно",
+  AppStrings.currencyAlertSubtitle:
+      "Сигурни ли сте, че искате да промените валутните си предпочитания?",
+  AppStrings.currencyUpdatedSuccess:
+      "Валутните предпочитания са актуализирани успешно",
   AppStrings.switchLanguage: "Смяна на езика",
   AppStrings.languageAlertTitle: "Промяна на езика !",
-  AppStrings.languageAlertSubtitle: "Сигурни ли сте, че искате да промените езиковите си предпочитания?",
-  AppStrings.languageUpdatedSuccess: "Езиковите предпочитания са актуализирани успешно",
+  AppStrings.languageAlertSubtitle:
+      "Сигурни ли сте, че искате да промените езиковите си предпочитания?",
+  AppStrings.languageUpdatedSuccess:
+      "Езиковите предпочитания са актуализирани успешно",
   AppStrings.english: "Английски",
   AppStrings.bulgarian: "Български",
   AppStrings.addressName: "Име на адреса",
   AppStrings.addressNameHint: "напр. Домашен, Офис",
-  AppStrings.enterFullAddress: "Въведете пълния адрес (улица, град, пощенски код)",
+  AppStrings.enterFullAddress:
+      "Въведете пълния адрес (улица, град, пощенски код)",
   AppStrings.updateAddressAlertTitle: "Актуализиране на адреса !",
   AppStrings.saveAddressAlertTitle: "Запазване на адреса !",
-  AppStrings.updateAddressAlertSubtitle: "Сигурни ли сте, че искате да актуализирате този адрес?",
-  AppStrings.saveAddressAlertSubtitle: "Сигурни ли сте, че искате да запазите този нов адрес?",
+  AppStrings.updateAddressAlertSubtitle:
+      "Сигурни ли сте, че искате да актуализирате този адрес?",
+  AppStrings.saveAddressAlertSubtitle:
+      "Сигурни ли сте, че искате да запазите този нов адрес?",
   AppStrings.addressUpdatedSuccess: "Адресът е актуализиран успешно",
   AppStrings.addressSavedSuccess: "Адресът е запазен успешно",
   AppStrings.professionalSeller: "Професионален продавач",
   AppStrings.blockedSellerTitle: "Блокирали сте този продавач",
-  AppStrings.blockedSellerSubtitle: "Не можете да изпращате или получавате съобщения в този разговор.",
+  AppStrings.blockedSellerSubtitle:
+      "Не можете да изпращате или получавате съобщения в този разговор.",
   AppStrings.unblockSeller: "Отблокиране на продавача",
   AppStrings.messagingUnavailableTitle: "Съобщенията не са налични",
-  AppStrings.messagingUnavailableSubtitle: "Вече не можете да изпращате съобщения в този разговор.",
+  AppStrings.messagingUnavailableSubtitle:
+      "Вече не можете да изпращате съобщения в този разговор.",
   AppStrings.deleteConversation: "Изтриване на разговора",
   AppStrings.enterAMessage: "Въведете съобщение..",
   AppStrings.options: "Опции",
@@ -356,22 +387,85 @@ Map<String, String> bulgarian = {
   AppStrings.delete: "Изтриване",
   AppStrings.unblockSellerTitle: "Отблокиране на този продавач !",
   AppStrings.blockSellerTitle: "Блокиране на този продавач !",
-  AppStrings.unblockSellerSubtitle: "Искате ли да отблокирате този продавач и да разрешите съобщенията отново?",
-  AppStrings.blockSellerSubtitle: "Сигурни ли сте, че искате да блокирате този продавач? Няма да можете да си изпращате или получавате съобщения един от друг.",
+  AppStrings.unblockSellerSubtitle:
+      "Искате ли да отблокирате този продавач и да разрешите съобщенията отново?",
+  AppStrings.blockSellerSubtitle:
+      "Сигурни ли сте, че искате да блокирате този продавач? Няма да можете да си изпращате или получавате съобщения един от друг.",
   AppStrings.deleteConversationTitle: "Изтриване на разговора !",
-  AppStrings.deleteConversationSubtitle: "Това ще премахне за постоянно този чат от вашите съобщения.",
+  AppStrings.deleteConversationSubtitle:
+      "Това ще премахне за постоянно този чат от вашите съобщения.",
   AppStrings.today: "ДНЕС",
   AppStrings.justNow: "Сега",
   AppStrings.addAddress: "Добави адрес",
   AppStrings.deleteAddressAlertTitle: "Изтриване на адреса !",
-  AppStrings.deleteAddressAlertSubtitle: "Сигурни ли сте, че искате да изтриете този адрес?",
+  AppStrings.deleteAddressAlertSubtitle:
+      "Сигурни ли сте, че искате да изтриете този адрес?",
   AppStrings.enterFullName: "Въведете пълното си име",
   AppStrings.enterPhoneNumber: "Въведете телефонния си номер",
-  AppStrings.emailUpdateRestriction: "Актуализациите на имейл адреса са ограничени за клиентски акаунти, тъй като имейл адресът е пряко свързан с удостоверяването, проверката на сигурността и записите на поръчките.",
+  AppStrings.emailUpdateRestriction:
+      "Актуализациите на имейл адреса са ограничени за клиентски акаунти, тъй като имейл адресът е пряко свързан с удостоверяването, проверката на сигурността и записите на поръчките.",
   AppStrings.saveProfileAlertTitle: "Запазване на промените в профила !",
-  AppStrings.saveProfileAlertSubtitle: "Сигурни ли сте, че искате да актуализирате информацията в профила си? Вашите промени ще бъдат приложени незабавно.",
+  AppStrings.saveProfileAlertSubtitle:
+      "Сигурни ли сте, че искате да актуализирате информацията в профила си? Вашите промени ще бъдат приложени незабавно.",
   AppStrings.failedToPickImage: "Неуспешно избиране на изображение",
   AppStrings.addressDeletedSuccess: "Адресът е изтрит успешно",
+  AppStrings.earning: "Печалби",
+  AppStrings.paymentHistory: "История на плащанията",
+  AppStrings.emptyPaymentHistory:
+      "Вашият списък с история на плащанията е празен",
+  AppStrings.showing: "Показване на",
+  AppStrings.serviceType: "Вид услуга",
+  AppStrings.allText: "Всички",
+  AppStrings.last24Hours: "Последните 24 часа",
+  AppStrings.lastWeek: "Миналата седмица",
+  AppStrings.lastFortnight: "Последните две седмици",
+  AppStrings.lastMonth: "Миналия месец",
+  AppStrings.lastYear: "Миналата година",
+  AppStrings.earningsForToday: "Печалби за днес",
+  AppStrings.allEarnings: "Всички печалби",
+  AppStrings.earningsFor: "Печалби за",
+  AppStrings.orderPlaced: "Направена поръчка",
+  AppStrings.confirmed: "Потвърдена",
+  AppStrings.shipped: "Изпратена",
+  AppStrings.pending: "Изчакваща",
+  AppStrings.noOrdersFoundText: "Няма намерени",
+  AppStrings.ordersFoundText: "поръчки",
+  AppStrings.updateOrderStatusTitle: "- Актуализиране на статус на поръчка",
+  AppStrings.updateOrderStatusSubtitle:
+      "Актуализирайте текущия статус на поръчката, за да информирате клиента за напредъка на доставката.",
+  AppStrings.orderStatusSelect: "Статус на поръчка (Изберете)",
+  AppStrings.updateOrderStatusAlertTitle:
+      "Актуализиране на статус на поръчка !",
+  AppStrings.updateOrderStatusAlertSubtitle:
+      "Сигурни ли сте, че искате да актуализирате статуса на тази поръчка? Клиентът ще бъде уведомен незабавно.",
+  AppStrings.orderStatusUpdatedTo: "Статусът на поръчката е актуализиран на",
+  AppStrings.orderDetailsTitle: "Подробности за поръчката",
+  AppStrings.orderIdPrefix: "- ID на поръчка: ",
+  AppStrings.quantityPrefix: "Количество :- ",
+  AppStrings.sizeVariantPrefix: " • Размер / Вариант :- ",
+  AppStrings.orderedBy: "- Поръчано от",
+  AppStrings.deliveryAddress: "- Адрес за доставка",
+  AppStrings.home: "Дом",
+  AppStrings.updateOrderStatusBtn: "Актуализиране на статус на поръчка",
+  AppStrings.deliveredOn: "Доставена на",
+  AppStrings.canceledByCustomerOn: "Отменена от клиента на",
+  AppStrings.updateDeliveryOption: "- Актуализиране на опцията за доставка",
+  AppStrings.makeChangesDeliveryOptions:
+      "Направете промени в опциите си за доставка по-долу",
+  AppStrings.enterDeliveryPartner:
+      "Въведете партньор за доставка (напр. местен куриер)",
+  AppStrings.deliveryCost: "Цена за доставка",
+  AppStrings.deliveryCostEuro: "Цена за доставка (€)",
+  AppStrings.enterDeliveryCost: "Въведете цена за доставка",
+  AppStrings.estimatedDeliveryTime: "Очаквано време за доставка",
+  AppStrings.eg24BusinessDays: "напр. 2-4 работни дни",
+  AppStrings.updateDeliveryOptionAlertTitle:
+      "Актуализиране на опцията за доставка !",
+  AppStrings.updateDeliveryOptionAlertSubtitle:
+      "Сигурни ли сте, че искате да актуализирате информацията за опцията за доставка на вашия продукт?",
+  AppStrings.deliveryOptionUpdatedSuccess:
+      "Опцията за доставка е актуализирана успешно!",
+  AppStrings.update: "Актуализиране",
   AppStrings.myReturns: "Моите връщания",
   AppStrings.returnRequests: "Заявки за връщане",
   AppStrings.accepted: "Приети",
@@ -397,6 +491,29 @@ Map<String, String> bulgarian = {
   AppStrings.markAllAsRead: "Маркирай всички като прочетени",
   AppStrings.noInternetConnection: "Няма интернет връзка",
   AppStrings.checkYourInternet: "Моля, проверете вашия интернет",
+
+  // Stripe Connect
+  AppStrings.connectPaymentsStripe: "Свържете плащания (Stripe)",
+  AppStrings.connectStripeSubtitle:
+      "Свържете своя Stripe акаунт, за да получавате сигурно плащания от вашите продажби.",
+  AppStrings.securePayments: "Сигурни плащания",
+  AppStrings.securePaymentsSubtitle:
+      "Свържете своя Stripe акаунт, за да получавате сигурни изплащания от вашите продажби.",
+  AppStrings.directBankPayouts: "Директни банкови изплащания",
+  AppStrings.directBankPayoutsSubtitle:
+      "Получавайте приходите си директно в свързаната си банкова сметка.",
+  AppStrings.fastSetup: "Бърза настройка",
+  AppStrings.fastSetupSubtitle:
+      "Свържете акаунта си само в няколко бързи стъпки.",
+  AppStrings.aboutBestKidPayments: "Относно плащанията в BestKid",
+  AppStrings.aboutBestKidPaymentsSubtitle:
+      "Плащанията от продажби се обработват чрез Stripe и се изплащат към вашия свързан акаунт.",
+  AppStrings.connectStripeAccount: "Свързване на Stripe акаунт",
+  AppStrings.saveAndContinue: "Запазване и продължаване",
+  AppStrings.skipForNow: "Пропускане засега \u00BB",
+  AppStrings.stripeConnected: "Stripe е свързан",
+  AppStrings.stripeConnectionFailed:
+      "Неуспешно свързване със Stripe - Опитайте отново",
   AppStrings.privacyPolicy: "Политика за поверителност",
   AppStrings.termsCondition: "Общи условия",
   AppStrings.legalCompanyInfo: "Правна и фирмена информация",
@@ -416,10 +533,352 @@ Map<String, String> bulgarian = {
   AppStrings.activeProduct: "Активен продукт",
   AppStrings.inactiveProduct: "Неактивен продукт",
   AppStrings.noActiveProductFound: "Няма намерени активни продукти",
+  AppStrings.browseShop: "Разгледайте магазина",
+  AppStrings.markAsInactiveTitle: "Маркирай като неактивен !",
+  AppStrings.markAsInactiveSubtitle:
+      "Сигурни ли сте, че искате да маркирате този продукт като неактивен? Той няма да бъде видим за клиентите в платформата.",
+  AppStrings.productMarkedInactiveSuccess:
+      "Продуктът е маркиран като неактивен успешно",
+  AppStrings.deleteProductTitle: "Изтриване на продукта !",
+  AppStrings.deleteProductSubtitle:
+      "Сигурни ли сте, че искате да изтриете този продукт? Това действие не може да бъде отменено.",
+  AppStrings.productDeletedSuccess: "Продуктът е изтрит успешно",
+  AppStrings.proceedToUpdateProductTitle:
+      "Продължете към актуализиране на продукта",
+  AppStrings.proceedToUpdateProductSubtitle:
+      "Искате ли да продължите към екрана за актуализиране на продукта?",
+  AppStrings.yesText: "Да",
+  AppStrings.noText: "Не",
+  AppStrings.viewOrdersTitle: "Преглед на поръчките !",
+  AppStrings.viewOrdersSubtitle:
+      "На път сте да видите поръчките за този продукт. Всички подробности за поръчката ще бъдат показани.",
+  AppStrings.viewOrdersBtn: "Преглед на поръчките",
   AppStrings.noInactiveProductFound: "Няма намерени неактивни продукти",
-  AppStrings.deliveryInfoMissingTitle: "Липсва информация за доставка !",
-  AppStrings.deliveryInfoMissingSubtitle: "Попълнете настройките за доставка, за да направите продуктите си достъпни за закупуване.",
-  AppStrings.stripeAccountRequiredTitle: "Изисква се акаунт в Stripe !",
-  AppStrings.stripeAccountRequiredSubtitle: "Свържете вашия Stripe акаунт, преди да изброите продукти и да получавате плащания.",
-};
 
+  AppStrings.updateProductTitle: "Актуализиране на продукта",
+  AppStrings.addProductTitle: "Добавяне на продукт",
+  AppStrings.uploadProductImages: "Качване на изображения на продукта",
+  AppStrings.uploadImagesHere: "Качете изображения тук",
+  AppStrings.productNameLabel: "Име на продукта",
+  AppStrings.enterProductName: "Въведете име на продукта",
+  AppStrings.productNameRequired: "Името на продукта е задължително",
+  AppStrings.productCategoryLabel: "Категория на продукта",
+  AppStrings.selectCategory: "Изберете категория",
+  AppStrings.productSubcategoryLabel: "Подкатегория на продукта",
+  AppStrings.selectSubcategory: "Изберете подкатегория",
+  AppStrings.sizeVariantLabel: "Размер / Вариант",
+  AppStrings.enterSizesCommas:
+      "Въведете размери или варианти, разделени със запетаи",
+  AppStrings.descriptionLabel: "Описание",
+  AppStrings.describeProductDetails:
+      "Опишете продукта, състояние, материал, размер, характеристики и важни детайли.",
+  AppStrings.enterProductDescription: "Въведете описание на продукта",
+  AppStrings.descriptionRequired: "Описанието е задължително",
+  AppStrings.continueBtn: "Продължи",
+  AppStrings.priceLabel: "Цена",
+  AppStrings.enterProductPrice: "Въведете цена на продукта",
+  AppStrings.priceRequired: "Цената е задължителна",
+  AppStrings.enterValidPrice: "Въведете валидна цена",
+  AppStrings.discountOptional: "Отстъпка (%) (По избор)",
+  AppStrings.discountOptionalLower: "Отстъпка (%) (по избор)",
+  AppStrings.enterDiscountPercent: "Въведете % отстъпка на продукта",
+  AppStrings.productStatusLabel: "Статус на продукта",
+  AppStrings.selectProductStatus: "Изберете статус на продукта",
+  AppStrings.activeStatus: "Активен",
+  AppStrings.inactiveStatus: "Неактивен",
+  AppStrings.outOfStockStatus: "Изчерпан",
+  AppStrings.publishProductTitle: "Публикуване на продукта !",
+  AppStrings.publishProductSubtitle:
+      "Сигурни ли сте, че искате да публикувате този продукт? Той ще стане видим за клиентите веднага.",
+  AppStrings.productPublishedSuccess: "Продуктът е публикуван успешно!",
+  AppStrings.saveProductChangesTitle: "Запазване на промените !",
+  AppStrings.saveProductChangesSubtitle:
+      "Сигурни ли сте, че искате да актуализирате този продукт? Промените ви ще бъдат приложени веднага.",
+  AppStrings.productUpdatedSuccess: "Продуктът е актуализиран успешно!",
+
+  AppStrings.productOrdersTitle: "Поръчки на продукта",
+  AppStrings.orderIdLabelWithDash: "- ID на поръчка: ",
+  AppStrings.ordersDetailsTitle: "Подробности за поръчката",
+  AppStrings.orderedBy: "- Поръчано от",
+  AppStrings.deliveryAddressTitle: "- Адрес за доставка",
+  AppStrings.updateOrderStatusBtn: "Актуализиране на статуса на поръчката",
+  AppStrings.updateOrderStatusDash: "- Актуализиране на статуса",
+  AppStrings.updateOrderStatusSubtitleDash:
+      "Актуализирайте текущия статус на поръчката, за да информирате клиента за напредъка на доставката.",
+  AppStrings.orderStatusSelect: "Статус на поръчката (Избор)",
+  AppStrings.updateBtn: "Актуализиране",
+  AppStrings.updateOrderStatusTitle: "Актуализиране на статуса на поръчката !",
+  AppStrings.updateOrderStatusConfirmMsg:
+      "Сигурни ли сте, че искате да актуализирате този статус? Клиентът ще бъде уведомен веднага.",
+  AppStrings.orderStatusUpdatedSuccess:
+      "Статусът на поръчката е актуализиран успешно",
+  AppStrings.chatInfo: "Информация за чата",
+  AppStrings.messageCustomerFeature:
+      "Избрана е функцията за съобщение на клиента",
+  AppStrings.pending: "В очакване",
+  AppStrings.confirmed: "Потвърдено",
+  AppStrings.shipped: "Изпратено",
+  AppStrings.delivered: "Доставено",
+  AppStrings.canceled: "Отменено",
+  AppStrings.viewDetailsBtn: "Преглед на детайли",
+  AppStrings.today: "ДНЕС",
+  AppStrings.justNow: "Сега",
+  AppStrings.addAddress: "Добави адрес",
+  AppStrings.deleteAddressAlertTitle: "Изтриване на адреса !",
+  AppStrings.deleteAddressAlertSubtitle:
+      "Сигурни ли сте, че искате да изтриете този адрес?",
+  AppStrings.enterFullName: "Въведете пълното си име",
+  AppStrings.enterPhoneNumber: "Въведете телефонния си номер",
+  AppStrings.emailUpdateRestriction:
+      "Актуализациите на имейл адреса са ограничени за клиентски акаунти, тъй като имейл адресът е пряко свързан с удостоверяването, проверката на сигурността и записите на поръчките.",
+  AppStrings.saveProfileAlertTitle: "Запазване на промените в профила !",
+  AppStrings.saveProfileAlertSubtitle:
+      "Сигурни ли сте, че искате да актуализирате информацията в профила си? Вашите промени ще бъдат приложени незабавно.",
+  AppStrings.failedToPickImage: "Неуспешно избиране на изображение",
+  AppStrings.addressDeletedSuccess: "Адресът е изтрит успешно",
+  AppStrings.earning: "Печалби",
+  AppStrings.paymentHistory: "История на плащанията",
+  AppStrings.emptyPaymentHistory:
+      "Вашият списък с история на плащанията е празен",
+  AppStrings.showing: "Показване на",
+  AppStrings.serviceType: "Вид услуга",
+  AppStrings.allText: "Всички",
+  AppStrings.last24Hours: "Последните 24 часа",
+  AppStrings.lastWeek: "Миналата седмица",
+  AppStrings.lastFortnight: "Последните две седмици",
+  AppStrings.lastMonth: "Миналия месец",
+  AppStrings.lastYear: "Миналата година",
+  AppStrings.earningsForToday: "Печалби за днес",
+  AppStrings.allEarnings: "Всички печалби",
+  AppStrings.earningsFor: "Печалби за",
+  AppStrings.orderPlaced: "Направена поръчка",
+  AppStrings.confirmed: "Потвърдена",
+  AppStrings.shipped: "Изпратена",
+  AppStrings.pending: "Изчакваща",
+  AppStrings.noOrdersFoundText: "Няма намерени",
+  AppStrings.ordersFoundText: "поръчки",
+  AppStrings.updateOrderStatusTitle: "- Актуализиране на статус на поръчка",
+  AppStrings.updateOrderStatusSubtitle:
+      "Актуализирайте текущия статус на поръчката, за да информирате клиента за напредъка на доставката.",
+  AppStrings.orderStatusSelect: "Статус на поръчка (Изберете)",
+  AppStrings.updateOrderStatusAlertTitle:
+      "Актуализиране на статус на поръчка !",
+  AppStrings.updateOrderStatusAlertSubtitle:
+      "Сигурни ли сте, че искате да актуализирате статуса на тази поръчка? Клиентът ще бъде уведомен незабавно.",
+  AppStrings.orderStatusUpdatedTo: "Статусът на поръчката е актуализиран на",
+  AppStrings.orderDetailsTitle: "Подробности за поръчката",
+  AppStrings.orderIdPrefix: "- ID на поръчка: ",
+  AppStrings.quantityPrefix: "Количество :- ",
+  AppStrings.sizeVariantPrefix: " • Размер / Вариант :- ",
+  AppStrings.orderedBy: "- Поръчано от",
+  AppStrings.deliveryAddress: "- Адрес за доставка",
+  AppStrings.home: "Дом",
+  AppStrings.updateOrderStatusBtn: "Актуализиране на статус на поръчка",
+  AppStrings.deliveredOn: "Доставена на",
+  AppStrings.canceledByCustomerOn: "Отменена от клиента на",
+  AppStrings.updateDeliveryOption: "- Актуализиране на опцията за доставка",
+  AppStrings.makeChangesDeliveryOptions:
+      "Направете промени в опциите си за доставка по-долу",
+  AppStrings.enterDeliveryPartner:
+      "Въведете партньор за доставка (напр. местен куриер)",
+  AppStrings.deliveryCost: "Цена за доставка",
+  AppStrings.deliveryCostEuro: "Цена за доставка (€)",
+  AppStrings.enterDeliveryCost: "Въведете цена за доставка",
+  AppStrings.estimatedDeliveryTime: "Очаквано време за доставка",
+  AppStrings.eg24BusinessDays: "напр. 2-4 работни дни",
+  AppStrings.updateDeliveryOptionAlertTitle:
+      "Актуализиране на опцията за доставка !",
+  AppStrings.updateDeliveryOptionAlertSubtitle:
+      "Сигурни ли сте, че искате да актуализирате информацията за опцията за доставка на вашия продукт?",
+  AppStrings.deliveryOptionUpdatedSuccess:
+      "Опцията за доставка е актуализирана успешно!",
+  AppStrings.update: "Актуализиране",
+  AppStrings.myReturns: "Моите връщания",
+  AppStrings.returnRequests: "Заявки за връщане",
+  AppStrings.accepted: "Приети",
+  AppStrings.rejected: "Отхвърлени",
+  AppStrings.inReview: "В преглед",
+  AppStrings.processing: "Обработка",
+  AppStrings.completed: "Завършено",
+  AppStrings.backToMyReturns: "<< Обратно към моите връщания",
+  AppStrings.orderIdLabel: "ID на поръчката",
+  AppStrings.returnDetails: "Подробности за връщането",
+  AppStrings.returnReason: "Причина за връщане",
+  AppStrings.submittedOn: "Изпратено на",
+  AppStrings.evidence: "Доказателства",
+  AppStrings.message: "Съобщение",
+  AppStrings.sellerRejectedRequest: "Продавачът отхвърли тази заявка",
+  AppStrings.reasonForRejection: "Причина за отхвърляне",
+  AppStrings.returnAddress: "Адрес за връщане",
+  AppStrings.location: "Местоположение",
+  AppStrings.noReturnRequestsFound: "Не са намерени заявки за връщане",
+  AppStrings.viewDetails: "Преглед на подробностите >>",
+  AppStrings.notifications: "Известия",
+  AppStrings.noNotificationsFound: "Няма намерени известия",
+  AppStrings.markAllAsRead: "Маркирай всички като прочетени",
+  AppStrings.noInternetConnection: "Няма интернет връзка",
+  AppStrings.checkYourInternet: "Моля, проверете вашия интернет",
+
+  // Stripe Connect
+  AppStrings.connectPaymentsStripe: "Свържете плащания (Stripe)",
+  AppStrings.connectStripeSubtitle:
+      "Свържете своя Stripe акаунт, за да получавате сигурно плащания от вашите продажби.",
+  AppStrings.securePayments: "Сигурни плащания",
+  AppStrings.securePaymentsSubtitle:
+      "Свържете своя Stripe акаунт, за да получавате сигурни изплащания от вашите продажби.",
+  AppStrings.directBankPayouts: "Директни банкови изплащания",
+  AppStrings.directBankPayoutsSubtitle:
+      "Получавайте приходите си директно в свързаната си банкова сметка.",
+  AppStrings.fastSetup: "Бърза настройка",
+  AppStrings.fastSetupSubtitle:
+      "Свържете акаунта си само в няколко бързи стъпки.",
+  AppStrings.aboutBestKidPayments: "Относно плащанията в BestKid",
+  AppStrings.aboutBestKidPaymentsSubtitle:
+      "Плащанията от продажби се обработват чрез Stripe и се изплащат към вашия свързан акаунт.",
+  AppStrings.connectStripeAccount: "Свързване на Stripe акаунт",
+  AppStrings.saveAndContinue: "Запазване и продължаване",
+  AppStrings.skipForNow: "Пропускане засега \u00BB",
+  AppStrings.stripeConnected: "Stripe е свързан",
+  AppStrings.stripeConnectionFailed:
+      "Неуспешно свързване със Stripe - Опитайте отново",
+  AppStrings.privacyPolicy: "Политика за поверителност",
+  AppStrings.termsCondition: "Общи условия",
+  AppStrings.legalCompanyInfo: "Правна и фирмена информация",
+  AppStrings.companyName: "Име на фирмата",
+  AppStrings.businessType: "Вид дейност",
+  AppStrings.registeredAddress: "Регистриран адрес",
+  AppStrings.jurisdiction: "Юрисдикция",
+  AppStrings.contactEmailLabel: "Имейл за контакт",
+  AppStrings.officialWebsite: "Официален уебсайт",
+  AppStrings.companyNameValue: "BestKid",
+  AppStrings.businessTypeValue: "Платформа за онлайн пазар",
+  AppStrings.registeredAddressValue: "Предстои потвърждение – България",
+  AppStrings.jurisdictionValue: "България / Европейски съюз",
+
+  // Sell Page
+  AppStrings.sellingItems: "Продавани артикули",
+  AppStrings.activeProduct: "Активен продукт",
+  AppStrings.inactiveProduct: "Неактивен продукт",
+  AppStrings.noActiveProductFound: "Няма намерени активни продукти",
+  AppStrings.browseShop: "Разгледайте магазина",
+  AppStrings.markAsInactiveTitle: "Маркирай като неактивен !",
+  AppStrings.markAsInactiveSubtitle:
+      "Сигурни ли сте, че искате да маркирате този продукт като неактивен? Той няма да бъде видим за клиентите в платформата.",
+  AppStrings.productMarkedInactiveSuccess:
+      "Продуктът е маркиран като неактивен успешно",
+  AppStrings.deleteProductTitle: "Изтриване на продукта !",
+  AppStrings.deleteProductSubtitle:
+      "Сигурни ли сте, че искате да изтриете този продукт? Това действие не може да бъде отменено.",
+  AppStrings.productDeletedSuccess: "Продуктът е изтрит успешно",
+  AppStrings.proceedToUpdateProductTitle:
+      "Продължете към актуализиране на продукта",
+  AppStrings.proceedToUpdateProductSubtitle:
+      "Искате ли да продължите към екрана за актуализиране на продукта?",
+  AppStrings.yesText: "Да",
+  AppStrings.noText: "Не",
+  AppStrings.viewOrdersTitle: "Преглед на поръчките !",
+  AppStrings.viewOrdersSubtitle:
+      "На път сте да видите поръчките за този продукт. Всички подробности за поръчката ще бъдат показани.",
+  AppStrings.viewOrdersBtn: "Преглед на поръчките",
+  AppStrings.noInactiveProductFound: "Няма намерени неактивни продукти",
+
+  AppStrings.updateProductTitle: "Актуализиране на продукта",
+  AppStrings.addProductTitle: "Добавяне на продукт",
+  AppStrings.uploadProductImages: "Качване на изображения на продукта",
+  AppStrings.uploadImagesHere: "Качете изображения тук",
+  AppStrings.productNameLabel: "Име на продукта",
+  AppStrings.enterProductName: "Въведете име на продукта",
+  AppStrings.productNameRequired: "Името на продукта е задължително",
+  AppStrings.productCategoryLabel: "Категория на продукта",
+  AppStrings.selectCategory: "Изберете категория",
+  AppStrings.productSubcategoryLabel: "Подкатегория на продукта",
+  AppStrings.selectSubcategory: "Изберете подкатегория",
+  AppStrings.sizeVariantLabel: "Размер / Вариант",
+  AppStrings.enterSizesCommas:
+      "Въведете размери или варианти, разделени със запетаи",
+  AppStrings.descriptionLabel: "Описание",
+  AppStrings.describeProductDetails:
+      "Опишете продукта, състояние, материал, размер, характеристики и важни детайли.",
+  AppStrings.enterProductDescription: "Въведете описание на продукта",
+  AppStrings.descriptionRequired: "Описанието е задължително",
+  AppStrings.continueBtn: "Продължи",
+  AppStrings.priceLabel: "Цена",
+  AppStrings.enterProductPrice: "Въведете цена на продукта",
+  AppStrings.priceRequired: "Цената е задължителна",
+  AppStrings.enterValidPrice: "Въведете валидна цена",
+  AppStrings.discountOptional: "Отстъпка (%) (По избор)",
+  AppStrings.discountOptionalLower: "Отстъпка (%) (по избор)",
+  AppStrings.enterDiscountPercent: "Въведете % отстъпка на продукта",
+  AppStrings.productStatusLabel: "Статус на продукта",
+  AppStrings.selectProductStatus: "Изберете статус на продукта",
+  AppStrings.activeStatus: "Активен",
+  AppStrings.inactiveStatus: "Неактивен",
+  AppStrings.outOfStockStatus: "Изчерпан",
+  AppStrings.publishProductTitle: "Публикуване на продукта !",
+  AppStrings.publishProductSubtitle:
+      "Сигурни ли сте, че искате да публикувате този продукт? Той ще стане видим за клиентите веднага.",
+  AppStrings.productPublishedSuccess: "Продуктът е публикуван успешно!",
+  AppStrings.saveProductChangesTitle: "Запазване на промените !",
+  AppStrings.saveProductChangesSubtitle:
+      "Сигурни ли сте, че искате да актуализирате този продукт? Промените ви ще бъдат приложени веднага.",
+  AppStrings.productUpdatedSuccess: "Продуктът е актуализиран успешно!",
+
+  AppStrings.productOrdersTitle: "Поръчки на продукта",
+  AppStrings.orderIdLabelWithDash: "- ID на поръчка: ",
+  AppStrings.ordersDetailsTitle: "Подробности за поръчката",
+  AppStrings.orderedBy: "- Поръчано от",
+  AppStrings.deliveryAddressTitle: "- Адрес за доставка",
+  AppStrings.updateOrderStatusBtn: "Актуализиране на статуса на поръчката",
+  AppStrings.updateOrderStatusDash: "- Актуализиране на статуса",
+  AppStrings.updateOrderStatusSubtitleDash:
+      "Актуализирайте текущия статус на поръчката, за да информирате клиента за напредъка на доставката.",
+  AppStrings.orderStatusSelect: "Статус на поръчката (Избор)",
+  AppStrings.updateBtn: "Актуализиране",
+  AppStrings.updateOrderStatusTitle: "Актуализиране на статуса на поръчката !",
+  AppStrings.updateOrderStatusConfirmMsg:
+      "Сигурни ли сте, че искате да актуализирате този статус? Клиентът ще бъде уведомен веднага.",
+  AppStrings.orderStatusUpdatedSuccess:
+      "Статусът на поръчката е актуализиран успешно",
+  AppStrings.chatInfo: "Информация за чата",
+  AppStrings.messageCustomerFeature:
+      "Избрана е функцията за съобщение на клиента",
+  AppStrings.pending: "В очакване",
+  AppStrings.confirmed: "Потвърдено",
+  AppStrings.shipped: "Изпратено",
+  AppStrings.delivered: "Доставено",
+  AppStrings.canceled: "Отменено",
+  AppStrings.viewDetailsBtn: "Преглед на детайли",
+
+  AppStrings.deliveryInfoMissingTitle: "Липсва информация за доставка !",
+  AppStrings.deliveryInfoMissingSubtitle:
+      "Попълнете настройките за доставка, за да направите продуктите си достъпни за закупуване.",
+  AppStrings.stripeAccountRequiredTitle: "Изисква се акаунт в Stripe !",
+  AppStrings.stripeAccountRequiredSubtitle:
+      "Свържете своя акаунт в Stripe, преди да изброявате продукти и да получавате плащания.",
+  AppStrings.dummyOrderPrice: "€260.00",
+  AppStrings.markAsInactiveBtn: "Маркирай като неактивен",
+  AppStrings.deleteProductBtn: "Изтрий продукта",
+  AppStrings.updateStatus: "Актуализиране на статуса",
+  AppStrings.confirmAndSendInstructions:
+      "Потвърждаване и изпращане на инструкции",
+  AppStrings.issueRefundAndCompleted: "Възстановяване на сумата и приключване",
+  AppStrings.confirmRejection: "Потвърждаване на отхвърлянето",
+  AppStrings.updateReturnStatusTitle: "- Актуализиране на статуса на връщане",
+  AppStrings.updateReturnStatusSubtitle2:
+      "Актуализирайте текущия статус на заявката за връщане, за да информирате клиента за напредъка.",
+  AppStrings.returnStatusSelect: "Статус на връщане (Избор)",
+  AppStrings.returnShippingAddress: "Адрес за доставка при връщане",
+  AppStrings.enterWarehouseAddress: "Въведете адреса на склада или магазина...",
+  AppStrings.rejectionNote: "Бележка за отхвърляне",
+  AppStrings.enterRejectionReason: "Моля, посочете причина за отхвърлянето...",
+  AppStrings.updateReturnStatusAlertTitle:
+      "Актуализиране на статуса на връщане !",
+  AppStrings.updateReturnStatusAlertSubtitle2:
+      "Сигурни ли сте, че искате да актуализирате статуса на тази заявка за връщане? Клиентът ще бъде уведомен незабавно.",
+  AppStrings.returnStatusUpdatedTo: "Статусът на връщане е актуализиран на",
+  AppStrings.returnCompletedAndRefunded: "Връщането е завършено и възстановено",
+  AppStrings.youRejectedReturnRequest: "Вие отхвърлихте тази заявка за връщане",
+  AppStrings.reasonForRejection2: "Причина за отхвърляне",
+  AppStrings.noReturnOrdersFound: "Няма намерени поръчки за връщане",
+  AppStrings.returnOrdersTitle: "Поръчки за връщане",
+};

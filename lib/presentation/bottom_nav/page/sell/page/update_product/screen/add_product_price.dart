@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../../../../../utils/static_strings/static_strings.dart';
 
 import '../../../../../../../core/responsive_layout/dimensions.dart';
 import '../../../../../../../utils/app_colors/app_colors.dart';
@@ -23,7 +24,7 @@ class _AddProductPriceState extends State<AddProductPrice> {
   final _discountController = TextEditingController();
   final _statusController = TextEditingController(text: '');
 
-  final List<String> _statusOptions = ['Active', 'Inactive', 'Out of Stock'];
+  late final List<String> _statusOptions = [AppStrings.activeStatus.tr, AppStrings.inactiveStatus.tr, AppStrings.outOfStockStatus.tr];
 
   @override
   void dispose() {
@@ -51,14 +52,13 @@ class _AddProductPriceState extends State<AddProductPrice> {
   void _onSaveAndContinue() {
     if (!_formKey.currentState!.validate()) return;
     AppAlerts.warning(
-      title: 'Publish Product !',
-      message:
-          'Are you sure you want to publish this product? It will become visible to customers immediately.',
-      confirmLabel: 'Confirm',
-      cancelLabel: 'Cancel',
+      title: AppStrings.publishProductTitle.tr,
+      message: AppStrings.publishProductSubtitle.tr,
+      confirmLabel: AppStrings.confirm.tr,
+      cancelLabel: AppStrings.cancel.tr,
       onConfirm: () {
         Get.back(); // close alert
-        AppAlerts.success(message: 'Product published successfully!');
+        AppAlerts.success(message: AppStrings.productPublishedSuccess.tr);
         Get.until((route) => route.isFirst); // back to sell screen root
       },
     );
@@ -68,7 +68,7 @@ class _AddProductPriceState extends State<AddProductPrice> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
-      appBar: const CommonAppBar(title: 'Add Product'),
+      appBar: CommonAppBar(title: AppStrings.addProductTitle.tr),
       body: Form(
         key: _formKey,
         child: Column(
@@ -84,20 +84,20 @@ class _AddProductPriceState extends State<AddProductPrice> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // ── Price ────────────────────────────────────────────
-                    _FieldLabel(label: 'Price'),
+                    _FieldLabel(label: AppStrings.priceLabel.tr),
                     SizedBox(height: Dimensions.h(8)),
                     AppTextField(
                       controller: _priceController,
-                      hint: 'Enter product Price',
+                      hint: AppStrings.enterProductPrice.tr,
                       keyboardType:
                           const TextInputType.numberWithOptions(decimal: true),
                       validator: (v) {
                         if (v == null || v.trim().isEmpty)
-                          return 'Price is required';
+                          return AppStrings.priceRequired.tr;
                         if (double.tryParse(
                                 v.replaceAll('€', '').trim()) ==
                             null) {
-                          return 'Enter a valid price';
+                          return AppStrings.enterValidPrice.tr;
                         }
                         return null;
                       },
@@ -105,21 +105,21 @@ class _AddProductPriceState extends State<AddProductPrice> {
                     SizedBox(height: Dimensions.h(18)),
 
                     // ── Discount (optional) ──────────────────────────────
-                    _FieldLabel(label: 'Discount (%) (Optional)'),
+                    _FieldLabel(label: AppStrings.discountOptional.tr),
                     SizedBox(height: Dimensions.h(8)),
                     AppTextField(
                       controller: _discountController,
-                      hint: 'Enter product Discount %',
+                      hint: AppStrings.enterDiscountPercent.tr,
                       keyboardType: TextInputType.number,
                     ),
                     SizedBox(height: Dimensions.h(18)),
 
                     // ── Product Status ───────────────────────────────────
-                    _FieldLabel(label: 'Product Status'),
+                    _FieldLabel(label: AppStrings.productStatusLabel.tr),
                     SizedBox(height: Dimensions.h(8)),
                     _StatusDropdown(
                       controller: _statusController,
-                      hint: 'Select Product Status',
+                      hint: AppStrings.selectProductStatus.tr,
                       onTap: _openStatusSheet,
                     ),
                     SizedBox(height: Dimensions.h(24)),
@@ -142,7 +142,7 @@ class _AddProductPriceState extends State<AddProductPrice> {
                 ),
               ),
               child: AppButton(
-                label: 'Save And Continue',
+                label: AppStrings.saveAndContinue.tr,
                 onPressed: _onSaveAndContinue,
                 backgroundColor: AppColors.secondaryColor,
                 textColor: AppColors.primaryColor,
@@ -270,7 +270,7 @@ class _StatusSheet extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
               child: Align(
                 alignment: Alignment.centerLeft,
-                child: Text('Product Status',
+                child: Text(AppStrings.productStatusLabel.tr,
                     style: AppTextStyles.body.copyWith(
                         fontSize: Dimensions.fs(18),
                         fontWeight: FontWeight.w700)),

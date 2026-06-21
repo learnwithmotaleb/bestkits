@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../../../../core/responsive_layout/dimensions.dart';
 import '../../../../utils/app_colors/app_colors.dart';
 import '../../../../utils/app_text_style/app_text_style.dart';
+import '../../../../utils/static_strings/static_strings.dart';
 import '../../../../widget/custom_appbar.dart';
 import '../../../../widget/app_button.dart';
 import '../controller/customer_order_controller.dart';
@@ -23,7 +24,7 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
-      appBar: const CommonAppBar(title: "Customer Order's"),
+      appBar: CommonAppBar(title: AppStrings.customerOrder.tr),
       body: Column(
         children: [
           SizedBox(height: Dimensions.h(10)),
@@ -57,7 +58,7 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
                         ),
                       ),
                       child: Text(
-                        tab,
+                        tab.tr,
                         style: AppTextStyles.body.copyWith(
                           fontSize: Dimensions.fs(13),
                           fontWeight:
@@ -103,7 +104,7 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
                                 color: AppColors.greyColor.withOpacity(0.5)),
                             SizedBox(height: Dimensions.h(12)),
                             Text(
-                              "No ${_ctrl.selectedTab.value} Order's Found",
+                              "${AppStrings.noOrdersFoundText.tr} ${_ctrl.selectedTab.value.tr} ${AppStrings.ordersFoundText.tr}",
                               style: AppTextStyles.body.copyWith(
                                 color: AppColors.greyColor,
                                 fontSize: Dimensions.fs(13),
@@ -144,7 +145,7 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "- Order ID: ${order['id']}",
+                                  "${AppStrings.orderIdPrefix.tr}${order['id']}",
                                   style: AppTextStyles.body.copyWith(
                                     fontWeight: FontWeight.w700,
                                     fontSize: Dimensions.fs(13),
@@ -178,7 +179,7 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
                                           _getStatusTextColor(order['status'])),
                                   SizedBox(width: Dimensions.w(4)),
                                   Text(
-                                    order['status'],
+                                    order['status'].toString().tr,
                                     style: AppTextStyles.body.copyWith(
                                       fontSize: Dimensions.fs(10),
                                       fontWeight: FontWeight.w600,
@@ -197,7 +198,7 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
                             color: AppColors.greyColor.withOpacity(0.15)),
                         SizedBox(height: Dimensions.h(16)),
                         AppButton(
-                          label: 'View Details',
+                          label: AppStrings.viewDetails.tr,
                           onPressed: () {
                             Get.to(
                                 () => CustomerOrderDetails(orderData: order));
@@ -225,38 +226,32 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
   }
 
   Color _getStatusBgColor(String status) {
-    switch (status) {
-      case 'Order Placed':
-      case 'Pending':
-        return Colors.blue.withOpacity(0.15);
-      case 'Confirmed':
-        return Colors.purple.withOpacity(0.15);
-      case 'Shipped':
-        return Colors.orange.withOpacity(0.15);
-      case 'Delivered':
-        return Colors.green.withOpacity(0.15);
-      case 'Canceled':
-        return Colors.red.withOpacity(0.15);
-      default:
-        return AppColors.greyColor.withOpacity(0.15);
+    if (status == AppStrings.orderPlaced || status == AppStrings.pending) {
+      return Colors.blue.withOpacity(0.15);
+    } else if (status == AppStrings.confirmed) {
+      return Colors.purple.withOpacity(0.15);
+    } else if (status == AppStrings.shipped) {
+      return Colors.orange.withOpacity(0.15);
+    } else if (status == AppStrings.delivered) {
+      return Colors.green.withOpacity(0.15);
+    } else if (status == AppStrings.canceled) {
+      return Colors.red.withOpacity(0.15);
     }
+    return AppColors.greyColor.withOpacity(0.15);
   }
 
   Color _getStatusTextColor(String status) {
-    switch (status) {
-      case 'Order Placed':
-      case 'Pending':
-        return Colors.blue;
-      case 'Confirmed':
-        return Colors.purple;
-      case 'Shipped':
-        return Colors.orange;
-      case 'Delivered':
-        return Colors.green;
-      case 'Canceled':
-        return Colors.red;
-      default:
-        return AppColors.greyColor;
+    if (status == AppStrings.orderPlaced || status == AppStrings.pending) {
+      return Colors.blue;
+    } else if (status == AppStrings.confirmed) {
+      return Colors.purple;
+    } else if (status == AppStrings.shipped) {
+      return Colors.orange;
+    } else if (status == AppStrings.delivered) {
+      return Colors.green;
+    } else if (status == AppStrings.canceled) {
+      return Colors.red;
     }
+    return AppColors.greyColor;
   }
 }

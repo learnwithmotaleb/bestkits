@@ -9,6 +9,7 @@ import '../../../widget/app_bottom_sheet.dart';
 import '../../../widget/app_button.dart';
 import '../../../widget/app_text_field.dart';
 import '../../../widget/custom_appbar.dart';
+import '../../../utils/static_strings/static_strings.dart';
 import '../controller/delivery_options_controller.dart';
 import '../widget/delivery_option_widget.dart';
 
@@ -43,7 +44,7 @@ class _DeliveryOptionsScreenState extends State<DeliveryOptionsScreen> {
                 children: [
                   Expanded(
                     child: Text(
-                      '- Update Delivery Option',
+                      AppStrings.updateDeliveryOption.tr,
                       style: AppTextStyles.body.copyWith(
                         fontSize: Dimensions.fs(16),
                         fontWeight: FontWeight.w800,
@@ -60,12 +61,12 @@ class _DeliveryOptionsScreenState extends State<DeliveryOptionsScreen> {
               ),
               SizedBox(height: Dimensions.h(4)),
               Text(
-                'Make changes to your delivery options below',
+                AppStrings.makeChangesDeliveryOptions.tr,
                 style: TextStyle(fontSize: 12, color: Colors.grey[400]),
               ),
               SizedBox(height: Dimensions.h(24)),
               Text(
-                'Delivery Partner',
+                AppStrings.deliveryPartner.tr,
                 style: AppTextStyles.body.copyWith(
                   fontWeight: FontWeight.w700,
                   fontSize: Dimensions.fs(14),
@@ -75,12 +76,12 @@ class _DeliveryOptionsScreenState extends State<DeliveryOptionsScreen> {
               SizedBox(height: Dimensions.h(10)),
               AppTextField(
                 controller: partnerCtrl,
-                hint: 'Enter delivery partner (e.g. Local courier)',
+                hint: AppStrings.enterDeliveryPartner.tr,
                 hintTextStyle: TextStyle(fontSize: 12, color: Colors.grey[400]),
               ),
               SizedBox(height: Dimensions.h(20)),
               Text(
-                'Delivery Cost (€)',
+                AppStrings.deliveryCostEuro.tr,
                 style: AppTextStyles.body.copyWith(
                   fontWeight: FontWeight.w700,
                   fontSize: Dimensions.fs(14),
@@ -90,13 +91,13 @@ class _DeliveryOptionsScreenState extends State<DeliveryOptionsScreen> {
               SizedBox(height: Dimensions.h(10)),
               AppTextField(
                 controller: costCtrl,
-                hint: 'Enter delivery cost',
+                hint: AppStrings.enterDeliveryCost.tr,
                 keyboardType: TextInputType.number,
                 hintTextStyle: TextStyle(fontSize: 12, color: Colors.grey[400]),
               ),
               SizedBox(height: Dimensions.h(20)),
               Text(
-                'Estimated Delivery Time',
+                AppStrings.estimatedDeliveryTime.tr,
                 style: AppTextStyles.body.copyWith(
                   fontWeight: FontWeight.w700,
                   fontSize: Dimensions.fs(14),
@@ -106,7 +107,7 @@ class _DeliveryOptionsScreenState extends State<DeliveryOptionsScreen> {
               SizedBox(height: Dimensions.h(10)),
               AppTextField(
                 controller: timeCtrl,
-                hint: 'e.g. 2-4 business days',
+                hint: AppStrings.eg24BusinessDays.tr,
                 hintTextStyle: TextStyle(fontSize: 12, color: Colors.grey[400]),
               ),
               SizedBox(height: Dimensions.h(24)),
@@ -114,7 +115,7 @@ class _DeliveryOptionsScreenState extends State<DeliveryOptionsScreen> {
                 children: [
                   Expanded(
                     child: AppButton(
-                      label: 'Cancel',
+                      label: AppStrings.cancel.tr,
                       onPressed: () => Get.back(),
                       backgroundColor: Colors.white,
                       textColor: Colors.grey,
@@ -126,15 +127,14 @@ class _DeliveryOptionsScreenState extends State<DeliveryOptionsScreen> {
                   SizedBox(width: Dimensions.w(12)),
                   Expanded(
                     child: AppButton(
-                      label: 'Save Changes',
+                      label: AppStrings.saveChanges.tr,
                       onPressed: () {
                         Get.back();
                         AppAlerts.warning(
-                          title: 'Update Delivery Option !',
-                          message:
-                              'Are you sure you want to update your Product Delivery Option information?',
-                          confirmLabel: 'Confirm',
-                          cancelLabel: 'Cancel',
+                          title: AppStrings.updateDeliveryOptionAlertTitle.tr,
+                          message: AppStrings.updateDeliveryOptionAlertSubtitle.tr,
+                          confirmLabel: AppStrings.confirm.tr,
+                          cancelLabel: AppStrings.cancel.tr,
                           onConfirm: () {
                             _ctrl.updateOption(
                               data['id'],
@@ -143,8 +143,8 @@ class _DeliveryOptionsScreenState extends State<DeliveryOptionsScreen> {
                               timeCtrl.text,
                             );
                             Get.snackbar(
-                              'Success',
-                              'Delivery option updated successfully!',
+                              AppStrings.success.tr,
+                              AppStrings.deliveryOptionUpdatedSuccess.tr,
                               snackPosition: SnackPosition.BOTTOM,
                               backgroundColor: Colors.green,
                               colorText: Colors.white,
@@ -172,7 +172,7 @@ class _DeliveryOptionsScreenState extends State<DeliveryOptionsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
-      appBar: const CommonAppBar(title: "Delivery Options"),
+      appBar: CommonAppBar(title: AppStrings.deliveryOption.tr),
       body: Obx(() {
         final options = _ctrl.deliveryOptions;
         return ListView.separated(

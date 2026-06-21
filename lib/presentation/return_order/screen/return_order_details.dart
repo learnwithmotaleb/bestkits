@@ -8,6 +8,7 @@ import '../../../widget/app_alert.dart';
 import '../../../widget/app_button.dart';
 import '../../../widget/app_text_field.dart';
 import '../../../widget/custom_appbar.dart';
+import '../../../utils/static_strings/static_strings.dart';
 import '../controller/return_order_controller.dart';
 
 class ReturnOrderDetails extends StatefulWidget {
@@ -22,10 +23,10 @@ class ReturnOrderDetails extends StatefulWidget {
 class _ReturnOrderDetailsState extends State<ReturnOrderDetails> {
   late final ReturnOrderController _ctrl;
   final List<String> _statusOptions = [
-    'In review',
-    'Processing',
-    'Completed',
-    'Rejected'
+    AppStrings.inReview,
+    AppStrings.processing,
+    AppStrings.completed,
+    AppStrings.rejected
   ];
 
   late String currentStatus;
@@ -36,7 +37,7 @@ class _ReturnOrderDetailsState extends State<ReturnOrderDetails> {
     super.initState();
     _ctrl = Get.find<ReturnOrderController>();
     order = widget.orderData ?? {};
-    currentStatus = order['status'] ?? 'In review';
+    currentStatus = order['status'] ?? AppStrings.inReview;
   }
 
   void _openUpdateStatusSheet() {
@@ -47,13 +48,13 @@ class _ReturnOrderDetailsState extends State<ReturnOrderDetails> {
     Get.bottomSheet(
       StatefulBuilder(
         builder: (context, setSheetState) {
-          String buttonText = 'Update status';
-          if (tempStatus == 'Processing') {
-            buttonText = 'Confirm & Send Instructions';
-          } else if (tempStatus == 'Completed') {
-            buttonText = 'Issue Refund & Completed Request';
-          } else if (tempStatus == 'Rejected') {
-            buttonText = 'Confirm Rejection';
+          String buttonText = AppStrings.updateStatus.tr;
+          if (tempStatus == AppStrings.processing) {
+            buttonText = AppStrings.confirmAndSendInstructions.tr;
+          } else if (tempStatus == AppStrings.completed) {
+            buttonText = AppStrings.issueRefundAndCompleted.tr;
+          } else if (tempStatus == AppStrings.rejected) {
+            buttonText = AppStrings.confirmRejection.tr;
           }
 
           return Container(
@@ -84,7 +85,7 @@ class _ReturnOrderDetailsState extends State<ReturnOrderDetails> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          '- Update Return Status',
+                          AppStrings.updateReturnStatusTitle.tr,
                           style: AppTextStyles.body.copyWith(
                             fontSize: Dimensions.fs(16),
                             fontWeight: FontWeight.w700,
@@ -103,7 +104,7 @@ class _ReturnOrderDetailsState extends State<ReturnOrderDetails> {
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
                     child: Text(
-                      'Update the current return request status to keep the customer informed about the return progress.',
+                      AppStrings.updateReturnStatusSubtitle2.tr,
                       style: AppTextStyles.body.copyWith(
                         color: AppColors.greyColor,
                         fontSize: Dimensions.fs(13),
@@ -116,7 +117,7 @@ class _ReturnOrderDetailsState extends State<ReturnOrderDetails> {
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        'Return Status (Select)',
+                        AppStrings.returnStatusSelect.tr,
                         style: AppTextStyles.body.copyWith(
                           fontWeight: FontWeight.w600,
                           fontSize: Dimensions.fs(14),
@@ -147,7 +148,7 @@ class _ReturnOrderDetailsState extends State<ReturnOrderDetails> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              tempStatus,
+                              tempStatus.tr,
                               style: AppTextStyles.body.copyWith(
                                 color: AppColors.blackColor,
                                 fontSize: Dimensions.fs(14),
@@ -162,7 +163,7 @@ class _ReturnOrderDetailsState extends State<ReturnOrderDetails> {
                   ),
 
                   // Dynamic fields based on status
-                  if (tempStatus == 'Processing') ...[
+                  if (tempStatus == AppStrings.processing) ...[
                     SizedBox(height: Dimensions.h(16)),
                     Padding(
                       padding:
@@ -170,7 +171,7 @@ class _ReturnOrderDetailsState extends State<ReturnOrderDetails> {
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          'Return Shipping Address',
+                          AppStrings.returnShippingAddress.tr,
                           style: AppTextStyles.body.copyWith(
                             fontWeight: FontWeight.w600,
                             fontSize: Dimensions.fs(14),
@@ -184,12 +185,12 @@ class _ReturnOrderDetailsState extends State<ReturnOrderDetails> {
                           EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
                       child: AppTextField(
                         controller: addressCtrl,
-                        hint: 'Enter The Warehouse Or Shop Address...',
+                        hint: AppStrings.enterWarehouseAddress.tr,
                       ),
                     ),
                   ],
 
-                  if (tempStatus == 'Rejected') ...[
+                  if (tempStatus == AppStrings.rejected) ...[
                     SizedBox(height: Dimensions.h(16)),
                     Padding(
                       padding:
@@ -197,7 +198,7 @@ class _ReturnOrderDetailsState extends State<ReturnOrderDetails> {
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          'Rejection Note',
+                          AppStrings.rejectionNote.tr,
                           style: AppTextStyles.body.copyWith(
                             fontWeight: FontWeight.w600,
                             fontSize: Dimensions.fs(14),
@@ -212,7 +213,7 @@ class _ReturnOrderDetailsState extends State<ReturnOrderDetails> {
                       child: AppTextField(
                         controller: noteCtrl,
                         maxLines: 4,
-                        hint: 'Please provide a reason for the rejection...',
+                        hint: AppStrings.enterRejectionReason.tr,
                       ),
                     ),
                   ],
@@ -284,7 +285,7 @@ class _ReturnOrderDetailsState extends State<ReturnOrderDetails> {
                 return ListTile(
                   contentPadding: EdgeInsets.zero,
                   title: Text(
-                    item,
+                    item.tr,
                     style: AppTextStyles.body.copyWith(
                       fontSize: Dimensions.fs(14),
                       fontStyle: FontStyle.italic,
@@ -321,11 +322,10 @@ class _ReturnOrderDetailsState extends State<ReturnOrderDetails> {
     if (newStatus == currentStatus) return;
 
     AppAlerts.warning(
-      title: 'Update Return Status !',
-      message:
-          'Are you sure you want to update this return request status? The customer will be notified immediately.',
-      confirmLabel: 'Confirm',
-      cancelLabel: 'Cancel',
+      title: AppStrings.updateReturnStatusAlertTitle.tr,
+      message: AppStrings.updateReturnStatusAlertSubtitle2.tr,
+      confirmLabel: AppStrings.confirm.tr,
+      cancelLabel: AppStrings.cancel.tr,
       onConfirm: () {
         setState(() {
           currentStatus = newStatus;
@@ -341,7 +341,7 @@ class _ReturnOrderDetailsState extends State<ReturnOrderDetails> {
         Get.back(); // close alert
         Get.snackbar(
           'Success',
-          'Return status updated to $newStatus',
+          '${AppStrings.returnStatusUpdatedTo.tr} ${newStatus.tr}',
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.green,
           colorText: Colors.white,
@@ -359,7 +359,7 @@ class _ReturnOrderDetailsState extends State<ReturnOrderDetails> {
 
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
-      appBar: const CommonAppBar(title: "Return Details"),
+      appBar: CommonAppBar(title: AppStrings.returnDetails.tr),
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(
             horizontal: Dimensions.w(20), vertical: Dimensions.h(20)),
@@ -387,7 +387,7 @@ class _ReturnOrderDetailsState extends State<ReturnOrderDetails> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "- Order ID: ${order['id'] ?? 'N/A'}",
+                            "${AppStrings.orderIdLabelWithDash.tr}${order['id'] ?? 'N/A'}",
                             style: AppTextStyles.body.copyWith(
                               fontWeight: FontWeight.w700,
                               fontSize: Dimensions.fs(13),
@@ -415,7 +415,7 @@ class _ReturnOrderDetailsState extends State<ReturnOrderDetails> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(
-                              currentStatus == 'Rejected'
+                              currentStatus == AppStrings.rejected
                                   ? Icons.remove
                                   : Icons.add,
                               size: 10,
@@ -423,7 +423,7 @@ class _ReturnOrderDetailsState extends State<ReturnOrderDetails> {
                             ),
                             SizedBox(width: Dimensions.w(2)),
                             Text(
-                              currentStatus,
+                              currentStatus.tr,
                               style: AppTextStyles.body.copyWith(
                                 fontSize: Dimensions.fs(10),
                                 fontWeight: FontWeight.w600,
@@ -473,7 +473,7 @@ class _ReturnOrderDetailsState extends State<ReturnOrderDetails> {
                     ),
                     SizedBox(height: Dimensions.h(4)),
                     Text(
-                      "Quantity :- ${order['product']['quantity']} • Size / Variant :- ${order['product']['size']}",
+                      "${AppStrings.quantityPrefix.tr}${order['product']['quantity']}${AppStrings.sizeVariantPrefix.tr}${order['product']['size']}",
                       style: AppTextStyles.body.copyWith(
                         fontSize: Dimensions.fs(11),
                         color: AppColors.greyColor,
@@ -508,7 +508,7 @@ class _ReturnOrderDetailsState extends State<ReturnOrderDetails> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Delivered On',
+                    AppStrings.deliveredOn.tr,
                     style: AppTextStyles.body.copyWith(
                       fontSize: Dimensions.fs(11),
                       color: AppColors.greyColor,
@@ -541,7 +541,7 @@ class _ReturnOrderDetailsState extends State<ReturnOrderDetails> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Return Details',
+                    AppStrings.returnDetails.tr,
                     style: AppTextStyles.body.copyWith(
                       fontSize: Dimensions.fs(12),
                       color: AppColors.greyColor,
@@ -553,7 +553,7 @@ class _ReturnOrderDetailsState extends State<ReturnOrderDetails> {
                       height: 1, color: AppColors.greyColor.withOpacity(0.15)),
                   SizedBox(height: Dimensions.h(16)),
                   Text(
-                    'Return Reason',
+                    AppStrings.returnReason.tr,
                     style: AppTextStyles.body.copyWith(
                       fontSize: Dimensions.fs(12),
                       fontWeight: FontWeight.w600,
@@ -569,7 +569,7 @@ class _ReturnOrderDetailsState extends State<ReturnOrderDetails> {
                   ),
                   SizedBox(height: Dimensions.h(16)),
                   Text(
-                    'Submitted On',
+                    AppStrings.submittedOn.tr,
                     style: AppTextStyles.body.copyWith(
                       fontSize: Dimensions.fs(12),
                       fontWeight: FontWeight.w600,
@@ -586,7 +586,7 @@ class _ReturnOrderDetailsState extends State<ReturnOrderDetails> {
                   SizedBox(height: Dimensions.h(16)),
                   if (evidence.isNotEmpty) ...[
                     Text(
-                      'Evidence',
+                      AppStrings.evidence.tr,
                       style: AppTextStyles.body.copyWith(
                         fontSize: Dimensions.fs(12),
                         fontWeight: FontWeight.w600,
@@ -616,7 +616,7 @@ class _ReturnOrderDetailsState extends State<ReturnOrderDetails> {
                     SizedBox(height: Dimensions.h(16)),
                   ],
                   Text(
-                    'Message',
+                    AppStrings.message.tr,
                     style: AppTextStyles.body.copyWith(
                       fontSize: Dimensions.fs(12),
                       fontWeight: FontWeight.w600,
@@ -634,7 +634,7 @@ class _ReturnOrderDetailsState extends State<ReturnOrderDetails> {
                   if (order['returnAddress'] != null) ...[
                     SizedBox(height: Dimensions.h(24)),
                     Text(
-                      "- Return Address",
+                      "- ${AppStrings.returnAddress.tr}",
                       style: AppTextStyles.body.copyWith(
                         fontWeight: FontWeight.w600,
                         fontSize: Dimensions.fs(13),
@@ -660,7 +660,7 @@ class _ReturnOrderDetailsState extends State<ReturnOrderDetails> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Location',
+                                AppStrings.location.tr,
                                 style: AppTextStyles.body.copyWith(
                                   fontWeight: FontWeight.w600,
                                   fontSize: Dimensions.fs(13),
@@ -680,7 +680,7 @@ class _ReturnOrderDetailsState extends State<ReturnOrderDetails> {
                       ],
                     ),
                   ],
-                  if (currentStatus == 'Completed') ...[
+                  if (currentStatus == AppStrings.completed) ...[
                     SizedBox(height: Dimensions.h(24)),
                     Container(
                       width: double.infinity,
@@ -701,7 +701,7 @@ class _ReturnOrderDetailsState extends State<ReturnOrderDetails> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Return Completed & Refunded',
+                                  AppStrings.returnCompletedAndRefunded.tr,
                                   style: AppTextStyles.body.copyWith(
                                     fontWeight: FontWeight.w600,
                                     fontSize: Dimensions.fs(12),
@@ -723,7 +723,7 @@ class _ReturnOrderDetailsState extends State<ReturnOrderDetails> {
                       ),
                     ),
                   ],
-                  if (currentStatus == 'Rejected') ...[
+                  if (currentStatus == AppStrings.rejected) ...[
                     SizedBox(height: Dimensions.h(24)),
                     Container(
                       width: double.infinity,
@@ -743,7 +743,7 @@ class _ReturnOrderDetailsState extends State<ReturnOrderDetails> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'You Rejected This Return Request',
+                                  AppStrings.youRejectedReturnRequest.tr,
                                   style: AppTextStyles.body.copyWith(
                                     fontWeight: FontWeight.w600,
                                     fontSize: Dimensions.fs(12),
@@ -777,7 +777,7 @@ class _ReturnOrderDetailsState extends State<ReturnOrderDetails> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Reason For Rejection',
+                            AppStrings.reasonForRejection2.tr,
                             style: AppTextStyles.body.copyWith(
                               fontSize: Dimensions.fs(11),
                               color: AppColors.greyColor,

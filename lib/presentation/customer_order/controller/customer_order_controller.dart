@@ -1,24 +1,25 @@
 import 'package:get/get.dart';
 import '../../../../utils/assets_image/app_images.dart';
 import '../../../utils/app_icons/app_icons.dart';
+import '../../../../utils/static_strings/static_strings.dart';
 
 class CustomerOrderController extends GetxController {
   final List<String> tabs = [
-    'Order Placed',
-    'Confirmed',
-    'Shipped',
-    'Delivered',
-    'Canceled'
+    AppStrings.orderPlaced,
+    AppStrings.confirmed,
+    AppStrings.shipped,
+    AppStrings.delivered,
+    AppStrings.canceled
   ];
   
-  final RxString selectedTab = 'Order Placed'.obs;
+  final RxString selectedTab = AppStrings.orderPlaced.obs;
 
   // Mock data for orders
   final RxList<Map<String, dynamic>> allOrders = <Map<String, dynamic>>[
     {
       'id': 'KDF143625879',
       'date': '27 Aug 2020 - 06:20 AM',
-      'status': 'Order Placed',
+      'status': AppStrings.orderPlaced,
       'product': {
         'name': 'D.D. Step - Comfort',
         'quantity': '01',
@@ -40,7 +41,7 @@ class CustomerOrderController extends GetxController {
     {
       'id': 'DDF143625869',
       'date': '27 Aug 2020 - 06:20 AM',
-      'status': 'Order Placed',
+      'status': AppStrings.orderPlaced,
       'product': {
         'name': 'Kids Cotton Hoodie',
         'quantity': '02',
@@ -61,7 +62,7 @@ class CustomerOrderController extends GetxController {
     {
       'id': 'KDF143625880',
       'date': '28 Aug 2020 - 08:30 AM',
-      'status': 'Shipped',
+      'status': AppStrings.shipped,
       'product': {
         'name': 'D.D. Step - Comfort',
         'quantity': '01',

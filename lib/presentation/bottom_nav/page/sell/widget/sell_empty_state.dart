@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../utils/app_colors/app_colors.dart';
+import '../../../../../utils/static_strings/static_strings.dart';
 import '../../../controller/bottom_nav_controller.dart';
 
 class SellEmptyState extends StatelessWidget {
@@ -47,8 +48,8 @@ class SellEmptyState extends StatelessWidget {
               }
             },
             icon: const Icon(Icons.search, size: 16),
-            label: const Text(
-              "Browse Shop",
+            label: Text(
+              AppStrings.browseShop.tr,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 12,

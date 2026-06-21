@@ -4,6 +4,7 @@ import '../../../../../../../core/responsive_layout/dimensions.dart';
 import '../../../../../../../utils/app_colors/app_colors.dart';
 import '../../../../../../../utils/app_text_style/app_text_style.dart';
 import '../../../../../../../utils/assets_image/app_images.dart';
+import '../../../../../../../utils/static_strings/static_strings.dart';
 import '../../../../../../../widget/app_alert.dart';
 import '../../../../../../../widget/custom_appbar.dart';
 
@@ -74,7 +75,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  '- Update Order Status',
+                  AppStrings.updateOrderStatusDash.tr,
                   style: AppTextStyles.h3.copyWith(
                     fontSize: Dimensions.fs(16),
                     fontWeight: FontWeight.w800,
@@ -95,7 +96,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
             ),
             Dimensions.gapH(6),
             Text(
-              'Update the current order status to keep the customer informed about the delivery progress.',
+              AppStrings.updateOrderStatusSubtitleDash.tr,
               style: TextStyle(
                 fontSize: Dimensions.fs(11),
                 color: Colors.grey[600],
@@ -106,7 +107,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
 
             // ── Label ───────────────────────────────────────────────────────
             Text(
-              'Order Status (Select)',
+              AppStrings.orderStatusSelect.tr,
               style: TextStyle(
                 fontSize: Dimensions.fs(12),
                 fontWeight: FontWeight.w700,
@@ -153,7 +154,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                             ),
                             Dimensions.gapW(12),
                             Text(
-                              status,
+                              status.tr,
                               style: TextStyle(
                                 fontSize: Dimensions.fs(13),
                                 fontWeight: isSelected
@@ -192,7 +193,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Update',
+                      AppStrings.updateBtn.tr,
                       style: TextStyle(
                         color: AppColors.primaryColor,
                         fontSize: Dimensions.fs(14),
@@ -222,14 +223,13 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
 
   void _showConfirmUpdateDialog(String newStatus) {
     AppAlerts.warning(
-      title: 'Update Order Status !',
-      message:
-          'Are you sure you want to update this order status? The customer will be notified immediately.',
-      confirmLabel: 'Confirm',
-      cancelLabel: 'Cancel',
+      title: AppStrings.updateOrderStatusTitle.tr,
+      message: AppStrings.updateOrderStatusConfirmMsg.tr,
+      confirmLabel: AppStrings.confirm.tr,
+      cancelLabel: AppStrings.cancel.tr,
       onConfirm: () {
         orderStatus.value = newStatus;
-        AppAlerts.success(message: 'Order status updated successfully');
+        AppAlerts.success(message: AppStrings.orderStatusUpdatedSuccess.tr);
       },
     );
   }
@@ -245,9 +245,9 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF4F4F4),
-      appBar: const CommonAppBar(
-        title: "Order's Details",
-        backgroundColor: Color(0xFFF4F4F4),
+      appBar: CommonAppBar(
+        title: AppStrings.ordersDetailsTitle.tr,
+        backgroundColor: const Color(0xFFF4F4F4),
       ),
       body: Column(
         children: [
@@ -280,7 +280,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    '- Order ID: $orderId',
+                                    '${AppStrings.orderIdLabelWithDash.tr}$orderId',
                                     style: TextStyle(
                                       fontSize: Dimensions.fs(13),
                                       fontWeight: FontWeight.w800,
@@ -312,7 +312,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                                       BorderRadius.circular(Dimensions.r(20)),
                                 ),
                                 child: Text(
-                                  '• $status',
+                                  '• ${status.tr}',
                                   style: TextStyle(
                                     color: badgeColor,
                                     fontSize: Dimensions.fs(9),
@@ -363,7 +363,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'D.D. Step – Comfort',
+                                      AppStrings.dummyOrderProductName.tr,
                                       style: TextStyle(
                                         fontSize: Dimensions.fs(12),
                                         fontWeight: FontWeight.w800,
@@ -372,7 +372,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                                     ),
                                     Dimensions.gapH(4),
                                     Text(
-                                      'Quantity :- 01 • Size / Variant :- S',
+                                      '${AppStrings.quantityPrefix.tr}01${AppStrings.sizeVariantPrefix.tr}S',
                                       style: TextStyle(
                                         fontSize: Dimensions.fs(10),
                                         color: Colors.grey[500],
@@ -381,7 +381,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                                     ),
                                     Dimensions.gapH(6),
                                     Text(
-                                      '€260.00',
+                                      AppStrings.dummyOrderPrice.tr,
                                       style: TextStyle(
                                         fontSize: Dimensions.fs(13),
                                         fontWeight: FontWeight.w800,
@@ -402,7 +402,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
 
                   // ── Ordered By ──────────────────────────────────────────
                   Text(
-                    '- Ordered By',
+                    AppStrings.orderedBy.tr,
                     style: TextStyle(
                       fontSize: Dimensions.fs(13),
                       fontWeight: FontWeight.w800,
@@ -451,8 +451,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                         GestureDetector(
                           onTap: () {
                             Get.snackbar(
-                              'Chat Info',
-                              'Message customer feature is selected',
+                              AppStrings.chatInfo.tr,
+                              AppStrings.messageCustomerFeature.tr,
                               backgroundColor: AppColors.primaryColor,
                               colorText: Colors.black,
                             );
@@ -479,7 +479,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
 
                   // ── Delivery Address ────────────────────────────────────
                   Text(
-                    '- Delivery Address',
+                    AppStrings.deliveryAddressTitle.tr,
                     style: TextStyle(
                       fontSize: Dimensions.fs(13),
                       fontWeight: FontWeight.w800,
@@ -516,7 +516,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                                 borderRadius: BorderRadius.circular(4),
                               ),
                               child: Text(
-                                '• Home',
+                                '• ${AppStrings.home.tr}',
                                 style: TextStyle(
                                   color: AppColors.primaryColor,
                                   fontSize: Dimensions.fs(8),
@@ -560,7 +560,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                       ),
                       alignment: Alignment.center,
                       child: Text(
-                        'Update Order Status',
+                        AppStrings.updateOrderStatusBtn.tr,
                         style: TextStyle(
                           color: AppColors.primaryColor,
                           fontSize: Dimensions.fs(14),

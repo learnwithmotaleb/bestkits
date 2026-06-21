@@ -7,6 +7,7 @@ import '../../../../utils/app_text_style/app_text_style.dart';
 import '../../../../widget/app_alert.dart';
 import '../../../../widget/app_button.dart';
 import '../../../../widget/custom_appbar.dart';
+import '../../../../utils/static_strings/static_strings.dart';
 import '../controller/customer_order_controller.dart';
 
 class CustomerOrderDetails extends StatefulWidget {
@@ -21,11 +22,11 @@ class CustomerOrderDetails extends StatefulWidget {
 class _CustomerOrderDetailsState extends State<CustomerOrderDetails> {
   late final CustomerOrderController _ctrl;
   final List<String> _statusOptions = [
-    'Pending',
-    'Confirmed',
-    'Shipped',
-    'Delivered',
-    'Canceled'
+    AppStrings.pending,
+    AppStrings.confirmed,
+    AppStrings.shipped,
+    AppStrings.delivered,
+    AppStrings.canceled
   ];
 
   late String currentStatus;
@@ -38,12 +39,12 @@ class _CustomerOrderDetailsState extends State<CustomerOrderDetails> {
     // Make a local copy so we can render immediately if needed, 
     // but we can also rely on the controller.
     order = widget.orderData ?? {};
-    currentStatus = order['status'] ?? 'Order Placed';
+    currentStatus = order['status'] ?? AppStrings.orderPlaced;
   }
 
   void _openUpdateStatusSheet() {
     // Temporary controller for bottom sheet selection
-    String tempStatus = currentStatus == 'Order Placed' ? 'Pending' : currentStatus;
+    String tempStatus = currentStatus == AppStrings.orderPlaced ? AppStrings.pending : currentStatus;
 
     Get.bottomSheet(
       StatefulBuilder(
@@ -75,7 +76,7 @@ class _CustomerOrderDetailsState extends State<CustomerOrderDetails> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        '- Update Order Status',
+                        AppStrings.updateOrderStatusTitle.tr,
                         style: AppTextStyles.body.copyWith(
                           fontSize: Dimensions.fs(16),
                           fontWeight: FontWeight.w700,
@@ -94,7 +95,7 @@ class _CustomerOrderDetailsState extends State<CustomerOrderDetails> {
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
                   child: Text(
-                    'Update the current order status to keep the customer informed about the delivery progress.',
+                    AppStrings.updateOrderStatusSubtitle.tr,
                     style: AppTextStyles.body.copyWith(
                       color: AppColors.greyColor,
                       fontSize: Dimensions.fs(13),
@@ -107,7 +108,7 @@ class _CustomerOrderDetailsState extends State<CustomerOrderDetails> {
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      'Order Status (Select)',
+                      AppStrings.orderStatusSelect.tr,
                       style: AppTextStyles.body.copyWith(
                         fontWeight: FontWeight.w600,
                         fontSize: Dimensions.fs(14),
@@ -138,7 +139,7 @@ class _CustomerOrderDetailsState extends State<CustomerOrderDetails> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            tempStatus,
+                            tempStatus.tr,
                             style: AppTextStyles.body.copyWith(
                               color: AppColors.blackColor,
                               fontSize: Dimensions.fs(14),
@@ -155,7 +156,7 @@ class _CustomerOrderDetailsState extends State<CustomerOrderDetails> {
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
                   child: AppButton(
-                    label: 'Update',
+                    label: AppStrings.update.tr,
                     onPressed: () {
                       Get.back(); // close sheet
                       _confirmUpdateStatus(tempStatus);
@@ -216,7 +217,7 @@ class _CustomerOrderDetailsState extends State<CustomerOrderDetails> {
                 return ListTile(
                   contentPadding: EdgeInsets.zero,
                   title: Text(
-                    item,
+                    item.tr,
                     style: AppTextStyles.body.copyWith(
                       fontSize: Dimensions.fs(14),
                       fontStyle: FontStyle.italic,
@@ -250,14 +251,13 @@ class _CustomerOrderDetailsState extends State<CustomerOrderDetails> {
   }
 
   void _confirmUpdateStatus(String newStatus) {
-    if (newStatus == currentStatus || (currentStatus == 'Order Placed' && newStatus == 'Pending')) return;
+    if (newStatus == currentStatus || (currentStatus == AppStrings.orderPlaced && newStatus == AppStrings.pending)) return;
 
     AppAlerts.warning(
-      title: 'Update Order Status !',
-      message:
-          'Are you sure you want to update this order status? The customer will be notified immediately.',
-      confirmLabel: 'Confirm',
-      cancelLabel: 'Cancel',
+      title: AppStrings.updateOrderStatusAlertTitle.tr,
+      message: AppStrings.updateOrderStatusAlertSubtitle.tr,
+      confirmLabel: AppStrings.confirm.tr,
+      cancelLabel: AppStrings.cancel.tr,
       onConfirm: () {
         setState(() {
           currentStatus = newStatus;
@@ -268,8 +268,8 @@ class _CustomerOrderDetailsState extends State<CustomerOrderDetails> {
         
         // Show success snackbar
         Get.snackbar(
-          'Success',
-          'Order status updated to $newStatus',
+          AppStrings.success.tr,
+          '${AppStrings.orderStatusUpdatedTo.tr} ${newStatus.tr}',
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.green,
           colorText: Colors.white,
@@ -280,11 +280,11 @@ class _CustomerOrderDetailsState extends State<CustomerOrderDetails> {
 
   @override
   Widget build(BuildContext context) {
-    final bool canUpdate = currentStatus != 'Delivered' && currentStatus != 'Canceled';
+    final bool canUpdate = currentStatus != AppStrings.delivered && currentStatus != AppStrings.canceled;
 
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
-      appBar: const CommonAppBar(title: "Order's Details"),
+      appBar: CommonAppBar(title: AppStrings.orderDetailsTitle.tr),
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(
             horizontal: Dimensions.w(20), vertical: Dimensions.h(20)),
@@ -311,7 +311,7 @@ class _CustomerOrderDetailsState extends State<CustomerOrderDetails> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "- Order ID: ${order['id'] ?? 'N/A'}",
+                            "${AppStrings.orderIdPrefix.tr}${order['id'] ?? 'N/A'}",
                             style: AppTextStyles.body.copyWith(
                               fontWeight: FontWeight.w700,
                               fontSize: Dimensions.fs(13),
@@ -343,7 +343,7 @@ class _CustomerOrderDetailsState extends State<CustomerOrderDetails> {
                                 color: _getStatusTextColor(currentStatus)),
                             SizedBox(width: Dimensions.w(4)),
                             Text(
-                              currentStatus,
+                              currentStatus.tr,
                               style: AppTextStyles.body.copyWith(
                                 fontSize: Dimensions.fs(10),
                                 fontWeight: FontWeight.w600,
@@ -393,7 +393,7 @@ class _CustomerOrderDetailsState extends State<CustomerOrderDetails> {
                     ),
                     SizedBox(height: Dimensions.h(4)),
                     Text(
-                      "Quantity :- ${order['product']['quantity']} • Size / Variant :- ${order['product']['size']}",
+                      "${AppStrings.quantityPrefix.tr}${order['product']['quantity']}${AppStrings.sizeVariantPrefix.tr}${order['product']['size']}",
                       style: AppTextStyles.body.copyWith(
                         fontSize: Dimensions.fs(11),
                         color: AppColors.greyColor,
@@ -416,7 +416,7 @@ class _CustomerOrderDetailsState extends State<CustomerOrderDetails> {
 
                   // Ordered By
                   Text(
-                    "- Ordered By",
+                    AppStrings.orderedBy.tr,
                     style: AppTextStyles.body.copyWith(
                       fontWeight: FontWeight.w600,
                       fontSize: Dimensions.fs(13),
@@ -473,7 +473,7 @@ class _CustomerOrderDetailsState extends State<CustomerOrderDetails> {
 
                   // Delivery Address
                   Text(
-                    "- Delivery Address",
+                    AppStrings.deliveryAddress.tr,
                     style: AppTextStyles.body.copyWith(
                       fontWeight: FontWeight.w600,
                       fontSize: Dimensions.fs(13),
@@ -505,7 +505,7 @@ class _CustomerOrderDetailsState extends State<CustomerOrderDetails> {
                                   size: 6, color: AppColors.primaryColor),
                               SizedBox(width: Dimensions.w(4)),
                               Text(
-                                'Home',
+                                AppStrings.home.tr,
                                 style: AppTextStyles.body.copyWith(
                                   fontSize: Dimensions.fs(10),
                                   fontWeight: FontWeight.w600,
@@ -543,14 +543,14 @@ class _CustomerOrderDetailsState extends State<CustomerOrderDetails> {
             // ── Update Order Status Button OR Status Banner ───────────────
             if (canUpdate)
               AppButton(
-                label: 'Update Order Status',
+                label: AppStrings.updateOrderStatusBtn.tr,
                 onPressed: _openUpdateStatusSheet,
                 backgroundColor: AppColors.blackColor,
                 textColor: AppColors.primaryColor,
                 borderRadius: 12,
                 height: 52,
               )
-            else if (currentStatus == 'Delivered')
+            else if (currentStatus == AppStrings.delivered)
               Container(
                 width: double.infinity,
                 padding: Dimensions.pSym(h: 16, v: 16),
@@ -563,7 +563,7 @@ class _CustomerOrderDetailsState extends State<CustomerOrderDetails> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Delivered On',
+                      AppStrings.deliveredOn.tr,
                       style: AppTextStyles.body.copyWith(
                         fontSize: Dimensions.fs(11),
                         color: AppColors.greyColor,
@@ -580,7 +580,7 @@ class _CustomerOrderDetailsState extends State<CustomerOrderDetails> {
                   ],
                 ),
               )
-            else if (currentStatus == 'Canceled')
+            else if (currentStatus == AppStrings.canceled)
               Container(
                 width: double.infinity,
                 padding: Dimensions.pSym(h: 16, v: 16),
@@ -593,7 +593,7 @@ class _CustomerOrderDetailsState extends State<CustomerOrderDetails> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Canceled By Customer On',
+                      AppStrings.canceledByCustomerOn.tr,
                       style: AppTextStyles.body.copyWith(
                         fontSize: Dimensions.fs(11),
                         color: AppColors.greyColor,
@@ -619,38 +619,32 @@ class _CustomerOrderDetailsState extends State<CustomerOrderDetails> {
   }
 
   Color _getStatusBgColor(String status) {
-    switch (status) {
-      case 'Order Placed':
-      case 'Pending':
-        return Colors.blue.withOpacity(0.15);
-      case 'Confirmed':
-        return Colors.purple.withOpacity(0.15);
-      case 'Shipped':
-        return Colors.orange.withOpacity(0.15);
-      case 'Delivered':
-        return Colors.green.withOpacity(0.15);
-      case 'Canceled':
-        return Colors.red.withOpacity(0.15);
-      default:
-        return AppColors.greyColor.withOpacity(0.15);
+    if (status == AppStrings.orderPlaced || status == AppStrings.pending) {
+      return Colors.blue.withOpacity(0.15);
+    } else if (status == AppStrings.confirmed) {
+      return Colors.purple.withOpacity(0.15);
+    } else if (status == AppStrings.shipped) {
+      return Colors.orange.withOpacity(0.15);
+    } else if (status == AppStrings.delivered) {
+      return Colors.green.withOpacity(0.15);
+    } else if (status == AppStrings.canceled) {
+      return Colors.red.withOpacity(0.15);
     }
+    return AppColors.greyColor.withOpacity(0.15);
   }
 
   Color _getStatusTextColor(String status) {
-    switch (status) {
-      case 'Order Placed':
-      case 'Pending':
-        return Colors.blue;
-      case 'Confirmed':
-        return Colors.purple;
-      case 'Shipped':
-        return Colors.orange;
-      case 'Delivered':
-        return Colors.green;
-      case 'Canceled':
-        return Colors.red;
-      default:
-        return AppColors.greyColor;
+    if (status == AppStrings.orderPlaced || status == AppStrings.pending) {
+      return Colors.blue;
+    } else if (status == AppStrings.confirmed) {
+      return Colors.purple;
+    } else if (status == AppStrings.shipped) {
+      return Colors.orange;
+    } else if (status == AppStrings.delivered) {
+      return Colors.green;
+    } else if (status == AppStrings.canceled) {
+      return Colors.red;
     }
+    return AppColors.greyColor;
   }
 }

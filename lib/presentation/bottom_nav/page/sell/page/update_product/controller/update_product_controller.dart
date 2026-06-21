@@ -134,11 +134,10 @@ class UpdateProductController extends GetxController {
 
   void markAsInactive() {
     AppAlerts.warning(
-      title: "Mark As Inactive !",
-      message:
-          "Are you sure you want to mark this product as inactive? It will not be visible to customers on the platform.",
-      confirmLabel: "Confirm",
-      cancelLabel: "Cancel",
+      title: AppStrings.markAsInactiveTitle.tr,
+      message: AppStrings.markAsInactiveSubtitle.tr,
+      confirmLabel: AppStrings.confirm.tr,
+      cancelLabel: AppStrings.cancel.tr,
       onConfirm: () {
         try {
           final sellController = Get.find<SellController>();
@@ -153,7 +152,7 @@ class UpdateProductController extends GetxController {
           sellController.isActiveTab.value = false;
 
           Get.back(); // go back
-          AppAlerts.success(message: "Product marked as inactive successfully");
+          AppAlerts.success(message: AppStrings.productMarkedInactiveSuccess.tr);
         } catch (e) {
           Get.back();
         }
@@ -163,9 +162,8 @@ class UpdateProductController extends GetxController {
 
   void deleteProduct() {
     AppAlerts.delete(
-      title: "Delete Product !",
-      message:
-          "Are you sure you want to delete this product? This action cannot be undone.",
+      title: AppStrings.deleteProductTitle.tr,
+      message: AppStrings.deleteProductSubtitle.tr,
       onDelete: () {
         try {
           final sellController = Get.find<SellController>();
@@ -177,7 +175,7 @@ class UpdateProductController extends GetxController {
               .removeWhere((p) => p['name'] == prod['name']);
 
           Get.back(); // go back
-          AppAlerts.success(message: "Product deleted successfully");
+          AppAlerts.success(message: AppStrings.productDeletedSuccess.tr);
         } catch (e) {
           Get.back();
         }
@@ -187,10 +185,10 @@ class UpdateProductController extends GetxController {
 
   void updateProduct() {
     AppAlerts.warning(
-      title: "Proceed to Update Product",
-      message: "Do you want to continue to the Update Product screen?",
-      confirmLabel: "Yes",
-      cancelLabel: "No",
+      title: AppStrings.proceedToUpdateProductTitle.tr,
+      message: AppStrings.proceedToUpdateProductSubtitle.tr,
+      confirmLabel: AppStrings.yesText.tr,
+      cancelLabel: AppStrings.noText.tr,
       onConfirm: () {
         Get.to(() => const UpdateProduct());
       },
@@ -199,11 +197,10 @@ class UpdateProductController extends GetxController {
 
   void viewOrders() {
     AppAlerts.warning(
-      title: "View Order's !",
-      message:
-          "You are about to view the orders for this product. All order details will be displayed.",
-      confirmLabel: "View Orders",
-      cancelLabel: "Cancel",
+      title: AppStrings.viewOrdersTitle.tr,
+      message: AppStrings.viewOrdersSubtitle.tr,
+      confirmLabel: AppStrings.viewOrdersBtn.tr,
+      cancelLabel: AppStrings.cancel.tr,
       onConfirm: () {
         Get.to(() => const ProductOrder());
       },

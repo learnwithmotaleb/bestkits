@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../../../../../utils/static_strings/static_strings.dart';
 
 import '../../../../../../../core/responsive_layout/dimensions.dart';
 import '../../../../../../../utils/app_colors/app_colors.dart';
@@ -21,9 +22,9 @@ class _UpdateProductPriceState extends State<UpdateProductPrice> {
 
   final _priceController = TextEditingController(text: '21.99');
   final _discountController = TextEditingController(text: '10%');
-  final _statusController = TextEditingController(text: 'Active');
+  late final _statusController = TextEditingController(text: AppStrings.activeStatus.tr);
 
-  final List<String> _statusOptions = ['Active', 'Inactive', 'Out of Stock'];
+  late final List<String> _statusOptions = [AppStrings.activeStatus.tr, AppStrings.inactiveStatus.tr, AppStrings.outOfStockStatus.tr];
 
   @override
   void dispose() {
@@ -51,14 +52,13 @@ class _UpdateProductPriceState extends State<UpdateProductPrice> {
   void _onSaveAndContinue() {
     if (!_formKey.currentState!.validate()) return;
     AppAlerts.warning(
-      title: 'Save Product Changes !',
-      message:
-          'Are you sure you want to update this product? Your changes will be applied immediately.',
-      confirmLabel: 'Confirm',
-      cancelLabel: 'Cancel',
+      title: AppStrings.saveProductChangesTitle.tr,
+      message: AppStrings.saveProductChangesSubtitle.tr,
+      confirmLabel: AppStrings.confirm.tr,
+      cancelLabel: AppStrings.cancel.tr,
       onConfirm: () {
         Get.back(); // close alert
-        AppAlerts.success(message: 'Product updated successfully!');
+        AppAlerts.success(message: AppStrings.productUpdatedSuccess.tr);
         Get.back(); // back to product details
       },
     );
@@ -68,7 +68,7 @@ class _UpdateProductPriceState extends State<UpdateProductPrice> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
-      appBar: const CommonAppBar(title: 'Update Product'),
+      appBar: CommonAppBar(title: AppStrings.updateProductTitle.tr),
       body: Form(
         key: _formKey,
         child: Column(
@@ -84,7 +84,7 @@ class _UpdateProductPriceState extends State<UpdateProductPrice> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // ── Price ───────────────────────────────────────────
-                    _FieldLabel(label: 'Price'),
+                    _FieldLabel(label: AppStrings.priceLabel.tr),
                     SizedBox(height: Dimensions.h(8)),
                     AppTextField(
                       controller: _priceController,
@@ -93,10 +93,10 @@ class _UpdateProductPriceState extends State<UpdateProductPrice> {
                           const TextInputType.numberWithOptions(decimal: true),
                       validator: (v) {
                         if (v == null || v.trim().isEmpty)
-                          return 'Price is required';
+                          return AppStrings.priceRequired.tr;
                         if (double.tryParse(v.replaceAll('€', '').trim()) ==
                             null) {
-                          return 'Enter a valid price';
+                          return AppStrings.enterValidPrice.tr;
                         }
                         return null;
                       },
@@ -104,7 +104,7 @@ class _UpdateProductPriceState extends State<UpdateProductPrice> {
                     SizedBox(height: Dimensions.h(18)),
 
                     // ── Discount (optional) ─────────────────────────────
-                    _FieldLabel(label: 'Discount (%) (optional)'),
+                    _FieldLabel(label: AppStrings.discountOptionalLower.tr),
                     SizedBox(height: Dimensions.h(8)),
                     AppTextField(
                       controller: _discountController,
@@ -114,7 +114,7 @@ class _UpdateProductPriceState extends State<UpdateProductPrice> {
                     SizedBox(height: Dimensions.h(18)),
 
                     // ── Product Status ──────────────────────────────────
-                    _FieldLabel(label: 'Product Status'),
+                    _FieldLabel(label: AppStrings.productStatusLabel.tr),
                     SizedBox(height: Dimensions.h(8)),
                     _StatusDropdown(
                       controller: _statusController,
@@ -139,7 +139,7 @@ class _UpdateProductPriceState extends State<UpdateProductPrice> {
                 ),
               ),
               child: AppButton(
-                label: 'Save And Continue',
+                label: AppStrings.saveAndContinue.tr,
                 onPressed: _onSaveAndContinue,
                 backgroundColor: AppColors.secondaryColor,
                 textColor: AppColors.primaryColor,
@@ -197,7 +197,7 @@ class _StatusDropdown extends StatelessWidget {
             fontSize: Dimensions.fs(14),
           ),
           decoration: InputDecoration(
-            hintText: 'Active',
+            hintText: AppStrings.activeStatus.tr,
             hintStyle: AppTextStyles.hint,
             suffixIcon: const Icon(
               Icons.keyboard_arrow_down_rounded,
@@ -268,7 +268,7 @@ class _StatusSheet extends StatelessWidget {
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                'Product Status',
+                AppStrings.productStatusLabel.tr,
                 style: AppTextStyles.body.copyWith(
                   fontSize: Dimensions.fs(18),
                   fontWeight: FontWeight.w700,

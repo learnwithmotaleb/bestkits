@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../../../../core/responsive_layout/dimensions.dart';
 import '../../../../utils/app_colors/app_colors.dart';
 import '../../../../utils/app_text_style/app_text_style.dart';
+import '../../../../utils/static_strings/static_strings.dart';
 import '../../../../widget/custom_appbar.dart';
 import '../controller/earning_controller.dart';
 import '../widget/earing_card_widget.dart';
@@ -67,7 +68,7 @@ class _EarningScreenState extends State<EarningScreen> {
                         contentPadding:
                             EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
                         title: Text(
-                          item,
+                          item.tr,
                           style: AppTextStyles.body.copyWith(
                             fontSize: Dimensions.fs(14),
                             fontStyle: FontStyle.italic,
@@ -106,7 +107,7 @@ class _EarningScreenState extends State<EarningScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
-      appBar: const CommonAppBar(title: "Earnings"),
+      appBar: CommonAppBar(title: AppStrings.earning.tr),
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(
             horizontal: Dimensions.w(20), vertical: Dimensions.h(20)),
@@ -179,7 +180,7 @@ class _EarningScreenState extends State<EarningScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Obx(() => Text(
-                                  'Showing ${_ctrl.filterTextForDisplay}',
+                                  '${AppStrings.showing.tr} ${_ctrl.filterTextForDisplay}',
                                   style: AppTextStyles.body.copyWith(
                                     fontSize: Dimensions.fs(12),
                                     color: AppColors.greyColor,
@@ -208,7 +209,7 @@ class _EarningScreenState extends State<EarningScreen> {
 
             // ── Payment History ────────────────────────────────────────────
             Text(
-              'Payment history',
+              AppStrings.paymentHistory.tr,
               style: AppTextStyles.body.copyWith(
                 fontSize: Dimensions.fs(15),
                 fontWeight: FontWeight.w700,
@@ -237,7 +238,7 @@ class _EarningScreenState extends State<EarningScreen> {
                           color: AppColors.greyColor.withOpacity(0.3)),
                       SizedBox(height: Dimensions.h(12)),
                       Text(
-                        "Your Payment History List Is Empty",
+                        AppStrings.emptyPaymentHistory.tr,
                         style: AppTextStyles.body.copyWith(
                           color: AppColors.greyColor,
                           fontSize: Dimensions.fs(13),

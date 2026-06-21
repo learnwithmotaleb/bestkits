@@ -91,7 +91,7 @@ class ProductInfoSection extends StatelessWidget {
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      isActive ? AppStrings.active.tr : "Inactive",
+                      isActive ? AppStrings.active.tr : AppStrings.inactiveStatus.tr,
                       style: TextStyle(
                         color: isActive ? const Color(0xFF4CAF50) : Colors.grey[600], 
                         fontSize: 10, 

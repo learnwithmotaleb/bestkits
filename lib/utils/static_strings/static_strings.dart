@@ -142,17 +142,24 @@ class AppStrings {
   static const String aboutUs = "About Us";
   static const String faqs = "FAQs";
   static const String frequentlyAskedQuestions = "Frequently Asked Questions";
-  static const String faqQuestion1 = "How does BestKid ensure product safety and quality?";
-  static const String faqAnswer1 = "All listings go through clear seller guidelines and community-based trust signals such as ratings and reviews. Sellers are encouraged to provide accurate descriptions and real product images, helping buyers make informed and confident decisions.";
+  static const String faqQuestion1 =
+      "How does BestKid ensure product safety and quality?";
+  static const String faqAnswer1 =
+      "All listings go through clear seller guidelines and community-based trust signals such as ratings and reviews. Sellers are encouraged to provide accurate descriptions and real product images, helping buyers make informed and confident decisions.";
   static const String faqQuestion2 = "How does the payment system work?";
-  static const String faqQuestion3 = "Can I return or refund a product if I am not satisfied?";
-  static const String faqQuestion4 = "How does BestKid ensure product safety and quality?";
-  static const String faqQuestion5 = "What fees or commission does BestKid charge?";
-  static const String faqAnswerDefault = "We are working on providing detailed answers for this question. Please contact support for immediate assistance.";
+  static const String faqQuestion3 =
+      "Can I return or refund a product if I am not satisfied?";
+  static const String faqQuestion4 =
+      "How does BestKid ensure product safety and quality?";
+  static const String faqQuestion5 =
+      "What fees or commission does BestKid charge?";
+  static const String faqAnswerDefault =
+      "We are working on providing detailed answers for this question. Please contact support for immediate assistance.";
 
   static const String reasonForContact = "Reason For Contact";
   static const String reasonForContactHint = "Enter the Reason for Contact";
-  static const String descriptionHint = "Please describe your issue or question in detail";
+  static const String descriptionHint =
+      "Please describe your issue or question in detail";
   static const String sendMessage = "Send message";
   static const String pleaseEnterReason = "Please enter a reason";
   static const String pleaseEnterDescription = "Please enter a description";
@@ -303,7 +310,6 @@ class AppStrings {
   static const String registeredAddressValue = "To be confirmed – Bulgaria";
   static const String jurisdictionValue = "Bulgaria / European Union";
 
-
   static const String accountSetting = "Account Settings";
   static const String deleteAccount = "Delete account";
 
@@ -439,7 +445,65 @@ class AppStrings {
   static const String customerOrder = "Customer Order's";
   static const String returnOrder = "Return Orders";
   static const String earning = "Earnings";
+  static const String paymentHistory = "Payment History";
+  static const String emptyPaymentHistory =
+      "Your Payment History List Is Empty";
+  static const String showing = "Showing";
+  static const String serviceType = "Service Type";
+
+  // Earnings Filter
+  static const String allText = "All";
+  static const String last24Hours = "Last 24 Hours";
+  static const String lastWeek = "Last Week";
+  static const String lastFortnight = "Last Fortnight";
+  static const String lastMonth = "Last Month";
+  static const String lastYear = "Last Year";
+  static const String earningsForToday = "Earnings for Today";
+  static const String allEarnings = "All Earnings";
+  static const String earningsFor = "Earnings for";
+
+  // Customer Orders
+  static const String confirmed = "Confirmed";
+  static const String shipped = "Shipped";
+  static const String pending = "Pending";
+  static const String noOrdersFoundText = "No";
+  static const String ordersFoundText = "Order's Found";
+  static const String updateOrderStatusTitle = "- Update Order Status";
+  static const String updateOrderStatusSubtitle =
+      "Update the current order status to keep the customer informed about the delivery progress.";
+  static const String orderStatusSelect = "Order Status (Select)";
+  static const String updateOrderStatusAlertTitle = "Update Order Status !";
+  static const String updateOrderStatusAlertSubtitle =
+      "Are you sure you want to update this order status? The customer will be notified immediately.";
+  static const String orderStatusUpdatedTo = "Order status updated to";
+  static const String orderDetailsTitle = "Order's Details";
+  static const String orderIdPrefix = "- Order ID: ";
+  static const String quantityPrefix = "Quantity :- ";
+  static const String sizeVariantPrefix = " • Size / Variant :- ";
+  static const String orderedBy = "- Ordered By";
+  static const String updateOrderStatusBtn = "Update Order Status";
+  static const String deliveredOn = "Delivered On";
+  static const String canceledByCustomerOn = "Canceled By Customer On";
+
   static const String deliveryOption = "Delivery Options";
+  static const String updateDeliveryOption = "- Update Delivery Option";
+  static const String makeChangesDeliveryOptions =
+      "Make changes to your delivery options below";
+  static const String enterDeliveryPartner =
+      "Enter delivery partner (e.g. Local courier)";
+  static const String deliveryCost = "Delivery Cost";
+  static const String deliveryCostEuro = "Delivery Cost (€)";
+  static const String enterDeliveryCost = "Enter delivery cost";
+  static const String estimatedDeliveryTime = "Estimated Delivery Time";
+  static const String eg24BusinessDays = "e.g. 2-4 business days";
+  static const String saveChanges = "Save Changes";
+  static const String updateDeliveryOptionAlertTitle =
+      "Update Delivery Option !";
+  static const String updateDeliveryOptionAlertSubtitle =
+      "Are you sure you want to update your Product Delivery Option information?";
+  static const String deliveryOptionUpdatedSuccess =
+      "Delivery option updated successfully!";
+  static const String update = "Update";
   static const String returnRequests = "Return Requests";
   static const String accepted = "Accepted";
   static const String rejected = "Rejected";
@@ -474,20 +538,26 @@ class AppStrings {
   static const String error = "Error";
   // Stripe Connect
   static const String connectPaymentsStripe = "Connect Payments (Stripe)";
-  static const String connectStripeSubtitle = "Connect your Stripe account to receive payments securely from your sales.";
+  static const String connectStripeSubtitle =
+      "Connect your Stripe account to receive payments securely from your sales.";
   static const String securePayments = "Secure Payments";
-  static const String securePaymentsSubtitle = "Connect your Stripe account to receive secure payouts from your sales.";
+  static const String securePaymentsSubtitle =
+      "Connect your Stripe account to receive secure payouts from your sales.";
   static const String directBankPayouts = "Direct Bank Payouts";
-  static const String directBankPayoutsSubtitle = "Receive your earnings directly in your connected bank account.";
+  static const String directBankPayoutsSubtitle =
+      "Receive your earnings directly in your connected bank account.";
   static const String fastSetup = "Fast Setup";
-  static const String fastSetupSubtitle = "Connect your account in just a few quick steps.";
+  static const String fastSetupSubtitle =
+      "Connect your account in just a few quick steps.";
   static const String aboutBestKidPayments = "About BestKid Payments";
-  static const String aboutBestKidPaymentsSubtitle = "Sales payments are processed through Stripe and paid out to your connected account.";
+  static const String aboutBestKidPaymentsSubtitle =
+      "Sales payments are processed through Stripe and paid out to your connected account.";
   static const String connectStripeAccount = "Connect Stripe Account";
   static const String saveAndContinue = "Save & Continue";
   static const String skipForNow = "Skip For Now \u00BB";
   static const String stripeConnected = "Stripe Connected";
-  static const String stripeConnectionFailed = "Stripe Connection Failed - Retry";
+  static const String stripeConnectionFailed =
+      "Stripe Connection Failed - Retry";
 
   static const String info = "Info";
   // Sell Page
@@ -495,11 +565,120 @@ class AppStrings {
   static const String activeProduct = "Active Product";
   static const String inactiveProduct = "Inactive Product";
   static const String noActiveProductFound = "No Active Product Found";
+  static const String browseShop = "Browse Shop";
+  static const String markAsInactiveTitle = "Mark As Inactive !";
+  static const String markAsInactiveSubtitle =
+      "Are you sure you want to mark this product as inactive? It will not be visible to customers on the platform.";
+  static const String productMarkedInactiveSuccess =
+      "Product marked as inactive successfully";
+  static const String deleteProductTitle = "Delete Product !";
+  static const String deleteProductSubtitle =
+      "Are you sure you want to delete this product? This action cannot be undone.";
+  static const String productDeletedSuccess = "Product deleted successfully";
+  static const String proceedToUpdateProductTitle = "Proceed to Update Product";
+  static const String proceedToUpdateProductSubtitle =
+      "Do you want to continue to the Update Product screen?";
+  static const String yesText = "Yes";
+  static const String noText = "No";
+  static const String viewOrdersTitle = "View Order's !";
+  static const String viewOrdersSubtitle =
+      "You are about to view the orders for this product. All order details will be displayed.";
+  static const String viewOrdersBtn = "View Orders";
   static const String noInactiveProductFound = "No Inactive Product Found";
-  
-  static const String deliveryInfoMissingTitle = "Delivery Information Missing !";
-  static const String deliveryInfoMissingSubtitle = "Complete your delivery settings to make your products available for purchase.";
-  static const String stripeAccountRequiredTitle = "Stripe Account Required !";
-  static const String stripeAccountRequiredSubtitle = "Connect your Stripe account before listing products and receiving payments.";
 
+  static const String updateProductTitle = "Update Product";
+  static const String addProductTitle = "Add Product";
+  static const String uploadProductImages = "Upload Product Images";
+  static const String productNameLabel = "Product Name";
+  static const String enterProductName = "Enter product name";
+  static const String productNameRequired = "Product name is required";
+  static const String productCategoryLabel = "Product Category";
+  static const String productSubcategoryLabel = "Product Sub-category";
+  static const String sizeVariantLabel = "Size / Variant";
+  static const String enterSizesCommas =
+      "Enter sizes or variants separated by commas";
+  static const String descriptionLabel = "Description";
+  static const String describeProductDetails =
+      "Describe the product, condition, material, size, features, and any important details buyers should know.";
+  static const String enterProductDescription = "Enter product description";
+  static const String descriptionRequired = "Description is required";
+  static const String continueBtn = "Continue";
+  static const String priceLabel = "Price";
+  static const String enterProductPrice = "Enter product Price";
+  static const String priceRequired = "Price is required";
+  static const String enterValidPrice = "Enter a valid price";
+  static const String discountOptional = "Discount (%) (Optional)";
+  static const String discountOptionalLower = "Discount (%) (optional)";
+  static const String enterDiscountPercent = "Enter product Discount %";
+  static const String productStatusLabel = "Product Status";
+  static const String selectProductStatus = "Select Product Status";
+  static const String activeStatus = "Active";
+  static const String inactiveStatus = "Inactive";
+  static const String outOfStockStatus = "Out of Stock";
+  static const String publishProductTitle = "Publish Product !";
+  static const String publishProductSubtitle =
+      "Are you sure you want to publish this product? It will become visible to customers immediately.";
+  static const String productPublishedSuccess =
+      "Product published successfully!";
+  static const String saveProductChangesTitle = "Save Product Changes !";
+  static const String saveProductChangesSubtitle =
+      "Are you sure you want to update this product? Your changes will be applied immediately.";
+  static const String productUpdatedSuccess = "Product updated successfully!";
+
+  // Product Orders & Details
+  static const String productOrdersTitle = "Product Order's";
+  static const String orderIdLabelWithDash = "- Order ID: ";
+  static const String ordersDetailsTitle = "Order's Details";
+  static const String deliveryAddressTitle = "- Delivery Address";
+  static const String updateOrderStatusDash = "- Update Order Status";
+  static const String updateOrderStatusSubtitleDash =
+      "Update the current order status to keep the customer informed about the delivery progress.";
+  static const String updateBtn = "Update";
+  static const String updateOrderStatusConfirmMsg =
+      "Are you sure you want to update this order status? The customer will be notified immediately.";
+  static const String orderStatusUpdatedSuccess =
+      "Order status updated successfully";
+  static const String chatInfo = "Chat Info";
+  static const String messageCustomerFeature =
+      "Message customer feature is selected";
+  static const String viewDetailsBtn = "View Details";
+
+  static const String deliveryInfoMissingTitle =
+      "Delivery Information Missing !";
+  static const String deliveryInfoMissingSubtitle =
+      "Complete your delivery settings to make your products available for purchase.";
+  static const String stripeAccountRequiredTitle = "Stripe Account Required !";
+  static const String stripeAccountRequiredSubtitle =
+      "Connect your Stripe account before listing products and receiving payments.";
+  static const String dummyOrderPrice = "€260.00";
+  static const String markAsInactiveBtn = "Mark As Inactive";
+  static const String deleteProductBtn = "Delete Product";
+
+  static const String updateStatus = "Update status";
+  static const String confirmAndSendInstructions =
+      "Confirm & Send Instructions";
+  static const String issueRefundAndCompleted =
+      "Issue Refund & Completed Request";
+  static const String confirmRejection = "Confirm Rejection";
+  static const String updateReturnStatusTitle = "- Update Return Status";
+  static const String updateReturnStatusSubtitle2 =
+      "Update the current return request status to keep the customer informed about the return progress.";
+  static const String returnStatusSelect = "Return Status (Select)";
+  static const String returnShippingAddress = "Return Shipping Address";
+  static const String enterWarehouseAddress =
+      "Enter The Warehouse Or Shop Address...";
+  static const String rejectionNote = "Rejection Note";
+  static const String enterRejectionReason =
+      "Please provide a reason for the rejection...";
+  static const String updateReturnStatusAlertTitle = "Update Return Status !";
+  static const String updateReturnStatusAlertSubtitle2 =
+      "Are you sure you want to update this return request status? The customer will be notified immediately.";
+  static const String returnStatusUpdatedTo = "Return status updated to";
+  static const String returnCompletedAndRefunded =
+      "Return Completed & Refunded";
+  static const String youRejectedReturnRequest =
+      "You Rejected This Return Request";
+  static const String reasonForRejection2 = "Reason For Rejection";
+  static const String noReturnOrdersFound = "No Return Orders Found";
+  static const String returnOrdersTitle = "Return Orders";
 }

@@ -118,7 +118,7 @@ class ProductTabsSection extends StatelessWidget {
 
         // Mark As Inactive Button (Image 1)
         AppButton(
-          label: 'Mark As Inactive',
+          label: AppStrings.markAsInactiveBtn.tr,
           onPressed: () {
             controller.markAsInactive();
           },
@@ -132,7 +132,7 @@ class ProductTabsSection extends StatelessWidget {
         
         // Delete Product Button (Image 1)
         AppButton(
-          label: 'Delete Product',
+          label: AppStrings.deleteProductBtn.tr,
           onPressed: () {
             controller.deleteProduct();
           },
