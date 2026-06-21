@@ -176,6 +176,10 @@ class AppStrings {
   static const String dummyReviewerInitials = "CV";
   static const String dummyReviewDate = "28 Jan 2026";
   static const String dummyRating = "4.9/5.0";
+  static const String mySellingTier = "My Selling Tier";
+  static const String basicSeller = "Basic Seller";
+  static const String professionalSellerTier = "Professional Seller";
+  static const String premiumSellerTier = "Premium Seller";
 
   // My Orders / Chat
   static const String myOrders = "My Orders";

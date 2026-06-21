@@ -575,5 +575,11 @@ Map<String, String> english = {
   AppStrings.reasonForRejection2: "Reason For Rejection",
   AppStrings.noReturnOrdersFound: "No Return Orders Found",
   AppStrings.returnOrdersTitle: "Return Orders",
+
+  // My Profile - Selling Tier
+  AppStrings.mySellingTier: "My Selling Tier",
+  AppStrings.basicSeller: "Basic Seller",
+  AppStrings.professionalSellerTier: "Professional Seller",
+  AppStrings.premiumSellerTier: "Premium Seller",
 };
 

@@ -75,7 +75,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             SizedBox(height: Dimensions.h(10)),
             ProfileMenuItem(
-              icon: AppIcons.my_return,
+              icon: AppIcons.order_icon,
               label: AppStrings.myOrders.tr,
               onTap: () => Get.to(() => const OrderScreen()),
             ),
@@ -99,7 +99,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             SizedBox(height: Dimensions.h(16)),
             ProfileMenuItem(
-              icon: AppIcons.my_return,
+              icon: AppIcons.order_icon,
               label: AppStrings.customerOrder.tr,
               onTap: () => Get.to(() => const CustomerOrderScreen()),
             ),
@@ -109,12 +109,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
               onTap: () => Get.to(() => const ReturnOrderScreen()),
             ),
             ProfileMenuItem(
-              icon: AppIcons.my_return,
+              icon: AppIcons.earningIcon,
               label: AppStrings.earning.tr,
               onTap: () => Get.to(() => const EarningScreen()),
             ),
             ProfileMenuItem(
-              icon: AppIcons.my_return,
+              icon: AppIcons.deliveryOption,
               label: AppStrings.deliveryOption.tr,
               onTap: () => Get.to(() => const DeliveryOptionsScreen()),
             ),

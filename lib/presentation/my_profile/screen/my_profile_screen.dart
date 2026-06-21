@@ -10,17 +10,17 @@ import '../../../utils/app_text_style/app_text_style.dart';
 import '../../../widget/app_button.dart';
 import '../../../widget/app_text_field.dart';
 import '../controller/my_profile_controller.dart';
+import '../widget/selling_tier_section.dart';
 
 class MyProfileScreen extends GetView<MyProfileController> {
   const MyProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Ensure the controller is initialized
     Get.put(MyProfileController());
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF9F9F9), // Light background matching design
+      backgroundColor: const Color(0xFFF9F9F9),
       appBar: CommonAppBar(
         title: AppStrings.myProfile.tr,
       ),
@@ -30,7 +30,8 @@ class MyProfileScreen extends GetView<MyProfileController> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(height: Dimensions.h(20)),
-            // Avatar Container
+
+            // ── Avatar ──────────────────────────────────────────
             Container(
               width: Dimensions.rs(100),
               height: Dimensions.rs(100),
@@ -38,8 +39,8 @@ class MyProfileScreen extends GetView<MyProfileController> {
                 color: AppColors.navBarColor,
                 borderRadius: BorderRadius.circular(Dimensions.r(24)),
                 border: Border.all(
-                  color: AppColors.greyColor.withOpacity(0.5)
-                )
+                  color: AppColors.greyColor.withOpacity(0.5),
+                ),
               ),
               alignment: Alignment.center,
               child: Text(
@@ -52,8 +53,8 @@ class MyProfileScreen extends GetView<MyProfileController> {
               ),
             ),
             SizedBox(height: Dimensions.h(40)),
-            
-            // Text Fields
+
+            // ── Name ─────────────────────────────────────────────
             AppTextField(
               controller: controller.nameController,
               label: AppStrings.fullName.tr,
@@ -61,7 +62,8 @@ class MyProfileScreen extends GetView<MyProfileController> {
               readOnly: true,
             ),
             SizedBox(height: Dimensions.h(16)),
-            
+
+            // ── Email ─────────────────────────────────────────────
             AppTextField(
               controller: controller.emailController,
               label: AppStrings.emailAddress.tr,
@@ -70,7 +72,8 @@ class MyProfileScreen extends GetView<MyProfileController> {
               readOnly: true,
             ),
             SizedBox(height: Dimensions.h(16)),
-            
+
+            // ── Phone ─────────────────────────────────────────────
             AppTextField(
               controller: controller.phoneController,
               label: AppStrings.phoneNumber.tr,
@@ -78,16 +81,23 @@ class MyProfileScreen extends GetView<MyProfileController> {
               keyboardType: TextInputType.phone,
               readOnly: true,
             ),
-            
+            SizedBox(height: Dimensions.h(16)),
+
+            // ── Selling Tier ──────────────────────────────────────
+            Obx(() => SellingTierSection(tier: controller.sellingTier.value)),
             SizedBox(height: Dimensions.h(32)),
-            
-            // Update Profile Button
+
+            // ── Update Profile Button ─────────────────────────────
             AppButton(
               label: AppStrings.updateProfile.tr,
-              backgroundColor: AppColors.secondaryColor, // Black background
-              textColor: AppColors.primaryColor, // Yellow text
+              backgroundColor: AppColors.secondaryColor,
+              textColor: AppColors.primaryColor,
               borderSideColor: Colors.transparent,
-              leadingIcon: Icon(Icons.edit_outlined, color: AppColors.primaryColor, size: Dimensions.rs(20)),
+              leadingIcon: Icon(
+                Icons.edit_outlined,
+                color: AppColors.primaryColor,
+                size: Dimensions.rs(20),
+              ),
               onPressed: () {
                 Get.toNamed(RoutePath.updateProfile);
               },

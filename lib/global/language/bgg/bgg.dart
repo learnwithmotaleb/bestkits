@@ -881,4 +881,10 @@ Map<String, String> bulgarian = {
   AppStrings.reasonForRejection2: "Причина за отхвърляне",
   AppStrings.noReturnOrdersFound: "Няма намерени поръчки за връщане",
   AppStrings.returnOrdersTitle: "Поръчки за връщане",
+
+  // My Profile - Selling Tier
+  AppStrings.mySellingTier: "Моето ниво на продавач",
+  AppStrings.basicSeller: "Основен продавач",
+  AppStrings.professionalSellerTier: "Професионален продавач",
+  AppStrings.premiumSellerTier: "Премиум продавач",
 };

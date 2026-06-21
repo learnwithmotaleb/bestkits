@@ -31,4 +31,6 @@ class AppIcons {
   static const String favouriteIcon = '$_basePath/favourite_icon.svg';
   static const String terms_condition = '$_basePath/terms_condition.svg';
   static const String sell_icon = '$_basePath/sell.svg';
+  static const String earningIcon = '$_basePath/earning_icon.svg';
+  static const String deliveryOption = '$_basePath/delivery_option.svg';
 }
