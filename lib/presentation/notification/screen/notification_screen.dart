@@ -1,0 +1,70 @@
+import 'package:bestkits/utils/static_strings/static_strings.dart';
+import 'package:bestkits/widget/custom_appbar.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../../../../core/responsive_layout/dimensions.dart';
+import '../../../../utils/app_colors/app_colors.dart';
+import '../controller/notification_controller.dart';
+import '../widget/notification_item.dart';
+
+class NotificationScreen extends StatelessWidget {
+  const NotificationScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = Get.find<NotificationController>();
+
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: CommonAppBar(
+        title: AppStrings.notifications.tr,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: GestureDetector(
+              onTap: () => controller.markAllAsRead(),
+              child: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF1A1A1A), // Dark background for eye icon
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Icon(Icons.visibility,
+                    color: AppColors.primaryColor, size: 18),
+              ),
+            ),
+          ),
+        ],
+      ),
+      body: Obx(() {
+        if (controller.notifications.isEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.notifications_none, size: 60, color: Colors.grey[300]),
+                const SizedBox(height: 10),
+                Text(
+                  AppStrings.noNotificationsFound.tr,
+                  style: const TextStyle(color: Colors.grey, fontSize: 16),
+                ),
+              ],
+            ),
+          );
+        }
+
+        return ListView.builder(
+          padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20), vertical: 16),
+          itemCount: controller.notifications.length,
+          itemBuilder: (context, index) {
+            final notification = controller.notifications[index];
+            return GestureDetector(
+              onTap: () => controller.markAsRead(notification.id),
+              child: NotificationItem(notification: notification),
+            );
+          },
+        );
+      }),
+    );
+  }
+}

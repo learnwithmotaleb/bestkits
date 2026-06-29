@@ -1,0 +1,32 @@
+// lib/core/routes/route_path.dart
+class RoutePath {
+  static const String splash = '/SplashScreen';
+  static const String onboard = '/OnboardScreen';
+  static const String login = '/LoginScreen';
+  static const String signup = '/SignupScreen';
+  static const String forgotPassword = '/ForgotPasswordScreen';
+  static const String otpScreen = '/OtpVerifyScreen';
+  static const String setNewPassword = '/SetNewPasswordScreen';
+  static const String accountBlock = '/AccountBlockScreen';
+  static const String bottomNav = '/BottomNavScreen';
+  static const String categoriesScreen = '/CategoriesScreen';
+  static const String productDetail = '/ProductDetailsScreen';
+  static const String myReturn = '/MyReturnScreen';
+  static const String message = '/MessageScreen';
+  static const String chat = '/ChatScreen';
+  static const String myProfile = '/MyProfileScreen';
+  static const String updateProfile = '/UpdateProfileController';
+  static const String accountSetting = '/AccountSettingScreen';
+  static const String changePassword = '/ChangePasswordScreen';
+  static const String myAddress = '/MyAddressScreen';
+  static const String manageAddress = '/ManageAddressScreen';
+  static const String currencyPreference = '/CurrencyPreferenceScreen';
+  static const String languagePreference = '/LanguagePreferenceScreen';
+  static const String termsCondition = '/TermsConditionScreen';
+  static const String privacyPolicy = '/PrivacyPolicyScreen';
+  static const String notification = '/NotificationScreen';
+  static const String legalCompanyInfo = '/LegalCompanyScreen';
+  static const String helpSupport = '/HelpSupportScreen';
+  static const String favorite = '/FavoriteScreen';
+  static const String cart = '/CartScreen';
+}
