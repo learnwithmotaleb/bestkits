@@ -55,15 +55,18 @@ class ForgotPasswordScreen extends StatelessWidget {
             ),
             Dimensions.gapH(40),
             // Send Button
-            AppButton(
-              label: AppStrings.sendVerificationCode.tr,
-              onPressed: controller.sendVerificationCode,
-              backgroundColor: AppColors.blackColor,
-              textColor: const Color(0xFFFFB000), // Gold/Yellow as in design
-              borderRadius: Dimensions.r(12),
-              height: Dimensions.h(56),
-              borderSideColor: Colors.transparent,
-            ),
+            Obx(() => AppButton(
+                  label: AppStrings.sendVerificationCode.tr,
+                  onPressed: controller.isLoading.value
+                      ? null
+                      : () => controller.sendVerificationCode(),
+                  isLoading: controller.isLoading.value,
+                  backgroundColor: AppColors.blackColor,
+                  textColor: const Color(0xFFFFB000), // Gold/Yellow as in design
+                  borderRadius: Dimensions.r(12),
+                  height: Dimensions.h(56),
+                  borderSideColor: Colors.transparent,
+                )),
           ],
         ),
       ),

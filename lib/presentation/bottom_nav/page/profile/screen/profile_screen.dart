@@ -175,40 +175,46 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildProfileHeader() {
-    return Column(
-      children: [
-        Container(
-          width: Dimensions.w(100),
-          height: Dimensions.h(100),
-          decoration: BoxDecoration(
-            color: AppColors.primaryColor.withOpacity(0.15),
-            borderRadius: BorderRadius.circular(Dimensions.r(24)),
-              border: Border.all(color: AppColors.greyColor.withOpacity(0.5), width: 1)
-          ),
-          alignment: Alignment.center,
-          child: Text(
-            AppStrings.dummyUserName.tr[0].toUpperCase(),
-            style: TextStyle(
-              fontFamily: 'Nunito',
-              fontSize: 40,
-              fontWeight: FontWeight.w900,
-              fontStyle: FontStyle.italic,
-              color: AppColors.primaryColor,
+    return Obx(() {
+      final user = controller.userData.value;
+      final name = user?.profile.fullName ?? AppStrings.dummyUserName.tr;
+      final firstLetter = name.isNotEmpty ? name[0].toUpperCase() : '?';
+
+      return Column(
+        children: [
+          Container(
+            width: Dimensions.w(100),
+            height: Dimensions.h(100),
+            decoration: BoxDecoration(
+              color: AppColors.primaryColor.withOpacity(0.15),
+              borderRadius: BorderRadius.circular(Dimensions.r(24)),
+                border: Border.all(color: AppColors.greyColor.withOpacity(0.5), width: 1)
+            ),
+            alignment: Alignment.center,
+            child: Text(
+              firstLetter,
+              style: TextStyle(
+                fontFamily: 'Nunito',
+                fontSize: 40,
+                fontWeight: FontWeight.w900,
+                fontStyle: FontStyle.italic,
+                color: AppColors.primaryColor,
+              ),
             ),
           ),
-        ),
-        SizedBox(height: Dimensions.h(16)),
-        Text(
-          AppStrings.dummyUserName.tr,
-          style: const TextStyle(
-            fontFamily: 'Nunito',
-            fontSize: 16,
-            fontWeight: FontWeight.w800,
-            fontStyle: FontStyle.italic,
-            color: AppColors.blackColor,
+          SizedBox(height: Dimensions.h(16)),
+          Text(
+            name,
+            style: const TextStyle(
+              fontFamily: 'Nunito',
+              fontSize: 16,
+              fontWeight: FontWeight.w800,
+              fontStyle: FontStyle.italic,
+              color: AppColors.blackColor,
+            ),
           ),
-        ),
-      ],
-    );
+        ],
+      );
+    });
   }
 }

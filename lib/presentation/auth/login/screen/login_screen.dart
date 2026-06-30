@@ -58,12 +58,21 @@ class LoginScreen extends StatelessWidget {
               SizedBox(height: Dimensions.h(24)),
 
               // Password Field
-              AppTextField(
-                controller: controller.passwordController,
-                label: AppStrings.password.tr,
-                hint: "••••••••",
-                obscure: true,
-              ),
+              Obx(() => AppTextField(
+                    controller: controller.passwordController,
+                    label: AppStrings.password.tr,
+                    hint: "••••••••",
+                    obscure: !controller.isPasswordVisible.value,
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        controller.isPasswordVisible.value
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                        color: AppColors.greyColor,
+                      ),
+                      onPressed: controller.togglePasswordVisibility,
+                    ),
+                  )),
 
               SizedBox(height: Dimensions.h(16)),
 
@@ -81,8 +90,7 @@ class LoginScreen extends StatelessWidget {
                               onChanged: controller.toggleRememberMe,
                               activeColor: AppColors.primaryColor,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(4),
-                              ),
+                                  borderRadius: BorderRadius.circular(4)),
                             ),
                           )),
                       SizedBox(width: Dimensions.w(8)),
@@ -97,7 +105,7 @@ class LoginScreen extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                    Get.toNamed(RoutePath.forgotPassword);
+                      Get.toNamed(RoutePath.forgotPassword);
                     },
                     child: Text(
                       AppStrings.forgotPassword.tr,
@@ -114,15 +122,18 @@ class LoginScreen extends StatelessWidget {
               SizedBox(height: Dimensions.h(32)),
 
               // Login Button
-              AppButton(
-                label: AppStrings.logIn.tr,
-                onPressed: controller.login,
-                backgroundColor: AppColors.secondaryColor,
-                textColor: AppColors.primaryColor,
-                borderSideColor: AppColors.secondaryColor,
-                borderRadius: Dimensions.r(12),
-                height: Dimensions.h(56),
-              ),
+              Obx(() => AppButton(
+                    label: AppStrings.logIn.tr,
+                    onPressed: controller.isLoading.value
+                        ? null
+                        : () => controller.login(),
+                    isLoading: controller.isLoading.value,
+                    backgroundColor: AppColors.secondaryColor,
+                    textColor: AppColors.primaryColor,
+                    borderSideColor: AppColors.secondaryColor,
+                    borderRadius: Dimensions.r(12),
+                    height: Dimensions.h(56),
+                  )),
 
               SizedBox(height: Dimensions.h(24)),
 

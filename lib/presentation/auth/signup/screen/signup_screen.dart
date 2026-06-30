@@ -78,22 +78,40 @@ class SignupScreen extends StatelessWidget {
               SizedBox(height: Dimensions.h(20)),
 
               // Password
-              AppTextField(
-                controller: controller.passwordController,
-                label: AppStrings.password.tr,
-                hint: "••••••••",
-                obscure: true,
-              ),
+              Obx(() => AppTextField(
+                    controller: controller.passwordController,
+                    label: AppStrings.password.tr,
+                    hint: "••••••••",
+                    obscure: !controller.isPasswordVisible.value,
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        controller.isPasswordVisible.value
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                        color: AppColors.greyColor,
+                      ),
+                      onPressed: controller.togglePasswordVisibility,
+                    ),
+                  )),
 
               SizedBox(height: Dimensions.h(20)),
 
               // Confirm Password
-              AppTextField(
-                controller: controller.confirmPasswordController,
-                label: AppStrings.confirmPassword.tr,
-                hint: "••••••••",
-                obscure: true,
-              ),
+              Obx(() => AppTextField(
+                    controller: controller.confirmPasswordController,
+                    label: AppStrings.confirmPassword.tr,
+                    hint: "••••••••",
+                    obscure: !controller.isConfirmPasswordVisible.value,
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        controller.isConfirmPasswordVisible.value
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                        color: AppColors.greyColor,
+                      ),
+                      onPressed: controller.toggleConfirmPasswordVisibility,
+                    ),
+                  )),
 
               SizedBox(height: Dimensions.h(16)),
 
@@ -149,18 +167,19 @@ class SignupScreen extends StatelessWidget {
 
               SizedBox(height: Dimensions.h(32)),
 
-              // Sign Up Button (Labelled "Log In" as per Figma)
-              AppButton(
-                label: AppStrings.createAccount.tr,
-                onPressed: () {
-                  Get.toNamed(RoutePath.otpScreen, arguments: "signup");
-                },
-                backgroundColor: AppColors.secondaryColor,
-                textColor: AppColors.primaryColor,
-                borderSideColor: AppColors.secondaryColor,
-                borderRadius: Dimensions.r(12),
-                height: Dimensions.h(56),
-              ),
+              // Sign Up Button
+              Obx(() => AppButton(
+                    label: AppStrings.createAccount.tr,
+                    onPressed: controller.isLoading.value
+                        ? null
+                        : () => controller.signUp(),
+                    isLoading: controller.isLoading.value,
+                    backgroundColor: AppColors.secondaryColor,
+                    textColor: AppColors.primaryColor,
+                    borderSideColor: AppColors.secondaryColor,
+                    borderRadius: Dimensions.r(12),
+                    height: Dimensions.h(56),
+                  )),
 
               SizedBox(height: Dimensions.h(24)),
 

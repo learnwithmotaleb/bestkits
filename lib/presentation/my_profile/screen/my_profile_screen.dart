@@ -44,7 +44,9 @@ class MyProfileScreen extends GetView<MyProfileController> {
               ),
               alignment: Alignment.center,
               child: Text(
-                AppStrings.dummyUserName.tr[0].toUpperCase(),
+                controller.nameController.text.isNotEmpty
+                    ? controller.nameController.text[0].toUpperCase()
+                    : AppStrings.dummyUserName.tr[0].toUpperCase(),
                 style: AppTextStyles.h1.copyWith(
                   fontSize: Dimensions.fs(40),
                   fontStyle: FontStyle.italic,

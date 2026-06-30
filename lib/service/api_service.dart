@@ -282,14 +282,15 @@ class ApiClient {
     required String url,
     required Map<String, String> fields,
     required List<MultipartFileData> files,
+    String method = "POST",
     bool isBasic = false,
     bool isToken = false,
     Map<String, String>? customHeaders,
   }) async {
     try {
-      _logRequest(url, "MULTIPART");
+      _logRequest(url, "MULTIPART $method");
 
-      final request = http.MultipartRequest("POST", Uri.parse(url));
+      final request = http.MultipartRequest(method, Uri.parse(url));
 
       // Add headers
       final headers = await _headers(

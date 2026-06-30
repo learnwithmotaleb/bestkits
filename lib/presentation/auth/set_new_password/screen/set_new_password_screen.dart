@@ -77,12 +77,15 @@ class SetNewPasswordScreen extends StatelessWidget {
             
             Dimensions.gapH(40),
             
-            AppButton(
-              label: AppStrings.updatePassword.tr,
-              onPressed: controller.updatePassword,
-              backgroundColor: AppColors.blackColor,
-              textColor: AppColors.primaryColor,
-            ),
+            Obx(() => AppButton(
+                  label: AppStrings.updatePassword.tr,
+                  onPressed: controller.isLoading.value
+                      ? null
+                      : () => controller.updatePassword(),
+                  isLoading: controller.isLoading.value,
+                  backgroundColor: AppColors.blackColor,
+                  textColor: AppColors.primaryColor,
+                )),
           ],
         ),
       ),

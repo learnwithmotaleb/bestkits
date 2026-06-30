@@ -102,15 +102,16 @@ class UpdateProfileScreen extends GetView<UpdateProfileController> {
             SizedBox(height: Dimensions.h(24)),
             
             // Save Button
-            AppButton(
+            Obx(() => AppButton(
               label: AppStrings.saveTheChanges.tr,
               backgroundColor: AppColors.secondaryColor, // Black background
               textColor: AppColors.primaryColor, // Yellow text
               borderSideColor: Colors.transparent,
+              isLoading: controller.isLoading.value,
               onPressed: () {
                 controller.showConfirmationDialog();
               },
-            ),
+            )),
             
             SizedBox(height: Dimensions.h(16)),
             

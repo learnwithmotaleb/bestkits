@@ -1,6 +1,9 @@
+import 'dart:convert';
 import 'package:get/get.dart';
 import '../../../../../utils/assets_image/app_images.dart';
 import '../../../../../utils/static_strings/static_strings.dart';
+import '../../../../../helper/local_db/local_db.dart';
+import '../../profile/model/user_model.dart';
 
 class BannerModel {
   final String tag;
@@ -27,10 +30,26 @@ class HomeController extends GetxController {
   final RxList<BannerModel> banners = <BannerModel>[].obs;
   final RxBool isLoadingBanners = false.obs;
 
+  // User Data
+  var userData = Rxn<UserData>();
+
   @override
   void onInit() {
     super.onInit();
+    _loadUserData();
     fetchBanners();
+  }
+
+  void _loadUserData() {
+    final userDataJson = SharePrefsHelper.getUserData();
+    if (userDataJson != null && userDataJson.isNotEmpty) {
+      try {
+        final Map<String, dynamic> data = jsonDecode(userDataJson);
+        userData.value = UserData.fromJson(data);
+      } catch (e) {
+        print("Error parsing cached user data in home: $e");
+      }
+    }
   }
 
   Future<void> fetchBanners() async {

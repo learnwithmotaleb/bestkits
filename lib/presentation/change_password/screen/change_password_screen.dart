@@ -17,7 +17,8 @@ class ChangePasswordScreen extends StatefulWidget {
 }
 
 class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
-  final ChangePasswordController controller = Get.put(ChangePasswordController());
+  final ChangePasswordController controller =
+      Get.put(ChangePasswordController());
 
   @override
   Widget build(BuildContext context) {
@@ -59,15 +60,17 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
             ),
             SizedBox(height: Dimensions.h(30)),
             Obx(() => AppButton(
-              label: AppStrings.saveTheChanges.tr,
-              onPressed: controller.isLoading.value ? null : () => controller.saveChanges(),
-              isLoading: controller.isLoading.value,
-              backgroundColor: const Color(0xFF1A1A1A),
-              textColor: AppColors.primaryColor,
-              borderRadius: Dimensions.r(8),
-              borderSideColor: Colors.transparent,
-              height: Dimensions.h(50),
-            )),
+                  label: AppStrings.saveTheChanges.tr,
+                  onPressed: controller.isLoading.value
+                      ? null
+                      : () => controller.saveChanges(),
+                  isLoading: controller.isLoading.value,
+                  backgroundColor: const Color(0xFF1A1A1A),
+                  textColor: AppColors.primaryColor,
+                  borderRadius: Dimensions.r(8),
+                  borderSideColor: Colors.transparent,
+                  height: Dimensions.h(50),
+                )),
           ],
         ),
       ),

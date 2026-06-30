@@ -135,6 +135,16 @@ class SharePrefsHelper {
     await _prefs?.setString(SharePrefsKeys.themeMode, value);
   }
 
+  // ================= USER DATA =================
+
+  static Future<void> saveUserData(String userDataJson) async {
+    await _prefs?.setString(SharePrefsKeys.userData, userDataJson);
+  }
+
+  static String? getUserData() {
+    return _prefs?.getString(SharePrefsKeys.userData);
+  }
+
   // ================= CLEAR ALL =================
 
   static Future<void> clearAll() async {
