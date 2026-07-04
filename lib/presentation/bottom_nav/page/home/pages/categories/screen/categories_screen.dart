@@ -63,24 +63,37 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
             // Categories Grid
             Expanded(
-              child: GridView.builder(
-                padding: EdgeInsets.symmetric(
-                  horizontal: Dimensions.w(20),
-                  vertical: Dimensions.h(5),
-                ),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 12,
-                  mainAxisSpacing: 12,
-                  childAspectRatio: 0.55,
-                ),
-                itemCount: controller.categories.length,
-                itemBuilder: (context, index) {
-                  return CategoryGridCard(
-                    category: controller.categories[index],
+              child: Obx(() {
+                if (controller.isLoadingCategories.value) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                if (controller.categories.isEmpty) {
+                  return Center(
+                    child: Text(
+                      AppStrings.noMatchesFound.tr,
+                      style: AppTextStyles.bodyText,
+                    ),
                   );
-                },
-              ),
+                }
+                return GridView.builder(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: Dimensions.w(20),
+                    vertical: Dimensions.h(5),
+                  ),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 12,
+                    mainAxisSpacing: 12,
+                    childAspectRatio: 0.55,
+                  ),
+                  itemCount: controller.categories.length,
+                  itemBuilder: (context, index) {
+                    return CategoryGridCard(
+                      category: controller.categories[index],
+                    );
+                  },
+                );
+              }),
             ),
           ],
         ),

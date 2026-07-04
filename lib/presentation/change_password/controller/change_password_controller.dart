@@ -1,3 +1,4 @@
+import 'package:bestkits/core/routes/route_path.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../utils/static_strings/static_strings.dart';
@@ -73,7 +74,7 @@ class ChangePasswordController extends GetxController {
         final responseData = response.body;
         if (responseData['success'] == true) {
           AppSnackBar.success("Password changed successfully!");
-          Get.back();
+          Get.offAndToNamed(RoutePath.bottomNav);
         } else {
           AppSnackBar.fail(responseData['message'] ?? "Failed to change password");
         }
@@ -89,4 +90,4 @@ class ChangePasswordController extends GetxController {
     }
   }
 }
-
+

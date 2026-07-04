@@ -5,18 +5,22 @@ import '../../../../../../../utils/app_colors/app_colors.dart';
 import '../../../../../../../utils/app_text_style/app_text_style.dart';
 import 'package:get/get.dart';
 import '../../../../../../product_details/screen/product_details_screen.dart';
-import 'package:bestkits/presentation/favorite/controller/favourite_controller.dart';
+import '../../../../../../../core/routes/route_path.dart';
+import '../model/CategoryModel.dart';
+import '../../../../../../../service/api_url.dart';
 
 class CategoryGridCard extends StatelessWidget {
-  final Map<String, dynamic> category;
+  final Data category;
 
   const CategoryGridCard({super.key, required this.category});
 
   @override
   Widget build(BuildContext context) {
-
+    final subcategories = category.subCategories ?? [];
+    final imageUrl = category.imageUrl as String?;
+    
     return GestureDetector(
-      onTap: () => Get.to(() => const ProductDetailsScreen()),
+      onTap: () => Get.toNamed(RoutePath.categoriesScreen, arguments: {'categoryId': category.id}), // Note: you might want to route to products list here based on category
       child: Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -50,10 +54,13 @@ class CategoryGridCard extends StatelessWidget {
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(10),
-                        child: Image.asset(
-                          category['image'],
-                          fit: BoxFit.contain,
-                        ),
+                        child: (imageUrl != null && imageUrl.isNotEmpty)
+                            ? Image.network(
+                                ApiUrl.buildImageUrl(imageUrl),
+                                fit: BoxFit.contain,
+                                errorBuilder: (context, error, stackTrace) => const Icon(Icons.category, color: Colors.grey, size: 50),
+                              )
+                            : const Icon(Icons.category, color: Colors.grey, size: 50),
                       ),
                     ),
                   ),
@@ -69,7 +76,7 @@ class CategoryGridCard extends StatelessWidget {
                         border: Border.all(color: AppColors.primaryColor.withOpacity(0.3)),
                       ),
                       child: Text(
-                        '${category['itemsCount']} ${AppStrings.itemsCountLabel.tr}',
+                        '${subcategories.length} ${AppStrings.itemsCountLabel.tr}',
                         style: TextStyle(
                           color: AppColors.primaryColor,
                           fontSize: 10,
@@ -78,8 +85,6 @@ class CategoryGridCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                  // Favorite Icon
-
                 ],
               ),
             ),
@@ -92,7 +97,7 @@ class CategoryGridCard extends StatelessWidget {
                 children: [
                   // Category Name
                   Text(
-                    category['name'].toString().tr,
+                    (category.name ?? '').tr,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: AppTextStyles.h4.copyWith(
@@ -107,9 +112,9 @@ class CategoryGridCard extends StatelessWidget {
                     spacing: 4,
                     runSpacing: 4,
                     children: [
-                      ...(category['subcategories'] as List<String>)
-                          .map((tag) => _buildTag(tag)),
-                      _buildTag('28+ More', isMore: true),
+                      ...subcategories.take(3).map((sub) => _buildTag(sub.name ?? '')),
+                      if (subcategories.length > 3)
+                        _buildTag('${subcategories.length - 3}+ More', isMore: true),
                     ],
                   ),
                 ],

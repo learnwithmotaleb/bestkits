@@ -4,6 +4,9 @@ import '../../../../../utils/assets_image/app_images.dart';
 import '../../../../../utils/static_strings/static_strings.dart';
 import '../../../../../helper/local_db/local_db.dart';
 import '../../profile/model/user_model.dart';
+import '../../../../../service/api_service.dart';
+import '../../../../../service/api_url.dart';
+import '../pages/categories/model/CategoryModel.dart';
 
 class BannerModel {
   final String tag;
@@ -38,6 +41,7 @@ class HomeController extends GetxController {
     super.onInit();
     _loadUserData();
     fetchBanners();
+    fetchCategoriesFromApi();
   }
 
   void _loadUserData() {
@@ -93,25 +97,27 @@ class HomeController extends GetxController {
       isLoadingBanners.value = false;
     }
   }
-  // Dummy Categories
-  final List<Map<String, dynamic>> categories = [
-    {
-      'name': AppStrings.kidsShorts,
-      'image': AppImages.kidShorts,
-      'items': '20+',
-    },
-    {
-      'name': AppStrings.kidsAccessories,
-      'image': AppImages.kidAccessor,
-      'items': '20+',
-    },
-    {
-      'name': AppStrings.kidsCollection,
-      'image': AppImages.kidsCollections,
-      'items': '15+',
-    },
-  ].obs;
+  // Categories from server
+  final RxList<Data> categories = <Data>[].obs;
+  final RxBool isLoadingCategories = false.obs;
+  final ApiClient _apiClient = ApiClient();
 
+  Future<void> fetchCategoriesFromApi() async {
+    isLoadingCategories.value = true;
+    try {
+      final response = await _apiClient.get(url: ApiUrl.getCategories);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final categoryModel = CategoryModel.fromJson(response.body);
+        if (categoryModel.success == true && categoryModel.data != null) {
+          categories.assignAll(categoryModel.data!);
+        }
+      }
+    } catch (e) {
+      print("Error fetching categories: $e");
+    } finally {
+      isLoadingCategories.value = false;
+    }
+  }
   // Dummy Trending Products
   final List<Map<String, dynamic>> trendingProducts = [
     {

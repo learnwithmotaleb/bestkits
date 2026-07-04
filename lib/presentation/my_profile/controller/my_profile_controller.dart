@@ -11,6 +11,8 @@ class MyProfileController extends GetxController {
 
   // Selling tier — could be driven by API; hardcoded for now
   final RxString sellingTier = 'Basic Seller'.obs;
+  
+  final RxnString avatarUrl = RxnString(null);
 
   @override
   void onInit() {
@@ -31,6 +33,7 @@ class MyProfileController extends GetxController {
 
         sellingTier.value =
             user.role == 'USER' ? 'Basic Seller' : 'Premium Seller';
+        avatarUrl.value = user.profile.avatarUrl;
       } catch (e) {
         print("Error parsing cached user data: $e");
       }

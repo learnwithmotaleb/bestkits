@@ -10,6 +10,7 @@ import '../../../utils/app_text_style/app_text_style.dart';
 import '../../../widget/app_button.dart';
 import '../../../widget/app_text_field.dart';
 import '../controller/my_profile_controller.dart';
+import '../../../service/api_url.dart';
 import '../widget/selling_tier_section.dart';
 
 class MyProfileScreen extends GetView<MyProfileController> {
@@ -32,28 +33,35 @@ class MyProfileScreen extends GetView<MyProfileController> {
             SizedBox(height: Dimensions.h(20)),
 
             // ── Avatar ──────────────────────────────────────────
-            Container(
-              width: Dimensions.rs(100),
-              height: Dimensions.rs(100),
-              decoration: BoxDecoration(
-                color: AppColors.navBarColor,
-                borderRadius: BorderRadius.circular(Dimensions.r(24)),
-                border: Border.all(
-                  color: AppColors.greyColor.withOpacity(0.5),
+            Obx(() {
+              final avatarUrl = controller.avatarUrl.value;
+              final hasImage = avatarUrl != null && avatarUrl.isNotEmpty;
+
+              return Container(
+                width: Dimensions.rs(100),
+                height: Dimensions.rs(100),
+                decoration: BoxDecoration(
+                  color: AppColors.navBarColor,
+                  borderRadius: BorderRadius.circular(Dimensions.r(24)),
+                  border: Border.all(
+                    color: AppColors.greyColor.withOpacity(0.5),
+                  ),
                 ),
-              ),
-              alignment: Alignment.center,
-              child: Text(
-                controller.nameController.text.isNotEmpty
-                    ? controller.nameController.text[0].toUpperCase()
-                    : AppStrings.dummyUserName.tr[0].toUpperCase(),
-                style: AppTextStyles.h1.copyWith(
-                  fontSize: Dimensions.fs(40),
-                  fontStyle: FontStyle.italic,
-                  color: AppColors.primaryColor,
-                ),
-              ),
-            ),
+                alignment: Alignment.center,
+                child: hasImage
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(Dimensions.r(24)),
+                        child: Image.network(
+                          ApiUrl.buildImageUrl(avatarUrl),
+                          fit: BoxFit.cover,
+                          width: Dimensions.rs(100),
+                          height: Dimensions.rs(100),
+                          errorBuilder: (context, error, stackTrace) => _buildDummyName(controller),
+                        ),
+                      )
+                    : _buildDummyName(controller),
+              );
+            }),
             SizedBox(height: Dimensions.h(40)),
 
             // ── Name ─────────────────────────────────────────────
@@ -106,6 +114,19 @@ class MyProfileScreen extends GetView<MyProfileController> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildDummyName(MyProfileController controller) {
+    return Text(
+      controller.nameController.text.isNotEmpty 
+          ? controller.nameController.text[0].toUpperCase()
+          : AppStrings.dummyUserName.tr[0].toUpperCase(),
+      style: AppTextStyles.h1.copyWith(
+        fontSize: Dimensions.fs(40),
+        fontStyle: FontStyle.italic,
+        color: AppColors.primaryColor,
       ),
     );
   }

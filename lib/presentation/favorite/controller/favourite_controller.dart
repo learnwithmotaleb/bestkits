@@ -1,12 +1,13 @@
 import 'package:get/get.dart';
 import '../../../../widget/show_snackbar.dart';
+import '../../bottom_nav/page/home/pages/categories/model/CategoryModel.dart';
 
 class FavouriteController extends GetxController {
   // Keep list of favorited products (as Map<String, dynamic>)
   final RxList<Map<String, dynamic>> favoriteList = <Map<String, dynamic>>[].obs;
   
-  // Keep list of favorited categories (as Map<String, dynamic>)
-  final RxList<Map<String, dynamic>> favoriteCategories = <Map<String, dynamic>>[].obs;
+  // Keep list of favorited categories
+  final RxList<Data> favoriteCategories = <Data>[].obs;
 
   final RxBool isLoading = false.obs;
 
@@ -29,16 +30,14 @@ class FavouriteController extends GetxController {
   }
 
   // ── Category Favorites ──
-  bool isCategoryFavorite(Map<String, dynamic> category) {
-    return favoriteCategories.any((item) =>
-        item['name'] == category['name']);
+  bool isCategoryFavorite(Data category) {
+    return favoriteCategories.any((item) => item.id == category.id);
   }
 
-  void toggleCategoryFavorite(Map<String, dynamic> category) {
-    final name = category['name'] ?? '';
+  void toggleCategoryFavorite(Data category) {
+    final name = category.name ?? '';
     if (isCategoryFavorite(category)) {
-      favoriteCategories.removeWhere((item) =>
-          item['name'] == category['name']);
+      favoriteCategories.removeWhere((item) => item.id == category.id);
       ShowAppSnackBar.info("Removed category from favorites", title: name.toString().tr);
     } else {
       favoriteCategories.add(category);

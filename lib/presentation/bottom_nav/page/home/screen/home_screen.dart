@@ -1,3 +1,4 @@
+import 'package:bestkits/utils/app_text_style/app_text_style.dart';
 import 'package:bestkits/utils/static_strings/static_strings.dart';
 import 'package:bestkits/core/routes/route_path.dart';
 import 'package:flutter/material.dart';
@@ -48,23 +49,46 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               ),
               Dimensions.gapH(15),
-              SizedBox(
-                height: Dimensions.h(160),
-                child: ListView.builder(
-                  padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
-                  scrollDirection: Axis.horizontal,
-                  itemCount: controller.categories.length,
-                  itemBuilder: (context, index) {
-                    final category = controller.categories[index];
-                    return CategoryCard(
-                      name: category['name'].toString().tr,
-                      image: category['image'],
-                      items:
-                          '${category['items']} ${AppStrings.itemsCountLabel.tr}',
-                    );
-                  },
-                ),
-              ),
+              Obx(() {
+                if (controller.isLoadingCategories.value) {
+                  return SizedBox(
+                    height: Dimensions.h(160),
+                    child: const Center(child: CircularProgressIndicator()),
+                  );
+                }
+                if (controller.categories.isEmpty) {
+                  return SizedBox(
+                    height: Dimensions.h(160),
+                    child: Center(
+                      child: Text(
+                        AppStrings.noMatchesFound.tr,
+                        style: AppTextStyles.bodyText,
+                      ),
+                    ),
+                  );
+                }
+                return SizedBox(
+                  height: Dimensions.h(160),
+                  child: ListView.builder(
+                    padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
+                    scrollDirection: Axis.horizontal,
+                    itemCount: controller.categories.length,
+                    itemBuilder: (context, index) {
+                      final category = controller.categories[index];
+                      return CategoryCard(
+                        name: category.name ?? '',
+                        imageUrl: category.imageUrl,
+                        items:
+                            '${category.subCategories?.length ?? 0} ${AppStrings.itemsCountLabel.tr}',
+                        onTap: () {
+                          Get.toNamed(RoutePath.categoriesScreen,
+                              arguments: {'categoryId': category.id});
+                        },
+                      );
+                    },
+                  ),
+                );
+              }),
               Dimensions.gapH(30),
 
               // Now Trending

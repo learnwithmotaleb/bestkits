@@ -8,9 +8,21 @@ import '../../../../../utils/app_text_style/app_text_style.dart';
 import '../../../../../core/widgets/app_svg.dart';
 import '../../../../../utils/app_icons/app_icons.dart';
 import '../controller/home_controller.dart';
+import '../../../../../service/api_url.dart';
 
 class HomeHeader extends GetView<HomeController> {
   const HomeHeader({super.key});
+
+  Widget _buildDummyName(String name) {
+    return Text(
+      name.isNotEmpty ? name[0].toUpperCase() : AppStrings.dummyUserName.tr[0].toUpperCase(),
+      style: AppTextStyles.h1.copyWith(
+        fontSize: Dimensions.fs(20),
+        fontStyle: FontStyle.italic,
+        color: AppColors.primaryColor,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,20 +34,29 @@ class HomeHeader extends GetView<HomeController> {
           Obx(() {
             final user = controller.userData.value;
             final avatarUrl = user?.profile.avatarUrl;
+            final hasImage = avatarUrl != null && avatarUrl.isNotEmpty;
+            final name = user?.profile.fullName ?? 'Roberts Junior';
             
             return Container(
               width: Dimensions.w(45),
               height: Dimensions.h(45),
               decoration: BoxDecoration(
-                color: Colors.grey[200],
+                color: hasImage ? Colors.transparent : AppColors.navBarColor,
                 borderRadius: BorderRadius.circular(Dimensions.r(10)),
-                image: DecorationImage(
-                  image: avatarUrl != null && avatarUrl.isNotEmpty
-                      ? NetworkImage(avatarUrl)
-                      : const NetworkImage('https://cdn-icons-png.flaticon.com/512/3135/3135715.png') as ImageProvider,
-                  fit: BoxFit.cover,
-                ),
               ),
+              alignment: Alignment.center,
+              child: hasImage
+                  ? ClipRRect(
+                      borderRadius: BorderRadius.circular(Dimensions.r(10)),
+                      child: Image.network(
+                        ApiUrl.buildImageUrl(avatarUrl),
+                        width: Dimensions.w(45),
+                        height: Dimensions.h(45),
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) => _buildDummyName(name),
+                      ),
+                    )
+                  : _buildDummyName(name),
             );
           }),
           Dimensions.gapW(12),

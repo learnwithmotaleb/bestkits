@@ -9,11 +9,12 @@ class ApiUrl {
       "https://helena-sedimentological-emily.ngrok-free.dev";
   static final String baseUrl = _mainDomain;
 
-  /// Convert relative images path → full URL
-  /// e.g. "uploads\images.png" → "https://domain.com/uploads/image.png"
-  static String buildImageUrl(String relativePath) {
+  static String buildImageUrl(String? relativePath) {
+    if (relativePath == null || relativePath.isEmpty) return '';
     final path = relativePath.replaceAll(r'\', '/');
-    return '$_mainDomain/$path';
+    if (path.startsWith('http')) return path; // Already a full URL
+    final cleanPath = path.startsWith('/') ? path.substring(1) : path;
+    return '$_mainDomain/$cleanPath';
   }
 
   // ════════════════════════════════════════════════════════
@@ -33,20 +34,7 @@ class ApiUrl {
   static final String getProfile = '$baseUrl/profile';
   static final String updateProfile = '$baseUrl/profile';
   static final String changePassword = '$baseUrl/profile/update-password';
+  static final String uploadA = '$baseUrl/uploads';
+  static final String getCategories = '$baseUrl/categories';
 
-
-
-
-  static final String accountActive = '$baseUrl/auth/activate-account';
-  static final String accountActiveCodeResend =
-      '$baseUrl/auth/activation-code-resend';
-
-  static final String forgetPasswordOtpVerify =
-      '$baseUrl/auth/forget-pass-otp-verify';
-
-  static final String socialLogin = '$baseUrl/auth/social-login';
-
-  static final String getUserProfile = '$baseUrl/user/user-profile';
-
-  static final String becomeDriver = '$baseUrl/user/become-driver';
 }

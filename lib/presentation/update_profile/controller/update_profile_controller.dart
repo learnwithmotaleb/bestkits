@@ -18,6 +18,7 @@ class UpdateProfileController extends GetxController {
   final TextEditingController phoneController = TextEditingController();
 
   Rx<File?> selectedImage = Rx<File?>(null);
+  RxnString existingImageUrl = RxnString(null);
   final ImagePicker _picker = ImagePicker();
   final ApiClient _apiClient = ApiClient();
   var isLoading = false.obs;
@@ -36,6 +37,7 @@ class UpdateProfileController extends GetxController {
         final user = UserData.fromJson(data);
         nameController.text = user.profile.fullName;
         phoneController.text = user.profile.phone ?? '';
+        existingImageUrl.value = user.profile.avatarUrl;
       } catch (e) {
         print("Error loading initial data: $e");
       }
@@ -76,13 +78,24 @@ class UpdateProfileController extends GetxController {
 
     try {
       isLoading.value = true;
-      final response = await _apiClient.patch(
+
+      final Map<String, String> fields = {
+        "full_name": name,
+        "phone": phone,
+      };
+
+      final List<MultipartFileData> files = [];
+      if (selectedImage.value != null) {
+        files.add(
+            MultipartFileData(key: 'file', path: selectedImage.value!.path));
+      }
+
+      final response = await _apiClient.multipart(
         url: ApiUrl.updateProfile,
+        method: "PATCH",
         isToken: true,
-        body: {
-          "full_name": name,
-          "phone": phone,
-        },
+        fields: fields,
+        files: files,
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -100,7 +113,9 @@ class UpdateProfileController extends GetxController {
           AppSnackBar.fail(responseData['message'] ?? "Update failed");
         }
       } else {
-        AppSnackBar.fail(response.body?['message'] ?? response.statusText ?? "Update failed");
+        AppSnackBar.fail(response.body?['message'] ??
+            response.statusText ??
+            "Update failed");
       }
     } catch (e) {
       AppSnackBar.fail("An error occurred: $e");
