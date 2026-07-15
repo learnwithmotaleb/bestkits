@@ -62,7 +62,7 @@ class CategoryCard extends StatelessWidget {
                   Expanded(
                     child: (imageUrl != null && imageUrl!.isNotEmpty)
                         ? Image.network(
-                            ApiUrl.buildImageUrl(imageUrl),
+                            ApiUrl.buildImageUrl(imageUrl!),
                             fit: BoxFit.contain,
                             errorBuilder: (context, error, stackTrace) => const Icon(Icons.category, color: Colors.grey),
                           )

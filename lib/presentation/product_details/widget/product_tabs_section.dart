@@ -5,12 +5,17 @@ import 'package:get/get.dart';
 import '../../../../utils/app_colors/app_colors.dart';
 import '../../../../utils/app_text_style/app_text_style.dart';
 import '../controller/product_details_controller.dart';
-import 'review_card.dart';
+import 'package:bestkits/data/model/product_model.dart';
 
 class ProductTabsSection extends StatelessWidget {
   final ProductDetailsController controller;
+  final ProductModel product;
 
-  const ProductTabsSection({super.key, required this.controller});
+  const ProductTabsSection({
+    super.key,
+    required this.controller,
+    required this.product,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +29,10 @@ class ProductTabsSection extends StatelessWidget {
               child: Obx(() {
                 final isSelected = controller.selectedTabIndex.value == index;
                 String tabLabel = controller.tabs[index].tr;
-                if (index == 1) tabLabel += " (05)";
-                
+                if (index == 1) {
+                  tabLabel += ' (${product.totalReviews})';
+                }
+
                 return GestureDetector(
                   onTap: () => controller.selectTab(index),
                   child: Container(
@@ -33,7 +40,9 @@ class ProductTabsSection extends StatelessWidget {
                     decoration: BoxDecoration(
                       border: Border(
                         bottom: BorderSide(
-                          color: isSelected ? AppColors.primaryColor : Colors.grey.withOpacity(0.1),
+                          color: isSelected
+                              ? AppColors.primaryColor
+                              : Colors.grey.withOpacity(0.1),
                           width: 2,
                         ),
                       ),
@@ -52,10 +61,16 @@ class ProductTabsSection extends StatelessWidget {
                     child: Text(
                       tabLabel,
                       style: TextStyle(
-                        color: isSelected ? AppColors.primaryColor : Colors.black,
-                        fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                        color: isSelected
+                            ? AppColors.primaryColor
+                            : Colors.black,
+                        fontWeight: isSelected
+                            ? FontWeight.w700
+                            : FontWeight.w500,
                         fontSize: 14,
-                        fontStyle: isSelected ? FontStyle.italic : FontStyle.normal,
+                        fontStyle: isSelected
+                            ? FontStyle.italic
+                            : FontStyle.normal,
                       ),
                     ),
                   ),
@@ -93,7 +108,9 @@ class ProductTabsSection extends StatelessWidget {
         ),
         const SizedBox(height: 10),
         Text(
-          AppStrings.dummyDescription.tr,
+          product.description.isNotEmpty
+              ? product.description
+              : AppStrings.dummyDescription.tr,
           style: TextStyle(
             fontSize: 12,
             color: Colors.grey[600],
@@ -106,18 +123,46 @@ class ProductTabsSection extends StatelessWidget {
           style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
         ),
         const SizedBox(height: 10),
-        _buildDetailRow('${AppStrings.onlineSince.tr}:', '2024-04-20'),
-        _buildDetailRow('${AppStrings.category.tr}:', 'Kids'),
-        _buildDetailRow('${AppStrings.subCategory.tr}:', 'Sneakers'),
-        _buildDetailRow('${AppStrings.condition.tr}:', 'New'),
-        _buildDetailRow('${AppStrings.material.tr}:', 'Textile & Rubber'),
-        _buildDetailRow('${AppStrings.color.tr}:', 'Black'),
-        _buildDetailRow('${AppStrings.size.tr}:', 'EU 28'),
-        _buildDetailRow('${AppStrings.location.tr}:', 'Bulgaria'),
-        _buildDetailRow('${AppStrings.sellerLabel.tr}:', 'Sofia Kids Closet'),
-        _buildDetailRow('${AppStrings.reference.tr}:', '87456231'),
+        _buildDetailRow(
+          '${AppStrings.onlineSince.tr}:',
+          _formatDate(product.createdAt),
+        ),
+        _buildDetailRow(
+          '${AppStrings.category.tr}:',
+          product.categoryName,
+        ),
+        _buildDetailRow(
+          '${AppStrings.subCategory.tr}:',
+          product.subCategoryName,
+        ),
+        _buildDetailRow(
+          '${AppStrings.condition.tr}:',
+          product.condition,
+        ),
+        if (product.user?.profile?.country != null)
+          _buildDetailRow(
+            '${AppStrings.location.tr}:',
+            product.user!.profile!.country!,
+          ),
+        _buildDetailRow(
+          '${AppStrings.sellerLabel.tr}:',
+          product.sellerName,
+        ),
+        _buildDetailRow(
+          '${AppStrings.reference.tr}:',
+          product.id.toString(),
+        ),
       ],
     );
+  }
+
+  String _formatDate(String isoDate) {
+    try {
+      final dt = DateTime.parse(isoDate);
+      return '${dt.day.toString().padLeft(2, '0')}-${dt.month.toString().padLeft(2, '0')}-${dt.year}';
+    } catch (_) {
+      return isoDate;
+    }
   }
 
   Widget _buildDetailRow(String label, String value) {
@@ -129,9 +174,15 @@ class ProductTabsSection extends StatelessWidget {
             '$label ',
             style: TextStyle(fontSize: 12, color: Colors.grey[500]),
           ),
-          Text(
-            value,
-            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, fontStyle: FontStyle.italic),
+          Flexible(
+            child: Text(
+              value.isNotEmpty ? value : '—',
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                fontStyle: FontStyle.italic,
+              ),
+            ),
           ),
         ],
       ),
@@ -139,41 +190,56 @@ class ProductTabsSection extends StatelessWidget {
   }
 
   Widget _buildReviews() {
-    return Column(
-      children: [
-        ...controller.reviews.map((review) => ReviewCard(review: review)),
-        const SizedBox(height: 10),
-        Center(
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-            decoration: BoxDecoration(
-              color: const Color(0xFF1A1A1A),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  AppStrings.viewMore.tr,
-                  style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600),
+    if (product.totalReviews == 0) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 30),
+        child: Center(
+          child: Column(
+            children: [
+              Icon(Icons.rate_review_outlined,
+                  size: 48, color: Colors.grey[300]),
+              const SizedBox(height: 12),
+              Text(
+                'No reviews yet',
+                style: TextStyle(
+                  color: Colors.grey[400],
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
                 ),
-                const SizedBox(width: 8),
-                const Icon(Icons.arrow_forward_ios, color: Colors.white, size: 10),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
-      ],
+      );
+    }
+
+    // When API includes reviews, map them here. For now show a placeholder count.
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 20),
+      child: Center(
+        child: Text(
+          '${product.totalReviews} review(s) — details coming soon',
+          style: TextStyle(color: Colors.grey[500], fontSize: 13),
+        ),
+      ),
     );
   }
 
   Widget _buildSeller(BuildContext context) {
+    final seller = product.user;
+    final profile = seller?.profile;
+    final sellerName =
+        (profile?.fullName.isNotEmpty ?? false) ? profile!.fullName : 'Seller';
+    final country = profile?.country ?? '';
+    final avatarUrl = product.sellerAvatarUrl;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Seller Profile
         Row(
           children: [
+            // Avatar
             Container(
               width: 50,
               height: 50,
@@ -181,8 +247,15 @@ class ProductTabsSection extends StatelessWidget {
                 color: const Color(0xFFF0F7FF),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: const Center(
-                child: Text('mayoral', style: TextStyle(color: Color(0xFF2196F3), fontSize: 10, fontWeight: FontWeight.w800)),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: avatarUrl.isNotEmpty
+                    ? Image.network(
+                        avatarUrl,
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) => _buildAvatarFallback(sellerName),
+                      )
+                    : _buildAvatarFallback(sellerName),
               ),
             ),
             const SizedBox(width: 12),
@@ -194,40 +267,46 @@ class ProductTabsSection extends StatelessWidget {
                     scrollDirection: Axis.horizontal,
                     child: Row(
                       children: [
-                        const Text(
-                          'Mayoral Clothing Reseller',
-                          style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
+                        Text(
+                          sellerName,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.w700, fontSize: 14),
                         ),
                         const SizedBox(width: 6),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 6, vertical: 2),
                           decoration: BoxDecoration(
                             color: const Color(0xFFE1F5FE),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Text(
                             '★ ${AppStrings.professionalSeller.tr}',
-                            style: const TextStyle(color: Color(0xFF03A9F4), fontSize: 8, fontWeight: FontWeight.w700),
+                            style: const TextStyle(
+                                color: Color(0xFF03A9F4),
+                                fontSize: 8,
+                                fontWeight: FontWeight.w700),
                           ),
                         ),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 4),
-                  Row(
-                    children: [
-                      const Icon(Icons.mail_outline, size: 12, color: Colors.grey),
-                      const SizedBox(width: 4),
-                      Text('Support@mayoral.com', style: TextStyle(color: Colors.grey[500], fontSize: 11)),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      const Icon(Icons.location_on_outlined, size: 12, color: Colors.grey),
-                      const SizedBox(width: 4),
-                      Text('Ivan Vazov, Plovdiv 4000, Bulgaria', style: TextStyle(color: Colors.grey[500], fontSize: 11)),
-                    ],
-                  ),
+                  if (country.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 4),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.location_on_outlined,
+                              size: 12, color: Colors.grey),
+                          const SizedBox(width: 4),
+                          Text(
+                            country,
+                            style: TextStyle(
+                                color: Colors.grey[500], fontSize: 11),
+                          ),
+                        ],
+                      ),
+                    ),
                 ],
               ),
             ),
@@ -236,24 +315,28 @@ class ProductTabsSection extends StatelessWidget {
         const SizedBox(height: 15),
         // Message Button
         GestureDetector(
-          onTap: (){
+          onTap: () {
             Get.toNamed(RoutePath.message);
           },
           child: Container(
             width: double.infinity,
             height: 45,
             decoration: BoxDecoration(
-              color:AppColors.blackColor,
+              color: AppColors.blackColor,
               borderRadius: BorderRadius.circular(10),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.message_outlined, color: AppColors.primaryColor, size: 18),
+                Icon(Icons.message_outlined,
+                    color: AppColors.primaryColor, size: 18),
                 const SizedBox(width: 10),
                 Text(
                   AppStrings.messageSeller.tr,
-                  style: TextStyle(color: AppColors.primaryColor, fontWeight: FontWeight.w700, fontSize: 14),
+                  style: TextStyle(
+                      color: AppColors.primaryColor,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 14),
                 ),
               ],
             ),
@@ -266,14 +349,38 @@ class ProductTabsSection extends StatelessWidget {
         ),
         const SizedBox(height: 12),
         // Stats
-        _buildSellerStat(Icons.star_border, '${AppStrings.totalRating.tr} ( 128 ${AppStrings.reviews.tr} )', '4.9/5.0'),
-        _buildSellerStat(Icons.shopping_bag_outlined, AppStrings.itemsSold.tr, '1680 ${AppStrings.sold.tr}', highlight: true),
-        _buildSellerStat(Icons.category_outlined, AppStrings.totalItems.tr, '56 ${AppStrings.products.tr}', highlight: true),
+        _buildSellerStat(
+          Icons.star_border,
+          '${AppStrings.totalRating.tr} ( ${product.totalReviews} ${AppStrings.reviews.tr} )',
+          product.ratingDisplay,
+        ),
+        _buildSellerStat(
+          Icons.category_outlined,
+          AppStrings.totalItems.tr,
+          '${product.categoryName} • ${product.subCategoryName}',
+          highlight: true,
+        ),
       ],
     );
   }
 
-  Widget _buildSellerStat(IconData icon, String label, String value, {bool highlight = false}) {
+  Widget _buildAvatarFallback(String name) {
+    final initials = name.isNotEmpty
+        ? name.trim().split(' ').map((w) => w.isNotEmpty ? w[0] : '').take(2).join().toUpperCase()
+        : '?';
+    return Center(
+      child: Text(
+        initials,
+        style: const TextStyle(
+            color: Color(0xFF2196F3),
+            fontSize: 14,
+            fontWeight: FontWeight.w800),
+      ),
+    );
+  }
+
+  Widget _buildSellerStat(IconData icon, String label, String value,
+      {bool highlight = false}) {
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(12),
@@ -293,19 +400,23 @@ class ProductTabsSection extends StatelessWidget {
             child: Icon(icon, color: AppColors.primaryColor, size: 18),
           ),
           const SizedBox(width: 12),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(label, style: TextStyle(color: Colors.grey[500], fontSize: 11)),
-              Text(
-                value,
-                style: TextStyle(
-                  fontWeight: FontWeight.w700,
-                  fontSize: 13,
-                  color: highlight ? AppColors.primaryColor : Colors.black,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(label,
+                    style:
+                        TextStyle(color: Colors.grey[500], fontSize: 11)),
+                Text(
+                  value,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 13,
+                    color: highlight ? AppColors.primaryColor : Colors.black,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),

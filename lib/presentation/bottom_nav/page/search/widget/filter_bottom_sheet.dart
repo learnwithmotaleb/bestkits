@@ -53,7 +53,8 @@ class FilterBottomSheet extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () => Get.back(),
-                    child: const Icon(Icons.close, size: 24, color: Colors.black54),
+                    child: const Icon(Icons.close,
+                        size: 24, color: Colors.black54),
                   ),
                 ],
               ),
@@ -64,24 +65,21 @@ class FilterBottomSheet extends StatelessWidget {
               ),
               const SizedBox(height: 20),
 
-
-              BottomSheetTextField(
-                controller: controller.categoryController,
-                label: AppStrings.selectCategory.tr,
-                items: controller.categories,
-                hint: AppStrings.selectCategory.tr,
-              ),
+              Obx(() => BottomSheetTextField(
+                    controller: controller.categoryController,
+                    label: AppStrings.selectCategory.tr,
+                    items: controller.categoryNames.toList(),
+                    hint: AppStrings.selectCategory.tr,
+                  )),
               const SizedBox(height: 18),
 
-
-              BottomSheetTextField(
-                controller: controller.subcategoryController,
-                label: AppStrings.selectSubcategory.tr,
-                items: controller.subcategories,
-                hint: AppStrings.selectSubcategory.tr,
-              ),
+              Obx(() => BottomSheetTextField(
+                    controller: controller.subcategoryController,
+                    label: AppStrings.selectSubcategory.tr,
+                    items: controller.subcategoryNames.toList(),
+                    hint: AppStrings.selectSubcategory.tr,
+                  )),
               const SizedBox(height: 18),
-
 
               BottomSheetTextField(
                 controller: controller.sortByController,
@@ -92,101 +90,119 @@ class FilterBottomSheet extends StatelessWidget {
               const SizedBox(height: 18),
 
               // Price Range
-              Text(AppStrings.priceRange.tr, style: AppTextStyles.h4.copyWith(fontSize: 14)),
+              Text(AppStrings.priceRange.tr,
+                  style: AppTextStyles.h4.copyWith(fontSize: 14)),
               const SizedBox(height: 12),
               Obx(() => Row(
-                children: [
-                  // Min price
-                  Container(
-                    width: 55,
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Colors.grey.withOpacity(0.3)),
-                    ),
-                    child: Text(
-                      controller.priceRangeMin.value.toInt().toString(),
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
-                    ),
-                  ),
-                  const Spacer(),
-                  const Text('»', style: TextStyle(fontSize: 16, color: Colors.grey)),
-                  const Spacer(),
-                  // Max price
-                  Container(
-                    width: 55,
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Colors.grey.withOpacity(0.3)),
-                    ),
-                    child: Text(
-                      controller.priceRangeMax.value.toInt().toString(),
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
-                    ),
-                  ),
-                ],
-              )),
+                    children: [
+                      // Min price
+                      Container(
+                        width: 55,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 8),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          border:
+                              Border.all(color: Colors.grey.withOpacity(0.3)),
+                        ),
+                        child: Text(
+                          controller.priceRangeMin.value.toInt().toString(),
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                              fontSize: 13, fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                      const Spacer(),
+                      const Text('»',
+                          style: TextStyle(fontSize: 16, color: Colors.grey)),
+                      const Spacer(),
+                      // Max price
+                      Container(
+                        width: 55,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 8),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          border:
+                              Border.all(color: Colors.grey.withOpacity(0.3)),
+                        ),
+                        child: Text(
+                          controller.priceRangeMax.value.toInt().toString(),
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                              fontSize: 13, fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                    ],
+                  )),
               const SizedBox(height: 8),
               Obx(() => SliderTheme(
-                data: SliderThemeData(
-                  activeTrackColor: AppColors.primaryColor,
-                  inactiveTrackColor: AppColors.navBarColor,
-                  thumbColor: AppColors.primaryColor,
-                  overlayColor: AppColors.primaryColor.withOpacity(0.1),
-                  trackHeight: 4,
-                  thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 8),
-                ),
-                child: RangeSlider(
-                  values: RangeValues(
-                    controller.priceRangeMin.value,
-                    controller.priceRangeMax.value,
-                  ),
-                  min: 0,
-                  max: 500,
-                  onChanged: (values) {
-                    controller.priceRangeMin.value = values.start;
-                    controller.priceRangeMax.value = values.end;
-                  },
-                ),
-              )),
+                    data: SliderThemeData(
+                      activeTrackColor: AppColors.primaryColor,
+                      inactiveTrackColor: AppColors.navBarColor,
+                      thumbColor: AppColors.primaryColor,
+                      overlayColor: AppColors.primaryColor.withOpacity(0.1),
+                      trackHeight: 4,
+                      thumbShape:
+                          const RoundSliderThumbShape(enabledThumbRadius: 8),
+                    ),
+                    child: RangeSlider(
+                      values: RangeValues(
+                        controller.priceRangeMin.value,
+                        controller.priceRangeMax.value,
+                      ),
+                      min: 0,
+                      max: 500,
+                      onChanged: (values) {
+                        controller.priceRangeMin.value = values.start;
+                        controller.priceRangeMax.value = values.end;
+                      },
+                    ),
+                  )),
               const SizedBox(height: 18),
 
               // Sort By Rating
-              Text(AppStrings.sortBy.tr, style: AppTextStyles.h4.copyWith(fontSize: 14)),
+              Text(AppStrings.sortBy.tr,
+                  style: AppTextStyles.h4.copyWith(fontSize: 14)),
               const SizedBox(height: 10),
               Obx(() => Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: controller.ratingOptions.map((rating) {
-                  final isSelected = controller.selectedRating.value == rating;
-                  return GestureDetector(
-                    onTap: () => controller.selectedRating.value = rating,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
-                      decoration: BoxDecoration(
-                        color: isSelected ? AppColors.navBarColor : Colors.white,
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(
-                          color: isSelected
-                              ? AppColors.primaryColor
-                              : Colors.grey.withOpacity(0.3),
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: controller.ratingOptions.map((rating) {
+                      final isSelected =
+                          controller.selectedRating.value == rating;
+                      return GestureDetector(
+                        onTap: () => controller.selectedRating.value = rating,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 7),
+                          decoration: BoxDecoration(
+                            color: isSelected
+                                ? AppColors.navBarColor
+                                : Colors.white,
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                              color: isSelected
+                                  ? AppColors.primaryColor
+                                  : Colors.grey.withOpacity(0.3),
+                            ),
+                          ),
+                          child: Text(
+                            rating,
+                            style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: isSelected
+                                  ? FontWeight.w700
+                                  : FontWeight.w500,
+                              color: isSelected
+                                  ? AppColors.primaryColor
+                                  : Colors.black87,
+                            ),
+                          ),
                         ),
-                      ),
-                      child: Text(
-                        rating,
-                        style: TextStyle(
-                          fontSize: 11,
-                          fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                          color: isSelected ? AppColors.primaryColor : Colors.black87,
-                        ),
-                      ),
-                    ),
-                  );
-                }).toList(),
-              )),
+                      );
+                    }).toList(),
+                  )),
               const SizedBox(height: 28),
 
               // Buttons

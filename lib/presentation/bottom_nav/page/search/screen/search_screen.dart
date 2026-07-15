@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:bestkits/data/model/product_model.dart';
 import '../../../../../core/responsive_layout/dimensions.dart';
 import '../../../../../utils/app_colors/app_colors.dart';
 import '../../../../../utils/app_text_style/app_text_style.dart';
@@ -83,10 +84,12 @@ class _SearchScreenState extends State<SearchScreen> {
             // Search Content
             Expanded(
               child: Obx(() {
+                if (controller.isLoading.value) {
+                  return const Center(child: CircularProgressIndicator());
+                }
                 if (controller.filteredProducts.isEmpty) {
                   return _buildNoMatchesState();
                 }
-
                 return _buildSearchResults();
               }),
             ),
@@ -145,8 +148,9 @@ class _SearchScreenState extends State<SearchScreen> {
       ),
       itemCount: controller.filteredProducts.length,
       itemBuilder: (context, index) {
+        final ProductModel product = controller.filteredProducts[index];
         return ProductCard(
-          product: controller.filteredProducts[index],
+          product: product,
           width: double.infinity,
           margin: EdgeInsets.zero,
         );

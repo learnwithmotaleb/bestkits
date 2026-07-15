@@ -8,6 +8,7 @@ import '../../../../widget/custom_appbar.dart';
 import '../../bottom_nav/page/home/widget/product_card.dart';
 import '../../bottom_nav/page/home/pages/categories/widget/category_grid_card.dart';
 import '../controller/favourite_controller.dart';
+import 'package:bestkits/data/model/product_model.dart';
 
 class FavouriteScreen extends StatefulWidget {
   const FavouriteScreen({super.key});
@@ -121,7 +122,7 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                   ),
                   delegate: SliverChildBuilderDelegate(
                     (context, index) {
-                      final product = controller.favoriteList[index];
+                      final ProductModel product = controller.favoriteList[index];
                       return ProductCard(product: product);
                     },
                     childCount: controller.favoriteList.length,

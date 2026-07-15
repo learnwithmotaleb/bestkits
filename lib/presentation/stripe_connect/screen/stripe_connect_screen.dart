@@ -7,8 +7,36 @@ import 'package:bestkits/utils/static_strings/static_strings.dart';
 import 'package:bestkits/widget/app_button.dart';
 import '../controller/stripe_connect_controller.dart';
 
-class StripeConnectScreen extends StatelessWidget {
+class StripeConnectScreen extends StatefulWidget {
   const StripeConnectScreen({super.key});
+
+  @override
+  State<StripeConnectScreen> createState() => _StripeConnectScreenState();
+}
+
+class _StripeConnectScreenState extends State<StripeConnectScreen>
+    with WidgetsBindingObserver {
+  late final StripeConnectController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = Get.find<StripeConnectController>();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      controller.onAppResumed();
+    }
+  }
 
   Widget _buildListTile(IconData icon, String title, String subtitle) {
     return Padding(
@@ -58,8 +86,6 @@ class StripeConnectScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<StripeConnectController>();
-
     return Scaffold(
       backgroundColor: AppColors.whiteColor,
       body: SafeArea(
@@ -69,10 +95,11 @@ class StripeConnectScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: Dimensions.h(40)),
-              
+
               // Top Icon
               Container(
-                padding: EdgeInsets.symmetric(horizontal: Dimensions.w(16), vertical: Dimensions.w(10) ),
+                padding: EdgeInsets.symmetric(
+                    horizontal: Dimensions.w(16), vertical: Dimensions.w(10)),
                 decoration: BoxDecoration(
                   color: AppColors.primaryColor,
                   borderRadius: BorderRadius.circular(16),
@@ -179,7 +206,20 @@ class StripeConnectScreen extends StatelessWidget {
 
               // Action Buttons
               Obx(() {
-                if (controller.connectionState.value == StripeConnectionState.connected) {
+                final state = controller.connectionState.value;
+
+                if (state == StripeConnectionState.loading) {
+                  return Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(Dimensions.w(24)),
+                      child: CircularProgressIndicator(
+                        color: AppColors.primaryColor,
+                      ),
+                    ),
+                  );
+                }
+
+                if (state == StripeConnectionState.connected) {
                   return Column(
                     children: [
                       Container(
@@ -194,11 +234,13 @@ class StripeConnectScreen extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.check_circle_outline, color: Colors.green, size: Dimensions.w(20)),
+                            Icon(Icons.check_circle_outline,
+                                color: Colors.green, size: Dimensions.w(20)),
                             SizedBox(width: Dimensions.w(8)),
                             Text(
                               AppStrings.stripeConnected.tr,
-                              style: AppTextStyles.button.copyWith(color: Colors.green),
+                              style: AppTextStyles.button
+                                  .copyWith(color: Colors.green),
                             ),
                           ],
                         ),
@@ -215,9 +257,87 @@ class StripeConnectScreen extends StatelessWidget {
                       ),
                     ],
                   );
-                } else if (controller.connectionState.value == StripeConnectionState.failed) {
+                }
+
+                if (state == StripeConnectionState.onboarding) {
                   return Column(
                     children: [
+                      Container(
+                        width: double.infinity,
+                        height: Dimensions.h(56),
+                        decoration: BoxDecoration(
+                          color: Colors.orange.shade50,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: Colors.orange.shade400),
+                        ),
+                        alignment: Alignment.center,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.pending_actions,
+                                color: Colors.orange, size: Dimensions.w(20)),
+                            SizedBox(width: Dimensions.w(8)),
+                            Text(
+                              "Onboarding Started",
+                              style: AppTextStyles.button
+                                  .copyWith(color: Colors.orange),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: Dimensions.h(16)),
+                      AppButton(
+                        label: "Continue Onboarding",
+                        onPressed: controller.connectStripeAccount,
+                        backgroundColor: AppColors.blackColor,
+                        textColor: AppColors.primaryColor,
+                        borderSideColor: AppColors.blackColor,
+                        borderRadius: Dimensions.r(12),
+                        height: Dimensions.h(56),
+                        trailingIcon: Icon(Icons.arrow_forward,
+                            color: AppColors.primaryColor,
+                            size: Dimensions.w(18)),
+                      ),
+                      SizedBox(height: Dimensions.h(16)),
+                      AppButton(
+                        label: "Refresh Status",
+                        onPressed: controller.checkStripeStatus,
+                        backgroundColor: AppColors.whiteColor,
+                        textColor: AppColors.blackColor,
+                        borderSideColor: AppColors.blackColor,
+                        borderRadius: Dimensions.r(12),
+                        height: Dimensions.h(56),
+                        trailingIcon: Icon(Icons.refresh,
+                            color: AppColors.blackColor,
+                            size: Dimensions.w(18)),
+                      ),
+                    ],
+                  );
+                }
+
+                if (state == StripeConnectionState.failed) {
+                  return Column(
+                    children: [
+                      if (controller.errorMessage.value.isNotEmpty) ...[
+                        Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.all(Dimensions.w(12)),
+                          decoration: BoxDecoration(
+                            color: Colors.red.shade50,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: Colors.red.shade300),
+                          ),
+                          child: Text(
+                            controller.errorMessage.value,
+                            style: AppTextStyles.body.copyWith(
+                              color: Colors.red.shade700,
+                              fontSize: Dimensions.fs(13),
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        SizedBox(height: Dimensions.h(16)),
+                      ],
                       GestureDetector(
                         onTap: controller.connectStripeAccount,
                         child: Container(
@@ -232,31 +352,19 @@ class StripeConnectScreen extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.error_outline, color: Colors.red, size: Dimensions.w(20)),
+                              Icon(Icons.error_outline,
+                                  color: Colors.red, size: Dimensions.w(20)),
                               SizedBox(width: Dimensions.w(8)),
                               Text(
                                 AppStrings.stripeConnectionFailed.tr,
-                                style: AppTextStyles.button.copyWith(color: Colors.red),
+                                style: AppTextStyles.button
+                                    .copyWith(color: Colors.red),
                               ),
                             ],
                           ),
                         ),
                       ),
                       SizedBox(height: Dimensions.h(16)),
-                      AppButton(
-                        label: AppStrings.saveAndContinue.tr,
-                        onPressed: () {}, // Disabled
-                        backgroundColor: AppColors.blackColor,
-                        textColor: AppColors.primaryColor,
-                        borderSideColor: AppColors.blackColor,
-                        borderRadius: Dimensions.r(12),
-                        height: Dimensions.h(56),
-                      ),
-                    ],
-                  );
-                } else {
-                  return Column(
-                    children: [
                       AppButton(
                         label: AppStrings.connectStripeAccount.tr,
                         onPressed: controller.connectStripeAccount,
@@ -265,42 +373,61 @@ class StripeConnectScreen extends StatelessWidget {
                         borderSideColor: AppColors.blackColor,
                         borderRadius: Dimensions.r(12),
                         height: Dimensions.h(56),
-                        trailingIcon: Icon(Icons.link, color: AppColors.primaryColor, size: Dimensions.w(18)),
-                      ),
-                      SizedBox(height: Dimensions.h(16)),
-                      Container(
-                        width: double.infinity,
-                        height: Dimensions.h(56),
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade300,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        alignment: Alignment.center,
-                        child: Text(
-                          AppStrings.saveAndContinue.tr,
-                          style: AppTextStyles.button.copyWith(color: AppColors.whiteColor),
-                        ),
-                      ),
-                      SizedBox(height: Dimensions.h(16)),
-                      GestureDetector(
-                        onTap: controller.skipForNow,
-                        child: Container(
-                          width: double.infinity,
-                          height: Dimensions.h(56),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFFEF7E5),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          alignment: Alignment.center,
-                          child: Text(
-                            AppStrings.skipForNow.tr,
-                            style: AppTextStyles.button.copyWith(color: AppColors.blackColor),
-                          ),
-                        ),
+                        trailingIcon: Icon(Icons.refresh,
+                            color: AppColors.primaryColor,
+                            size: Dimensions.w(18)),
                       ),
                     ],
                   );
                 }
+
+                // ── Initial state ────────────────────────────
+                return Column(
+                  children: [
+                    AppButton(
+                      label: AppStrings.connectStripeAccount.tr,
+                      onPressed: controller.connectStripeAccount,
+                      backgroundColor: AppColors.blackColor,
+                      textColor: AppColors.primaryColor,
+                      borderSideColor: AppColors.blackColor,
+                      borderRadius: Dimensions.r(12),
+                      height: Dimensions.h(56),
+                      trailingIcon: Icon(Icons.link,
+                          color: AppColors.primaryColor,
+                          size: Dimensions.w(18)),
+                    ),
+                    SizedBox(height: Dimensions.h(16)),
+                    AppButton(
+                      label: "Refresh Status",
+                      onPressed: controller.checkStripeStatus,
+                      backgroundColor: AppColors.whiteColor,
+                      textColor: AppColors.blackColor,
+                      borderSideColor: AppColors.blackColor,
+                      borderRadius: Dimensions.r(12),
+                      height: Dimensions.h(56),
+                      trailingIcon: Icon(Icons.refresh,
+                          color: AppColors.blackColor, size: Dimensions.w(18)),
+                    ),
+                    SizedBox(height: Dimensions.h(16)),
+                    GestureDetector(
+                      onTap: controller.skipForNow,
+                      child: Container(
+                        width: double.infinity,
+                        height: Dimensions.h(56),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFFEF7E5),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          AppStrings.skipForNow.tr,
+                          style: AppTextStyles.button
+                              .copyWith(color: AppColors.blackColor),
+                        ),
+                      ),
+                    ),
+                  ],
+                );
               }),
               SizedBox(height: Dimensions.h(24)),
             ],

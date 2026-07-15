@@ -3,38 +3,102 @@
 class ApiUrl {
   ApiUrl._();
 
-  // ── Domain ───────────────────────────────────────────────
-  // 🔧 Switch domain here only — everything else updates automatically
-  static const String _mainDomain =
-      "https://helena-sedimentological-emily.ngrok-free.dev";
-  static final String baseUrl = _mainDomain;
+  //══════════════════════════════════════════════════════════
+  // DOMAIN
+  //══════════════════════════════════════════════════════════
 
-  static String buildImageUrl(String? relativePath) {
-    if (relativePath == null || relativePath.isEmpty) return '';
-    final path = relativePath.replaceAll(r'\', '/');
-    if (path.startsWith('http')) return path; // Already a full URL
-    final cleanPath = path.startsWith('/') ? path.substring(1) : path;
-    return '$_mainDomain/$cleanPath';
+  /// Change only this domain when switching servers.
+  // static const String _mainDomain = "https://helena-sedimentological-emily.ngrok-free.dev";
+  static const String _mainDomain = "https://hqwwvtcz-5050.inc1.devtunnels.ms";
+
+  static const String baseUrl = _mainDomain;
+
+  /// Builds a full image URL from a relative path.
+  ///
+  /// Examples:
+  /// \uploads\shoes.jpg
+  /// \\uploads\\shoes.jpg
+  /// uploads/shoes.jpg
+  /// /uploads/shoes.jpg
+  ///
+  /// =>
+  /// https://helena-sedimentological-emily.ngrok-free.dev/uploads/shoes.jpg
+  static String buildImageUrl(String? imagePath) {
+    if (imagePath == null || imagePath.trim().isEmpty) {
+      return '';
+    }
+
+    // Already a complete URL
+    if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+      return imagePath;
+    }
+
+    // Convert Windows path separators to URL separators
+    String path = imagePath.replaceAll('\\', '/');
+
+    // Remove duplicate slashes
+    path = path.replaceAll(RegExp(r'/+'), '/');
+
+    // Remove leading slash
+    if (path.startsWith('/')) {
+      path = path.substring(1);
+    }
+
+    return '$_mainDomain/$path';
   }
 
-  // ════════════════════════════════════════════════════════
-  //  AUTH
-  // ════════════════════════════════════════════════════════
+  //══════════════════════════════════════════════════════════
+  // AUTH
+  //══════════════════════════════════════════════════════════
 
-  static final String register = '$baseUrl/auth/register';
-  static final String verifyEmail = '$baseUrl/auth/verify-email';
-  static final String resendOtp = '$baseUrl/auth/resend-otp';
-  static final String forgotPassword = '$baseUrl/auth/forgot-password';
-  static final String verifyResetOtp = '$baseUrl/auth/verify-reset-otp';
-  static final String resetPassword = '$baseUrl/auth/reset-password';
-  static final String login = '$baseUrl/auth/login';
-  static final String getMe = '$baseUrl/auth/me';
+  static const String register = '$baseUrl/auth/register';
+  static const String verifyEmail = '$baseUrl/auth/verify-email';
+  static const String resendOtp = '$baseUrl/auth/resend-otp';
+  static const String forgotPassword = '$baseUrl/auth/forgot-password';
+  static const String verifyResetOtp = '$baseUrl/auth/verify-reset-otp';
+  static const String resetPassword = '$baseUrl/auth/reset-password';
+  static const String login = '$baseUrl/auth/login';
+  static const String getMe = '$baseUrl/auth/me';
 
-  //=================================
-  static final String getProfile = '$baseUrl/profile';
-  static final String updateProfile = '$baseUrl/profile';
-  static final String changePassword = '$baseUrl/profile/update-password';
-  static final String uploadA = '$baseUrl/uploads';
-  static final String getCategories = '$baseUrl/categories';
+  //══════════════════════════════════════════════════════════
+  // PROFILE
+  //══════════════════════════════════════════════════════════
 
+  static const String getProfile = '$baseUrl/profile';
+  static const String updateProfile = '$baseUrl/profile';
+  static const String changePassword = '$baseUrl/profile/update-password';
+
+  //══════════════════════════════════════════════════════════
+  // UPLOADS
+  //══════════════════════════════════════════════════════════
+
+  static const String upload = '$baseUrl/uploads';
+
+  //══════════════════════════════════════════════════════════
+  // CATEGORIES
+  //══════════════════════════════════════════════════════════
+
+  static const String getCategories = '$baseUrl/categories';
+  static String detailsCategory(String id) => '$baseUrl/categories/$id';
+
+  //══════════════════════════════════════════════════════════
+  // PRODUCTS
+  //══════════════════════════════════════════════════════════
+
+  static const String createProduct = '$baseUrl/products';
+  static const String getProducts = '$baseUrl/products';
+
+  static String detailsProduct(String id) => '$baseUrl/products/$id';
+
+  static String updateProduct(String id) => '$baseUrl/products/$id';
+
+  static String deleteProduct(String id) => '$baseUrl/products/$id';
+
+  ///===================Stripe===================
+  static const String stripeCallBack = '$baseUrl/stripe/callback'; //get method
+  static const String stripeStatus = '$baseUrl/stripe/status'; // get Method
+  static const String stripeOnboard = '$baseUrl/stripe/onboard'; //post method
+  static const String stripeCheckOutSession =
+      '$baseUrl/stripe/checkout-session'; //post method
+  static const String stripeWebHook = '$baseUrl/stripe/webhook'; //post method
 }

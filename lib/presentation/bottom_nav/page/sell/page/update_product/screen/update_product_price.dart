@@ -9,6 +9,7 @@ import '../../../../../../../widget/app_alert.dart';
 import '../../../../../../../widget/app_button.dart';
 import '../../../../../../../widget/app_text_field.dart';
 import '../../../../../../../widget/custom_appbar.dart';
+import '../controller/update_product_controller.dart';
 
 class UpdateProductPrice extends StatefulWidget {
   const UpdateProductPrice({super.key});
@@ -49,6 +50,8 @@ class _UpdateProductPriceState extends State<UpdateProductPrice> {
     );
   }
 
+  final UpdateProductController _ctrl = Get.find<UpdateProductController>();
+
   void _onSaveAndContinue() {
     if (!_formKey.currentState!.validate()) return;
     AppAlerts.warning(
@@ -56,10 +59,26 @@ class _UpdateProductPriceState extends State<UpdateProductPrice> {
       message: AppStrings.saveProductChangesSubtitle.tr,
       confirmLabel: AppStrings.confirm.tr,
       cancelLabel: AppStrings.cancel.tr,
-      onConfirm: () {
+      onConfirm: () async {
         Get.back(); // close alert
-        AppAlerts.success(message: AppStrings.productUpdatedSuccess.tr);
-        Get.back(); // back to product details
+        
+        final price = double.tryParse(_priceController.text.replaceAll(RegExp(r'[^0-9.]'), '')) ?? 0.0;
+        final discountPrice = double.tryParse(_discountController.text.replaceAll(RegExp(r'[^0-9.]'), '')) ?? 0.0;
+        final status = _statusController.text;
+
+        final errorMsg = await _ctrl.updateProductApi(
+          price: price,
+          discountPrice: discountPrice,
+          status: status,
+        );
+
+        if (errorMsg == null) {
+          AppAlerts.success(message: AppStrings.productUpdatedSuccess.tr);
+          Get.back(); // back to product details
+          Get.back(); // also back from update screen
+        } else {
+          AppAlerts.error(message: errorMsg);
+        }
       },
     );
   }

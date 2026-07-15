@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:get/get.dart';
-import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:bestkits/presentation/bottom_nav/page/sell/page/update_product/screen/update_product.dart';
 
@@ -10,6 +9,9 @@ import '../../../../../../../utils/static_strings/static_strings.dart';
 import '../../../../../../../utils/assets_image/app_images.dart';
 import '../../../controller/sell_controller.dart';
 import '../screen/product_order.dart';
+import 'package:bestkits/service/api_service.dart';
+import 'package:bestkits/service/api_url.dart';
+import 'package:bestkits/presentation/bottom_nav/page/home/pages/categories/model/CategoryModel.dart';
 
 class UpdateProductController extends GetxController {
   late final RxMap<String, dynamic> product;
@@ -96,6 +98,7 @@ class UpdateProductController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    fetchCategories();
     final args = Get.arguments;
     if (args is Map<String, dynamic>) {
       product = RxMap<String, dynamic>(args);
@@ -205,5 +208,193 @@ class UpdateProductController extends GetxController {
         Get.to(() => const ProductOrder());
       },
     );
+  }
+
+  // ── Form Data for Updating ──────────────────────────────────────────────
+  final RxString name = ''.obs;
+  final RxString description = ''.obs;
+  final RxString selectedCategory = ''.obs;
+  final RxString selectedSubCategory = ''.obs;
+  final RxList<String> selectedSizes = <String>[].obs;
+  final RxBool isLoading = false.obs;
+
+  final RxList<Data> categoryData = <Data>[].obs;
+  final RxList<String> categoryNames = <String>[].obs;
+  final RxList<String> subCategoryNames = <String>[].obs;
+
+  Future<void> fetchCategories() async {
+    try {
+      final apiClient = ApiClient();
+      final response = await apiClient.get(url: ApiUrl.getCategories);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final categoryModel = CategoryModel.fromJson(response.body);
+        if (categoryModel.success == true && categoryModel.data != null) {
+          categoryData.assignAll(categoryModel.data!);
+          categoryNames.assignAll(categoryData
+              .map((c) => c.name ?? '')
+              .where((n) => n.isNotEmpty)
+              .toList());
+        }
+      }
+    } catch (e) {
+      print("Error fetching categories in UpdateProductController: $e");
+    }
+  }
+
+  void updateSubCategories(String categoryName) {
+    final selectedCat = categoryData.firstWhereOrNull(
+      (c) => c.name?.toLowerCase().trim() == categoryName.toLowerCase().trim()
+    );
+    subCategoryNames.clear();
+    if (selectedCat != null && selectedCat.subCategories != null) {
+      subCategoryNames.assignAll(selectedCat.subCategories!
+          .map((s) => s.name ?? '')
+          .where((n) => n.isNotEmpty)
+          .toList());
+    }
+  }
+
+  Future<List<String>> _uploadImages() async {
+    final List<String> urls = [];
+    final apiClient = ApiClient();
+    for (final img in pickedImages) {
+      try {
+        final response = await apiClient.multipart(
+          url: ApiUrl.upload,
+          fields: {},
+          files: [
+            MultipartFileData(
+              key: 'file',
+              path: img.path,
+            )
+          ],
+          isToken: true,
+        );
+        if (response.statusCode == 200 || response.statusCode == 201) {
+          final data = response.body;
+          if (data is Map && data.containsKey('url')) {
+            urls.add(data['url'].toString());
+          } else if (data is Map && data['data'] != null && data['data']['url'] != null) {
+            urls.add(data['data']['url'].toString());
+          }
+        }
+      } catch (e) {
+        print("Error uploading image: $e");
+      }
+    }
+    return urls;
+  }
+
+  Future<String?> updateProductApi({
+    required double price,
+    required double discountPrice,
+    required String status,
+  }) async {
+    final prodId = product['id']?.toString() ?? '1'; // Fallback to 1 if dummy
+
+    isLoading.value = true;
+    try {
+      final apiClient = ApiClient();
+      
+      // Upload images if any picked, otherwise reuse existing
+      final List<String> imageUrls = [];
+      if (pickedImages.isNotEmpty) {
+        imageUrls.addAll(await _uploadImages());
+      }
+      if (imageUrls.isEmpty) {
+        imageUrls.addAll(productImages);
+      }
+      if (imageUrls.isEmpty) {
+        imageUrls.add("https://example.com/images/iphone15pro-front.jpg");
+      }
+
+      double discountPercentage = 0;
+      if (price > 0 && discountPrice > 0 && discountPrice < price) {
+        discountPercentage = ((price - discountPrice) / price) * 100;
+      }
+
+      // Resolve category & subcategory IDs
+      int categoryId = 1;
+      int subCategoryId = 1;
+
+      if (selectedCategory.value.isNotEmpty) {
+        final cat = categoryData.firstWhereOrNull(
+          (c) => c.name?.toLowerCase().trim() == selectedCategory.value.toLowerCase().trim()
+        );
+        if (cat != null && cat.id != null) {
+          categoryId = cat.id!.toInt();
+          
+          if (selectedSubCategory.value.isNotEmpty && cat.subCategories != null) {
+            final sub = cat.subCategories!.firstWhereOrNull(
+              (s) => s.name?.toLowerCase().trim() == selectedSubCategory.value.toLowerCase().trim()
+            );
+            if (sub != null && sub.id != null) {
+              subCategoryId = sub.id!.toInt();
+            }
+          }
+        }
+      }
+
+      // Map sizes to variants
+      final List<Map<String, dynamic>> variants = [];
+      final List<String> variantNames = [];
+
+      if (selectedSizes.isNotEmpty) {
+        variantNames.add("Size");
+        for (final size in selectedSizes) {
+          variants.add({
+            "variantName": size,
+            "price": price,
+          });
+        }
+      } else {
+        variants.add({
+          "variantName": "Default",
+          "price": price,
+        });
+      }
+
+      String statusPayload = "ACTIVE";
+      if (status.toLowerCase().contains("inactive")) {
+        statusPayload = "INACTIVE";
+      }
+
+      final body = {
+        "name": name.value.isNotEmpty ? name.value : product['name']?.toString() ?? '',
+        "description": description.value.isNotEmpty ? description.value : product['description']?.toString() ?? '',
+        "original_price": price,
+        "discounted_price": discountPrice,
+        "discount_percentage": discountPercentage.round(),
+        "image_urls": imageUrls,
+        "categoryId": categoryId,
+        "subCategoryId": subCategoryId,
+        "condition": "NEW",
+        "status": statusPayload,
+        "variants": variants,
+        "variant_names": variantNames,
+        "replace_variants": true
+      };
+
+      final response = await apiClient.patch(
+        url: ApiUrl.updateProduct(prodId),
+        body: body,
+        isToken: true,
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return null; // success
+      } else {
+        final resBody = response.body;
+        if (resBody is Map && resBody.containsKey('message')) {
+          return resBody['message'].toString();
+        }
+        return "Failed to update product. Status code: ${response.statusCode}";
+      }
+    } catch (e) {
+      print("Error updating product: $e");
+      return "Something went wrong: $e";
+    } finally {
+      isLoading.value = false;
+    }
   }
 }

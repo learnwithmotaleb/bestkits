@@ -7,69 +7,87 @@ import '../../../../utils/app_colors/app_colors.dart';
 import '../../../../utils/app_text_style/app_text_style.dart';
 import '../../../../widget/app_button.dart';
 import '../controller/product_details_controller.dart';
+import 'package:bestkits/data/model/product_model.dart';
 
 class ProductActionSection extends StatelessWidget {
   final ProductDetailsController controller;
+  final ProductModel product;
 
-  const ProductActionSection({super.key, required this.controller});
+  const ProductActionSection({
+    super.key,
+    required this.controller,
+    required this.product,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final variants = product.variants;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Size Selection
-        Text(
-          '${AppStrings.variant.tr} -',
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-            color: Colors.grey[600],
+        // Variant Selection
+        if (variants.isNotEmpty) ...[
+          Text(
+            '${AppStrings.variant.tr} -',
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: Colors.grey[600],
+            ),
           ),
-        ),
-        const SizedBox(height: 10),
-        SizedBox(
-          height: 35,
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            itemCount: controller.sizes.length,
-            separatorBuilder: (_, __) => const SizedBox(width: 10),
-            itemBuilder: (context, index) {
-              return Obx(() {
-                final size = controller.sizes[index];
-                final isSelected = controller.selectedSize.value == size;
-                return GestureDetector(
-                  onTap: () => controller.selectSize(size),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    decoration: BoxDecoration(
-                      color: isSelected ? Colors.white : Colors.grey[200],
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(
-                        color: isSelected
-                            ? AppColors.primaryColor
-                            : Colors.transparent,
-                        width: 1,
+          const SizedBox(height: 10),
+          SizedBox(
+            height: 35,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              itemCount: variants.length,
+              separatorBuilder: (_, __) => const SizedBox(width: 10),
+              itemBuilder: (context, index) {
+                return Obx(() {
+                  final variant = variants[index];
+                  final isSelected =
+                      controller.selectedVariant.value == variant.variantName;
+                  return GestureDetector(
+                    onTap: () =>
+                        controller.selectVariant(variant.variantName),
+                    child: Container(
+                      padding:
+                          const EdgeInsets.symmetric(horizontal: 15),
+                      decoration: BoxDecoration(
+                        color: isSelected ? Colors.white : Colors.grey[200],
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: isSelected
+                              ? AppColors.primaryColor
+                              : Colors.transparent,
+                          width: 1,
+                        ),
+                      ),
+                      alignment: Alignment.center,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            variant.variantName,
+                            style: TextStyle(
+                              color: isSelected
+                                  ? AppColors.primaryColor
+                                  : Colors.grey[500],
+                              fontWeight: FontWeight.w600,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    alignment: Alignment.center,
-                    child: Text(
-                      size,
-                      style: TextStyle(
-                        color: isSelected
-                            ? AppColors.primaryColor
-                            : Colors.grey[500],
-                        fontWeight: FontWeight.w600,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ),
-                );
-              });
-            },
+                  );
+                });
+              },
+            ),
           ),
-        ),
-        const SizedBox(height: 20),
+          const SizedBox(height: 20),
+        ],
 
         // Quantity Selection
         Text(
@@ -92,8 +110,8 @@ class ProductActionSection extends StatelessWidget {
             children: [
               IconButton(
                 onPressed: controller.decrementQuantity,
-                icon:
-                    Icon(Icons.remove, color: AppColors.primaryColor, size: 18),
+                icon: Icon(Icons.remove,
+                    color: AppColors.primaryColor, size: 18),
               ),
               Expanded(
                 child: Container(
@@ -109,7 +127,8 @@ class ProductActionSection extends StatelessWidget {
               ),
               IconButton(
                 onPressed: controller.incrementQuantity,
-                icon: Icon(Icons.add, color: AppColors.primaryColor, size: 18),
+                icon: Icon(Icons.add,
+                    color: AppColors.primaryColor, size: 18),
               ),
             ],
           ),
@@ -123,7 +142,6 @@ class ProductActionSection extends StatelessWidget {
               child: AppButton(
                 label: AppStrings.addToCart.tr,
                 onPressed: () {
-                  //show alert added successfully to cart
                   Get.snackbar(
                     'Success',
                     'Product added to cart successfully',
@@ -131,7 +149,6 @@ class ProductActionSection extends StatelessWidget {
                     colorText: Colors.white,
                     snackPosition: SnackPosition.BOTTOM,
                   );
-                  print("Add To Cart Button Clicked");
                 },
                 backgroundColor: const Color(0xFF1A1A1A),
                 textColor: AppColors.primaryColor,
@@ -147,7 +164,6 @@ class ProductActionSection extends StatelessWidget {
                 label: AppStrings.orderNow.tr,
                 onPressed: () {
                   Get.toNamed(RoutePath.checkOut);
-                  print("Order Button Clicked");
                 },
                 backgroundColor: AppColors.primaryColor,
                 textColor: Colors.black,

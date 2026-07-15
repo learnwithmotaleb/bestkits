@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'package:get/get.dart';
-import '../../../../../utils/assets_image/app_images.dart';
-import '../../../../../utils/static_strings/static_strings.dart';
 import '../../../../../helper/local_db/local_db.dart';
+import '../../../../../utils/assets_image/app_images.dart';
 import '../../profile/model/user_model.dart';
 import '../../../../../service/api_service.dart';
 import '../../../../../service/api_url.dart';
 import '../pages/categories/model/CategoryModel.dart';
+import 'package:bestkits/data/model/product_model.dart';
 
 class BannerModel {
   final String tag;
@@ -42,6 +42,7 @@ class HomeController extends GetxController {
     _loadUserData();
     fetchBanners();
     fetchCategoriesFromApi();
+    fetchProducts();
   }
 
   void _loadUserData() {
@@ -118,47 +119,32 @@ class HomeController extends GetxController {
       isLoadingCategories.value = false;
     }
   }
-  // Dummy Trending Products
-  final List<Map<String, dynamic>> trendingProducts = [
-    {
-      'name': AppStrings.dummyProductName,
-      'image': AppImages.kidsCottonHoodie,
-      'price': '18.00',
-      'oldPrice': '21.99',
-      'rating': '4.5/5.0',
-      'material': AppStrings.cottonPullOn,
-      'discount': '20%',
-    },
-    {
-      'name': AppStrings.dummyProductName,
-      'image': AppImages.kidsCottonSho, // Using available sho image
-      'price': '18.00',
-      'oldPrice': '21.99',
-      'rating': '4.5/5.0',
-      'material': AppStrings.cottonPullOn,
-      'discount': '10%',
-    },
-  ].obs;
+  // Trending Products fetched from API
+  final RxList<ProductModel> trendingProducts = <ProductModel>[].obs;
 
-  // Dummy Recently Viewed
-  final List<Map<String, dynamic>> recentlyViewed = [
-    {
-      'name': AppStrings.dummyProductName,
-      'image': AppImages.kidsCottonHoddieTshirt,
-      'price': '18.00',
-      'oldPrice': '21.99',
-      'rating': '4.5/5.0',
-      'material': AppStrings.cottonPullOn,
-      'discount': '20%',
-    },
-    {
-      'name': AppStrings.dummyProductName,
-      'image': AppImages.kidAccessor,
-      'price': '18.00',
-      'oldPrice': '21.99',
-      'rating': '4.5/5.0',
-      'material': AppStrings.cottonPullOn,
-      'discount': '15%',
-    },
-  ].obs;
+  // Recently Viewed - populated from API (same products list for now)
+  final RxList<ProductModel> recentlyViewed = <ProductModel>[].obs;
+
+  // Fetch products from API
+  Future<void> fetchProducts() async {
+    try {
+      final response = await _apiClient.get(url: ApiUrl.getProducts);
+      if (response.statusCode == 200 &&
+          response.body is Map &&
+          response.body['data'] != null) {
+        final List<dynamic> data = response.body['data'];
+        final products = data
+            .map((e) => ProductModel.fromJson(e as Map<String, dynamic>))
+            .toList();
+        trendingProducts.assignAll(products);
+        // Use same products for recently viewed (sliced for variety)
+        recentlyViewed.assignAll(
+            products.length > 4 ? products.sublist(products.length - 4) : products);
+      } else {
+        print('Failed to fetch products: \${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching products: \$e');
+    }
+  }
 }

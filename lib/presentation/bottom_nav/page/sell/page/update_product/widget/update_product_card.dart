@@ -83,6 +83,8 @@ class UpdateProductCard extends StatelessWidget {
                       top: Dimensions.h(10),
                       right: Dimensions.w(10),
                       child: Obx(() {
+                        // ignore: unused_local_variable
+                        final _ = favouriteController.favoriteList.length;
                         final isFav = favouriteController.isFavorite(product);
                         return GestureDetector(
                           onTap: () {

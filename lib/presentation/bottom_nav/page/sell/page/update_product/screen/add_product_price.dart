@@ -9,6 +9,7 @@ import '../../../../../../../widget/app_alert.dart';
 import '../../../../../../../widget/app_button.dart';
 import '../../../../../../../widget/app_text_field.dart';
 import '../../../../../../../widget/custom_appbar.dart';
+import '../controller/add_product_controller.dart';
 
 class AddProductPrice extends StatefulWidget {
   const AddProductPrice({super.key});
@@ -49,6 +50,8 @@ class _AddProductPriceState extends State<AddProductPrice> {
     );
   }
 
+  final AddProductController _ctrl = Get.find<AddProductController>();
+
   void _onSaveAndContinue() {
     if (!_formKey.currentState!.validate()) return;
     AppAlerts.warning(
@@ -56,10 +59,25 @@ class _AddProductPriceState extends State<AddProductPrice> {
       message: AppStrings.publishProductSubtitle.tr,
       confirmLabel: AppStrings.confirm.tr,
       cancelLabel: AppStrings.cancel.tr,
-      onConfirm: () {
+      onConfirm: () async {
         Get.back(); // close alert
-        AppAlerts.success(message: AppStrings.productPublishedSuccess.tr);
-        Get.until((route) => route.isFirst); // back to sell screen root
+        
+        final price = double.tryParse(_priceController.text) ?? 0.0;
+        final discountPrice = double.tryParse(_discountController.text) ?? 0.0;
+        final status = _statusController.text;
+
+        final errorMsg = await _ctrl.saveProduct(
+          price: price,
+          discountPrice: discountPrice,
+          status: status,
+        );
+
+        if (errorMsg == null) {
+          AppAlerts.success(message: AppStrings.productPublishedSuccess.tr);
+          Get.until((route) => route.isFirst); // back to sell screen root
+        } else {
+          AppAlerts.error(message: errorMsg);
+        }
       },
     );
   }

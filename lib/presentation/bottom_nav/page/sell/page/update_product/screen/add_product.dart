@@ -149,6 +149,7 @@ class _AddProductState extends State<AddProduct> {
             // Clear sub-category if category changes
             if (title == AppStrings.productCategoryLabel.tr) {
               _subCategoryController.clear();
+              _ctrl.updateSubCategories(val);
             }
           });
           Get.back();
@@ -161,6 +162,13 @@ class _AddProductState extends State<AddProduct> {
 
   void _onContinue() {
     if (!_formKey.currentState!.validate()) return;
+    
+    _ctrl.name.value = _nameController.text;
+    _ctrl.description.value = _descController.text;
+    _ctrl.selectedCategory.value = _categoryController.text;
+    _ctrl.selectedSubCategory.value = _subCategoryController.text;
+    _ctrl.selectedSizes.assignAll(_selectedSizes);
+
     Get.to(() => const AddProductPrice());
   }
 
@@ -207,23 +215,29 @@ class _AddProductState extends State<AddProduct> {
                     // ── Product Category ──────────────────────────────────
                     _SectionLabel(label: AppStrings.productCategoryLabel.tr),
                     SizedBox(height: Dimensions.h(8)),
-                    _DropdownField(
-                      controller: _categoryController,
-                      hint: AppStrings.selectCategory.tr,
-                      onTap: () => _openDropdown(
-                          AppStrings.productCategoryLabel.tr, _categories, _categoryController),
-                    ),
+                    Obx(() {
+                      final cats = _ctrl.categoryNames.toList();
+                      return _DropdownField(
+                        controller: _categoryController,
+                        hint: AppStrings.selectCategory.tr,
+                        onTap: () => _openDropdown(
+                            AppStrings.productCategoryLabel.tr, cats, _categoryController),
+                      );
+                    }),
                     SizedBox(height: Dimensions.h(16)),
 
                     // ── Product Sub-category ──────────────────────────────
                     _SectionLabel(label: AppStrings.productSubcategoryLabel.tr),
                     SizedBox(height: Dimensions.h(8)),
-                    _DropdownField(
-                      controller: _subCategoryController,
-                      hint: AppStrings.selectSubcategory.tr,
-                      onTap: () => _openDropdown(AppStrings.productSubcategoryLabel.tr,
-                          _subCategories, _subCategoryController),
-                    ),
+                    Obx(() {
+                      final subs = _ctrl.subCategoryNames.toList();
+                      return _DropdownField(
+                        controller: _subCategoryController,
+                        hint: AppStrings.selectSubcategory.tr,
+                        onTap: () => _openDropdown(AppStrings.productSubcategoryLabel.tr,
+                            subs, _subCategoryController),
+                      );
+                    }),
                     SizedBox(height: Dimensions.h(16)),
 
                     // ── Size / Variant ────────────────────────────────────

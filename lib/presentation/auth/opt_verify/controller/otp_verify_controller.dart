@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../../../../service/api_service.dart';
 import '../../../../service/api_url.dart';
 import '../../../../helper/tost_message/show_snackbar.dart';
+import '../../../../helper/local_db/local_db.dart';
 import '../../../../core/routes/route_path.dart';
 
 class OtpVerifyController extends GetxController {
@@ -96,6 +97,16 @@ class OtpVerifyController extends GetxController {
               },
             );
           } else {
+            // Save the JWT token returned by verify-email before navigating
+            final resData = responseData['data'];
+            if (resData is Map) {
+              final token = resData['token']?.toString() ??
+                  resData['accessToken']?.toString() ??
+                  resData['access_token']?.toString();
+              if (token != null && token.isNotEmpty) {
+                await SharePrefsHelper.saveToken(token);
+              }
+            }
             Get.offAllNamed(RoutePath.stripeConnect);
           }
         } else {
