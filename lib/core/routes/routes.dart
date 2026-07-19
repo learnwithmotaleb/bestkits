@@ -69,7 +69,8 @@ import 'package:bestkits/presentation/return_order/controller/return_order_contr
 import 'package:bestkits/presentation/return_order/screen/return_order_details.dart';
 import 'package:bestkits/presentation/return_order/screen/return_order_screen.dart';
 import 'package:bestkits/presentation/stripe_connect/controller/stripe_connect_controller.dart';
-import 'package:bestkits/presentation/stripe_connect/screen/stripe_connect_screen.dart';
+import 'package:bestkits/presentation/stripe_connect/screen/stripe_connect_profile.dart';
+import 'package:bestkits/presentation/stripe_connect/web_page_load.dart';
 import 'package:bestkits/presentation/terms_condition/controller/terms_condition_controller.dart';
 import 'package:bestkits/presentation/terms_condition/screen/terms_condition_screen.dart';
 import 'package:bestkits/presentation/update_profile/controller/update_profile_controller.dart';
@@ -323,7 +324,7 @@ class AppRouter {
     ),
     GetPage(
       name: RoutePath.stripeConnect,
-      page: () => const StripeConnectScreen(),
+      page: () => const StripeConnectProfileScreen(),
       transition: Transition.rightToLeft,
       binding: BindingsBuilder(() {
         Get.put(StripeConnectController());
@@ -363,19 +364,16 @@ class AppRouter {
       page: () => const OrderDetailsScreen(),
       transition: Transition.rightToLeft,
     ),
-
     GetPage(
       name: RoutePath.updateProductSell,
       page: () => const UpdateProduct(),
       transition: Transition.rightToLeft,
     ),
-
     GetPage(
       name: RoutePath.updateProductPrice,
       page: () => const UpdateProductPrice(),
       transition: Transition.rightToLeft,
     ),
-
     GetPage(
       name: RoutePath.addProduct,
       page: () => const AddProduct(),
@@ -384,7 +382,6 @@ class AppRouter {
         Get.put(AddProductController());
       }),
     ),
-
     GetPage(
       name: RoutePath.addProductPrice,
       page: () => const AddProductPrice(),
@@ -398,13 +395,11 @@ class AppRouter {
         Get.put(CustomerOrderController());
       }),
     ),
-
     GetPage(
       name: RoutePath.customerOrderDetails,
       page: () => const CustomerOrderDetails(),
       transition: Transition.rightToLeft,
     ),
-
     GetPage(
       name: RoutePath.returnOrder,
       page: () => const ReturnOrderScreen(),
@@ -413,13 +408,11 @@ class AppRouter {
         Get.put(ReturnOrderController());
       }),
     ),
-
     GetPage(
       name: RoutePath.returnOrderDetails,
       page: () => const ReturnOrderDetails(),
       transition: Transition.rightToLeft,
     ),
-
     GetPage(
       name: RoutePath.earning,
       page: () => const EarningScreen(),
@@ -428,7 +421,6 @@ class AppRouter {
         Get.put(EarningController());
       }),
     ),
-
     GetPage(
       name: RoutePath.deliveryOption,
       page: () => const DeliveryOptionsScreen(),
@@ -437,6 +429,10 @@ class AppRouter {
         Get.put(DeliveryOptionsController());
       }),
     ),
-
+    GetPage(
+      name: RoutePath.stripeWebview,
+      page: () => const StripeWebPageLoadScreen(),
+      transition: Transition.rightToLeft,
+    ),
   ];
 }

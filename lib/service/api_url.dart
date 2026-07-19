@@ -101,4 +101,16 @@ class ApiUrl {
   static const String stripeCheckOutSession =
       '$baseUrl/stripe/checkout-session'; //post method
   static const String stripeWebHook = '$baseUrl/stripe/webhook'; //post method
+
+//=================Delivery Options========================
+  static const String deliveryMeInternation =
+      '$baseUrl/delivery/me/international'; //put method
+  static const String deliveryMeDomestic =
+      '$baseUrl/delivery/me/domestic'; //put method
+  static const String deliveryGetAll = '$baseUrl/delivery/me'; //get method
+
+//==================Home=====================
+  static const String home = '$baseUrl/home'; //get method
+  static const String recentlyViewed =
+      '$baseUrl/home/recently-viewed'; //get method
 }

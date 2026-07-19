@@ -19,9 +19,17 @@ class SplashController extends GetxController {
 
         final token = SharePrefsHelper.getToken();
         if (token != null && token.isNotEmpty) {
+          // Already logged in → go straight to main app
           Get.offAllNamed(RoutePath.bottomNav);
         } else {
-          Get.offAllNamed(RoutePath.login);
+          final onboardSeen = SharePrefsHelper.getOnboardSeen();
+          if (!onboardSeen) {
+            // First launch → show onboarding
+            Get.offAllNamed(RoutePath.onboard);
+          } else {
+            // Returning user, not logged in → go to login
+            Get.offAllNamed(RoutePath.login);
+          }
         }
       },
     );

@@ -5,34 +5,11 @@ import '../../../../../utils/assets_image/app_images.dart';
 import '../../profile/model/user_model.dart';
 import '../../../../../service/api_service.dart';
 import '../../../../../service/api_url.dart';
-import '../pages/categories/model/CategoryModel.dart';
 import 'package:bestkits/data/model/product_model.dart';
-
-class BannerModel {
-  final String tag;
-  final String title;
-  final String titleHighlight;
-  final String subtitle;
-  final String description;
-  final String? image;
-  final String? badgeColor;
-
-  const BannerModel({
-    required this.tag,
-    required this.title,
-    required this.titleHighlight,
-    required this.subtitle,
-    required this.description,
-    this.image,
-    this.badgeColor,
-  });
-}
+import '../model/home_model.dart' hide UserData;
+import '../model/recently_view_model.dart';
 
 class HomeController extends GetxController {
-  // Banners from server
-  final RxList<BannerModel> banners = <BannerModel>[].obs;
-  final RxBool isLoadingBanners = false.obs;
-
   // User Data
   var userData = Rxn<UserData>();
 
@@ -40,9 +17,8 @@ class HomeController extends GetxController {
   void onInit() {
     super.onInit();
     _loadUserData();
-    fetchBanners();
-    fetchCategoriesFromApi();
-    fetchProducts();
+    fetchHomeData();
+    fetchRecentlyViewed();
   }
 
   void _loadUserData() {
@@ -57,94 +33,64 @@ class HomeController extends GetxController {
     }
   }
 
-  Future<void> fetchBanners() async {
-    isLoadingBanners.value = true;
-    try {
-      // Simulate network request
-      await Future.delayed(const Duration(milliseconds: 1500));
-      
-      banners.value = [
-        const BannerModel(
-          tag: 'Kids Sneakers',
-          title: 'Get ',
-          titleHighlight: '5% OFF',
-          subtitle: 'Use Code: KIDS20',
-          description: 'Valid for all Kids Sneakers products from May 20, 2026 – May 31, 2026. Limited to the first 100 uses only. Apply the coupon code at checkout and enjoy exclusive savings on selected styles.',
-          image: AppImages.kidsCollections,
-          badgeColor: 'yellow',
-        ),
-        const BannerModel(
-          tag: 'Kids Clothing',
-          title: 'Flat ',
-          titleHighlight: '€15 OFF',
-          subtitle: 'Use Code: KIDS20',
-          description: 'Enjoy an instant €15 discount on all Kids Clothing items. Offer valid from June 01, 2026 – June 15, 2026 with unlimited coupon usage during the campaign period.',
-          image: AppImages.kidsCollections,
-          badgeColor: 'yellow',
-        ),
-        const BannerModel(
-          tag: 'Buy & Sell Kids Fashion',
-          title: 'Trusted Marketplace ',
-          titleHighlight: 'For Kids Fashion',
-          subtitle: '',
-          description: '"Discover quality pre-loved and new kids\' fashion from trusted sellers across Europe. BestKid makes buying and selling simple, secure, and family-friendly — all in one place."',
-          image: null,
-          badgeColor: 'green',
-        ),
-      ];
-    } catch (e) {
-      banners.clear();
-    } finally {
-      isLoadingBanners.value = false;
-    }
-  }
-  // Categories from server
-  final RxList<Data> categories = <Data>[].obs;
-  final RxBool isLoadingCategories = false.obs;
+  // Data from Home API
+  final RxList<CategoryData> categories = <CategoryData>[].obs;
+  final RxList<ProductModel> trendingProducts = <ProductModel>[].obs;
+  final RxList<ProductModel> promotedProducts = <ProductModel>[].obs;
+  final RxList<ProductModel> newArrivals = <ProductModel>[].obs;
+  final RxList<TrustCardData> trustCards = <TrustCardData>[].obs;
+
+  final RxBool isLoadingHome = false.obs;
   final ApiClient _apiClient = ApiClient();
 
-  Future<void> fetchCategoriesFromApi() async {
-    isLoadingCategories.value = true;
+  Future<void> fetchHomeData() async {
+    isLoadingHome.value = true;
     try {
-      final response = await _apiClient.get(url: ApiUrl.getCategories);
+      final response = await _apiClient.get(url: ApiUrl.home);
       if (response.statusCode == 200 || response.statusCode == 201) {
-        final categoryModel = CategoryModel.fromJson(response.body);
-        if (categoryModel.success == true && categoryModel.data != null) {
-          categories.assignAll(categoryModel.data!);
+        final homeModel = HomeModel.fromJson(response.body);
+        if (homeModel.success == true && homeModel.data != null) {
+          if (homeModel.data!.categories != null)
+            categories.assignAll(homeModel.data!.categories!);
+          if (homeModel.data!.trending != null)
+            trendingProducts.assignAll(homeModel.data!.trending!);
+          if (homeModel.data!.promoted != null)
+            promotedProducts.assignAll(homeModel.data!.promoted!);
+          if (homeModel.data!.newArrivals != null)
+            newArrivals.assignAll(homeModel.data!.newArrivals!);
+          if (homeModel.data!.trustCards != null)
+            trustCards.assignAll(homeModel.data!.trustCards!);
         }
       }
     } catch (e) {
-      print("Error fetching categories: $e");
+      print("Error fetching home data: $e");
     } finally {
-      isLoadingCategories.value = false;
+      isLoadingHome.value = false;
     }
   }
-  // Trending Products fetched from API
-  final RxList<ProductModel> trendingProducts = <ProductModel>[].obs;
 
-  // Recently Viewed - populated from API (same products list for now)
+  // Recently Viewed - populated from API
   final RxList<ProductModel> recentlyViewed = <ProductModel>[].obs;
+  final RxBool isLoadingRecentlyViewed = false.obs;
 
-  // Fetch products from API
-  Future<void> fetchProducts() async {
+  Future<void> fetchRecentlyViewed() async {
+    isLoadingRecentlyViewed.value = true;
     try {
-      final response = await _apiClient.get(url: ApiUrl.getProducts);
-      if (response.statusCode == 200 &&
-          response.body is Map &&
-          response.body['data'] != null) {
-        final List<dynamic> data = response.body['data'];
-        final products = data
-            .map((e) => ProductModel.fromJson(e as Map<String, dynamic>))
-            .toList();
-        trendingProducts.assignAll(products);
-        // Use same products for recently viewed (sliced for variety)
-        recentlyViewed.assignAll(
-            products.length > 4 ? products.sublist(products.length - 4) : products);
-      } else {
-        print('Failed to fetch products: \${response.statusCode}');
+      final response = await _apiClient.get(
+        url: ApiUrl.recentlyViewed,
+        isToken: true, // Need token for recently viewed
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final recentlyViewModel = RecentlyViewModel.fromJson(response.body);
+        if (recentlyViewModel.success == true &&
+            recentlyViewModel.data != null) {
+          recentlyViewed.assignAll(recentlyViewModel.data!);
+        }
       }
     } catch (e) {
-      print('Error fetching products: \$e');
+      print('Error fetching recently viewed: $e');
+    } finally {
+      isLoadingRecentlyViewed.value = false;
     }
   }
 }

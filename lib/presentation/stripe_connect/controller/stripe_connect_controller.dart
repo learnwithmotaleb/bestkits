@@ -4,6 +4,7 @@ import 'package:bestkits/service/api_service.dart';
 import 'package:bestkits/service/api_url.dart';
 import 'package:bestkits/widget/open_url.dart';
 import 'package:bestkits/widget/show_snackbar.dart';
+import 'package:bestkits/helper/local_db/local_db.dart';
 
 enum StripeConnectionState { loading, initial, onboarding, connected, failed }
 
@@ -12,11 +13,23 @@ class StripeConnectController extends GetxController {
 
   final connectionState = StripeConnectionState.loading.obs;
   final errorMessage = ''.obs;
+  final cardNumber = ''.obs;
 
   @override
   void onInit() {
     super.onInit();
     checkStripeStatus();
+    loadCardNumber();
+  }
+
+  void loadCardNumber() {
+    cardNumber.value =
+        SharePrefsHelper.getStripeCardNumber() ?? '4242 4242 4242 4242';
+  }
+
+  Future<void> saveCardNumber(String number) async {
+    cardNumber.value = number;
+    await SharePrefsHelper.saveStripeCardNumber(number);
   }
 
   // ─── Status Check ─────────────────────────────────────────────────────────
@@ -34,6 +47,13 @@ class StripeConnectController extends GetxController {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final body = response.body;
+
+        // Handle body-level error even if HTTP 200
+        if (body is Map && body['success'] == false) {
+          connectionState.value = StripeConnectionState.initial;
+          return;
+        }
+
         final data = (body is Map && body['data'] is Map)
             ? body['data'] as Map
             : (body is Map ? body : <String, dynamic>{});
@@ -43,11 +63,9 @@ class StripeConnectController extends GetxController {
         errorMessage.value = 'Session expired. Please log in again.';
         connectionState.value = StripeConnectionState.failed;
       } else {
-        // Status endpoint failure — fall back to initial so user can try
         connectionState.value = StripeConnectionState.initial;
       }
     } catch (e) {
-      // Network or parse error — show initial so user isn't stuck on loading
       connectionState.value = StripeConnectionState.initial;
     }
   }
@@ -77,32 +95,44 @@ class StripeConnectController extends GetxController {
     try {
       final response = await _apiClient.post(
         url: ApiUrl.stripeOnboard,
-        body: {
-          "returnUrl": "bestkits://stripe/callback",
-          "refreshUrl": "bestkits://stripe/refresh",
-        },
+        body: {}, // returnUrl & refreshUrl are optional — omitting them
         isToken: true,
       );
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        final body = response.body;
-        final stripeUrl = _extractUrl(body);
+      final body = response.body;
+      final httpCode = response.statusCode ?? 500;
 
+      // ── Success path ──────────────────────────────────────────
+      if (httpCode == 200 || httpCode == 201) {
+        // Handle body-level failure (success:false with HTTP 200)
+        if (body is Map && body['success'] == false) {
+          final msg = _extractErrorMessage(body, httpCode);
+          _setFailed(msg);
+          return;
+        }
+
+        final stripeUrl = _extractUrl(body);
         if (stripeUrl != null && stripeUrl.isNotEmpty) {
-          // Mark as onboarding so the UI updates while user is in browser
+          // Open Stripe-hosted onboarding in our in-app WebView
           connectionState.value = StripeConnectionState.onboarding;
-          await openExternalUrl(stripeUrl);
-          // User returned from browser — re-check status automatically
+
+          // Wait for the user to return from the webview
+          await Get.toNamed(RoutePath.stripeWebview, arguments: stripeUrl);
+
+          // Re-check status when they return
           await checkStripeStatus();
         } else {
           _setFailed('Could not retrieve the Stripe onboarding link.');
         }
-      } else {
-        _setFailed(
-            _extractErrorMessage(response.body, response.statusCode ?? 500));
+      }
+
+      // ── Server error (4xx / 5xx) ──────────────────────────────
+      else {
+        final msg = _extractErrorMessage(body, httpCode);
+        _setFailed('[$httpCode] $msg');
       }
     } catch (e) {
-      _setFailed('A network error occurred. Please try again.');
+      _setFailed('A network error occurred. Please try again. ($e)');
     }
   }
 
@@ -113,6 +143,40 @@ class StripeConnectController extends GetxController {
   Future<void> onAppResumed() async {
     if (connectionState.value == StripeConnectionState.onboarding) {
       await checkStripeStatus();
+    }
+  }
+
+  // ─── Checkout Session ─────────────────────────────────────────────────────
+
+  /// Calls POST /stripe/checkout-session to create a checkout session and opens it.
+  Future<void> createCheckoutSession({required String productId}) async {
+    try {
+      final response = await _apiClient.post(
+        url: ApiUrl.stripeCheckOutSession,
+        body: {
+          'product_id': productId,
+        },
+        isToken: true,
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final body = response.body;
+        final checkoutUrl = _extractUrl(body);
+
+        if (checkoutUrl != null && checkoutUrl.isNotEmpty) {
+          await openExternalUrl(checkoutUrl);
+        } else {
+          ShowAppSnackBar.fail('Could not retrieve the checkout link.',
+              title: 'Error');
+        }
+      } else {
+        ShowAppSnackBar.fail(
+            _extractErrorMessage(response.body, response.statusCode ?? 500),
+            title: 'Error');
+      }
+    } catch (e) {
+      ShowAppSnackBar.fail('A network error occurred. Please try again.',
+          title: 'Error');
     }
   }
 

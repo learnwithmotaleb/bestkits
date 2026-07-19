@@ -49,18 +49,15 @@ class ApiClient {
     return headers;
   }
 
-
   /// ---------------- Master Request Handler ---------------------
   /// ---------------- Master Request Handler ---------------------
   Future<ApiResult> safeRequest(
-      Future<http.Response> Function() requestFn, {
-        required String url,
-        String method = "GET",
-        bool checkInternet = true,
-      }) async {
+    Future<http.Response> Function() requestFn, {
+    required String url,
+    String method = "GET",
+    bool checkInternet = true,
+  }) async {
     try {
-      _logRequest(url, method);
-
       // Optional: check internet before request
       if (checkInternet && Get.isRegistered<InternetController>()) {
         final controller = Get.find<InternetController>();
@@ -103,18 +100,29 @@ class ApiClient {
     }
   }
 
-
   /// ---------------- Response Handler ---------------------------
   ApiResult _handleResponse(http.Response response) {
-    log.i("Response Code: ${response.statusCode}");
-    log.i("Response Body: ${response.body}");
-
     dynamic decoded;
     try {
       decoded = jsonDecode(response.body);
     } catch (_) {
       decoded = response.body;
     }
+
+    // Pretty-print the response body
+    String prettyBody;
+    try {
+      prettyBody = const JsonEncoder.withIndent('  ').convert(decoded);
+    } catch (_) {
+      prettyBody = response.body;
+    }
+
+    log.i(
+      "\n┌─── RESPONSE ───────────────────────────────\n"
+      "│ Status : ${response.statusCode} ${response.reasonPhrase}\n"
+      "│ Body   :\n$prettyBody\n"
+      "└────────────────────────────────────────────",
+    );
 
     return Response(
       statusCode: response.statusCode,
@@ -126,14 +134,30 @@ class ApiClient {
 
   /// ---------------- Error Handler -------------------------------
   ApiResult _handleException(String message) {
-    log.e(message);
+    log.e("\n✖ API ERROR: $message");
     return Response(statusCode: 400, body: {}, statusText: message);
   }
 
   /// ---------------- Logging -------------------------------------
-  void _logRequest(String url, String method) {
-    log.i("====== API [$method] Request ======");
-    log.i("URL: $url");
+  void _logRequest(String url, String method,
+      {Map<String, dynamic>? body, Map<String, String>? headers}) {
+    String prettyBody = '';
+    if (body != null && body.isNotEmpty) {
+      try {
+        prettyBody = const JsonEncoder.withIndent('  ').convert(body);
+      } catch (_) {
+        prettyBody = body.toString();
+      }
+    }
+
+    log.i(
+      "\n┌─── REQUEST ────────────────────────────────\n"
+      "│ Method  : $method\n"
+      "│ URL     : $url\n"
+      "│ Headers : $headers\n"
+      "│ Body    : ${prettyBody.isEmpty ? '(none)' : '\n$prettyBody'}\n"
+      "└────────────────────────────────────────────",
+    );
   }
 
   // ======================== HTTP METHODS ========================
@@ -141,29 +165,23 @@ class ApiClient {
   Future<ApiResult> get({
     required String url,
     bool isBasic = false,
-    bool isToken = false, // <-- NEW: add token option
+    bool isToken = false,
     Map<String, String>? customHeaders,
   }) async {
-    // Get headers properly
     final headers = await _headers(
       isBasic: isBasic,
-      isToken: isToken, // <-- pass token flag
+      isToken: isToken,
       customHeaders: customHeaders,
     );
 
-    print("GET Headers: $headers"); // Debug: check if token is included
+    _logRequest(url, "GET", headers: headers);
 
     return safeRequest(
-          () async =>
-          http.get(
-            Uri.parse(url),
-            headers: headers,
-          ),
+      () async => http.get(Uri.parse(url), headers: headers),
       url: url,
       method: "GET",
     );
   }
-
 
   Future<ApiResult> post({
     required String url,
@@ -172,33 +190,30 @@ class ApiClient {
     bool isToken = false,
     Map<String, String>? customHeaders,
   }) async {
-    // ✅ Get headers properly
     final headers = await _headers(
       isBasic: isBasic,
       isToken: isToken,
       customHeaders: customHeaders,
     );
 
-    print("POST Headers: $headers"); // Debug: check if token is included
+    _logRequest(url, "POST", body: body, headers: headers);
 
     return safeRequest(
-          () async =>
-          http.post(
-            Uri.parse(url),
-            body: jsonEncode(body ?? {}),
-            headers: headers,
-          ),
+      () async => http.post(
+        Uri.parse(url),
+        body: jsonEncode(body ?? {}),
+        headers: headers,
+      ),
       url: url,
       method: "POST",
     );
   }
 
-
   Future<ApiResult> put({
     required String url,
     Map<String, dynamic>? body,
     bool isBasic = false,
-    bool isToken = false, // <-- token support
+    bool isToken = false,
     Map<String, String>? customHeaders,
   }) async {
     final headers = await _headers(
@@ -207,13 +222,14 @@ class ApiClient {
       customHeaders: customHeaders,
     );
 
+    _logRequest(url, "PUT", body: body, headers: headers);
+
     return safeRequest(
-          () async =>
-          http.put(
-            Uri.parse(url),
-            body: jsonEncode(body ?? {}),
-            headers: headers,
-          ),
+      () async => http.put(
+        Uri.parse(url),
+        body: jsonEncode(body ?? {}),
+        headers: headers,
+      ),
       url: url,
       method: "PUT",
     );
@@ -223,7 +239,7 @@ class ApiClient {
     required String url,
     Map<String, dynamic>? body,
     bool isBasic = false,
-    bool isToken = false, // <-- token support
+    bool isToken = false,
     Map<String, String>? customHeaders,
   }) async {
     final headers = await _headers(
@@ -232,13 +248,14 @@ class ApiClient {
       customHeaders: customHeaders,
     );
 
+    _logRequest(url, "PATCH", body: body, headers: headers);
+
     return safeRequest(
-          () async =>
-          http.patch(
-            Uri.parse(url),
-            body: jsonEncode(body ?? {}),
-            headers: headers,
-          ),
+      () async => http.patch(
+        Uri.parse(url),
+        body: jsonEncode(body ?? {}),
+        headers: headers,
+      ),
       url: url,
       method: "PATCH",
     );
@@ -246,7 +263,7 @@ class ApiClient {
 
   Future<ApiResult> delete({
     required String url,
-    Map<String, dynamic>? body,   // optional body
+    Map<String, dynamic>? body,
     bool isBasic = false,
     bool isToken = false,
     Map<String, String>? customHeaders,
@@ -257,12 +274,13 @@ class ApiClient {
       customHeaders: customHeaders,
     );
 
-    // Use http.Request to send DELETE with body
+    _logRequest(url, "DELETE", body: body, headers: headers);
+
     return safeRequest(
-          () async {
+      () async {
         final request = http.Request("DELETE", Uri.parse(url))
           ..headers.addAll(headers)
-          ..body = jsonEncode(body ?? {}); // attach body if provided
+          ..body = jsonEncode(body ?? {});
 
         final streamedResponse = await request.send().timeout(defaultTimeout);
         return http.Response.fromStream(streamedResponse);
@@ -271,9 +289,6 @@ class ApiClient {
       method: "DELETE",
     );
   }
-
-
-
 
   // ================================================================
 //                      MULTIPART Upload (Enhanced Logging)
@@ -315,9 +330,8 @@ class ApiClient {
             ['application', 'octet-stream']);
         final contentType = MediaType(mimeTypeData[0], mimeTypeData[1]);
 
-        log.i("Adding file -> Key: ${file.key}, Path: ${file
-            .path}, MIME: ${mimeTypeData.join('/')}, Size: ${fileObj
-            .lengthSync()} bytes");
+        log.i(
+            "Adding file -> Key: ${file.key}, Path: ${file.path}, MIME: ${mimeTypeData.join('/')}, Size: ${fileObj.lengthSync()} bytes");
 
         request.files.add(
           await http.MultipartFile.fromPath(
@@ -362,7 +376,6 @@ class ApiClient {
     );
   }
 
-
   // ... your existing _headers, _logRequest, _handleResponse, etc.
 
   /// ---------------- PATCH with multipart & token -----------------
@@ -389,8 +402,7 @@ class ApiClient {
       request.fields.addAll(fields);
 
       if (imageFile != null && imageFile.existsSync()) {
-        final mimeTypeData =
-        (lookupMimeType(imageFile.path)?.split('/') ??
+        final mimeTypeData = (lookupMimeType(imageFile.path)?.split('/') ??
             ['application', 'octet-stream']);
 
         request.files.add(
@@ -411,9 +423,6 @@ class ApiClient {
     }
   }
 
-
-
-
   Future<ApiResult> uploadMedicalImage({
     required String url,
     required String imageKey, // medical_mySelf_image / medical_family_image
@@ -429,7 +438,12 @@ class ApiClient {
           path: imageFile.path,
         ),
       ],
-      customHeaders: isToken ? {"Authorization": "Bearer ${await SharePrefsHelper.getToken() ?? ""}"} : null,
+      customHeaders: isToken
+          ? {
+              "Authorization":
+                  "Bearer ${await SharePrefsHelper.getToken() ?? ""}"
+            }
+          : null,
     );
   }
 
@@ -454,12 +468,8 @@ class ApiClient {
       isToken: isToken,
     );
   }
-
-
-
-
-
 }
+
 /// ================= Multipart File Model ========================
 class MultipartFileData {
   final String key;

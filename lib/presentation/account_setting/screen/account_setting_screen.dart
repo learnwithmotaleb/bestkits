@@ -49,6 +49,14 @@ class AccountSettingScreen extends GetView<AccountSettingController> {
               },
             ),
             AccountSettingTile(
+              title: AppStrings.connectStripeAccount.tr,
+              icon: Icons.currency_exchange,
+              onTap: () {
+                Get.toNamed(RoutePath.stripeConnect);
+              },
+            ),
+
+            AccountSettingTile(
               title: AppStrings.changePassword.tr,
               icon: AppIcons.change_password,
               onTap: () {
@@ -56,6 +64,8 @@ class AccountSettingScreen extends GetView<AccountSettingController> {
               },
             ),
             SizedBox(height: Dimensions.h(8)),
+
+
             AccountSettingTile(
               title: AppStrings.deleteAccount.tr,
               icon: Icons.person_remove_outlined,

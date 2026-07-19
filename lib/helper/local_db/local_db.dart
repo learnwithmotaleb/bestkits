@@ -145,6 +145,16 @@ class SharePrefsHelper {
     return _prefs?.getString(SharePrefsKeys.userData);
   }
 
+  // ================= STRIPE CARD NUMBER =================
+
+  static Future<void> saveStripeCardNumber(String cardNumber) async {
+    await _prefs?.setString(SharePrefsKeys.stripeCardNumber, cardNumber);
+  }
+
+  static String? getStripeCardNumber() {
+    return _prefs?.getString(SharePrefsKeys.stripeCardNumber);
+  }
+
   // ================= CLEAR ALL =================
 
   static Future<void> clearAll() async {

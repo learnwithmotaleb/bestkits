@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../core/responsive_layout/dimensions.dart';
+import '../../../../../core/routes/route_path.dart';
 import '../../../../../utils/app_colors/app_colors.dart';
 import '../../../../../utils/app_text_style/app_text_style.dart';
 import '../../../../../utils/assets_image/app_images.dart';
@@ -31,7 +32,7 @@ class _HomeBannerState extends State<HomeBanner> {
   void _startAutoPlay() {
     _autoPlayTimer?.cancel();
     _autoPlayTimer = Timer.periodic(const Duration(seconds: 4), (timer) {
-      final bannerCount = controller.banners.isNotEmpty ? controller.banners.length : 1;
+      final bannerCount = controller.promotedProducts.isNotEmpty ? controller.promotedProducts.length : 1;
       if (_pageController.hasClients && bannerCount > 1) {
         final nextPage = (_currentPage + 1) % bannerCount;
         _pageController.animateToPage(
@@ -53,23 +54,25 @@ class _HomeBannerState extends State<HomeBanner> {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      final bannerList = controller.banners;
-      final bool isLoading = controller.isLoadingBanners.value;
+      final productList = controller.promotedProducts;
+      final bool isLoading = controller.isLoadingHome.value;
 
-      // Fallback single item list if loading or empty
-      final List<BannerModel> activeBanners = (isLoading || bannerList.isEmpty)
-          ? [
-              const BannerModel(
-                tag: 'Limited Time Offer',
-                title: 'Up To ',
-                titleHighlight: '40% OFF',
-                subtitle: 'Spring Sale',
-                description: 'Apply the coupon code at checkout and enjoy exclusive savings on selected styles.',
-                image: AppImages.kidsCollections,
-                badgeColor: 'yellow',
-              ),
-            ]
-          : bannerList;
+      if (isLoading && productList.isEmpty) {
+        return Container(
+          margin: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
+          height: Dimensions.h(180),
+          width: double.infinity,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(Dimensions.r(15)),
+            color: Colors.grey.shade100,
+          ),
+          child: const Center(child: CircularProgressIndicator()),
+        );
+      }
+
+      if (productList.isEmpty) {
+        return const SizedBox.shrink(); // hide if no promoted products
+      }
 
       return Container(
         margin: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
@@ -90,13 +93,19 @@ class _HomeBannerState extends State<HomeBanner> {
                 });
                 _startAutoPlay(); // Reset timer on manual swipe
               },
-              itemCount: activeBanners.length,
+              itemCount: productList.length,
               itemBuilder: (context, index) {
-                final banner = activeBanners[index];
-                final isYellow = banner.badgeColor != 'green';
+                final product = productList[index];
+                final hasDiscount = product.discountPercentage != null && product.discountPercentage! > 0;
+                final imageUrl = product.primaryImageUrl;
 
                 return GestureDetector(
-                  onTap: () => Get.to(() => const ProductDetailsScreen()),
+                  onTap: () {
+                    Get.toNamed(
+                      RoutePath.productDetail,
+                      arguments: {'productId': product.id.toString()},
+                    );
+                  },
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(Dimensions.r(15)),
@@ -107,18 +116,16 @@ class _HomeBannerState extends State<HomeBanner> {
                     ),
                     child: Stack(
                       children: [
-                        // Left & center text content layout
+                        // Left content layout
                         Padding(
                           padding: EdgeInsets.all(Dimensions.w(15)),
                           child: SizedBox(
-                            width: banner.image != null
+                            width: imageUrl.isNotEmpty
                                 ? Dimensions.w(200)
                                 : double.infinity,
                             child: SingleChildScrollView(
                               child: Column(
-                                crossAxisAlignment: banner.image != null
-                                    ? CrossAxisAlignment.start
-                                    : CrossAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   // Pill tag
@@ -128,44 +135,29 @@ class _HomeBannerState extends State<HomeBanner> {
                                       vertical: Dimensions.h(4),
                                     ),
                                     decoration: BoxDecoration(
-                                      color: isYellow
-                                          ? AppColors.primaryColor.withOpacity(0.1)
-                                          : const Color(0xFFE8F5E9),
+                                      color: AppColors.primaryColor.withOpacity(0.1),
                                       borderRadius: BorderRadius.circular(Dimensions.r(20)),
                                       border: Border.all(
-                                        color: isYellow
-                                            ? AppColors.primaryColor
-                                            : AppColors.applyCouponCodeColor,
+                                        color: AppColors.primaryColor,
                                         width: 1,
                                       ),
                                     ),
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        if (!isYellow) ...[
-                                          const Icon(
-                                            Icons.wb_sunny_outlined,
-                                            color: AppColors.applyCouponCodeColor,
-                                            size: 11,
+                                        Container(
+                                          width: 5,
+                                          height: 5,
+                                          decoration: const BoxDecoration(
+                                            color: AppColors.primaryColor,
+                                            shape: BoxShape.circle,
                                           ),
-                                          const SizedBox(width: 4),
-                                        ] else ...[
-                                          Container(
-                                            width: 5,
-                                            height: 5,
-                                            decoration: const BoxDecoration(
-                                              color: AppColors.primaryColor,
-                                              shape: BoxShape.circle,
-                                            ),
-                                          ),
-                                          const SizedBox(width: 6),
-                                        ],
+                                        ),
+                                        const SizedBox(width: 6),
                                         Text(
-                                          banner.tag,
+                                          product.condition.toUpperCase(),
                                           style: TextStyle(
-                                            color: isYellow
-                                                ? AppColors.primaryColor
-                                                :AppColors.applyCouponCodeColor,
+                                            color: AppColors.primaryColor,
                                             fontSize: Dimensions.fs(10),
                                             fontWeight: FontWeight.w700,
                                           ),
@@ -173,76 +165,54 @@ class _HomeBannerState extends State<HomeBanner> {
                                       ],
                                     ),
                                   ),
-                                  Dimensions.gapH(10),
+                                  Dimensions.gapH(8),
                               
-                                  // Title Text with styled highlights
-                                  RichText(
-                                    textAlign: banner.image != null
-                                        ? TextAlign.start
-                                        : TextAlign.center,
-                                    text: TextSpan(
-                                      style: AppTextStyles.h2.copyWith(
-                                        fontSize: Dimensions.fs(20),
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w800,
-                                      ),
-                                      children: [
-                                        TextSpan(
-                                          text: banner.title,
-                                          style: TextStyle(
-                                            color: !isYellow && banner.image == null
-                                                ? AppColors.primaryColor
-                                                : Colors.black,
-                                          ),
-                                        ),
-                                        TextSpan(
-                                          text: banner.titleHighlight,
-                                          style: TextStyle(
-                                            color: isYellow
-                                                ? AppColors.primaryColor
-                                                : (banner.image == null
-                                                    ? Colors.black
-                                                    : const Color(0xFF2E7D32)),
-                                          ),
-                                        ),
-                                      ],
+                                  // Title Text
+                                  Text(
+                                    product.name,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: AppTextStyles.h2.copyWith(
+                                      fontSize: Dimensions.fs(16),
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w800,
                                     ),
                                   ),
                               
-                                  // Subtitle / Promo Code
-                                  if (banner.subtitle.isNotEmpty) ...[
-                                    Dimensions.gapH(4),
-                                    RichText(
-                                      text: TextSpan(
+                                  // Price
+                                  Dimensions.gapH(4),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        product.formattedPrice,
                                         style: TextStyle(
-                                          fontSize: Dimensions.fs(12),
-                                          color: Colors.black87,
+                                          fontSize: Dimensions.fs(14),
+                                          fontWeight: FontWeight.w800,
+                                          color: AppColors.primaryColor,
                                         ),
-                                        children: [
-                                          const TextSpan(text: 'Use Code: '),
-                                          TextSpan(
-                                            text: banner.subtitle.replaceAll('Use Code: ', ''),
-                                            style: const TextStyle(
-                                              fontStyle: FontStyle.italic,
-                                              fontWeight: FontWeight.w800,
-                                            ),
-                                          ),
-                                        ],
                                       ),
-                                    ),
-                                  ],
-                                  Dimensions.gapH(8),
+                                      if (hasDiscount) ...[
+                                        const SizedBox(width: 8),
+                                        Text(
+                                          product.formattedOriginalPrice,
+                                          style: TextStyle(
+                                            fontSize: Dimensions.fs(10),
+                                            color: Colors.grey,
+                                            decoration: TextDecoration.lineThrough,
+                                          ),
+                                        ),
+                                      ],
+                                    ],
+                                  ),
+                                  Dimensions.gapH(6),
                               
                                   // Long Description
                                   Text(
-                                    banner.description,
-                                    textAlign: banner.image != null
-                                        ? TextAlign.start
-                                        : TextAlign.center,
-                                    maxLines: 3,
+                                    product.description,
+                                    maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
-                                      fontSize: Dimensions.fs(8.5),
+                                      fontSize: Dimensions.fs(9),
                                       color: Colors.grey.shade600,
                                       height: 1.3,
                                     ),
@@ -252,17 +222,24 @@ class _HomeBannerState extends State<HomeBanner> {
                             ),
                           ),
                         ),
-
+ 
                         // Image layout right-aligned
-                        if (banner.image != null)
+                        if (imageUrl.isNotEmpty)
                           Positioned(
-                            right: 0,
-                            bottom: 0,
-                            top: 0,
-                            child: Image.asset(
-                              banner.image!,
-                              width: Dimensions.w(130),
-                              fit: BoxFit.contain,
+                            right: Dimensions.w(10),
+                            bottom: Dimensions.h(10),
+                            top: Dimensions.h(10),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(Dimensions.r(10)),
+                              child: Image.network(
+                                imageUrl,
+                                width: Dimensions.w(110),
+                                fit: BoxFit.contain,
+                                errorBuilder: (_, __, ___) => const Icon(
+                                  Icons.image_not_supported,
+                                  color: Colors.grey,
+                                ),
+                              ),
                             ),
                           ),
                       ],
@@ -273,7 +250,7 @@ class _HomeBannerState extends State<HomeBanner> {
             ),
 
             // Indicator Dots
-            if (activeBanners.length > 1)
+            if (productList.length > 1)
               Positioned(
                 bottom: 8,
                 left: 0,
@@ -281,7 +258,7 @@ class _HomeBannerState extends State<HomeBanner> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: List.generate(
-                    activeBanners.length,
+                    productList.length,
                     (index) => AnimatedContainer(
                       duration: const Duration(milliseconds: 200),
                       margin: const EdgeInsets.symmetric(horizontal: 4),

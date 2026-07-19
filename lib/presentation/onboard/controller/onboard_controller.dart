@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../core/routes/route_path.dart';
+import '../../../helper/local_db/local_db.dart';
 import '../../../utils/assets_image/app_images.dart';
 import '../../../utils/static_strings/static_strings.dart';
 
@@ -32,7 +33,7 @@ class OnboardController extends GetxController {
 
   void nextPage() {
     if (isLastPage) {
-      Get.offNamed(RoutePath.forgotPassword);
+      _finishOnboarding();
     } else {
       pageController.nextPage(
         duration: const Duration(milliseconds: 400),
@@ -41,7 +42,13 @@ class OnboardController extends GetxController {
     }
   }
 
-  void skip() => Get.offNamed(RoutePath.forgotPassword);
+  void skip() => _finishOnboarding();
+
+  Future<void> _finishOnboarding() async {
+    // Mark onboarding as seen so it never shows again
+    await SharePrefsHelper.setOnboardSeen(true);
+    Get.offAllNamed(RoutePath.login);
+  }
 
   @override
   void onClose() {

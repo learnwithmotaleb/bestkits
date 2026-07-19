@@ -49,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             Dimensions.gapH(15),
             Obx(() {
-              if (controller.isLoadingCategories.value) {
+              if (controller.isLoadingHome.value) {
                 return SizedBox(
                   height: Dimensions.h(160),
                   child: const Center(child: CircularProgressIndicator()),
@@ -127,22 +127,33 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             ),
             Dimensions.gapH(15),
-            SizedBox(
-              height: Dimensions.h(280),
-              child: ListView.builder(
-                padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
-                scrollDirection: Axis.horizontal,
-                itemCount: controller.recentlyViewed.length,
-                itemBuilder: (context, index) {
-                  final product = controller.recentlyViewed[index];
-                  return ProductCard(
-                    product: product,
-                    width: Dimensions.w(160),
-                    margin: EdgeInsets.only(right: Dimensions.w(15)),
-                  );
-                },
-              ),
-            ),
+            Obx(() {
+              if (controller.isLoadingRecentlyViewed.value) {
+                return SizedBox(
+                  height: Dimensions.h(280),
+                  child: Center(child: CircularProgressIndicator()),
+                );
+              }
+              if (controller.recentlyViewed.isEmpty) {
+                return SizedBox.shrink(); // hide if empty
+              }
+              return SizedBox(
+                height: Dimensions.h(280),
+                child: ListView.builder(
+                  padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: controller.recentlyViewed.length,
+                  itemBuilder: (context, index) {
+                    final product = controller.recentlyViewed[index];
+                    return ProductCard(
+                      product: product,
+                      width: Dimensions.w(160),
+                      margin: EdgeInsets.only(right: Dimensions.w(15)),
+                    );
+                  },
+                ),
+              );
+            }),
             Dimensions.gapH(30),
 
             // New Arrivals
@@ -153,23 +164,34 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             ),
             Dimensions.gapH(15),
-            SizedBox(
-              height: Dimensions.h(280),
-              child: ListView.builder(
-                padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
-                scrollDirection: Axis.horizontal,
-                itemCount: controller
-                    .trendingProducts.length, // Reusing trending for demo
-                itemBuilder: (context, index) {
-                  final product = controller.trendingProducts[index];
-                  return ProductCard(
-                    product: product,
-                    width: Dimensions.w(160),
-                    margin: EdgeInsets.only(right: Dimensions.w(15)),
-                  );
-                },
-              ),
-            ),
+            Obx(() {
+              if (controller.isLoadingHome.value &&
+                  controller.newArrivals.isEmpty) {
+                return SizedBox(
+                  height: Dimensions.h(280),
+                  child: Center(child: CircularProgressIndicator()),
+                );
+              }
+              if (controller.newArrivals.isEmpty) {
+                return SizedBox.shrink(); // hide if empty
+              }
+              return SizedBox(
+                height: Dimensions.h(280),
+                child: ListView.builder(
+                  padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: controller.newArrivals.length,
+                  itemBuilder: (context, index) {
+                    final product = controller.newArrivals[index];
+                    return ProductCard(
+                      product: product,
+                      width: Dimensions.w(160),
+                      margin: EdgeInsets.only(right: Dimensions.w(15)),
+                    );
+                  },
+                ),
+              );
+            }),
 
             // Seller Banner
             const SellerBanner(),

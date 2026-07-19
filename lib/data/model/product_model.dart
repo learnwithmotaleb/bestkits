@@ -30,6 +30,7 @@ class ProductModel {
   final ProductUser? user;
   final num effectivePrice;
   final bool isWishlisted;
+  final String? viewedAt;
 
   ProductModel({
     required this.id,
@@ -59,6 +60,7 @@ class ProductModel {
     this.user,
     required this.effectivePrice,
     required this.isWishlisted,
+    this.viewedAt,
   });
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
@@ -97,11 +99,13 @@ class ProductModel {
               ?.map((e) => ProductVariant.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
-      user: json['user'] != null
-          ? ProductUser.fromJson(json['user'])
-          : null,
-      effectivePrice: (json['effective_price'] as num?) ?? 0,
+      user: json['user'] != null ? ProductUser.fromJson(json['user']) : null,
+      effectivePrice: (json['effective_price'] as num?) ??
+          (json['discounted_price'] as num?) ??
+          (json['original_price'] as num?) ??
+          0,
       isWishlisted: json['is_wishlisted'] as bool? ?? false,
+      viewedAt: json['viewed_at']?.toString(),
     );
   }
 
@@ -120,13 +124,13 @@ class ProductModel {
   String get formattedOriginalPrice => '€${originalPrice.toStringAsFixed(2)}';
 
   /// Discount label, e.g. "17%" or null if no discount.
-  String? get discountLabel => (discountPercentage != null && discountPercentage! > 0)
-      ? '${discountPercentage!.toInt()}%'
-      : null;
+  String? get discountLabel =>
+      (discountPercentage != null && discountPercentage! > 0)
+          ? '${discountPercentage!.toInt()}%'
+          : null;
 
   /// Rating as a display string, e.g. "4.5/5.0".
-  String get ratingDisplay =>
-      '${averageRating.toStringAsFixed(1)}/5.0';
+  String get ratingDisplay => '${averageRating.toStringAsFixed(1)}/5.0';
 
   /// Category name for display.
   String get categoryName => category?.name ?? '';
@@ -138,8 +142,7 @@ class ProductModel {
   String get sellerName => user?.profile?.fullName ?? '';
 
   /// Seller's avatar URL.
-  String get sellerAvatarUrl =>
-      ApiUrl.buildImageUrl(user?.profile?.avatarUrl);
+  String get sellerAvatarUrl => ApiUrl.buildImageUrl(user?.profile?.avatarUrl);
 
   /// Variant names as a list of strings for size selection.
   List<String> get variantNames => variants.map((v) => v.variantName).toList();

@@ -25,8 +25,21 @@ class _DeliveryOptionsScreenState extends State<DeliveryOptionsScreen> {
 
   void _showEditBottomSheet(BuildContext context, Map<String, dynamic> data) {
     final partnerCtrl = TextEditingController(text: data['partner']);
-    final costCtrl = TextEditingController(text: data['cost']);
-    final timeCtrl = TextEditingController(text: data['time']);
+    final costCtrl = TextEditingController(text: data['cost']?.toString());
+
+    // Parse existing time string like "2-4 Business Days" or "2-4" to get min and max
+    String minStr = '1';
+    String maxStr = '1';
+    final timeStr = data['time']?.toString() ?? '';
+    final RegExp timeRegex = RegExp(r'(\d+)\s*-\s*(\d+)');
+    final match = timeRegex.firstMatch(timeStr);
+    if (match != null) {
+      minStr = match.group(1) ?? '1';
+      maxStr = match.group(2) ?? '1';
+    }
+
+    final minDaysCtrl = TextEditingController(text: minStr);
+    final maxDaysCtrl = TextEditingController(text: maxStr);
 
     AppBottomSheet(
       child: Padding(
@@ -97,7 +110,7 @@ class _DeliveryOptionsScreenState extends State<DeliveryOptionsScreen> {
               ),
               SizedBox(height: Dimensions.h(20)),
               Text(
-                AppStrings.estimatedDeliveryTime.tr,
+                'Estimated Delivery Days',
                 style: AppTextStyles.body.copyWith(
                   fontWeight: FontWeight.w700,
                   fontSize: Dimensions.fs(14),
@@ -105,10 +118,30 @@ class _DeliveryOptionsScreenState extends State<DeliveryOptionsScreen> {
                 ),
               ),
               SizedBox(height: Dimensions.h(10)),
-              AppTextField(
-                controller: timeCtrl,
-                hint: AppStrings.eg24BusinessDays.tr,
-                hintTextStyle: TextStyle(fontSize: 12, color: Colors.grey[400]),
+              Row(
+                children: [
+                  Expanded(
+                    child: AppTextField(
+                      controller: minDaysCtrl,
+                      hint: 'Min Days (e.g. 2)',
+                      keyboardType: TextInputType.number,
+                      hintTextStyle:
+                          TextStyle(fontSize: 12, color: Colors.grey[400]),
+                    ),
+                  ),
+                  SizedBox(width: Dimensions.w(10)),
+                  Text('-', style: TextStyle(fontWeight: FontWeight.bold)),
+                  SizedBox(width: Dimensions.w(10)),
+                  Expanded(
+                    child: AppTextField(
+                      controller: maxDaysCtrl,
+                      hint: 'Max Days (e.g. 4)',
+                      keyboardType: TextInputType.number,
+                      hintTextStyle:
+                          TextStyle(fontSize: 12, color: Colors.grey[400]),
+                    ),
+                  ),
+                ],
               ),
               SizedBox(height: Dimensions.h(24)),
               Row(
@@ -126,38 +159,40 @@ class _DeliveryOptionsScreenState extends State<DeliveryOptionsScreen> {
                   ),
                   SizedBox(width: Dimensions.w(12)),
                   Expanded(
-                    child: AppButton(
-                      label: AppStrings.saveChanges.tr,
-                      onPressed: () {
-                        Get.back();
-                        AppAlerts.warning(
-                          title: AppStrings.updateDeliveryOptionAlertTitle.tr,
-                          message: AppStrings.updateDeliveryOptionAlertSubtitle.tr,
-                          confirmLabel: AppStrings.confirm.tr,
-                          cancelLabel: AppStrings.cancel.tr,
-                          onConfirm: () {
-                            _ctrl.updateOption(
-                              data['id'],
-                              partnerCtrl.text,
-                              costCtrl.text,
-                              timeCtrl.text,
-                            );
-                            Get.snackbar(
-                              AppStrings.success.tr,
-                              AppStrings.deliveryOptionUpdatedSuccess.tr,
-                              snackPosition: SnackPosition.BOTTOM,
-                              backgroundColor: Colors.green,
-                              colorText: Colors.white,
-                            );
-                          },
-                        );
-                      },
-                      backgroundColor: const Color(0xFF1A1A1A),
-                      textColor: AppColors.primaryColor,
-                      borderSideColor: const Color(0xFF1A1A1A),
-                      height: 44,
-                      borderRadius: 8,
-                    ),
+                    child: Obx(() {
+                      return AppButton(
+                        label: _ctrl.isUpdating.value
+                            ? 'Saving...'
+                            : AppStrings.saveChanges.tr,
+                        onPressed: _ctrl.isUpdating.value
+                            ? () {}
+                            : () {
+                                Get.back(); // close bottom sheet
+                                AppAlerts.warning(
+                                  title: AppStrings
+                                      .updateDeliveryOptionAlertTitle.tr,
+                                  message: AppStrings
+                                      .updateDeliveryOptionAlertSubtitle.tr,
+                                  confirmLabel: AppStrings.confirm.tr,
+                                  cancelLabel: AppStrings.cancel.tr,
+                                  onConfirm: () {
+                                    _ctrl.updateOption(
+                                      data['id'],
+                                      partnerCtrl.text,
+                                      costCtrl.text,
+                                      minDaysCtrl.text,
+                                      maxDaysCtrl.text,
+                                    );
+                                  },
+                                );
+                              },
+                        backgroundColor: const Color(0xFF1A1A1A),
+                        textColor: AppColors.primaryColor,
+                        borderSideColor: const Color(0xFF1A1A1A),
+                        height: 44,
+                        borderRadius: 8,
+                      );
+                    }),
                   ),
                 ],
               ),
@@ -174,7 +209,17 @@ class _DeliveryOptionsScreenState extends State<DeliveryOptionsScreen> {
       backgroundColor: AppColors.backgroundColor,
       appBar: CommonAppBar(title: AppStrings.deliveryOption.tr),
       body: Obx(() {
+        if (_ctrl.isLoading.value) {
+          return Center(
+            child: CircularProgressIndicator(color: AppColors.primaryColor),
+          );
+        }
         final options = _ctrl.deliveryOptions;
+        if (options.isEmpty) {
+          return Center(
+            child: Text('No delivery options available', style: TextStyle(color: Colors.grey)),
+          );
+        }
         return ListView.separated(
           padding: EdgeInsets.symmetric(
               horizontal: Dimensions.w(20), vertical: Dimensions.h(20)),
