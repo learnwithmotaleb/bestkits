@@ -29,10 +29,10 @@ class MyProfileController extends GetxController {
 
         nameController.text = user.profile.fullName;
         emailController.text = user.email;
-        phoneController.text = user.profile.phone ?? '';
+        phoneController.text = user.profile.phone;
 
-        sellingTier.value =
-            user.role == 'USER' ? 'Basic Seller' : 'Premium Seller';
+        sellingTier.value = user.sellingTier ??
+            (user.role == 'USER' ? 'Basic Seller' : 'Premium Seller');
         avatarUrl.value = user.profile.avatarUrl;
       } catch (e) {
         print("Error parsing cached user data: $e");

@@ -114,8 +114,21 @@ class ApiUrl {
   static const String recentlyViewed =
       '$baseUrl/home/recently-viewed'; //get method
 
-  static const String getAccountAddress = '$baseUrl/account/addresses'; //get method
-  static const String createAccountAddress = '$baseUrl/account/addresses'; //post method
-  static  String updateAccountAddress(String id) => '$baseUrl/account/addresses/$id'; //patch method
-  static  String deleteAccountAddress(String id) => '$baseUrl/account/addresses/$id'; //delete method
+  static const String getAccountAddress =
+      '$baseUrl/account/addresses'; //get method
+  static const String createAccountAddress =
+      '$baseUrl/account/addresses'; //post method
+  static String updateAccountAddress(String id) =>
+      '$baseUrl/account/addresses/$id'; //patch method
+  static String deleteAccountAddress(String id) =>
+      '$baseUrl/account/addresses/$id'; //delete method
+
+  static String currency =
+      '$baseUrl/account/preferences/currency'; //patch method
+  static String language =
+      '$baseUrl/account/preferences/language'; //patch method
+  static String connectStripeAccountConnect =
+      '$baseUrl/account/connected-account'; //get method
+  static String accountSetting = '$baseUrl/account/settings'; //get method
+  static String deleteAccount = '$baseUrl/account'; //delete method
 }

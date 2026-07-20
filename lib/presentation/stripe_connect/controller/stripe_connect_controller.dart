@@ -5,6 +5,7 @@ import 'package:bestkits/service/api_url.dart';
 import 'package:bestkits/widget/open_url.dart';
 import 'package:bestkits/widget/show_snackbar.dart';
 import 'package:bestkits/helper/local_db/local_db.dart';
+import '../model/StripeConnectModel.dart';
 
 enum StripeConnectionState { loading, initial, onboarding, connected, failed }
 
@@ -34,14 +35,14 @@ class StripeConnectController extends GetxController {
 
   // ─── Status Check ─────────────────────────────────────────────────────────
 
-  /// Calls GET /stripe/status and maps the response to a connection state.
+  /// Calls GET /account/connected-account and maps the response to a connection state.
   Future<void> checkStripeStatus() async {
     connectionState.value = StripeConnectionState.loading;
     errorMessage.value = '';
 
     try {
       final response = await _apiClient.get(
-        url: ApiUrl.stripeStatus,
+        url: ApiUrl.connectStripeAccountConnect,
         isToken: true,
       );
 
@@ -54,11 +55,18 @@ class StripeConnectController extends GetxController {
           return;
         }
 
-        final data = (body is Map && body['data'] is Map)
-            ? body['data'] as Map
-            : (body is Map ? body : <String, dynamic>{});
-
-        connectionState.value = _resolveState(data);
+        final model = StripeConnectModel.fromJson(body);
+        if (model.success == true && model.data != null) {
+          final data = model.data!;
+          if (data.accountId != null && data.accountId!.isNotEmpty) {
+            connectionState.value = StripeConnectionState.connected;
+            cardNumber.value = data.accountId!;
+          } else {
+            connectionState.value = StripeConnectionState.initial;
+          }
+        } else {
+          connectionState.value = StripeConnectionState.initial;
+        }
       } else if (response.statusCode == 401) {
         errorMessage.value = 'Session expired. Please log in again.';
         connectionState.value = StripeConnectionState.failed;
@@ -68,21 +76,6 @@ class StripeConnectController extends GetxController {
     } catch (e) {
       connectionState.value = StripeConnectionState.initial;
     }
-  }
-
-  /// Maps the status data map to a [StripeConnectionState].
-  StripeConnectionState _resolveState(Map data) {
-    final chargesEnabled = data['charges_enabled'] == true;
-    final payoutsEnabled = data['payouts_enabled'] == true;
-    final detailsSubmitted = data['details_submitted'] == true;
-    final isOnboarded =
-        data['isOnboarded'] == true || data['is_onboarded'] == true;
-
-    if (chargesEnabled && payoutsEnabled)
-      return StripeConnectionState.connected;
-    if (chargesEnabled || isOnboarded) return StripeConnectionState.connected;
-    if (detailsSubmitted) return StripeConnectionState.onboarding;
-    return StripeConnectionState.initial;
   }
 
   // ─── Onboarding ───────────────────────────────────────────────────────────

@@ -1,8 +1,14 @@
 import 'package:get/get.dart';
 import '../../../utils/static_strings/static_strings.dart';
 import '../../../widget/app_alert.dart';
+import '../../../service/api_service.dart';
+import '../../../service/api_url.dart';
+import '../../../helper/tost_message/show_snackbar.dart';
 
 class CurrencyPreferenceController extends GetxController {
+  final ApiClient _apiClient = ApiClient();
+  final RxBool isLoading = false.obs;
+
   final List<Map<String, String>> currencies = [
     {'name': 'USD', 'symbol': '\$'},
     {'name': 'EUR', 'symbol': '€'},
@@ -11,7 +17,7 @@ class CurrencyPreferenceController extends GetxController {
   ];
 
   final RxString selectedCurrency = 'USD'.obs;
-  final String initialCurrency = 'USD';
+  String initialCurrency = 'USD';
 
   void selectCurrency(String currency) {
     selectedCurrency.value = currency;
@@ -26,16 +32,29 @@ class CurrencyPreferenceController extends GetxController {
       confirmLabel: AppStrings.confirm.tr,
       cancelLabel: AppStrings.cancel.tr,
       onConfirm: () {
-        // Handle currency change logic here
         _performSwitch();
       },
     );
   }
 
   void _performSwitch() async {
-    // Simulate API call or local storage update
-    await Future.delayed(const Duration(milliseconds: 500));
-    AppAlerts.success(message: AppStrings.currencyUpdatedSuccess.tr);
-    Get.back();
+    isLoading.value = true;
+    final Map<String, dynamic> body = {"currency": selectedCurrency.value};
+
+    final response = await _apiClient.patch(
+      url: ApiUrl.currency,
+      body: body,
+      isToken: true,
+    );
+
+    isLoading.value = false;
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      initialCurrency = selectedCurrency.value;
+      Get.back();
+      AppSnackBar.success(AppStrings.currencyUpdatedSuccess.tr);
+    } else {
+      AppSnackBar.fail("Failed to update currency preference");
+    }
   }
 }

@@ -16,12 +16,13 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _loadUserData();
+    loadUserData();
+    fetchUserProfile(); // Sync fresh profile on startup
     fetchHomeData();
     fetchRecentlyViewed();
   }
 
-  void _loadUserData() {
+  void loadUserData() {
     final userDataJson = SharePrefsHelper.getUserData();
     if (userDataJson != null && userDataJson.isNotEmpty) {
       try {
@@ -30,6 +31,26 @@ class HomeController extends GetxController {
       } catch (e) {
         print("Error parsing cached user data in home: $e");
       }
+    }
+  }
+
+  Future<void> fetchUserProfile() async {
+    try {
+      final response = await _apiClient.get(
+        url: ApiUrl.getProfile,
+        isToken: true,
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final responseData = response.body;
+        if (responseData['success'] == true && responseData['data'] != null) {
+          final data = responseData['data'];
+          userData.value = UserData.fromJson(data);
+          await SharePrefsHelper.saveUserData(jsonEncode(data));
+        }
+      }
+    } catch (e) {
+      print("Error fetching profile in home: $e");
     }
   }
 
