@@ -113,4 +113,9 @@ class ApiUrl {
   static const String home = '$baseUrl/home'; //get method
   static const String recentlyViewed =
       '$baseUrl/home/recently-viewed'; //get method
+
+  static const String getAccountAddress = '$baseUrl/account/addresses'; //get method
+  static const String createAccountAddress = '$baseUrl/account/addresses'; //post method
+  static  String updateAccountAddress(String id) => '$baseUrl/account/addresses/$id'; //patch method
+  static  String deleteAccountAddress(String id) => '$baseUrl/account/addresses/$id'; //delete method
 }
