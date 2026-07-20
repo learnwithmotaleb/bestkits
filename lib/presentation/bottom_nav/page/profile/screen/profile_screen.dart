@@ -15,6 +15,7 @@ import '../controller/profile_controller.dart';
 import '../widget/profile_menu_item.dart';
 import '../../../../my_return/screen/my_return_screen.dart';
 import '../../../../message/screen/message_screen.dart';
+import '../../../../../service/api_url.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -34,7 +35,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         title: AppStrings.profile.tr,
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: Dimensions.w(24), vertical: Dimensions.h(20)),
+        padding: EdgeInsets.symmetric(
+            horizontal: Dimensions.w(24), vertical: Dimensions.h(20)),
         child: Column(
           children: [
             _buildProfileHeader(),
@@ -51,7 +53,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               label: AppStrings.messages.tr,
               onTap: () => Get.to(() => const MessageScreen()),
             ),
-
             ProfileMenuItem(
               icon: AppIcons.setting,
               label: AppStrings.accountSetting.tr,
@@ -59,7 +60,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Get.toNamed(RoutePath.accountSetting);
               },
             ),
-
             SizedBox(height: Dimensions.h(10)),
             Align(
               alignment: Alignment.centerLeft,
@@ -179,6 +179,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       final user = controller.userData.value;
       final name = user?.profile.fullName ?? AppStrings.dummyUserName.tr;
       final firstLetter = name.isNotEmpty ? name[0].toUpperCase() : '?';
+      final avatarUrl = user?.profile.avatarUrl;
 
       return Column(
         children: [
@@ -188,19 +189,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
             decoration: BoxDecoration(
               color: AppColors.primaryColor.withOpacity(0.15),
               borderRadius: BorderRadius.circular(Dimensions.r(24)),
-                border: Border.all(color: AppColors.greyColor.withOpacity(0.5), width: 1)
+              border: Border.all(
+                  color: AppColors.greyColor.withOpacity(0.5), width: 1),
+              image: avatarUrl != null && avatarUrl.trim().isNotEmpty
+                  ? DecorationImage(
+                      image: NetworkImage(ApiUrl.buildImageUrl(avatarUrl)),
+                      fit: BoxFit.cover,
+                    )
+                  : null,
             ),
             alignment: Alignment.center,
-            child: Text(
-              firstLetter,
-              style: TextStyle(
-                fontFamily: 'Nunito',
-                fontSize: 40,
-                fontWeight: FontWeight.w900,
-                fontStyle: FontStyle.italic,
-                color: AppColors.primaryColor,
-              ),
-            ),
+            child: avatarUrl != null && avatarUrl.trim().isNotEmpty
+                ? null
+                : Text(
+                    firstLetter,
+                    style: TextStyle(
+                      fontFamily: 'Nunito',
+                      fontSize: 40,
+                      fontWeight: FontWeight.w900,
+                      fontStyle: FontStyle.italic,
+                      color: AppColors.primaryColor,
+                    ),
+                  ),
           ),
           SizedBox(height: Dimensions.h(16)),
           Text(

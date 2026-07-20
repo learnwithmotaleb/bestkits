@@ -106,7 +106,8 @@ class _CurrencyPreferenceScreenState extends State<CurrencyPreferenceScreen> {
             ),
             Obx(() => AppButton(
               label: AppStrings.switchCurrency.tr,
-              onPressed: controller.isChanged ? controller.switchCurrency : null,
+              onPressed: (controller.isChanged && !controller.isLoading.value) ? controller.switchCurrency : null,
+              isLoading: controller.isLoading.value,
               backgroundColor: const Color(0xFF1A1A1A),
               textColor: AppColors.primaryColor,
               borderRadius: Dimensions.r(8),

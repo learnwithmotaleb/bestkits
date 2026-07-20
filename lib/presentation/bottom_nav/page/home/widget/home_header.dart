@@ -15,7 +15,9 @@ class HomeHeader extends GetView<HomeController> {
 
   Widget _buildDummyName(String name) {
     return Text(
-      name.isNotEmpty ? name[0].toUpperCase() : AppStrings.dummyUserName.tr[0].toUpperCase(),
+      name.isNotEmpty
+          ? name[0].toUpperCase()
+          : AppStrings.dummyUserName.tr[0].toUpperCase(),
       style: AppTextStyles.h1.copyWith(
         fontSize: Dimensions.fs(20),
         fontStyle: FontStyle.italic,
@@ -36,7 +38,7 @@ class HomeHeader extends GetView<HomeController> {
             final avatarUrl = user?.profile.avatarUrl;
             final hasImage = avatarUrl != null && avatarUrl.isNotEmpty;
             final name = user?.profile.fullName ?? 'Roberts Junior';
-            
+
             return Container(
               width: Dimensions.w(45),
               height: Dimensions.h(45),
@@ -53,7 +55,8 @@ class HomeHeader extends GetView<HomeController> {
                         width: Dimensions.w(45),
                         height: Dimensions.h(45),
                         fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) => _buildDummyName(name),
+                        errorBuilder: (context, error, stackTrace) =>
+                            _buildDummyName(name),
                       ),
                     )
                   : _buildDummyName(name),
@@ -65,7 +68,7 @@ class HomeHeader extends GetView<HomeController> {
             child: Obx(() {
               final user = controller.userData.value;
               final name = user?.profile.fullName ?? 'Roberts Junior';
-              
+
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -110,7 +113,7 @@ class HomeHeader extends GetView<HomeController> {
           Dimensions.gapW(10),
           // Notification Bell
           GestureDetector(
-            onTap: (){
+            onTap: () {
               Get.toNamed(RoutePath.notification);
             },
             child: Container(

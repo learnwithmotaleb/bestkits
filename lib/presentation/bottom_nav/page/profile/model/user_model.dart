@@ -31,7 +31,7 @@ class UserData {
   final String email;
   final bool emailVerifird;
   final bool isBlocked;
-  final int profileId;
+  final int? profileId;
   final String role;
   final String? stripeAccountId;
   final bool stripeOnboardingComplete;
@@ -39,18 +39,32 @@ class UserData {
   final DateTime updatedAt;
   final Profile profile;
 
+  // New fields from profile endpoint
+  final String? languagePreference;
+  final String? currencyPreference;
+  final String? sellerTier;
+  final String? sellingTier;
+  final bool? emailUpdateRestricted;
+  final String? emailUpdateRestrictedReason;
+
   UserData({
     required this.id,
     required this.email,
     required this.emailVerifird,
     required this.isBlocked,
-    required this.profileId,
+    this.profileId,
     required this.role,
     this.stripeAccountId,
     required this.stripeOnboardingComplete,
     required this.createdAt,
     required this.updatedAt,
     required this.profile,
+    this.languagePreference,
+    this.currencyPreference,
+    this.sellerTier,
+    this.sellingTier,
+    this.emailUpdateRestricted,
+    this.emailUpdateRestrictedReason,
   });
 
   factory UserData.fromJson(Map<String, dynamic> json) {
@@ -59,13 +73,19 @@ class UserData {
       email: json['email'],
       emailVerifird: json['email_verifird'],
       isBlocked: json['is_blocked'],
-      profileId: json['profile_id'],
+      profileId: json['profile_id'] ?? json['profile']?['id'],
       role: json['role'],
       stripeAccountId: json['stripe_account_id'],
-      stripeOnboardingComplete: json['stripe_onboarding_complete'],
+      stripeOnboardingComplete: json['stripe_onboarding_complete'] ?? false,
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
       profile: Profile.fromJson(json['profile']),
+      languagePreference: json['language_preference'],
+      currencyPreference: json['currency_preference'],
+      sellerTier: json['seller_tier'],
+      sellingTier: json['selling_tier'],
+      emailUpdateRestricted: json['email_update_restricted'],
+      emailUpdateRestrictedReason: json['email_update_restricted_reason'],
     );
   }
 
@@ -82,6 +102,12 @@ class UserData {
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
       'profile': profile.toJson(),
+      'language_preference': languagePreference,
+      'currency_preference': currencyPreference,
+      'seller_tier': sellerTier,
+      'selling_tier': sellingTier,
+      'email_update_restricted': emailUpdateRestricted,
+      'email_update_restricted_reason': emailUpdateRestrictedReason,
     };
   }
 }
@@ -111,10 +137,10 @@ class Profile {
     return Profile(
       id: json['id'],
       avatarUrl: json['avatar_url'],
-      fullName: json['full_name'],
-      phone: json['phone'],
+      fullName: json['full_name'] ?? '',
+      phone: json['phone'] ?? '',
       country: json['country'],
-      userId: json['userId'],
+      userId: json['userId'] ?? json['user_id'] ?? 0,
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
     );

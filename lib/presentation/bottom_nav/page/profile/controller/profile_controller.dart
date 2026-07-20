@@ -6,6 +6,7 @@ import '../../../../../widget/app_alert.dart';
 import '../../../../../service/api_service.dart';
 import '../../../../../service/api_url.dart';
 import '../../../../../helper/local_db/local_db.dart';
+import '../../home/controller/home_controller.dart';
 import '../model/user_model.dart';
 
 class ProfileController extends GetxController {
@@ -24,7 +25,7 @@ class ProfileController extends GetxController {
     try {
       isLoading.value = true;
       final response = await _apiClient.get(
-        url: ApiUrl.getMe,
+        url: ApiUrl.getProfile,
         isToken: true,
       );
 
@@ -36,6 +37,11 @@ class ProfileController extends GetxController {
 
           // Save to Local DB for other screens to use
           await SharePrefsHelper.saveUserData(jsonEncode(data));
+
+          // Notify HomeController to reload data if registered
+          if (Get.isRegistered<HomeController>()) {
+            Get.find<HomeController>().loadUserData();
+          }
         }
       }
     } catch (e) {

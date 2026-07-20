@@ -46,7 +46,8 @@ class _LanguagePreferenceScreenState extends State<LanguagePreferenceScreen> {
             const Spacer(),
             Obx(() => AppButton(
               label: AppStrings.switchLanguage.tr,
-              onPressed: controller.isChanged ? controller.switchLanguage : null,
+              onPressed: (controller.isChanged && !controller.isLoading.value) ? controller.switchLanguage : null,
+              isLoading: controller.isLoading.value,
               backgroundColor: const Color(0xFF1A1A1A),
               textColor: AppColors.primaryColor,
               borderRadius: Dimensions.r(8),
