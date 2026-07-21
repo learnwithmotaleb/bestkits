@@ -25,6 +25,11 @@ class ShowAppSnackBar {
     );
   }
 
+  /// ❌ Failure/Error snackbar (alias for fail)
+  static void error(String message, {String? title}) {
+    fail(message, title: title);
+  }
+
   /// ℹ️ Info / Warning snackbar
   static void info(String message, {String? title}) {
     _show(

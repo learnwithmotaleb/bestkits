@@ -58,118 +58,125 @@ class _MyAddressScreenState extends State<MyAddressScreen> {
         ),
         centerTitle: true,
       ),
-      body: Obx(() => ListView.separated(
-            padding: EdgeInsets.symmetric(
-              horizontal: Dimensions.w(20),
-              vertical: Dimensions.h(20),
-            ),
-            itemCount: controller.addresses.length + 1,
-            separatorBuilder: (_, __) => SizedBox(height: Dimensions.h(16)),
-            itemBuilder: (context, index) {
-              if (index == controller.addresses.length) {
-                return Align(
-                  alignment: Alignment.centerLeft,
-                  child: SizedBox(
-                    width: Dimensions.w(150),
-                    child: AppButton(
-                      label: AppStrings.addAddress.tr,
-                      onPressed: controller.goToAddAddress,
-                      backgroundColor: const Color(0xFF1A1A1A),
-                      textColor: AppColors.primaryColor,
-                      borderRadius: Dimensions.r(8),
-                      borderSideColor: Colors.transparent,
-                      height: Dimensions.h(40),
-                      leadingIcon: Icon(Icons.add,
-                          color: AppColors.primaryColor,
-                          size: Dimensions.rs(18)),
-                    ),
+      body: Obx(() {
+        if (controller.isLoading.value) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        return ListView.separated(
+          padding: EdgeInsets.symmetric(
+            horizontal: Dimensions.w(20),
+            vertical: Dimensions.h(20),
+          ),
+          itemCount: controller.addresses.length + 1,
+          separatorBuilder: (_, __) => SizedBox(height: Dimensions.h(16)),
+          itemBuilder: (context, index) {
+            if (index == controller.addresses.length) {
+              return Align(
+                alignment: Alignment.centerLeft,
+                child: SizedBox(
+                  width: Dimensions.w(150),
+                  child: AppButton(
+                    label: AppStrings.addAddress.tr,
+                    onPressed: controller.goToAddAddress,
+                    backgroundColor: const Color(0xFF1A1A1A),
+                    textColor: AppColors.primaryColor,
+                    borderRadius: Dimensions.r(8),
+                    borderSideColor: Colors.transparent,
+                    height: Dimensions.h(40),
+                    leadingIcon: Icon(Icons.add,
+                        color: AppColors.primaryColor,
+                        size: Dimensions.rs(18)),
                   ),
-                );
-              }
-              final Data address = controller.addresses[index];
-              return Container(
-                decoration: BoxDecoration(
-                  color: AppColors.whiteColor,
-                  borderRadius: BorderRadius.circular(Dimensions.r(12)),
-                  border:
-                      Border.all(color: AppColors.greyColor.withOpacity(0.2)),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: Dimensions.w(16),
-                        vertical: Dimensions.h(12),
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(Icons.home_outlined,
-                              color: AppColors.primaryColor,
-                              size: Dimensions.rs(20)),
-                          SizedBox(width: Dimensions.w(8)),
-                          Expanded(
-                            child: Text(
-                              address.addressName ?? "",
-                              style: AppTextStyles.body.copyWith(
-                                fontWeight: FontWeight.w700,
-                                fontSize: Dimensions.fs(14),
-                                color: AppColors.blackColor,
-                              ),
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () => controller.goToEditAddress(address),
-                            child: Container(
-                              padding: EdgeInsets.all(Dimensions.r(6)),
-                              decoration: BoxDecoration(
-                                color: const Color(0xFF1A1A1A),
-                                borderRadius:
-                                    BorderRadius.circular(Dimensions.r(6)),
-                              ),
-                              child: Icon(Icons.edit_outlined,
-                                  color: AppColors.primaryColor,
-                                  size: Dimensions.rs(16)),
-                            ),
-                          ),
-                          SizedBox(width: Dimensions.w(8)),
-                          GestureDetector(
-                            onTap: () => controller.deleteAddress(index),
-                            child: Container(
-                              padding: EdgeInsets.all(Dimensions.r(6)),
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFF15151),
-                                borderRadius:
-                                    BorderRadius.circular(Dimensions.r(6)),
-                              ),
-                              child: Icon(Icons.delete_outline,
-                                  color: AppColors.whiteColor,
-                                  size: Dimensions.rs(16)),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Divider(
-                        color: AppColors.greyColor.withOpacity(0.2), height: 1),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: Dimensions.w(16),
-                        vertical: Dimensions.h(12),
-                      ),
-                      child: Text(
-                        address.address ?? "",
-                        style: AppTextStyles.body.copyWith(
-                          color: AppColors.greyColor,
-                          fontSize: Dimensions.fs(12),
-                        ),
-                      ),
-                    ),
-                  ],
                 ),
               );
-            },
-          )),
+            }
+            final Data address = controller.addresses[index];
+            return Container(
+              decoration: BoxDecoration(
+                color: AppColors.whiteColor,
+                borderRadius: BorderRadius.circular(Dimensions.r(12)),
+                border:
+                    Border.all(color: AppColors.greyColor.withOpacity(0.2)),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: Dimensions.w(16),
+                      vertical: Dimensions.h(12),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.home_outlined,
+                            color: AppColors.primaryColor,
+                            size: Dimensions.rs(20)),
+                        SizedBox(width: Dimensions.w(8)),
+                        Expanded(
+                          child: Text(
+                            address.addressName ?? "",
+                            style: AppTextStyles.body.copyWith(
+                              fontWeight: FontWeight.w700,
+                              fontSize: Dimensions.fs(14),
+                              color: AppColors.blackColor,
+                            ),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () => controller.goToEditAddress(address),
+                          child: Container(
+                            padding: EdgeInsets.all(Dimensions.r(6)),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF1A1A1A),
+                              borderRadius:
+                                  BorderRadius.circular(Dimensions.r(6)),
+                            ),
+                            child: Icon(Icons.edit_outlined,
+                                color: AppColors.primaryColor,
+                                size: Dimensions.rs(16)),
+                          ),
+                        ),
+                        SizedBox(width: Dimensions.w(8)),
+                        GestureDetector(
+                          onTap: () => controller.deleteAddress(index),
+                          child: Container(
+                            padding: EdgeInsets.all(Dimensions.r(6)),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFF15151),
+                              borderRadius:
+                                  BorderRadius.circular(Dimensions.r(6)),
+                            ),
+                            child: Icon(Icons.delete_outline,
+                                color: AppColors.whiteColor,
+                                size: Dimensions.rs(16)),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Divider(
+                      color: AppColors.greyColor.withOpacity(0.2), height: 1),
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: Dimensions.w(16),
+                      vertical: Dimensions.h(12),
+                    ),
+                    child: Text(
+                      address.address ?? "",
+                      style: AppTextStyles.body.copyWith(
+                        color: AppColors.greyColor,
+                        fontSize: Dimensions.fs(12),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      }),
     );
   }
 }

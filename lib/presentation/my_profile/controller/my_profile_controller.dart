@@ -9,6 +9,8 @@ class MyProfileController extends GetxController {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
 
+  final RxBool isLoading = true.obs;
+
   // Selling tier — could be driven by API; hardcoded for now
   final RxString sellingTier = 'Basic Seller'.obs;
   
@@ -21,6 +23,7 @@ class MyProfileController extends GetxController {
   }
 
   void _loadUserData() {
+    isLoading.value = true;
     final userDataJson = SharePrefsHelper.getUserData();
     if (userDataJson != null && userDataJson.isNotEmpty) {
       try {
@@ -38,6 +41,7 @@ class MyProfileController extends GetxController {
         print("Error parsing cached user data: $e");
       }
     }
+    isLoading.value = false;
   }
 
   @override

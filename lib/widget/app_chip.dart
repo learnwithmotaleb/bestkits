@@ -18,9 +18,9 @@ class AppPillChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final activeColor = selectedColor ?? AppColors.primaryColor;
-    final bg = selected ? activeColor.withOpacity(0.15) : AppColors.textFieldBackgroundColor;
+    final bg = selected ? activeColor.withValues(alpha: 0.15) : AppColors.textFieldBackgroundColor;
     final fg = selected ? activeColor : AppColors.darkGreyColor;
-    final border = selected ? activeColor : AppColors.greyColor.withOpacity(0.3);
+    final border = selected ? activeColor : AppColors.greyColor.withValues(alpha: 0.3);
 
     return InkWell(
       onTap: onTap,

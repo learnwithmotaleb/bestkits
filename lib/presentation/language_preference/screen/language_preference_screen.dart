@@ -25,38 +25,46 @@ class _LanguagePreferenceScreenState extends State<LanguagePreferenceScreen> {
       appBar: CommonAppBar(
         title: AppStrings.languagePreference.tr,
       ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: Dimensions.w(20),
-          vertical: Dimensions.h(20),
-        ),
-        child: Column(
-          children: [
-            _buildLanguageItem(
-              code: "EN",
-              name: AppStrings.english.tr,
-              langKey: "en",
-            ),
-            SizedBox(height: Dimensions.h(16)),
-            _buildLanguageItem(
-              code: "BG",
-              name: AppStrings.bulgarian.tr,
-              langKey: "bg",
-            ),
-            const Spacer(),
-            Obx(() => AppButton(
-              label: AppStrings.switchLanguage.tr,
-              onPressed: (controller.isChanged && !controller.isLoading.value) ? controller.switchLanguage : null,
-              isLoading: controller.isLoading.value,
-              backgroundColor: const Color(0xFF1A1A1A),
-              textColor: AppColors.primaryColor,
-              borderRadius: Dimensions.r(8),
-              height: Dimensions.h(50),
-            )),
-            SizedBox(height: Dimensions.h(20)),
-          ],
-        ),
-      ),
+      body: Obx(() {
+        if (controller.isLoading.value) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        return Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: Dimensions.w(20),
+            vertical: Dimensions.h(20),
+          ),
+          child: Column(
+            children: [
+              _buildLanguageItem(
+                code: "EN",
+                name: AppStrings.english.tr,
+                langKey: "en",
+              ),
+              SizedBox(height: Dimensions.h(16)),
+              _buildLanguageItem(
+                code: "BG",
+                name: AppStrings.bulgarian.tr,
+                langKey: "bg",
+              ),
+              const Spacer(),
+              Obx(() => AppButton(
+                label: AppStrings.switchLanguage.tr,
+                onPressed: (controller.isChanged && !controller.isLoading.value) ? controller.switchLanguage : null,
+                isLoading: controller.isLoading.value,
+                backgroundColor: const Color(0xFF1A1A1A),
+                textColor: AppColors.primaryColor,
+                borderRadius: Dimensions.r(8),
+                height: Dimensions.h(50),
+              )),
+              SizedBox(height: Dimensions.h(20)),
+            ],
+          ),
+        );
+      }),
+
     );
   }
 

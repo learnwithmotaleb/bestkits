@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../utils/app_colors/app_colors.dart';
 
+// ignore: non_constant_identifier_names
 Future<T?> AppBottomSheet<T>({required Widget child}) {
   return Get.bottomSheet<T>(
     SafeArea(child: child),

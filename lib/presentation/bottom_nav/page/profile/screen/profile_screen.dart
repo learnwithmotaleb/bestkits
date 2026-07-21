@@ -176,6 +176,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget _buildProfileHeader() {
     return Obx(() {
+      final isLoading = controller.isLoading.value;
       final user = controller.userData.value;
       final name = user?.profile.fullName ?? AppStrings.dummyUserName.tr;
       final firstLetter = name.isNotEmpty ? name[0].toUpperCase() : '?';
@@ -191,38 +192,54 @@ class _ProfileScreenState extends State<ProfileScreen> {
               borderRadius: BorderRadius.circular(Dimensions.r(24)),
               border: Border.all(
                   color: AppColors.greyColor.withOpacity(0.5), width: 1),
-              image: avatarUrl != null && avatarUrl.trim().isNotEmpty
-                  ? DecorationImage(
-                      image: NetworkImage(ApiUrl.buildImageUrl(avatarUrl)),
-                      fit: BoxFit.cover,
-                    )
-                  : null,
+              image:
+                  !isLoading && avatarUrl != null && avatarUrl.trim().isNotEmpty
+                      ? DecorationImage(
+                          image: NetworkImage(ApiUrl.buildImageUrl(avatarUrl)),
+                          fit: BoxFit.cover,
+                        )
+                      : null,
             ),
             alignment: Alignment.center,
-            child: avatarUrl != null && avatarUrl.trim().isNotEmpty
-                ? null
-                : Text(
-                    firstLetter,
-                    style: TextStyle(
-                      fontFamily: 'Nunito',
-                      fontSize: 40,
-                      fontWeight: FontWeight.w900,
-                      fontStyle: FontStyle.italic,
-                      color: AppColors.primaryColor,
-                    ),
-                  ),
+            child: isLoading
+                ? SizedBox(
+                    width: Dimensions.rs(30),
+                    height: Dimensions.rs(30),
+                    child: const CircularProgressIndicator(strokeWidth: 2.5),
+                  )
+                : avatarUrl != null && avatarUrl.trim().isNotEmpty
+                    ? null
+                    : Text(
+                        firstLetter,
+                        style: TextStyle(
+                          fontFamily: 'Nunito',
+                          fontSize: 40,
+                          fontWeight: FontWeight.w900,
+                          fontStyle: FontStyle.italic,
+                          color: AppColors.primaryColor,
+                        ),
+                      ),
           ),
           SizedBox(height: Dimensions.h(16)),
-          Text(
-            name,
-            style: const TextStyle(
-              fontFamily: 'Nunito',
-              fontSize: 16,
-              fontWeight: FontWeight.w800,
-              fontStyle: FontStyle.italic,
-              color: AppColors.blackColor,
-            ),
-          ),
+          isLoading
+              ? Container(
+                  width: Dimensions.w(120),
+                  height: Dimensions.h(14),
+                  decoration: BoxDecoration(
+                    color: AppColors.greyColor.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(Dimensions.r(6)),
+                  ),
+                )
+              : Text(
+                  name,
+                  style: const TextStyle(
+                    fontFamily: 'Nunito',
+                    fontSize: 16,
+                    fontWeight: FontWeight.w800,
+                    fontStyle: FontStyle.italic,
+                    color: AppColors.blackColor,
+                  ),
+                ),
         ],
       );
     });

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../../core/responsive_layout/dimensions.dart';
-import '../../../../utils/app_colors/app_colors.dart';
 import '../../../../utils/static_strings/static_strings.dart';
 import '../../../../widget/custom_appbar.dart';
 import '../controller/terms_condition_controller.dart';
@@ -12,14 +10,19 @@ class TermsConditionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<TermsConditionController>();
+    final controller = Get.put(TermsConditionController());
 
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: CommonAppBar(
         title: AppStrings.termsCondition.tr,
       ),
-      body: LegalContentWidget(htmlContent: controller.termsText),
+      body: Obx(() {
+        if (controller.isLoading.value) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        return LegalContentWidget(htmlContent: controller.termsText);
+      }),
     );
   }
 }

@@ -11,14 +11,19 @@ class PrivacyPolicyScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<PrivacyPolicyController>();
+    final controller = Get.put(PrivacyPolicyController());
 
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: CommonAppBar(
         title: AppStrings.privacyPolicy.tr,
       ),
-      body: PrivacyPolicyWidget(htmlContent: controller.policyText),
+      body: Obx(() {
+        if (controller.isLoading.value) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        return PrivacyPolicyWidget(htmlContent: controller.policyText);
+      }),
     );
   }
 }

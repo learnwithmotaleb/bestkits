@@ -1,16 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../core/responsive_layout/dimensions.dart';
 import '../../../../utils/app_colors/app_colors.dart';
 import '../../../../utils/app_text_style/app_text_style.dart';
+import '../model/ErningModel.dart';
 
 class EaringCardWidget extends StatelessWidget {
-  final Map<String, dynamic> data;
+  final PaymentHistory data;
 
   const EaringCardWidget({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
+    String formattedDate = '';
+    try {
+      if (data.paidAt != null) {
+        final dt = DateTime.parse(data.paidAt!);
+        formattedDate = DateFormat('MMM d, yyyy • h:mm a').format(dt.toLocal());
+      }
+    } catch (e) {
+      formattedDate = data.paidAt ?? '';
+    }
+
     return Container(
       padding: EdgeInsets.symmetric(
           horizontal: Dimensions.w(16), vertical: Dimensions.h(16)),
@@ -29,8 +41,8 @@ class EaringCardWidget extends StatelessWidget {
               color: AppColors.primaryColor.withOpacity(0.1),
             ),
             child: ClipOval(
-              child: Image.asset(
-                data['image'],
+              child: Image.network(
+                data.customer?.avatarUrl ?? '',
                 fit: BoxFit.cover,
                 errorBuilder: (_, __, ___) =>
                     Icon(Icons.person, color: AppColors.primaryColor),
@@ -43,7 +55,7 @@ class EaringCardWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  data['name'],
+                  data.customer?.name ?? 'Unknown',
                   style: AppTextStyles.body.copyWith(
                     fontSize: Dimensions.fs(14),
                     fontWeight: FontWeight.w600,
@@ -51,7 +63,7 @@ class EaringCardWidget extends StatelessWidget {
                 ),
                 SizedBox(height: Dimensions.h(4)),
                 Text(
-                  data['date'],
+                  formattedDate,
                   style: AppTextStyles.body.copyWith(
                     fontSize: Dimensions.fs(12),
                     color: AppColors.greyColor,
@@ -61,7 +73,7 @@ class EaringCardWidget extends StatelessWidget {
             ),
           ),
           Text(
-            '€${data['amount']}',
+            '\$${data.amount ?? 0}',
             style: AppTextStyles.body.copyWith(
               fontSize: Dimensions.fs(16),
               fontWeight: FontWeight.w700,

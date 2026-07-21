@@ -131,4 +131,22 @@ class ApiUrl {
       '$baseUrl/account/connected-account'; //get method
   static String accountSetting = '$baseUrl/account/settings'; //get method
   static String deleteAccount = '$baseUrl/account'; //delete method
+
+//=================whitelist==================
+  static String getWishlist = '$baseUrl/wishlist'; //get method
+  static String saveWishlist(String productID) =>
+      '$baseUrl/wishlist/$productID'; //Post method
+  static String removeWishlist(String productID) =>
+      '$baseUrl/wishlist/$productID'; //Delete method
+  static String getWishlistCount = '$baseUrl/wishlist/count'; //get method
+
+  static String legalCompanyInformation =
+      '$baseUrl/content/company'; //get method
+  static String helpAndSupport = '$baseUrl/content/contact'; //post method
+  static String fag = '$baseUrl/content/faq'; //get method
+
+  static String legal(String type) =>
+      '$baseUrl/content/legal/$type'; //get method
+
+static String sellerEarning = '$baseUrl/seller/earnings'; //get method
 }
