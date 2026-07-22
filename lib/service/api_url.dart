@@ -87,6 +87,7 @@ class ApiUrl {
 
   static const String createProduct = '$baseUrl/products';
   static const String getProducts = '$baseUrl/products';
+  static const String productSellerMe = '$baseUrl/products/seller/my';
 
   static String detailsProduct(String id) => '$baseUrl/products/$id';
 
@@ -148,5 +149,5 @@ class ApiUrl {
   static String legal(String type) =>
       '$baseUrl/content/legal/$type'; //get method
 
-static String sellerEarning = '$baseUrl/seller/earnings'; //get method
+  static String sellerEarning = '$baseUrl/seller/earnings'; //get method
 }

@@ -16,20 +16,31 @@ class ProductInfoSection extends StatelessWidget {
     return Obx(() {
       final product = controller.product;
       final name = product['name'] ?? '';
-      final price = product['price'] ?? '';
-      final oldPrice = product['oldPrice'] ?? '';
-      final discount = product['discount'] ?? '';
-      final rating = product['rating'] ?? '4.9/5.0';
-      final material = product['material'] ?? '';
+      final price = product['effective_price'] ?? product['discounted_price'] ?? product['original_price'] ?? product['price'] ?? '';
+      final oldPrice = product['original_price'] ?? product['oldPrice'] ?? '';
+      final discount = product['discount_percentage'] != null ? '${product['discount_percentage']}%' : (product['discount'] ?? '');
+      final rating = product['average_rating']?.toString() ?? product['rating'] ?? '4.9/5.0';
+      final material = (product['category'] is Map ? product['category']['name'] : product['category']) ?? product['material'] ?? '';
       
       // Dynamic active/inactive state check
       bool isActive = true;
-      try {
-        final sellController = Get.find<SellController>();
-        if (sellController.inactiveProducts.any((p) => p['name'] == name)) {
-          isActive = false;
-        }
-      } catch (e) {}
+      if (product['status'] != null) {
+        isActive = product['status'] == 'ACTIVE';
+      } else {
+        try {
+          final sellController = Get.find<SellController>();
+          final prodId = product['id'];
+          if (prodId != null) {
+            if (sellController.inactiveProducts.any((p) => p.id == prodId)) {
+              isActive = false;
+            }
+          } else {
+            if (sellController.inactiveProducts.any((p) => p.name == name)) {
+              isActive = false;
+            }
+          }
+        } catch (e) {}
+      }
 
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,

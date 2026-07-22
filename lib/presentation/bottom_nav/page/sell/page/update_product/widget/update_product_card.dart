@@ -1,20 +1,23 @@
-import 'package:bestkits/presentation/bottom_nav/page/sell/page/update_product/screen/update_product_screen.dart';
+import 'package:bestkits/presentation/product_details/screen/product_details_screen.dart';
+import 'package:bestkits/service/api_url.dart';
 import 'package:flutter/material.dart';
 import '../../../../../../../core/responsive_layout/dimensions.dart';
 import '../../../../../../../utils/app_colors/app_colors.dart';
 import 'package:get/get.dart';
 import 'package:bestkits/presentation/favorite/controller/favourite_controller.dart';
+import 'package:bestkits/data/model/product_model.dart';
+import '../../../model/SellerMyModel.dart' as sellerModel;
 
 import '../../../../../../../utils/app_text_style/app_text_style.dart';
 
 class UpdateProductCard extends StatelessWidget {
-  final Map<String, dynamic> product;
+  final sellerModel.Data productData;
   final EdgeInsetsGeometry? margin;
   final double? width;
 
   const UpdateProductCard({
     super.key,
-    required this.product,
+    required this.productData,
     this.margin,
     this.width,
   });
@@ -23,8 +26,22 @@ class UpdateProductCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final favouriteController = Get.find<FavouriteController>();
 
+    final imagePath = productData.imageUrl ?? '';
+    final discount = '${productData.discountPercentage ?? 0}%';
+    final name = productData.name ?? '';
+    final material = productData.category?.name ?? 'Unknown';
+    final rating = (productData.averageRating ?? 0).toString();
+    final price = productData.effectivePrice ??
+        productData.discountedPrice ??
+        productData.originalPrice ??
+        0;
+    final oldPrice = productData.originalPrice ?? 0;
+
     return GestureDetector(
-        onTap: () => Get.to(() => const UpdateProductScreen(), arguments: product),
+        onTap: () {
+          Get.to(() => const ProductDetailsScreen(),
+              arguments: {'productId': productData.id});
+        },
         child: Container(
           width: width ?? Dimensions.w(170),
           margin: margin ?? EdgeInsets.only(right: Dimensions.w(15)),
@@ -44,10 +61,14 @@ class UpdateProductCard extends StatelessWidget {
                     Center(
                       child: Padding(
                         padding: EdgeInsets.all(Dimensions.w(8)),
-                        child: Image.asset(
-                          product['image'],
-                          fit: BoxFit.contain,
-                        ),
+                        child: imagePath.isNotEmpty
+                            ? Image.network(
+                                ApiUrl.buildImageUrl(imagePath),
+                                fit: BoxFit.contain,
+                                errorBuilder: (_, __, ___) =>
+                                    const Icon(Icons.image_not_supported),
+                              )
+                            : const Icon(Icons.image_not_supported),
                       ),
                     ),
                     Positioned(
@@ -68,7 +89,7 @@ class UpdateProductCard extends StatelessWidget {
                                 color: AppColors.primaryColor),
                             Dimensions.gapW(2),
                             Text(
-                              product['discount'],
+                              discount,
                               style: TextStyle(
                                 color: AppColors.primaryColor,
                                 fontSize: Dimensions.fs(8),
@@ -83,12 +104,43 @@ class UpdateProductCard extends StatelessWidget {
                       top: Dimensions.h(10),
                       right: Dimensions.w(10),
                       child: Obx(() {
-                        // ignore: unused_local_variable
-                        final _ = favouriteController.favoriteList.length;
-                        final isFav = favouriteController.isFavorite(product);
+                        final productId = productData.id?.toInt() ?? 0;
+                        final isFav =
+                            favouriteController.isFavoriteById(productId);
                         return GestureDetector(
                           onTap: () {
-                            favouriteController.toggleFavorite(product);
+                            // Build a minimal ProductModel from seller Data so the API call works
+                            final pm = ProductModel(
+                              id: productId,
+                              name: productData.name ?? '',
+                              description: '',
+                              originalPrice: productData.originalPrice ?? 0,
+                              discountedPrice: productData.discountedPrice,
+                              discountPercentage:
+                                  productData.discountPercentage,
+                              imageUrls: productData.imageUrls ?? [],
+                              categoryId:
+                                  productData.category?.id?.toInt() ?? 0,
+                              subCategoryId:
+                                  productData.subCategory?.id?.toInt() ?? 0,
+                              userId: 0,
+                              condition: '',
+                              status: productData.status ?? '',
+                              views: 0,
+                              totalReviews:
+                                  productData.totalReviews?.toInt() ?? 0,
+                              averageRating: productData.averageRating ?? 0,
+                              isAuthenticated: false,
+                              authenticationStatus: '',
+                              createdAt: productData.createdAt ?? '',
+                              updatedAt: productData.updatedAt ?? '',
+                              variants: [],
+                              effectivePrice: productData.effectivePrice ??
+                                  productData.originalPrice ??
+                                  0,
+                              isWishlisted: isFav,
+                            );
+                            favouriteController.toggleFavoriteProduct(pm);
                           },
                           child: Container(
                             padding: EdgeInsets.all(Dimensions.w(6)),
@@ -134,7 +186,7 @@ class UpdateProductCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          product['name'].toString().tr,
+                          name,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: AppTextStyles.bodyText.copyWith(
@@ -161,7 +213,7 @@ class UpdateProductCard extends StatelessWidget {
                                           .withOpacity(0.3)),
                                 ),
                                 child: Text(
-                                  product['material'].toString().tr,
+                                  material,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
@@ -185,7 +237,7 @@ class UpdateProductCard extends StatelessWidget {
                                     child: FittedBox(
                                       fit: BoxFit.scaleDown,
                                       child: Text(
-                                        product['rating'],
+                                        rating,
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
@@ -205,7 +257,7 @@ class UpdateProductCard extends StatelessWidget {
                               child: FittedBox(
                                 fit: BoxFit.scaleDown,
                                 child: Text(
-                                  '€${product['price']}',
+                                  '\$$price',
                                   style: AppTextStyles.h4.copyWith(
                                     fontSize: Dimensions.fs(14),
                                     fontWeight: FontWeight.w800,
@@ -219,7 +271,7 @@ class UpdateProductCard extends StatelessWidget {
                               child: FittedBox(
                                 fit: BoxFit.scaleDown,
                                 child: Text(
-                                  product['oldPrice'],
+                                  '\$$oldPrice',
                                   style: TextStyle(
                                     fontSize: Dimensions.fs(10),
                                     color: Colors.grey,

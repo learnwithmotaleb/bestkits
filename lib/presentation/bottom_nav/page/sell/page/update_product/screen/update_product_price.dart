@@ -52,35 +52,26 @@ class _UpdateProductPriceState extends State<UpdateProductPrice> {
 
   final UpdateProductController _ctrl = Get.find<UpdateProductController>();
 
-  void _onSaveAndContinue() {
+  void _onSaveAndContinue() async {
     if (!_formKey.currentState!.validate()) return;
-    AppAlerts.warning(
-      title: AppStrings.saveProductChangesTitle.tr,
-      message: AppStrings.saveProductChangesSubtitle.tr,
-      confirmLabel: AppStrings.confirm.tr,
-      cancelLabel: AppStrings.cancel.tr,
-      onConfirm: () async {
-        Get.back(); // close alert
         
-        final price = double.tryParse(_priceController.text.replaceAll(RegExp(r'[^0-9.]'), '')) ?? 0.0;
-        final discountPrice = double.tryParse(_discountController.text.replaceAll(RegExp(r'[^0-9.]'), '')) ?? 0.0;
-        final status = _statusController.text;
+    final price = double.tryParse(_priceController.text.replaceAll(RegExp(r'[^0-9.]'), '')) ?? 0.0;
+    final discountPrice = double.tryParse(_discountController.text.replaceAll(RegExp(r'[^0-9.]'), '')) ?? 0.0;
+    final status = _statusController.text;
 
-        final errorMsg = await _ctrl.updateProductApi(
-          price: price,
-          discountPrice: discountPrice,
-          status: status,
-        );
-
-        if (errorMsg == null) {
-          AppAlerts.success(message: AppStrings.productUpdatedSuccess.tr);
-          Get.back(); // back to product details
-          Get.back(); // also back from update screen
-        } else {
-          AppAlerts.error(message: errorMsg);
-        }
-      },
+    final errorMsg = await _ctrl.updateProductApi(
+      price: price,
+      discountPrice: discountPrice,
+      status: status,
     );
+
+    if (errorMsg == null) {
+      AppAlerts.success(message: AppStrings.productUpdatedSuccess.tr);
+      // Pop all screens back to the bottom nav (sell screen)
+      Get.until((route) => route.isFirst);
+    } else {
+      AppAlerts.error(message: errorMsg);
+    }
   }
 
   @override
@@ -157,9 +148,10 @@ class _UpdateProductPriceState extends State<UpdateProductPrice> {
                   top: BorderSide(color: AppColors.greyColor.withOpacity(0.12)),
                 ),
               ),
-              child: AppButton(
+              child: Obx(() => AppButton(
                 label: AppStrings.saveAndContinue.tr,
-                onPressed: _onSaveAndContinue,
+                onPressed: _ctrl.isLoading.value ? null : _onSaveAndContinue,
+                isLoading: _ctrl.isLoading.value,
                 backgroundColor: AppColors.secondaryColor,
                 textColor: AppColors.primaryColor,
                 trailingIcon: const Icon(
@@ -169,7 +161,7 @@ class _UpdateProductPriceState extends State<UpdateProductPrice> {
                 ),
                 borderRadius: 14,
                 height: 52,
-              ),
+              )),
             ),
           ],
         ),

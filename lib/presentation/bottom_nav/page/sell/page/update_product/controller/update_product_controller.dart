@@ -12,6 +12,8 @@ import '../screen/product_order.dart';
 import 'package:bestkits/service/api_service.dart';
 import 'package:bestkits/service/api_url.dart';
 import 'package:bestkits/presentation/bottom_nav/page/home/pages/categories/model/CategoryModel.dart';
+import 'package:bestkits/presentation/bottom_nav/page/home/controller/home_controller.dart';
+import 'package:bestkits/presentation/favorite/controller/favourite_controller.dart';
 
 class UpdateProductController extends GetxController {
   late final RxMap<String, dynamic> product;
@@ -116,14 +118,18 @@ class UpdateProductController extends GetxController {
 
     // Populate images based on product image
     productImages.clear();
-    final mainImg = product['image'] ?? AppImages.kidsCottonSho;
-    productImages.addAll([
-      mainImg,
-      mainImg,
-      mainImg,
-      mainImg,
-      mainImg,
-    ]);
+    if (product['image_urls'] != null && product['image_urls'] is List && (product['image_urls'] as List).isNotEmpty) {
+      productImages.addAll(List<String>.from(product['image_urls']));
+    } else {
+      final mainImg = product['image_url'] ?? product['image'] ?? AppImages.kidsCottonSho;
+      productImages.addAll([
+        mainImg,
+        mainImg,
+        mainImg,
+        mainImg,
+        mainImg,
+      ]);
+    }
   }
 
   void incrementQuantity() => quantity.value++;
@@ -144,13 +150,18 @@ class UpdateProductController extends GetxController {
       onConfirm: () {
         try {
           final sellController = Get.find<SellController>();
-          final prod = Map<String, dynamic>.from(product);
+          final prodId = product['id'];
 
-          sellController.activeProducts
-              .removeWhere((p) => p['name'] == prod['name']);
-          if (!sellController.inactiveProducts
-              .any((p) => p['name'] == prod['name'])) {
-            sellController.inactiveProducts.add(prod);
+          if (prodId != null) {
+            final activeItem = sellController.activeProducts.firstWhereOrNull((p) => p.id == prodId);
+            if (activeItem != null) {
+              sellController.activeProducts.remove(activeItem);
+              sellController.inactiveProducts.add(activeItem);
+            }
+          } else {
+            // Fallback for dummy data
+            sellController.activeProducts
+                .removeWhere((p) => p.name == product['name']);
           }
           sellController.isActiveTab.value = false;
 
@@ -170,12 +181,17 @@ class UpdateProductController extends GetxController {
       onDelete: () {
         try {
           final sellController = Get.find<SellController>();
-          final prod = Map<String, dynamic>.from(product);
+          final prodId = product['id'];
 
-          sellController.activeProducts
-              .removeWhere((p) => p['name'] == prod['name']);
-          sellController.inactiveProducts
-              .removeWhere((p) => p['name'] == prod['name']);
+          if (prodId != null) {
+            sellController.activeProducts.removeWhere((p) => p.id == prodId);
+            sellController.inactiveProducts.removeWhere((p) => p.id == prodId);
+          } else {
+            sellController.activeProducts
+                .removeWhere((p) => p.name == product['name']);
+            sellController.inactiveProducts
+                .removeWhere((p) => p.name == product['name']);
+          }
 
           Get.back(); // go back
           AppAlerts.success(message: AppStrings.productDeletedSuccess.tr);
@@ -382,6 +398,9 @@ class UpdateProductController extends GetxController {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
+        if (Get.isRegistered<HomeController>()) Get.find<HomeController>().fetchHomeData();
+        if (Get.isRegistered<SellController>()) Get.find<SellController>().fetchProducts();
+        if (Get.isRegistered<FavouriteController>()) Get.find<FavouriteController>().fetchWishlist();
         return null; // success
       } else {
         final resBody = response.body;

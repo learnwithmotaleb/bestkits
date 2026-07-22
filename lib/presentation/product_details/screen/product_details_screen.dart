@@ -12,6 +12,7 @@ import '../widget/product_info_section.dart';
 import '../widget/product_tabs_section.dart';
 import '../../favorite/controller/favourite_controller.dart';
 import 'package:bestkits/data/model/product_model.dart';
+import 'package:bestkits/presentation/bottom_nav/page/sell/page/update_product/screen/update_product_screen.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
   const ProductDetailsScreen({super.key});
@@ -55,6 +56,16 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 isFav ? Icons.favorite : Icons.favorite_border,
                 color: AppColors.redColor,
               ),
+            );
+          }),
+          Obx(() {
+            final product = controller.productDetails.value;
+            if (product == null) return const SizedBox.shrink();
+            return IconButton(
+              onPressed: () {
+                Get.to(() => const UpdateProductScreen(), arguments: product.toJson());
+              },
+              icon: const Icon(Icons.edit, color: AppColors.blackColor),
             );
           }),
           const SizedBox(width: 10),

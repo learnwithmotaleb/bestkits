@@ -55,6 +55,10 @@ class _SellScreenState extends State<SellScreen> {
             const SizedBox(height: 20),
             Expanded(
               child: Obx(() {
+                if (controller.isLoading.value) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                
                 final isAct = controller.isActiveTab.value;
                 final list = isAct
                     ? controller.activeProducts
@@ -83,7 +87,7 @@ class _SellScreenState extends State<SellScreen> {
                   itemCount: list.length,
                   itemBuilder: (context, index) {
                     return UpdateProductCard(
-                      product: list[index],
+                      productData: list[index],
                       width: double.infinity,
                       margin: EdgeInsets.zero,
                     );

@@ -52,34 +52,25 @@ class _AddProductPriceState extends State<AddProductPrice> {
 
   final AddProductController _ctrl = Get.find<AddProductController>();
 
-  void _onSaveAndContinue() {
+  void _onSaveAndContinue() async {
     if (!_formKey.currentState!.validate()) return;
-    AppAlerts.warning(
-      title: AppStrings.publishProductTitle.tr,
-      message: AppStrings.publishProductSubtitle.tr,
-      confirmLabel: AppStrings.confirm.tr,
-      cancelLabel: AppStrings.cancel.tr,
-      onConfirm: () async {
-        Get.back(); // close alert
         
-        final price = double.tryParse(_priceController.text) ?? 0.0;
-        final discountPrice = double.tryParse(_discountController.text) ?? 0.0;
-        final status = _statusController.text;
+    final price = double.tryParse(_priceController.text) ?? 0.0;
+    final discountPrice = double.tryParse(_discountController.text) ?? 0.0;
+    final status = _statusController.text;
 
-        final errorMsg = await _ctrl.saveProduct(
-          price: price,
-          discountPrice: discountPrice,
-          status: status,
-        );
-
-        if (errorMsg == null) {
-          AppAlerts.success(message: AppStrings.productPublishedSuccess.tr);
-          Get.until((route) => route.isFirst); // back to sell screen root
-        } else {
-          AppAlerts.error(message: errorMsg);
-        }
-      },
+    final errorMsg = await _ctrl.saveProduct(
+      price: price,
+      discountPrice: discountPrice,
+      status: status,
     );
+
+    if (errorMsg == null) {
+      AppAlerts.success(message: AppStrings.productPublishedSuccess.tr);
+      Get.until((route) => route.isFirst); // back to sell screen root
+    } else {
+      AppAlerts.error(message: errorMsg);
+    }
   }
 
   @override
@@ -159,9 +150,10 @@ class _AddProductPriceState extends State<AddProductPrice> {
                       color: AppColors.greyColor.withOpacity(0.12)),
                 ),
               ),
-              child: AppButton(
+              child: Obx(() => AppButton(
                 label: AppStrings.saveAndContinue.tr,
-                onPressed: _onSaveAndContinue,
+                onPressed: _ctrl.isLoading.value ? null : _onSaveAndContinue,
+                isLoading: _ctrl.isLoading.value,
                 backgroundColor: AppColors.secondaryColor,
                 textColor: AppColors.primaryColor,
                 trailingIcon: const Icon(
@@ -171,7 +163,7 @@ class _AddProductPriceState extends State<AddProductPrice> {
                 ),
                 borderRadius: 14,
                 height: 52,
-              ),
+              )),
             ),
           ],
         ),

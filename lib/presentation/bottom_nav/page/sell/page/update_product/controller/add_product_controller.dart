@@ -4,6 +4,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:bestkits/service/api_service.dart';
 import 'package:bestkits/service/api_url.dart';
 import 'package:bestkits/presentation/bottom_nav/page/home/pages/categories/model/CategoryModel.dart';
+import 'package:bestkits/presentation/bottom_nav/page/home/controller/home_controller.dart';
+import 'package:bestkits/presentation/bottom_nav/page/sell/controller/sell_controller.dart';
+import 'package:bestkits/presentation/favorite/controller/favourite_controller.dart';
 
 class AddProductController extends GetxController {
   final _picker = ImagePicker();
@@ -195,6 +198,9 @@ class AddProductController extends GetxController {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
+        if (Get.isRegistered<HomeController>()) Get.find<HomeController>().fetchHomeData();
+        if (Get.isRegistered<SellController>()) Get.find<SellController>().fetchProducts();
+        if (Get.isRegistered<FavouriteController>()) Get.find<FavouriteController>().fetchWishlist();
         return null; // success
       } else {
         final resBody = response.body;
