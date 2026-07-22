@@ -29,31 +29,51 @@ class HomeData {
     if (json['categories'] != null) {
       categories = <CategoryData>[];
       json['categories'].forEach((v) {
-        categories!.add(CategoryData.fromJson(v));
+        try {
+          categories!.add(CategoryData.fromJson(v));
+        } catch (e) {
+          print("Error parsing category: \$e");
+        }
       });
     }
     if (json['trending'] != null) {
       trending = <ProductModel>[];
       json['trending'].forEach((v) {
-        trending!.add(ProductModel.fromJson(v));
+        try {
+          trending!.add(ProductModel.fromJson(v));
+        } catch (e) {
+          print("Error parsing trending product: \$e");
+        }
       });
     }
     if (json['promoted'] != null) {
       promoted = <ProductModel>[];
       json['promoted'].forEach((v) {
-        promoted!.add(ProductModel.fromJson(v));
+        try {
+          promoted!.add(ProductModel.fromJson(v));
+        } catch (e) {
+          print("Error parsing promoted product: \$e");
+        }
       });
     }
     if (json['new_arrivals'] != null) {
       newArrivals = <ProductModel>[];
       json['new_arrivals'].forEach((v) {
-        newArrivals!.add(ProductModel.fromJson(v));
+        try {
+          newArrivals!.add(ProductModel.fromJson(v));
+        } catch (e) {
+          print("Error parsing new arrival product: \$e");
+        }
       });
     }
     if (json['trust_cards'] != null) {
       trustCards = <TrustCardData>[];
       json['trust_cards'].forEach((v) {
-        trustCards!.add(TrustCardData.fromJson(v));
+        try {
+          trustCards!.add(TrustCardData.fromJson(v));
+        } catch (e) {
+          print("Error parsing trust card: \$e");
+        }
       });
     }
   }

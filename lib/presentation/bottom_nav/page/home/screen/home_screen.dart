@@ -28,9 +28,18 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: SingleChildScrollView(
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        child: RefreshIndicator(
+          color: AppColors.primaryColor,
+          onRefresh: () async {
+            await Future.wait([
+              controller.fetchHomeData(),
+              controller.fetchRecentlyViewed(),
+            ]);
+          },
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Dimensions.gapH(10),
             // Header
             const HomeHeader(),
@@ -78,7 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       name: category.name ?? '',
                       imageUrl: category.imageUrl,
                       items:
-                          '${category.subCategories?.length ?? 0} ${AppStrings.itemsCountLabel.tr}',
+                          '${category.productCount ?? 0} ${AppStrings.itemsCountLabel.tr}',
                       onTap: () {
                         Get.toNamed(RoutePath.categoriesScreen,
                             arguments: {'categoryId': category.id});
@@ -198,6 +207,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
             Dimensions.gapH(20),
           ]),
+        ),
         ),
       ),
     );

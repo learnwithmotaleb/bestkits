@@ -5,6 +5,7 @@ import '../../favorite/screen/favourite_screen.dart';
 import '../page/order/screen/order_screen.dart';
 import '../page/profile/screen/profile_screen.dart';
 import '../page/sell/screen/sell_screen.dart';
+import '../page/home/controller/home_controller.dart';
 
 class BottomNavController extends GetxController {
   final currentIndex = 0.obs;
@@ -20,5 +21,14 @@ class BottomNavController extends GetxController {
 
   void changeIndex(int index) {
     currentIndex.value = index;
+
+    // Refresh Home Data when navigating back to the Home Tab
+    if (index == 0) {
+      if (Get.isRegistered<HomeController>()) {
+        final homeController = Get.find<HomeController>();
+        homeController.fetchHomeData();
+        homeController.fetchRecentlyViewed();
+      }
+    }
   }
 }

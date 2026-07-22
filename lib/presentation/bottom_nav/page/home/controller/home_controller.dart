@@ -67,7 +67,7 @@ class HomeController extends GetxController {
   Future<void> fetchHomeData() async {
     isLoadingHome.value = true;
     try {
-      final response = await _apiClient.get(url: ApiUrl.home);
+      final response = await _apiClient.get(url: ApiUrl.home, isToken: false);
       if (response.statusCode == 200 || response.statusCode == 201) {
         final homeModel = HomeModel.fromJson(response.body);
         if (homeModel.success == true && homeModel.data != null) {

@@ -100,70 +100,71 @@ class UpdateProductCard extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Positioned(
-                      top: Dimensions.h(10),
-                      right: Dimensions.w(10),
-                      child: Obx(() {
-                        final productId = productData.id?.toInt() ?? 0;
-                        final isFav =
-                            favouriteController.isFavoriteById(productId);
-                        return GestureDetector(
-                          onTap: () {
-                            // Build a minimal ProductModel from seller Data so the API call works
-                            final pm = ProductModel(
-                              id: productId,
-                              name: productData.name ?? '',
-                              description: '',
-                              originalPrice: productData.originalPrice ?? 0,
-                              discountedPrice: productData.discountedPrice,
-                              discountPercentage:
-                                  productData.discountPercentage,
-                              imageUrls: productData.imageUrls ?? [],
-                              categoryId:
-                                  productData.category?.id?.toInt() ?? 0,
-                              subCategoryId:
-                                  productData.subCategory?.id?.toInt() ?? 0,
-                              userId: 0,
-                              condition: '',
-                              status: productData.status ?? '',
-                              views: 0,
-                              totalReviews:
-                                  productData.totalReviews?.toInt() ?? 0,
-                              averageRating: productData.averageRating ?? 0,
-                              isAuthenticated: false,
-                              authenticationStatus: '',
-                              createdAt: productData.createdAt ?? '',
-                              updatedAt: productData.updatedAt ?? '',
-                              variants: [],
-                              effectivePrice: productData.effectivePrice ??
-                                  productData.originalPrice ??
-                                  0,
-                              isWishlisted: isFav,
-                            );
-                            favouriteController.toggleFavoriteProduct(pm);
-                          },
-                          child: Container(
-                            padding: EdgeInsets.all(Dimensions.w(6)),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.05),
-                                  blurRadius: 4,
-                                  spreadRadius: 1,
-                                ),
-                              ],
+                    if (productData.status?.toUpperCase() == 'ACTIVE')
+                      Positioned(
+                        top: Dimensions.h(10),
+                        right: Dimensions.w(10),
+                        child: Obx(() {
+                          final productId = productData.id?.toInt() ?? 0;
+                          final isFav =
+                              favouriteController.isFavoriteById(productId);
+                          return GestureDetector(
+                            onTap: () {
+                              // Build a minimal ProductModel from seller Data so the API call works
+                              final pm = ProductModel(
+                                id: productId,
+                                name: productData.name ?? '',
+                                description: '',
+                                originalPrice: productData.originalPrice ?? 0,
+                                discountedPrice: productData.discountedPrice,
+                                discountPercentage:
+                                    productData.discountPercentage,
+                                imageUrls: productData.imageUrls ?? [],
+                                categoryId:
+                                    productData.category?.id?.toInt() ?? 0,
+                                subCategoryId:
+                                    productData.subCategory?.id?.toInt() ?? 0,
+                                userId: 0,
+                                condition: '',
+                                status: productData.status ?? '',
+                                views: 0,
+                                totalReviews:
+                                    productData.totalReviews?.toInt() ?? 0,
+                                averageRating: productData.averageRating ?? 0,
+                                isAuthenticated: false,
+                                authenticationStatus: '',
+                                createdAt: productData.createdAt ?? '',
+                                updatedAt: productData.updatedAt ?? '',
+                                variants: [],
+                                effectivePrice: productData.effectivePrice ??
+                                    productData.originalPrice ??
+                                    0,
+                                isWishlisted: isFav,
+                              );
+                              favouriteController.toggleFavoriteProduct(pm);
+                            },
+                            child: Container(
+                              padding: EdgeInsets.all(Dimensions.w(6)),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.05),
+                                    blurRadius: 4,
+                                    spreadRadius: 1,
+                                  ),
+                                ],
+                              ),
+                              child: Icon(
+                                isFav ? Icons.favorite : Icons.favorite_border,
+                                size: Dimensions.icon(16),
+                                color: isFav ? Colors.red : Colors.grey,
+                              ),
                             ),
-                            child: Icon(
-                              isFav ? Icons.favorite : Icons.favorite_border,
-                              size: Dimensions.icon(16),
-                              color: isFav ? Colors.red : Colors.grey,
-                            ),
-                          ),
-                        );
-                      }),
-                    ),
+                          );
+                        }),
+                      ),
                   ],
                 ),
               ),

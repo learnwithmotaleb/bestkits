@@ -9,6 +9,8 @@ import 'core/theme/theme_controller.dart';
 import 'global/language/controller/language_controller.dart';
 import 'global/language/languages.dart';
 import 'helper/no_internet/screen/no_internet_screen.dart';
+import 'presentation/bottom_nav/controller/bottom_nav_controller.dart';
+import 'presentation/bottom_nav/page/home/controller/home_controller.dart';
 
 class MyApp extends StatelessWidget {
   MyApp({super.key}) {
@@ -25,7 +27,7 @@ class MyApp extends StatelessWidget {
       return GetMaterialApp(
         title: 'BestKits',
         debugShowCheckedModeBanner: false,
-        
+
         // Theme Configuration
         theme: lightTheme,
         darkTheme: lightTheme,
@@ -41,6 +43,21 @@ class MyApp extends StatelessWidget {
         // Routing
         getPages: AppRouter.pages,
         initialRoute: RoutePath.splash,
+
+        routingCallback: (routing) {
+          if (routing?.current == RoutePath.bottomNav &&
+              routing?.isBack == true) {
+            if (Get.isRegistered<BottomNavController>() &&
+                Get.isRegistered<HomeController>()) {
+              final nav = Get.find<BottomNavController>();
+              if (nav.currentIndex.value == 0) {
+                final homeController = Get.find<HomeController>();
+                homeController.fetchHomeData();
+                homeController.fetchRecentlyViewed();
+              }
+            }
+          }
+        },
 
         // Global Wrappers
         builder: (context, child) {
