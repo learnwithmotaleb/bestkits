@@ -9,6 +9,7 @@ import '../../../../../core/widgets/app_svg.dart';
 import '../../../../../utils/app_icons/app_icons.dart';
 import '../controller/home_controller.dart';
 import '../../../../../service/api_url.dart';
+import '../../../../notification/controller/notification_controller.dart';
 
 class HomeHeader extends GetView<HomeController> {
   const HomeHeader({super.key});
@@ -28,6 +29,9 @@ class HomeHeader extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
+    // Ensure NotificationController is initialized here so we can show the badge
+    final notifCtrl = Get.put(NotificationController());
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
       child: Row(
@@ -116,18 +120,52 @@ class HomeHeader extends GetView<HomeController> {
             onTap: () {
               Get.toNamed(RoutePath.notification);
             },
-            child: Container(
-              padding: EdgeInsets.all(Dimensions.w(8)),
-              decoration: BoxDecoration(
-                color: AppColors.navBarColor,
-                shape: BoxShape.circle,
-              ),
-              child: AppSvg(
-                path: AppIcons.notification,
-                color: AppColors.primaryColor,
-                size: Dimensions.icon(24),
-              ),
-            ),
+            child: Obx(() {
+              return Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(Dimensions.w(8)),
+                    decoration: const BoxDecoration(
+                      color: AppColors.navBarColor,
+                      shape: BoxShape.circle,
+                    ),
+                    child: AppSvg(
+                      path: AppIcons.notification,
+                      color: AppColors.primaryColor,
+                      size: Dimensions.icon(24),
+                    ),
+                  ),
+                  if (notifCtrl.unreadCount.value > 0)
+                    Positioned(
+                      top: 0,
+                      right: 0,
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: const BoxDecoration(
+                          color: Colors.red,
+                          shape: BoxShape.circle,
+                        ),
+                        constraints: const BoxConstraints(
+                          minWidth: 16,
+                          minHeight: 16,
+                        ),
+                        child: Text(
+                          notifCtrl.unreadCount.value > 99
+                              ? '99+'
+                              : notifCtrl.unreadCount.value.toString(),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 8,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                ],
+              );
+            }),
           ),
         ],
       ),

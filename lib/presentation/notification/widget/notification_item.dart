@@ -1,20 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import '../../../../utils/app_colors/app_colors.dart';
-import '../controller/notification_controller.dart';
+import '../model/NotificationModel.dart';
+import 'package:intl/intl.dart';
 
 class NotificationItem extends StatelessWidget {
-  final NotificationModel notification;
+  final Data notification;
 
   const NotificationItem({super.key, required this.notification});
 
+  String _formatDate(String? dateStr) {
+    if (dateStr == null || dateStr.isEmpty) return '';
+    try {
+      final date = DateTime.parse(dateStr).toLocal();
+      return DateFormat('dd MMM yyyy, hh:mm a').format(date);
+    } catch (e) {
+      return dateStr;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Obx(() => Container(
+    return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: notification.isRead.value 
+        color: notification.isRead == true 
             ? Colors.white 
             : AppColors.navBarColor, // Light cream from design system
         borderRadius: BorderRadius.circular(12),
@@ -23,6 +33,7 @@ class NotificationItem extends StatelessWidget {
         ),
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Logo/Icon
           Container(
@@ -34,7 +45,6 @@ class NotificationItem extends StatelessWidget {
               border: Border.all(
                 color: AppColors.primaryColor,
               ),
-
             ),
             child: const Center(
               child: Text(
@@ -55,16 +65,26 @@ class NotificationItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  notification.title,
+                  notification.title ?? '',
                   style: const TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w700,
                     fontStyle: FontStyle.italic,
                   ),
                 ),
-                const SizedBox(height: 4),
+                if (notification.message != null && notification.message!.isNotEmpty) ...[
+                  const SizedBox(height: 4),
+                  Text(
+                    notification.message!,
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: Colors.grey[700],
+                    ),
+                  ),
+                ],
+                const SizedBox(height: 6),
                 Text(
-                  notification.date,
+                  _formatDate(notification.createdAt),
                   style: TextStyle(
                     fontSize: 10,
                     color: Colors.grey[400],
@@ -75,6 +95,6 @@ class NotificationItem extends StatelessWidget {
           ),
         ],
       ),
-    ));
+    );
   }
 }

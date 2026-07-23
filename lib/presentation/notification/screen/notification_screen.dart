@@ -12,7 +12,8 @@ class NotificationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<NotificationController>();
+    // If not found, put it
+    final controller = Get.put(NotificationController());
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -37,6 +38,10 @@ class NotificationScreen extends StatelessWidget {
         ],
       ),
       body: Obx(() {
+        if (controller.isLoading.value && controller.notifications.isEmpty) {
+          return const Center(child: CircularProgressIndicator(color: AppColors.primaryColor));
+        }
+
         if (controller.notifications.isEmpty) {
           return Center(
             child: Column(
@@ -53,16 +58,36 @@ class NotificationScreen extends StatelessWidget {
           );
         }
 
-        return ListView.builder(
-          padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20), vertical: 16),
-          itemCount: controller.notifications.length,
-          itemBuilder: (context, index) {
-            final notification = controller.notifications[index];
-            return GestureDetector(
-              onTap: () => controller.markAsRead(notification.id),
-              child: NotificationItem(notification: notification),
-            );
-          },
+        return RefreshIndicator(
+          color: AppColors.primaryColor,
+          onRefresh: () => controller.fetchNotifications(),
+          child: ListView.builder(
+            padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20), vertical: 16),
+            itemCount: controller.notifications.length,
+            itemBuilder: (context, index) {
+              final notification = controller.notifications[index];
+              return Dismissible(
+                key: Key(notification.id.toString()),
+                direction: DismissDirection.endToStart,
+                background: Container(
+                  alignment: Alignment.centerRight,
+                  padding: const EdgeInsets.only(right: 20),
+                  decoration: BoxDecoration(
+                    color: Colors.red,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Icon(Icons.delete, color: Colors.white),
+                ),
+                onDismissed: (direction) {
+                  controller.deleteNotification(notification.id.toString());
+                },
+                child: GestureDetector(
+                  onTap: () => controller.markAsRead(notification.id.toString()),
+                  child: NotificationItem(notification: notification),
+                ),
+              );
+            },
+          ),
         );
       }),
     );

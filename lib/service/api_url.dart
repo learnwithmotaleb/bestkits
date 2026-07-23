@@ -162,6 +162,15 @@ class ApiUrl {
 //=====================return===================
   static String myReturn = '$baseUrl/returns'; //get method
   static String myReturnDetails(String id) => '$baseUrl/returns/$id'; //get method
-
   static String returnOrder = '$baseUrl/returns/seller/all'; //get method for seller
+
+
+//notifications=============================
+  static String notification = '$baseUrl/notifications'; //get method
+  static String notificationDelete(String id) => '$baseUrl/notifications/$id'; //delete method
+  static String notificationUnreadCount(String id) => '$baseUrl/notifications/unread-count'; //get method
+  static String notificationRead(String id) => '$baseUrl/notifications/$id/read'; //Patch method
+  static String notificationReadAll = '$baseUrl/notifications/read-all'; //Patch method
+
+
 }
