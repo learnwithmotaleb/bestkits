@@ -8,6 +8,7 @@ import '../../../../utils/static_strings/static_strings.dart';
 import '../../../../widget/custom_appbar.dart';
 import '../../../../widget/app_button.dart';
 import '../controller/customer_order_controller.dart';
+import '../model/CustomerOrderModel.dart';
 import 'customer_order_details.dart';
 
 class CustomerOrderScreen extends StatefulWidget {
@@ -79,6 +80,15 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
           // ── Orders List / Empty State ────────────────────────────────────────
           Expanded(
             child: Obx(() {
+              if (_ctrl.isLoading.value) {
+                return const Center(
+                  child: CircularProgressIndicator(
+                    color: AppColors.blackColor,
+                    strokeWidth: 2.5,
+                  ),
+                );
+              }
+
               final orders = _ctrl.filteredOrders;
 
               if (orders.isEmpty) {
@@ -145,7 +155,7 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "${AppStrings.orderIdPrefix.tr}${order['id']}",
+                                  "${AppStrings.orderIdPrefix.tr}${order.displayId ?? order.id ?? ''}",
                                   style: AppTextStyles.body.copyWith(
                                     fontWeight: FontWeight.w700,
                                     fontSize: Dimensions.fs(13),
@@ -153,7 +163,7 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
                                 ),
                                 SizedBox(height: Dimensions.h(4)),
                                 Text(
-                                  order['date'],
+                                  order.createdAt ?? '',
                                   style: AppTextStyles.body.copyWith(
                                     fontSize: Dimensions.fs(10),
                                     color: AppColors.greyColor,
@@ -166,7 +176,7 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
                                   horizontal: Dimensions.w(8),
                                   vertical: Dimensions.h(4)),
                               decoration: BoxDecoration(
-                                color: _getStatusBgColor(order['status']),
+                                color: _getStatusBgColor(order.status ?? ''),
                                 borderRadius:
                                     BorderRadius.circular(Dimensions.r(12)),
                               ),
@@ -176,15 +186,15 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
                                   Icon(Icons.circle,
                                       size: 6,
                                       color:
-                                          _getStatusTextColor(order['status'])),
+                                          _getStatusTextColor(order.status ?? '')),
                                   SizedBox(width: Dimensions.w(4)),
                                   Text(
-                                    order['status'].toString().tr,
+                                    (order.statusLabel ?? order.status ?? '').tr,
                                     style: AppTextStyles.body.copyWith(
                                       fontSize: Dimensions.fs(10),
                                       fontWeight: FontWeight.w600,
                                       color:
-                                          _getStatusTextColor(order['status']),
+                                          _getStatusTextColor(order.status ?? ''),
                                     ),
                                   ),
                                 ],
@@ -200,8 +210,9 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
                         AppButton(
                           label: AppStrings.viewDetails.tr,
                           onPressed: () {
-                            Get.to(
-                                () => CustomerOrderDetails(orderData: order));
+                            if (order.id != null) {
+                              Get.to(() => CustomerOrderDetails(orderId: order.id.toString()));
+                            }
                           },
                           backgroundColor: AppColors.blackColor,
                           textColor: AppColors.primaryColor,
@@ -226,30 +237,30 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
   }
 
   Color _getStatusBgColor(String status) {
-    if (status == AppStrings.orderPlaced || status == AppStrings.pending) {
+    if (status == 'PENDING') {
       return Colors.blue.withOpacity(0.15);
-    } else if (status == AppStrings.confirmed) {
+    } else if (status == 'CONFIRMED' || status == 'PROCESSING') {
       return Colors.purple.withOpacity(0.15);
-    } else if (status == AppStrings.shipped) {
+    } else if (status == 'SHIPPED') {
       return Colors.orange.withOpacity(0.15);
-    } else if (status == AppStrings.delivered) {
+    } else if (status == 'DELIVERED') {
       return Colors.green.withOpacity(0.15);
-    } else if (status == AppStrings.canceled) {
+    } else if (status == 'CANCELLED') {
       return Colors.red.withOpacity(0.15);
     }
     return AppColors.greyColor.withOpacity(0.15);
   }
 
   Color _getStatusTextColor(String status) {
-    if (status == AppStrings.orderPlaced || status == AppStrings.pending) {
+    if (status == 'PENDING') {
       return Colors.blue;
-    } else if (status == AppStrings.confirmed) {
+    } else if (status == 'CONFIRMED' || status == 'PROCESSING') {
       return Colors.purple;
-    } else if (status == AppStrings.shipped) {
+    } else if (status == 'SHIPPED') {
       return Colors.orange;
-    } else if (status == AppStrings.delivered) {
+    } else if (status == 'DELIVERED') {
       return Colors.green;
-    } else if (status == AppStrings.canceled) {
+    } else if (status == 'CANCELLED') {
       return Colors.red;
     }
     return AppColors.greyColor;

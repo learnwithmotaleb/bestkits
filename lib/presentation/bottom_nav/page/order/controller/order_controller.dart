@@ -2,186 +2,107 @@ import 'package:bestkits/utils/static_strings/static_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../../../../utils/assets_image/app_images.dart';
-
-class OrderItem {
-  final String image;
-  final String name;
-  final int quantity;
-  final String variant;
-  final double price;
-
-  OrderItem({
-    required this.image,
-    required this.name,
-    required this.quantity,
-    required this.variant,
-    required this.price,
-  });
-}
-
-class OrderModel {
-  final String id;
-  final String orderId;
-  final String date;
-  final String status; // 'Active Oder', 'Complete', 'Canceled'
-  final String subStatus; // 'Order Placed', 'Delivered', 'Canceled'
-  final String sellerName;
-  final double totalAmount;
-  final List<OrderItem> items;
-  final String location;
-  final String locationTag;
-  final bool isReviewed;
-
-  OrderModel({
-    required this.id,
-    required this.orderId,
-    required this.date,
-    required this.status,
-    required this.subStatus,
-    required this.sellerName,
-    required this.totalAmount,
-    required this.items,
-    required this.location,
-    required this.locationTag,
-    this.isReviewed = false,
-  });
-}
+import '../../../../../service/api_service.dart';
+import '../../../../../service/api_url.dart';
+import '../model/MyOrderModel.dart';
+import '../../../../../helper/tost_message/show_snackbar.dart';
+import '../model/MyOrderDetailsModel.dart';
 
 class OrderController extends GetxController {
-  final List<String> tabs = [AppStrings.activeOrder, AppStrings.complete, AppStrings.canceled];
+  final List<String> tabs = [
+    AppStrings.activeOrder,
+    AppStrings.complete,
+    AppStrings.canceled
+  ];
   final RxInt selectedTab = 0.obs;
 
-  final Rx<OrderModel?> selectedOrder = Rx<OrderModel?>(null);
+  final Rx<Data?> selectedOrder = Rx<Data?>(null);
+  final Rx<OrderDetail?> selectedOrderDetail = Rx<OrderDetail?>(null);
+  final RxBool isDetailLoading = false.obs;
 
-  final List<OrderModel> orders = [
-    OrderModel(
-      id: '1',
-      orderId: 'KDF143625879',
-      date: '27 Aug 2020 - 08:30 AM',
-      status: AppStrings.activeOrder,
-      subStatus: AppStrings.orderPlaced,
-      sellerName: 'Mayoral Reseller',
-      totalAmount: 520.00,
-      location: '25 "Ivan Vazov" Street, Plovdiv 4000, Bulgaria',
-      locationTag: AppStrings.locationTag,
-      items: [
-        OrderItem(
-          image: AppImages.kidsCottonSho,
-          name: AppStrings.dummyOrderProductName,
-          quantity: 1,
-          variant: 'S',
-          price: 260.00,
-        ),
-        OrderItem(
-          image: AppImages.kidsCottonSho,
-          name: AppStrings.dummyOrderProductName,
-          quantity: 1,
-          variant: 'S',
-          price: 260.00,
-        ),
-      ],
-    ),
-    OrderModel(
-      id: '2',
-      orderId: 'DDF143625869',
-      date: '27 Aug 2020 - 08:30 AM',
-      status: AppStrings.activeOrder,
-      subStatus: AppStrings.orderPlaced,
-      sellerName: 'Mayoral Reseller',
-      totalAmount: 260.00,
-      location: '25 "Ivan Vazov" Street, Plovdiv 4000, Bulgaria',
-      locationTag: AppStrings.locationTag,
-      items: [
-        OrderItem(
-          image: AppImages.kidsCottonSho,
-          name: AppStrings.dummyOrderProductName,
-          quantity: 1,
-          variant: 'S',
-          price: 260.00,
-        ),
-      ],
-    ),
-    OrderModel(
-      id: '3',
-      orderId: 'KDF143625879',
-      date: '27 Aug 2020 - 08:30 AM',
-      status: AppStrings.complete,
-      subStatus: AppStrings.delivered,
-      sellerName: 'Mayoral Reseller',
-      totalAmount: 520.00,
-      location: '25 "Ivan Vazov" Street, Plovdiv 4000, Bulgaria',
-      locationTag: AppStrings.locationTag,
-      isReviewed: true,
-      items: [
-        OrderItem(
-          image: AppImages.kidsCottonSho,
-          name: AppStrings.dummyOrderProductName,
-          quantity: 1,
-          variant: 'S',
-          price: 260.00,
-        ),
-        OrderItem(
-          image: AppImages.kidsCottonSho,
-          name: AppStrings.dummyOrderProductName,
-          quantity: 1,
-          variant: 'S',
-          price: 260.00,
-        ),
-      ],
-    ),
-    OrderModel(
-      id: '4',
-      orderId: 'DDF143625869',
-      date: '27 Aug 2020 - 08:30 AM',
-      status: AppStrings.complete,
-      subStatus: AppStrings.delivered,
-      sellerName: 'Mayoral Reseller',
-      totalAmount: 260.00,
-      location: '25 "Ivan Vazov" Street, Plovdiv 4000, Bulgaria',
-      locationTag: AppStrings.locationTag,
-      items: [
-        OrderItem(
-          image: AppImages.kidsCottonSho,
-          name: AppStrings.dummyOrderProductName,
-          quantity: 1,
-          variant: 'S',
-          price: 260.00,
-        ),
-      ],
-    ),
-    OrderModel(
-      id: '5',
-      orderId: 'KDF143625879',
-      date: '27 Aug 2020 - 08:30 AM',
-      status: AppStrings.canceled,
-      subStatus: AppStrings.canceled,
-      sellerName: 'Mayoral Reseller',
-      totalAmount: 520.00,
-      location: '25 "Ivan Vazov" Street, Plovdiv 4000, Bulgaria',
-      locationTag: AppStrings.locationTag,
-      items: [
-        OrderItem(
-          image: AppImages.kidsCottonSho,
-          name: AppStrings.dummyOrderProductName,
-          quantity: 1,
-          variant: 'S',
-          price: 260.00,
-        ),
-        OrderItem(
-          image: AppImages.kidsCottonSho,
-          name: AppStrings.dummyOrderProductName,
-          quantity: 1,
-          variant: 'S',
-          price: 260.00,
-        ),
-      ],
-    ),
-  ];
+  final RxBool isLoading = false.obs;
+  final RxList<Data> orders = <Data>[].obs;
 
   final RxList<String> returnEvidenceImages = <String>[].obs;
   final RxDouble reviewRating = 0.0.obs;
   final TextEditingController reviewTextController = TextEditingController();
+
+  @override
+  void onInit() {
+    super.onInit();
+    fetchOrders();
+  }
+
+  Future<void> fetchOrders() async {
+    isLoading.value = true;
+    try {
+      // ACTIVE, COMPLETE, CANCELED
+      String tabStr = "ACTIVE";
+      if (selectedTab.value == 1)
+        tabStr = "COMPLETE";
+      else if (selectedTab.value == 2) tabStr = "CANCELED";
+
+      String url = "${ApiUrl.myOrder}?page=1&limit=10&tab=$tabStr";
+
+      var response = await ApiClient().get(url: url, isToken: true);
+
+      if (response.statusCode == 200) {
+        MyOrderModel model = MyOrderModel.fromJson(response.body);
+        orders.assignAll(model.data ?? []);
+      } else {
+        AppSnackBar.fail(response.statusText ?? "Failed to load orders");
+      }
+    } catch (e) {
+      AppSnackBar.fail("An error occurred: $e");
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> fetchOrderDetail(String id) async {
+    isDetailLoading.value = true;
+    selectedOrderDetail.value = null;
+    try {
+      String url = ApiUrl.myOrderDetails(id);
+      var response = await ApiClient().get(url: url, isToken: true);
+
+      if (response.statusCode == 200) {
+        MyOrderDetailsModel model = MyOrderDetailsModel.fromJson(response.body);
+        selectedOrderDetail.value = model.data;
+      } else {
+        AppSnackBar.fail(response.statusText ?? "Failed to load order details");
+      }
+    } catch (e) {
+      AppSnackBar.fail("An error occurred: $e");
+    } finally {
+      isDetailLoading.value = false;
+    }
+  }
+
+  Future<bool> submitReview(String orderItemId, double rating, String reviewText) async {
+    try {
+      String url = ApiUrl.orderDeliveryItemReview(orderItemId);
+      var body = {
+        "rating": rating.toInt(),
+        "review": reviewText,
+      };
+      var response = await ApiClient().post(url: url, body: body, isToken: true);
+
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        AppSnackBar.success("Review submitted successfully");
+        if (selectedOrder.value != null) {
+          fetchOrderDetail(selectedOrder.value!.id.toString());
+        }
+        return true;
+      } else {
+        AppSnackBar.fail(response.body?['message'] ?? response.statusText ?? "Failed to submit review");
+        return false;
+      }
+    } catch (e) {
+      AppSnackBar.fail("An error occurred: $e");
+      return false;
+    }
+  }
 
   void updateReviewRating(double rating) {
     reviewRating.value = rating;
@@ -211,22 +132,25 @@ class OrderController extends GetxController {
     reviewTextController.clear();
   }
 
-  List<OrderModel> get currentTabOrders {
-    final status = tabs[selectedTab.value];
-    return orders.where((o) => o.status == status).toList();
+  List<Data> get currentTabOrders {
+    return orders.toList();
   }
 
   void changeTab(int index) {
     selectedTab.value = index;
     selectedOrder.value = null;
+    selectedOrderDetail.value = null;
+    fetchOrders();
   }
 
-  void viewOrderDetails(OrderModel order) {
+  void viewOrderDetails(Data order) {
     clearReturnState();
     selectedOrder.value = order;
+    fetchOrderDetail(order.id.toString());
   }
 
   void backToList() {
     selectedOrder.value = null;
+    selectedOrderDetail.value = null;
   }
 }

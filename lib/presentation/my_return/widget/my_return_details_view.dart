@@ -3,19 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../core/responsive_layout/dimensions.dart';
 import '../../../../utils/app_colors/app_colors.dart';
+import '../../../../service/api_url.dart';
 import '../../../../widget/app_button.dart';
-import 'package:bestkits/presentation/bottom_nav/page/order/controller/order_controller.dart';
 import '../controller/my_return_controller.dart';
+import '../model/MyReturnDetailsModel.dart';
 
 class MyReturnDetailsView extends StatelessWidget {
-  final ReturnModel returnModel;
+  final Data returnDetail;
+  final VoidCallback? onBack;
 
-  const MyReturnDetailsView({super.key, required this.returnModel});
+  const MyReturnDetailsView({super.key, required this.returnDetail, this.onBack});
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: EdgeInsets.symmetric(horizontal: Dimensions.w(24), vertical: Dimensions.h(8)),
+      padding: EdgeInsets.symmetric(
+          horizontal: Dimensions.w(24), vertical: Dimensions.h(8)),
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -38,8 +41,8 @@ class MyReturnDetailsView extends StatelessWidget {
             Divider(height: 1, color: AppColors.greyColor.withOpacity(0.2)),
             _buildItemsList(),
             _buildReturnDetails(),
-            if (returnModel.statusTab == AppStrings.rejected) _buildRejectedDetails(),
-            if (returnModel.statusTab == AppStrings.accepted) _buildReturnAddress(),
+            if (returnDetail.status == 'REJECTED') _buildRejectedDetails(),
+            if (returnDetail.returnAddress != null) _buildReturnAddress(),
             Padding(
               padding: EdgeInsets.all(Dimensions.w(16)),
               child: Row(
@@ -47,7 +50,8 @@ class MyReturnDetailsView extends StatelessWidget {
                   Expanded(
                     child: AppButton(
                       label: AppStrings.backToMyReturns.tr,
-                      onPressed: () => Get.find<MyReturnController>().backToList(),
+                      onPressed: onBack ?? () =>
+                          Get.find<MyReturnController>().backToList(),
                       backgroundColor: const Color(0xFF1A1A1A),
                       textColor: AppColors.primaryColor,
                       borderSideColor: const Color(0xFF1A1A1A),
@@ -70,16 +74,14 @@ class MyReturnDetailsView extends StatelessWidget {
     Color badgeColor;
     Color badgeTextColor;
 
-    if (returnModel.returnStatus == AppStrings.inReview) {
+    final status = returnDetail.status ?? '';
+    if (status == 'PENDING' || status == 'IN_REVIEW') {
       badgeColor = AppColors.primaryColor.withOpacity(0.15);
       badgeTextColor = AppColors.primaryColor;
-    } else if (returnModel.returnStatus == AppStrings.processing) {
-      badgeColor = Colors.blue.withOpacity(0.1);
-      badgeTextColor = Colors.blue;
-    } else if (returnModel.returnStatus == AppStrings.completed) {
+    } else if (status == 'APPROVED') {
       badgeColor = Colors.green.withOpacity(0.1);
       badgeTextColor = Colors.green;
-    } else if (returnModel.returnStatus == AppStrings.rejected) {
+    } else if (status == 'REJECTED' || status == 'CANCELLED') {
       badgeColor = Colors.red.withOpacity(0.1);
       badgeTextColor = Colors.red;
     } else {
@@ -98,7 +100,7 @@ class MyReturnDetailsView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "- ${AppStrings.orderIdLabel.tr}: ${returnModel.orderId}",
+                  "- ${AppStrings.orderIdLabel.tr}: ${returnDetail.order?.displayId ?? ""}",
                   style: const TextStyle(
                     fontFamily: 'Nunito',
                     fontSize: 14,
@@ -109,7 +111,7 @@ class MyReturnDetailsView extends StatelessWidget {
                 ),
                 SizedBox(height: Dimensions.h(4)),
                 Text(
-                  returnModel.date,
+                  returnDetail.submittedOn ?? "",
                   style: TextStyle(
                     fontFamily: 'Nunito',
                     fontSize: 10,
@@ -120,13 +122,14 @@ class MyReturnDetailsView extends StatelessWidget {
             ),
           ),
           Container(
-            padding: EdgeInsets.symmetric(horizontal: Dimensions.w(8), vertical: Dimensions.h(4)),
+            padding: EdgeInsets.symmetric(
+                horizontal: Dimensions.w(8), vertical: Dimensions.h(4)),
             decoration: BoxDecoration(
               color: badgeColor,
               borderRadius: BorderRadius.circular(Dimensions.r(20)),
             ),
             child: Text(
-              "• ${returnModel.returnStatus.tr}",
+              "• ${returnDetail.statusLabel ?? ""}",
               style: TextStyle(
                 fontFamily: 'Nunito',
                 fontSize: 10,
@@ -141,13 +144,17 @@ class MyReturnDetailsView extends StatelessWidget {
   }
 
   Widget _buildOrderSummary() {
+    final seller = returnDetail.order?.seller;
+    final sellerName = seller?.profile?.fullName ?? seller?.email ?? "";
+    final total = returnDetail.order?.total ?? 0;
+
     return Padding(
       padding: EdgeInsets.all(Dimensions.w(16)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "- ${AppStrings.orderSummary.tr} ( ${returnModel.sellerName} )",
+            "- ${AppStrings.orderSummary.tr} ( $sellerName )",
             style: const TextStyle(
               fontFamily: 'Nunito',
               fontSize: 14,
@@ -167,7 +174,7 @@ class MyReturnDetailsView extends StatelessWidget {
               ),
               children: [
                 TextSpan(
-                  text: "€${returnModel.totalAmount.toStringAsFixed(2)}",
+                  text: "€${total.toStringAsFixed(2)}",
                   style: const TextStyle(
                     fontFamily: 'Nunito',
                     fontSize: 12,
@@ -184,77 +191,90 @@ class MyReturnDetailsView extends StatelessWidget {
   }
 
   Widget _buildItemsList() {
+    final item = returnDetail.returnedItem;
+    if (item == null) return const SizedBox.shrink();
+
+    final imageUrl = item.product?.imageUrls?.isNotEmpty == true
+        ? ApiUrl.buildImageUrl(item.product!.imageUrls!.first)
+        : null;
+
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: Dimensions.w(16), vertical: Dimensions.h(8)),
-      child: Column(
-        children: returnModel.items.map((OrderItem item) {
-          return Container(
-            margin: EdgeInsets.only(bottom: Dimensions.h(12)),
-            padding: EdgeInsets.all(Dimensions.w(12)),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(Dimensions.r(12)),
-              border: Border.all(color: AppColors.greyColor.withOpacity(0.2)),
+      padding: EdgeInsets.symmetric(
+          horizontal: Dimensions.w(16), vertical: Dimensions.h(8)),
+      child: Container(
+        padding: EdgeInsets.all(Dimensions.w(12)),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(Dimensions.r(12)),
+          border: Border.all(color: AppColors.greyColor.withOpacity(0.2)),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: Dimensions.w(64),
+              height: Dimensions.h(64),
+              padding: EdgeInsets.all(Dimensions.w(4)),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(Dimensions.r(12)),
+                border: Border.all(color: AppColors.primaryColor),
+              ),
+              child: imageUrl != null && imageUrl.isNotEmpty
+                  ? Image.network(imageUrl,
+                      fit: BoxFit.contain,
+                      errorBuilder: (_, __, ___) =>
+                          const Icon(Icons.image_not_supported, size: 24))
+                  : const Icon(Icons.image_not_supported, size: 24),
             ),
-            child: Row(
-              children: [
-                Container(
-                  width: Dimensions.w(64),
-                  height: Dimensions.h(64),
-                  padding: EdgeInsets.all(Dimensions.w(4)),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(Dimensions.r(12)),
-                    border: Border.all(color: AppColors.primaryColor),
+            SizedBox(width: Dimensions.w(12)),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    item.product?.name ?? "",
+                    style: const TextStyle(
+                      fontFamily: 'Nunito',
+                      fontSize: 14,
+                      fontWeight: FontWeight.w800,
+                      fontStyle: FontStyle.italic,
+                      color: AppColors.blackColor,
+                    ),
                   ),
-                  child: Image.asset(item.image, fit: BoxFit.contain),
-                ),
-                SizedBox(width: Dimensions.w(12)),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        item.name,
-                        style: const TextStyle(
-                          fontFamily: 'Nunito',
-                          fontSize: 14,
-                          fontWeight: FontWeight.w800,
-                          fontStyle: FontStyle.italic,
-                          color: AppColors.blackColor,
-                        ),
-                      ),
-                      SizedBox(height: Dimensions.h(4)),
-                      Text(
-                        "${AppStrings.quantity.tr} :- ${item.quantity.toString().padLeft(2, '0')} • ${AppStrings.variant.tr} :- ${item.variant}",
-                        style: TextStyle(
-                          fontFamily: 'Nunito',
-                          fontSize: 10,
-                          color: AppColors.darkGreyColor,
-                        ),
-                      ),
-                      SizedBox(height: Dimensions.h(8)),
-                      Text(
-                        "€${item.price.toStringAsFixed(2)}",
-                        style: const TextStyle(
-                          fontFamily: 'Nunito',
-                          fontSize: 14,
-                          fontWeight: FontWeight.w800,
-                          color: AppColors.blackColor,
-                        ),
-                      ),
-                    ],
+                  SizedBox(height: Dimensions.h(4)),
+                  Text(
+                    "${AppStrings.quantity.tr} :- ${(item.quantity ?? 0).toString().padLeft(2, '0')}",
+                    style: TextStyle(
+                      fontFamily: 'Nunito',
+                      fontSize: 10,
+                      color: AppColors.darkGreyColor,
+                    ),
                   ),
-                ),
-              ],
+                  SizedBox(height: Dimensions.h(8)),
+                  Text(
+                    "€${item.price?.toStringAsFixed(2) ?? "0.00"}",
+                    style: const TextStyle(
+                      fontFamily: 'Nunito',
+                      fontSize: 14,
+                      fontWeight: FontWeight.w800,
+                      color: AppColors.blackColor,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          );
-        }).toList(),
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildReturnDetails() {
+    final images = returnDetail.images ?? [];
+    final reason = returnDetail.reason ?? "No reason provided";
+    final msg = returnDetail.message?.toString() ?? "No message";
+
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: Dimensions.w(16), vertical: Dimensions.h(8)),
+      margin: EdgeInsets.symmetric(
+          horizontal: Dimensions.w(16), vertical: Dimensions.h(8)),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(Dimensions.r(12)),
         border: Border.all(color: AppColors.greyColor.withOpacity(0.2)),
@@ -281,6 +301,7 @@ class MyReturnDetailsView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Return Reason
                 Text(
                   AppStrings.returnReason.tr,
                   style: const TextStyle(
@@ -293,7 +314,7 @@ class MyReturnDetailsView extends StatelessWidget {
                 ),
                 SizedBox(height: Dimensions.h(4)),
                 Text(
-                  returnModel.returnReason,
+                  reason,
                   style: TextStyle(
                     fontFamily: 'Nunito',
                     fontSize: 12,
@@ -301,6 +322,8 @@ class MyReturnDetailsView extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: Dimensions.h(16)),
+
+                // Submitted On
                 Text(
                   AppStrings.submittedOn.tr,
                   style: const TextStyle(
@@ -313,7 +336,7 @@ class MyReturnDetailsView extends StatelessWidget {
                 ),
                 SizedBox(height: Dimensions.h(4)),
                 Text(
-                  returnModel.submittedOn,
+                  returnDetail.submittedOn ?? "—",
                   style: TextStyle(
                     fontFamily: 'Nunito',
                     fontSize: 12,
@@ -321,6 +344,8 @@ class MyReturnDetailsView extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: Dimensions.h(16)),
+
+                // Evidence Images
                 Text(
                   AppStrings.evidence.tr,
                   style: const TextStyle(
@@ -332,22 +357,41 @@ class MyReturnDetailsView extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: Dimensions.h(8)),
-                Row(
-                  children: returnModel.evidenceImages.map((img) {
-                    return Container(
-                      margin: EdgeInsets.only(right: Dimensions.w(8)),
-                      width: 50,
-                      height: 50,
-                      padding: const EdgeInsets.all(4),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: Colors.grey.withOpacity(0.2)),
-                      ),
-                      child: Image.asset(img, fit: BoxFit.contain),
-                    );
-                  }).toList(),
-                ),
+                if (images.isEmpty)
+                  Text(
+                    "No evidence uploaded",
+                    style: TextStyle(
+                      fontFamily: 'Nunito',
+                      fontSize: 12,
+                      color: AppColors.darkGreyColor,
+                    ),
+                  )
+                else
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: images.map((imgUrl) {
+                      return Container(
+                        width: 60,
+                        height: 60,
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                              color: AppColors.greyColor.withOpacity(0.2)),
+                        ),
+                        child: Image.network(
+                          ApiUrl.buildImageUrl(imgUrl),
+                          fit: BoxFit.contain,
+                          errorBuilder: (_, __, ___) =>
+                              const Icon(Icons.image_not_supported, size: 24),
+                        ),
+                      );
+                    }).toList(),
+                  ),
                 SizedBox(height: Dimensions.h(16)),
+
+                // Message
                 Text(
                   AppStrings.message.tr,
                   style: const TextStyle(
@@ -360,7 +404,7 @@ class MyReturnDetailsView extends StatelessWidget {
                 ),
                 SizedBox(height: Dimensions.h(4)),
                 Text(
-                  returnModel.message,
+                  msg,
                   style: TextStyle(
                     fontFamily: 'Nunito',
                     fontSize: 10,
@@ -377,11 +421,15 @@ class MyReturnDetailsView extends StatelessWidget {
   }
 
   Widget _buildRejectedDetails() {
+    final rejectionReason =
+        returnDetail.sellerRejectionReason?.toString() ?? "No reason provided";
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          margin: EdgeInsets.symmetric(horizontal: Dimensions.w(16), vertical: Dimensions.h(8)),
+          margin: EdgeInsets.symmetric(
+              horizontal: Dimensions.w(16), vertical: Dimensions.h(8)),
           padding: EdgeInsets.all(Dimensions.w(16)),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(Dimensions.r(12)),
@@ -395,7 +443,8 @@ class MyReturnDetailsView extends StatelessWidget {
                   color: Colors.red.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: const Icon(Icons.info_outline, color: Colors.red, size: 20),
+                child:
+                    const Icon(Icons.info_outline, color: Colors.red, size: 20),
               ),
               SizedBox(width: Dimensions.w(12)),
               Expanded(
@@ -414,7 +463,7 @@ class MyReturnDetailsView extends StatelessWidget {
                     ),
                     SizedBox(height: Dimensions.h(4)),
                     Text(
-                      "${AppStrings.onDate.tr} ${returnModel.rejectedOn ?? ''}",
+                      "${AppStrings.onDate.tr} ${returnDetail.resolvedAt?.toString() ?? returnDetail.submittedOn ?? "—"}",
                       style: TextStyle(
                         fontFamily: 'Nunito',
                         fontSize: 10,
@@ -428,7 +477,8 @@ class MyReturnDetailsView extends StatelessWidget {
           ),
         ),
         Container(
-          margin: EdgeInsets.symmetric(horizontal: Dimensions.w(16), vertical: Dimensions.h(4)),
+          margin: EdgeInsets.symmetric(
+              horizontal: Dimensions.w(16), vertical: Dimensions.h(4)),
           padding: EdgeInsets.all(Dimensions.w(16)),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(Dimensions.r(12)),
@@ -449,7 +499,7 @@ class MyReturnDetailsView extends StatelessWidget {
               ),
               SizedBox(height: Dimensions.h(8)),
               Text(
-                returnModel.rejectionReason ?? '',
+                rejectionReason,
                 style: const TextStyle(
                   fontFamily: 'Nunito',
                   fontSize: 10,
@@ -466,8 +516,23 @@ class MyReturnDetailsView extends StatelessWidget {
   }
 
   Widget _buildReturnAddress() {
+    final addr = returnDetail.returnAddress;
+    String addressText = "No address provided";
+    if (addr is Map) {
+      final parts = <String>[];
+      if (addr['address'] != null) parts.add(addr['address'].toString());
+      if (addr['city'] != null) parts.add(addr['city'].toString());
+      if (addr['postal_code'] != null)
+        parts.add(addr['postal_code'].toString());
+      if (addr['country'] != null) parts.add(addr['country'].toString());
+      if (parts.isNotEmpty) addressText = parts.join(', ');
+    } else if (addr != null) {
+      addressText = addr.toString();
+    }
+
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: Dimensions.w(16), vertical: Dimensions.h(8)),
+      padding: EdgeInsets.symmetric(
+          horizontal: Dimensions.w(16), vertical: Dimensions.h(8)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -497,7 +562,8 @@ class MyReturnDetailsView extends StatelessWidget {
                     color: const Color(0xFF1A1A1A),
                     borderRadius: BorderRadius.circular(Dimensions.r(12)),
                   ),
-                  child: const Icon(Icons.location_on_outlined, color: AppColors.primaryColor, size: 20),
+                  child: const Icon(Icons.location_on_outlined,
+                      color: AppColors.primaryColor, size: 20),
                 ),
                 SizedBox(width: Dimensions.w(12)),
                 Expanded(
@@ -516,7 +582,7 @@ class MyReturnDetailsView extends StatelessWidget {
                       ),
                       SizedBox(height: Dimensions.h(4)),
                       Text(
-                        returnModel.location ?? '',
+                        addressText,
                         style: TextStyle(
                           fontFamily: 'Nunito',
                           fontSize: 12,

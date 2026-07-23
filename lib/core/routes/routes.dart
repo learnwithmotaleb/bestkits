@@ -66,7 +66,7 @@ import 'package:bestkits/presentation/privacy_policy/screen/privacy_policy_scree
 import 'package:bestkits/presentation/product_details/controller/product_details_controller.dart';
 import 'package:bestkits/presentation/product_details/screen/product_details_screen.dart';
 import 'package:bestkits/presentation/return_order/controller/return_order_controller.dart';
-import 'package:bestkits/presentation/return_order/screen/return_order_details.dart';
+
 import 'package:bestkits/presentation/return_order/screen/return_order_screen.dart';
 import 'package:bestkits/presentation/stripe_connect/controller/stripe_connect_controller.dart';
 import 'package:bestkits/presentation/stripe_connect/screen/stripe_connect_profile.dart';
@@ -397,7 +397,7 @@ class AppRouter {
     ),
     GetPage(
       name: RoutePath.customerOrderDetails,
-      page: () => const CustomerOrderDetails(),
+      page: () => CustomerOrderDetails(orderId: Get.arguments as String? ?? ''),
       transition: Transition.rightToLeft,
     ),
     GetPage(
@@ -408,11 +408,7 @@ class AppRouter {
         Get.put(ReturnOrderController());
       }),
     ),
-    GetPage(
-      name: RoutePath.returnOrderDetails,
-      page: () => const ReturnOrderDetails(),
-      transition: Transition.rightToLeft,
-    ),
+
     GetPage(
       name: RoutePath.earning,
       page: () => const EarningScreen(),

@@ -1,134 +1,97 @@
 import 'package:get/get.dart';
-import '../../../utils/assets_image/app_images.dart';
+import '../../../service/api_service.dart';
+import '../../../service/api_url.dart';
 import '../../../utils/static_strings/static_strings.dart';
+import '../../../helper/tost_message/show_snackbar.dart';
+import '../model/ReturnOrderModel.dart';
+import '../../my_return/model/MyReturnDetailsModel.dart' as detail_model;
 
 class ReturnOrderController extends GetxController {
   final List<String> tabs = [
     AppStrings.inReview,
     AppStrings.processing,
     AppStrings.completed,
-    AppStrings.rejected
+    AppStrings.rejected,
   ];
-  
+
   final RxString selectedTab = AppStrings.inReview.obs;
 
-  // Mock data for return orders
-  final RxList<Map<String, dynamic>> allOrders = <Map<String, dynamic>>[
-    {
-      'id': 'KDF143625879',
-      'date': '27 Aug 2020 - 06:20 AM',
-      'status': AppStrings.inReview,
-      'product': {
-        'name': 'D.D. Step - Comfort',
-        'quantity': '01',
-        'size': 'S',
-        'price': '260.00',
-        'image': AppImages.kidsCottonSho, 
-      },
-      'deliveredOn': '22 February 2026 at 6:30 PM',
-      'returnDetails': {
-        'reason': 'Damage Product',
-        'submittedOn': 'Jul 13, 2025',
-        'evidence': [
-          AppImages.kidsCottonSho,
-          AppImages.kidAccessor,
-          AppImages.kidsCottonSho,
-        ],
-        'message': 'I recently noticed that I am unable to log into my account and received a notification that it has been blocked. I believe this may have been a misunderstanding. Could you please review my account and let me know the reason for the restriction? I would appreciate your assistance in resolving this matter as soon as possible.',
-      },
-    },
-    {
-      'id': 'DDF143625869',
-      'date': '27 Aug 2020 - 06:20 AM',
-      'status': AppStrings.processing,
-      'product': {
-        'name': 'Kids Cotton Hoodie',
-        'quantity': '02',
-        'size': 'M',
-        'price': '45.00',
-        'image': AppImages.kidAccessor,
-      },
-      'deliveredOn': '20 February 2026 at 2:00 PM',
-      'returnDetails': {
-        'reason': 'Wrong Item Sent',
-        'submittedOn': 'Jul 14, 2025',
-        'evidence': [
-          AppImages.kidAccessor,
-        ],
-        'message': 'The item I received is different from what I ordered.',
-      },
-      'returnAddress': '25 "Ivan Vazov" Street, Plovdiv 4000, Bulgaria',
-    },
-    {
-      'id': 'KDF143625880',
-      'date': '28 Aug 2020 - 08:30 AM',
-      'status': AppStrings.completed,
-      'product': {
-        'name': 'D.D. Step - Comfort',
-        'quantity': '01',
-        'size': 'S',
-        'price': '260.00',
-        'image': AppImages.kidsCottonSho,
-      },
-      'deliveredOn': '15 February 2026 at 1:15 PM',
-      'returnDetails': {
-        'reason': 'Did not fit',
-        'submittedOn': 'Jul 15, 2025',
-        'evidence': [],
-        'message': 'The shoes are too small.',
-        'completedOn': '27 Aug 2020 - 06:20 AM',
-      },
-    },
-    {
-      'id': 'KDF143625881',
-      'date': '29 Aug 2020 - 09:00 AM',
-      'status': AppStrings.rejected,
-      'product': {
-        'name': 'D.D. Step - Comfort',
-        'quantity': '01',
-        'size': 'S',
-        'price': '260.00',
-        'image': AppImages.kidsCottonSho,
-      },
-      'deliveredOn': '10 February 2026 at 10:00 AM',
-      'returnDetails': {
-        'reason': 'Damage Product',
-        'submittedOn': 'Jul 16, 2025',
-        'evidence': [AppImages.kidsCottonSho],
-        'message': 'Product is damaged.',
-        'rejectedOn': '27 Aug 2020 - 06:20 AM',
-        'rejectionNote': 'I received the product in a damaged condition. The sole appears to be slightly torn, and the stitching on one side is loose. The packaging was intact, so the issue seems to be with the product itself. I have attached images for your review. Please assist with the return process.',
-      },
-    }
-  ].obs;
+  // List state
+  final RxBool isLoading = false.obs;
+  final RxList<Data> allOrders = <Data>[].obs;
 
-  List<Map<String, dynamic>> get filteredOrders {
-    return allOrders.where((order) => order['status'] == selectedTab.value).toList();
+  // Detail state
+  final RxBool isDetailLoading = false.obs;
+  final Rx<detail_model.Data?> selectedReturnDetail = Rx<detail_model.Data?>(null);
+
+  @override
+  void onInit() {
+    super.onInit();
+    fetchOrders();
+  }
+
+  String _getSellerTabParam(String tab) {
+    if (tab == AppStrings.inReview) return 'IN_REVIEW';
+    if (tab == AppStrings.processing) return 'PROCESSING';
+    if (tab == AppStrings.completed) return 'COMPLETED';
+    if (tab == AppStrings.rejected) return 'REJECTED';
+    return 'IN_REVIEW';
+  }
+
+  Future<void> fetchOrders() async {
+    isLoading.value = true;
+    selectedReturnDetail.value = null;
+    try {
+      final tabParam = _getSellerTabParam(selectedTab.value);
+      final url = '${ApiUrl.returnOrder}?sellerTab=$tabParam';
+      final response = await ApiClient().get(url: url, isToken: true);
+
+      if (response.statusCode == 200) {
+        final model = ReturnOrderModel.fromJson(response.body);
+        allOrders.assignAll(model.data ?? []);
+      } else {
+        AppSnackBar.fail(response.statusText ?? 'Failed to load return orders');
+      }
+    } catch (e) {
+      AppSnackBar.fail('An error occurred: $e');
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> fetchReturnDetails(String id) async {
+    isDetailLoading.value = true;
+    try {
+      final response = await ApiClient().get(
+        url: ApiUrl.myReturnDetails(id),
+        isToken: true,
+      );
+
+      if (response.statusCode == 200) {
+        final model = detail_model.MyReturnDetailsModel.fromJson(response.body);
+        selectedReturnDetail.value = model.data;
+      } else {
+        AppSnackBar.fail(response.statusText ?? 'Failed to load return details');
+      }
+    } catch (e) {
+      AppSnackBar.fail('An error occurred: $e');
+    } finally {
+      isDetailLoading.value = false;
+    }
   }
 
   void setTab(String tab) {
-    selectedTab.value = tab;
+    if (selectedTab.value != tab) {
+      selectedTab.value = tab;
+      fetchOrders();
+    }
   }
 
-  void updateReturnStatus(String orderId, String newStatus, {String? address, String? note}) {
-    final index = allOrders.indexWhere((o) => o['id'] == orderId);
-    if (index != -1) {
-      final updatedOrder = Map<String, dynamic>.from(allOrders[index]);
-      updatedOrder['status'] = newStatus;
-      
-      final details = Map<String, dynamic>.from(updatedOrder['returnDetails']);
-      
-      if (newStatus == AppStrings.processing && address != null) {
-        updatedOrder['returnAddress'] = address;
-      } else if (newStatus == AppStrings.completed) {
-        details['completedOn'] = AppStrings.justNow.tr; // Ideally use real date format
-      } else if (newStatus == AppStrings.rejected) {
-        details['rejectedOn'] = AppStrings.justNow.tr;
-        details['rejectionNote'] = note ?? '';
-      }
-      
-      updatedOrder['returnDetails'] = details;
-      allOrders[index] = updatedOrder;
-    }
+  void viewDetails(Data order) {
+    fetchReturnDetails(order.id.toString());
+  }
+
+  void backToList() {
+    selectedReturnDetail.value = null;
   }
 }

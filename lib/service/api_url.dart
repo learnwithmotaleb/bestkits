@@ -150,4 +150,18 @@ class ApiUrl {
       '$baseUrl/content/legal/$type'; //get method
 
   static String sellerEarning = '$baseUrl/seller/earnings'; //get method
+
+//=======================Order sections============================
+  static String myOrder = '$baseUrl/orders'; //get met
+  static String myOrderDetails(String id) => '$baseUrl/orders/$id'; //get met
+  static String orderDeliveryItemReview(String orderItemId) => '$baseUrl/orders/items/$orderItemId/review'; //get met
+  static String customerOrder = '$baseUrl/orders/seller/all'; //get method
+  static String orderDetails(String id) => '$baseUrl/orders/seller/$id'; //get method
+
+
+//=====================return===================
+  static String myReturn = '$baseUrl/returns'; //get method
+  static String myReturnDetails(String id) => '$baseUrl/returns/$id'; //get method
+
+  static String returnOrder = '$baseUrl/returns/seller/all'; //get method for seller
 }

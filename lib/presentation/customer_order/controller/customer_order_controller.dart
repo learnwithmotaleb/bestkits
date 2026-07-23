@@ -1,7 +1,10 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../../utils/assets_image/app_images.dart';
-import '../../../utils/app_icons/app_icons.dart';
+import 'package:bestkits/service/api_service.dart';
+import 'package:bestkits/service/api_url.dart';
 import '../../../../utils/static_strings/static_strings.dart';
+import '../model/CustomerOrderModel.dart';
+import '../model/CustomerOrderDetailsModel.dart' as details_model;
 
 class CustomerOrderController extends GetxController {
   final List<String> tabs = [
@@ -11,92 +14,94 @@ class CustomerOrderController extends GetxController {
     AppStrings.delivered,
     AppStrings.canceled
   ];
-  
+
   final RxString selectedTab = AppStrings.orderPlaced.obs;
 
-  // Mock data for orders
-  final RxList<Map<String, dynamic>> allOrders = <Map<String, dynamic>>[
-    {
-      'id': 'KDF143625879',
-      'date': '27 Aug 2020 - 06:20 AM',
-      'status': AppStrings.orderPlaced,
-      'product': {
-        'name': 'D.D. Step - Comfort',
-        'quantity': '01',
-        'size': 'S',
-        'price': '260.00',
-        // Fallback or real image
-        'image': AppImages.kidsCottonSho, 
-      },
-      'customer': {
-        'name': 'Roberts Junior',
-        'email': 'robert1@junior.com',
-        'image': AppImages.profileImage,
-      },
-      'delivery': {
-        'phone': '+359 77 123 4567',
-        'address': '25 "Ivan Vazov" Street, Plovdiv 4000, Bulgaria',
-      }
-    },
-    {
-      'id': 'DDF143625869',
-      'date': '27 Aug 2020 - 06:20 AM',
-      'status': AppStrings.orderPlaced,
-      'product': {
-        'name': 'Kids Cotton Hoodie',
-        'quantity': '02',
-        'size': 'M',
-        'price': '45.00',
-        'image': AppImages.kidAccessor,
-      },
-      'customer': {
-        'name': 'Roberts Junior',
-        'email': 'robert1@junior.com',
-        'image': AppImages.profileImage,
-      },
-      'delivery': {
-        'phone': '+359 77 123 4567',
-        'address': '25 "Ivan Vazov" Street, Plovdiv 4000, Bulgaria',
-      }
-    },
-    {
-      'id': 'KDF143625880',
-      'date': '28 Aug 2020 - 08:30 AM',
-      'status': AppStrings.shipped,
-      'product': {
-        'name': 'D.D. Step - Comfort',
-        'quantity': '01',
-        'size': 'S',
-        'price': '260.00',
-        'image': AppImages.kidsCottonSho,
-      },
-      'customer': {
-        'name': 'John Doe',
-        'email': 'john@doe.com',
-        'image': AppImages.profileImage,
-      },
-      'delivery': {
-        'phone': '+123 456 7890',
-        'address': '123 Main St, NY, USA',
-      }
-    }
-  ].obs;
+  final RxList<Data> allOrders = <Data>[].obs;
+  final RxBool isLoading = false.obs;
 
-  List<Map<String, dynamic>> get filteredOrders {
-    return allOrders.where((order) => order['status'] == selectedTab.value).toList();
+  final Rx<details_model.Data?> selectedOrderDetails = Rx<details_model.Data?>(null);
+  final RxBool isDetailsLoading = false.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    fetchOrders();
+  }
+
+  Future<void> fetchOrders() async {
+    isLoading.value = true;
+    try {
+      final tabParam = _getSellerTabParam(selectedTab.value);
+      final response = await ApiClient().get(
+        url: '${ApiUrl.customerOrder}?page=1&limit=50&sellerTab=$tabParam',
+        isToken: true,
+      );
+      if (response.statusCode == 200) {
+        final model = CustomerOrderModel.fromJson(response.body);
+        if (model.data != null) {
+          allOrders.value = model.data!;
+        }
+      }
+    } catch (e) {
+      debugPrint("Error fetching customer orders: $e");
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  String _getSellerTabParam(String tab) {
+    if (tab == AppStrings.orderPlaced) return 'ORDER_PLACED';
+    if (tab == AppStrings.confirmed) return 'CONFIRMED';
+    if (tab == AppStrings.shipped) return 'SHIPPED';
+    if (tab == AppStrings.delivered) return 'DELIVERED';
+    if (tab == AppStrings.canceled) return 'CANCELED';
+    return 'ORDER_PLACED';
+  }
+
+  List<Data> get filteredOrders {
+    // Return allOrders directly since they are already filtered by the backend
+    return allOrders;
   }
 
   void setTab(String tab) {
-    selectedTab.value = tab;
+    if (selectedTab.value != tab) {
+      selectedTab.value = tab;
+      fetchOrders();
+    }
   }
 
   void updateOrderStatus(String orderId, String newStatus) {
-    final index = allOrders.indexWhere((o) => o['id'] == orderId);
+    // API update status logic would go here
+    final index = allOrders.indexWhere(
+        (o) => o.id.toString() == orderId || o.displayId == orderId);
     if (index != -1) {
-      final updatedOrder = Map<String, dynamic>.from(allOrders[index]);
-      updatedOrder['status'] = newStatus;
-      allOrders[index] = updatedOrder;
-      // Refresh the list if needed, RxList assignments trigger updates automatically if we replace the element
+      // Local UI update for now
+      fetchOrders();
+    }
+    
+    if (selectedOrderDetails.value != null && 
+        (selectedOrderDetails.value!.id.toString() == orderId || selectedOrderDetails.value!.displayId == orderId)) {
+      selectedOrderDetails.value = selectedOrderDetails.value!.copyWith(status: newStatus);
+    }
+  }
+
+  Future<void> fetchOrderDetails(String id) async {
+    isDetailsLoading.value = true;
+    selectedOrderDetails.value = null; // reset before fetch
+    try {
+      final response = await ApiClient().get(
+        url: ApiUrl.orderDetails(id),
+        isToken: true,
+      );
+      if (response.statusCode == 200) {
+        final model = details_model.CustomerOrderDetailsModel.fromJson(response.body);
+        selectedOrderDetails.value = model.data;
+      }
+    } catch (e) {
+      debugPrint("Error fetching customer order details: $e");
+    } finally {
+      isDetailsLoading.value = false;
     }
   }
 }

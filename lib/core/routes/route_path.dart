@@ -42,7 +42,7 @@ class RoutePath {
   static const String customerOrder = '/CustomerOrderScreen';
   static const String customerOrderDetails = '/CustomerOrderDetails';
   static const String returnOrder = '/ReturnOrderScreen';
-  static const String returnOrderDetails = '/ReturnOrderDetails';
+
   static const String earning = '/EarningScreen';
   static const String deliveryOption = '/DeliveryOptionsScreen';
   static const String stripeWebview = '/StripeWebviewScreen';

@@ -1,43 +1,10 @@
 import 'package:get/get.dart';
-import '../../../../../utils/assets_image/app_images.dart';
 import '../../../../../utils/static_strings/static_strings.dart';
-import '../../bottom_nav/page/order/controller/order_controller.dart';
-
-class ReturnModel {
-  final String id;
-  final String orderId;
-  final String date;
-  final String statusTab; // AppStrings key
-  final String returnStatus; // AppStrings key
-  final String sellerName;
-  final double totalAmount;
-  final List<OrderItem> items;
-  final String returnReason;
-  final String submittedOn;
-  final String message;
-  final List<String> evidenceImages;
-  final String? location;
-  final String? rejectionReason;
-  final String? rejectedOn;
-
-  ReturnModel({
-    required this.id,
-    required this.orderId,
-    required this.date,
-    required this.statusTab,
-    required this.returnStatus,
-    required this.sellerName,
-    required this.totalAmount,
-    required this.items,
-    required this.returnReason,
-    required this.submittedOn,
-    required this.message,
-    required this.evidenceImages,
-    this.location,
-    this.rejectionReason,
-    this.rejectedOn,
-  });
-}
+import '../../../../../service/api_service.dart';
+import '../../../../../service/api_url.dart';
+import '../../../../../helper/tost_message/show_snackbar.dart';
+import '../model/MyReturnModel.dart' as list_model;
+import '../model/MyReturnDetailsModel.dart' as detail_model;
 
 class MyReturnController extends GetxController {
   final List<String> tabs = [
@@ -47,170 +14,86 @@ class MyReturnController extends GetxController {
   ];
   final RxInt selectedTab = 0.obs;
 
-  final Rx<ReturnModel?> selectedReturn = Rx<ReturnModel?>(null);
+  // List state
+  final RxBool isLoading = false.obs;
+  final RxList<list_model.Data> returns = <list_model.Data>[].obs;
 
-  final List<ReturnModel> returns = [
-    ReturnModel(
-      id: '1',
-      orderId: 'KDF143625879',
-      date: '27 Aug 2020 - 08:30 AM',
-      statusTab: AppStrings.returnRequests,
-      returnStatus: AppStrings.inReview,
-      sellerName: 'Mayoral Reseller',
-      totalAmount: 520.00,
-      returnReason: 'Damage Product',
-      submittedOn: 'Jul 13, 2025',
-      message: 'I recently noticed that I am unable to log into my account and received a notification that it has been blocked. I believe this may have been a misunderstanding. Could you please review my account and let me know the reason for the restriction? I would appreciate your assistance in resolving this matter as soon as possible.',
-      evidenceImages: [
-        AppImages.kidsCottonHoodie,
-        AppImages.kidsCottonHoddieTshirt,
-        AppImages.kidShorts,
-      ],
-      items: [
-        OrderItem(
-          image: AppImages.kidsCottonSho,
-          name: 'D.D. Step - Comfort',
-          quantity: 1,
-          variant: 'S',
-          price: 260.00,
-        ),
-        OrderItem(
-          image: AppImages.kidsCottonSho,
-          name: 'D.D. Step - Comfort',
-          quantity: 1,
-          variant: 'S',
-          price: 260.00,
-        ),
-      ],
-    ),
-    ReturnModel(
-      id: '2',
-      orderId: 'DDF143625869',
-      date: '27 Aug 2020 - 08:30 AM',
-      statusTab: AppStrings.returnRequests,
-      returnStatus: AppStrings.inReview,
-      sellerName: 'Mayoral Reseller',
-      totalAmount: 260.00,
-      returnReason: 'Damage Product',
-      submittedOn: 'Jul 13, 2025',
-      message: 'Product arrived damaged.',
-      evidenceImages: [
-        AppImages.kidsCottonHoodie,
-      ],
-      items: [
-        OrderItem(
-          image: AppImages.kidsCottonSho,
-          name: 'D.D. Step - Comfort',
-          quantity: 1,
-          variant: 'S',
-          price: 260.00,
-        ),
-      ],
-    ),
-    ReturnModel(
-      id: '3',
-      orderId: 'KDF143625879',
-      date: '27 Aug 2020 - 08:30 AM',
-      statusTab: AppStrings.accepted,
-      returnStatus: AppStrings.processing,
-      sellerName: 'Mayoral Reseller',
-      totalAmount: 520.00,
-      returnReason: 'Damage Product',
-      submittedOn: 'Jul 13, 2025',
-      message: 'I recently noticed that I am unable to log into my account and received a notification that it has been blocked. I believe this may have been a misunderstanding. Could you please review my account and let me know the reason for the restriction? I would appreciate your assistance in resolving this matter as soon as possible.',
-      evidenceImages: [
-        AppImages.kidsCottonHoodie,
-        AppImages.kidsCottonHoddieTshirt,
-        AppImages.kidShorts,
-      ],
-      location: '25 "Ivan Vazov" Street, Plovdiv 4000, Bulgaria',
-      items: [
-        OrderItem(
-          image: AppImages.kidsCottonSho,
-          name: 'D.D. Step - Comfort',
-          quantity: 1,
-          variant: 'S',
-          price: 260.00,
-        ),
-      ],
-    ),
-    ReturnModel(
-      id: '4',
-      orderId: 'DDF143625869',
-      date: '27 Aug 2020 - 08:30 AM',
-      statusTab: AppStrings.accepted,
-      returnStatus: AppStrings.completed,
-      sellerName: 'Mayoral Reseller',
-      totalAmount: 260.00,
-      returnReason: 'Damage Product',
-      submittedOn: 'Jul 13, 2025',
-      message: 'Product arrived damaged.',
-      evidenceImages: [
-        AppImages.kidsCottonHoodie,
-      ],
-      location: '25 "Ivan Vazov" Street, Plovdiv 4000, Bulgaria',
-      items: [
-        OrderItem(
-          image: AppImages.kidsCottonSho,
-          name: 'D.D. Step - Comfort',
-          quantity: 1,
-          variant: 'S',
-          price: 260.00,
-        ),
-      ],
-    ),
-    ReturnModel(
-      id: '5',
-      orderId: 'KDF143625879',
-      date: '27 Aug 2020 - 08:30 AM',
-      statusTab: AppStrings.rejected,
-      returnStatus: AppStrings.rejected,
-      sellerName: 'Mayoral Reseller',
-      totalAmount: 520.00,
-      returnReason: 'Damage Product',
-      submittedOn: 'Jul 13, 2025',
-      message: 'I recently noticed that I am unable to log into my account and received a notification that it has been blocked. I believe this may have been a misunderstanding. Could you please review my account and let me know the reason for the restriction? I would appreciate your assistance in resolving this matter as soon as possible.',
-      evidenceImages: [
-        AppImages.kidsCottonHoodie,
-        AppImages.kidsCottonHoddieTshirt,
-        AppImages.kidShorts,
-      ],
-      rejectedOn: '27 Aug 2020 - 08:20 AM',
-      rejectionReason: 'I received the product in a damaged condition. The sole appears to be slightly torn, and the stitching on one side is loose. The packaging was intact, so the issue seems to be with the product itself. I have attached images for your review. Please assist with the return process.',
-      items: [
-        OrderItem(
-          image: AppImages.kidsCottonSho,
-          name: 'D.D. Step - Comfort',
-          quantity: 1,
-          variant: 'S',
-          price: 260.00,
-        ),
-        OrderItem(
-          image: AppImages.kidsCottonSho,
-          name: 'D.D. Step - Comfort',
-          quantity: 1,
-          variant: 'S',
-          price: 260.00,
-        ),
-      ],
-    ),
-  ];
+  // Detail state
+  final RxBool isDetailLoading = false.obs;
+  final Rx<detail_model.Data?> selectedReturnDetail =
+      Rx<detail_model.Data?>(null);
 
-  List<ReturnModel> get currentTabReturns {
-    final status = tabs[selectedTab.value];
-    return returns.where((r) => r.statusTab == status).toList();
+  @override
+  void onInit() {
+    super.onInit();
+    fetchReturns();
   }
+
+  Future<void> fetchReturns() async {
+    isLoading.value = true;
+    try {
+      String? statusFilter;
+      if (selectedTab.value == 1)
+        statusFilter = 'APPROVED';
+      else if (selectedTab.value == 2) statusFilter = 'REJECTED';
+
+      String url = ApiUrl.myReturn;
+      if (statusFilter != null) {
+        url += '?status=$statusFilter';
+      }
+
+      var response = await ApiClient().get(url: url, isToken: true);
+
+      if (response.statusCode == 200) {
+        list_model.MyReturnModel model =
+            list_model.MyReturnModel.fromJson(response.body);
+        returns.assignAll(model.data ?? []);
+      } else {
+        AppSnackBar.fail(response.statusText ?? "Failed to load returns");
+      }
+    } catch (e) {
+      AppSnackBar.fail("An error occurred: $e");
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> fetchReturnDetails(String id) async {
+    isDetailLoading.value = true;
+    try {
+      var response = await ApiClient().get(
+        url: ApiUrl.myReturnDetails(id),
+        isToken: true,
+      );
+
+      if (response.statusCode == 200) {
+        detail_model.MyReturnDetailsModel model =
+            detail_model.MyReturnDetailsModel.fromJson(response.body);
+        selectedReturnDetail.value = model.data;
+      } else {
+        AppSnackBar.fail(
+            response.statusText ?? "Failed to load return details");
+      }
+    } catch (e) {
+      AppSnackBar.fail("An error occurred: $e");
+    } finally {
+      isDetailLoading.value = false;
+    }
+  }
+
+  List<list_model.Data> get currentTabReturns => returns.toList();
 
   void changeTab(int index) {
     selectedTab.value = index;
-    selectedReturn.value = null;
+    selectedReturnDetail.value = null;
+    fetchReturns();
   }
 
-  void viewReturnDetails(ReturnModel r) {
-    selectedReturn.value = r;
+  void viewReturnDetails(list_model.Data r) {
+    fetchReturnDetails(r.id.toString());
   }
 
   void backToList() {
-    selectedReturn.value = null;
+    selectedReturnDetail.value = null;
   }
-}
+}

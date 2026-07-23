@@ -13,6 +13,15 @@ class OrderListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
+      if (controller.isLoading.value) {
+        return const Center(
+          child: CircularProgressIndicator(
+            color: Color(0xFF1A1A1A),
+            strokeWidth: 2.5,
+          ),
+        );
+      }
+
       final orders = controller.currentTabOrders;
       if (orders.isEmpty) {
         return Center(
@@ -24,7 +33,11 @@ class OrderListView extends StatelessWidget {
               Text(
                 '${AppStrings.noOrderFound.tr} (${controller.tabs[controller.selectedTab.value].tr})',
                 textAlign: TextAlign.center,
-                style: const TextStyle(color: Colors.grey, fontSize: 16, fontWeight: FontWeight.w600, fontStyle: FontStyle.italic),
+                style: const TextStyle(
+                    color: Colors.grey,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    fontStyle: FontStyle.italic),
               )
             ],
           ),
@@ -32,7 +45,8 @@ class OrderListView extends StatelessWidget {
       }
 
       return ListView.builder(
-        padding: EdgeInsets.symmetric(horizontal: Dimensions.w(16), vertical: 10),
+        padding:
+            EdgeInsets.symmetric(horizontal: Dimensions.w(16), vertical: 10),
         itemCount: orders.length,
         itemBuilder: (context, index) {
           final order = orders[index];
@@ -52,24 +66,36 @@ class OrderListView extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        '- ${AppStrings.orderIdLabel.tr}: ${order.orderId}',
-                        style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 13, fontStyle: FontStyle.italic),
+                        '- ${AppStrings.orderIdLabel.tr}: ${order.displayId ?? ""}',
+                        style: const TextStyle(
+                            fontWeight: FontWeight.w800,
+                            fontSize: 13,
+                            fontStyle: FontStyle.italic),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     const SizedBox(width: 8),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
-                        color: order.status == AppStrings.complete ? Colors.green.withOpacity(0.1) : (order.status == AppStrings.canceled ? Colors.red.withOpacity(0.1) : Colors.blue.withOpacity(0.1)),
+                        color: order.status == 'DELIVERED'
+                            ? Colors.green.withOpacity(0.1)
+                            : (order.status == 'CANCELLED'
+                                ? Colors.red.withOpacity(0.1)
+                                : Colors.blue.withOpacity(0.1)),
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Text(
-                        order.status == AppStrings.canceled ? '• ${AppStrings.canceled.tr}' : (order.status == AppStrings.complete ? '• ${AppStrings.delivered.tr}' : '• ${AppStrings.orderPlaced.tr}'),
+                        '• ${order.statusLabel ?? ""}',
                         style: TextStyle(
                           fontSize: 10,
                           fontWeight: FontWeight.w700,
-                          color: order.status == AppStrings.complete ? Colors.green : (order.status == AppStrings.canceled ? Colors.red : Colors.blue),
+                          color: order.status == 'DELIVERED'
+                              ? Colors.green
+                              : (order.status == 'CANCELLED'
+                                  ? Colors.red
+                                  : Colors.blue),
                         ),
                       ),
                     ),
@@ -77,14 +103,18 @@ class OrderListView extends StatelessWidget {
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  order.date,
-                  style: TextStyle(fontSize: 11, color: Colors.grey[400], fontStyle: FontStyle.italic),
+                  order.createdAt ?? "",
+                  style: TextStyle(
+                      fontSize: 11,
+                      color: Colors.grey[400],
+                      fontStyle: FontStyle.italic),
                 ),
                 const SizedBox(height: 14),
                 GestureDetector(
                   onTap: () => controller.viewOrderDetails(order),
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     decoration: BoxDecoration(
                       color: const Color(0xFF1A1A1A),
                       borderRadius: BorderRadius.circular(8),
@@ -94,7 +124,10 @@ class OrderListView extends StatelessWidget {
                       children: [
                         Text(
                           AppStrings.viewDetails.tr,
-                          style: TextStyle(color: AppColors.primaryColor, fontSize: 12, fontWeight: FontWeight.w700),
+                          style: TextStyle(
+                              color: AppColors.primaryColor,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w700),
                         ),
                       ],
                     ),

@@ -5,6 +5,7 @@ import '../../../../core/responsive_layout/dimensions.dart';
 import '../../../../utils/app_colors/app_colors.dart';
 import '../../../../widget/app_button.dart';
 import '../controller/my_return_controller.dart';
+import '../model/MyReturnModel.dart';
 
 class MyReturnListView extends GetView<MyReturnController> {
   const MyReturnListView({super.key});
@@ -12,6 +13,14 @@ class MyReturnListView extends GetView<MyReturnController> {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
+      if (controller.isLoading.value) {
+        return const Center(
+          child: CircularProgressIndicator(
+            color: AppColors.primaryColor,
+          ),
+        );
+      }
+
       final returns = controller.currentTabReturns;
 
       if (returns.isEmpty) {
@@ -54,20 +63,18 @@ class MyReturnListView extends GetView<MyReturnController> {
     });
   }
 
-  Widget _buildReturnCard(ReturnModel r) {
+  Widget _buildReturnCard(Data r) {
     Color badgeColor;
     Color badgeTextColor;
 
-    if (r.returnStatus == AppStrings.inReview) {
+    final status = r.status ?? '';
+    if (status == 'PENDING' || status == 'IN_REVIEW') {
       badgeColor = AppColors.primaryColor.withOpacity(0.15);
       badgeTextColor = AppColors.primaryColor;
-    } else if (r.returnStatus == AppStrings.processing) {
-      badgeColor = Colors.blue.withOpacity(0.1);
-      badgeTextColor = Colors.blue;
-    } else if (r.returnStatus == AppStrings.completed) {
+    } else if (status == 'APPROVED') {
       badgeColor = Colors.green.withOpacity(0.1);
       badgeTextColor = Colors.green;
-    } else if (r.returnStatus == AppStrings.rejected) {
+    } else if (status == 'REJECTED' || status == 'CANCELLED') {
       badgeColor = Colors.red.withOpacity(0.1);
       badgeTextColor = Colors.red;
     } else {
@@ -103,7 +110,7 @@ class MyReturnListView extends GetView<MyReturnController> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "- ${AppStrings.orderIdLabel.tr}: ${r.orderId}",
+                        "- ${AppStrings.orderIdLabel.tr}: ${r.displayOrderId ?? ""}",
                         style: const TextStyle(
                           fontFamily: 'Nunito',
                           fontSize: 14,
@@ -114,7 +121,7 @@ class MyReturnListView extends GetView<MyReturnController> {
                       ),
                       SizedBox(height: Dimensions.h(4)),
                       Text(
-                        r.date,
+                        r.submittedOn ?? "",
                         style: TextStyle(
                           fontFamily: 'Nunito',
                           fontSize: 10,
@@ -125,13 +132,14 @@ class MyReturnListView extends GetView<MyReturnController> {
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: Dimensions.w(8), vertical: Dimensions.h(4)),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: Dimensions.w(8), vertical: Dimensions.h(4)),
                   decoration: BoxDecoration(
                     color: badgeColor,
                     borderRadius: BorderRadius.circular(Dimensions.r(20)),
                   ),
                   child: Text(
-                    "• ${r.returnStatus.tr}",
+                    "• ${r.statusLabel ?? ""}",
                     style: TextStyle(
                       fontFamily: 'Nunito',
                       fontSize: 10,

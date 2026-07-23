@@ -25,7 +25,7 @@ class _MyReturnScreenState extends State<MyReturnScreen> {
       appBar: CommonAppBar(
         title: AppStrings.myReturns.tr,
         onBack: () {
-          if (controller.selectedReturn.value != null) {
+          if (controller.selectedReturnDetail.value != null) {
             controller.backToList();
           } else {
             Get.back();
@@ -39,9 +39,18 @@ class _MyReturnScreenState extends State<MyReturnScreen> {
           SizedBox(height: Dimensions.h(20)),
           Expanded(
             child: Obx(() {
-              if (controller.selectedReturn.value != null) {
+              // Show loading spinner while fetching details
+              if (controller.isDetailLoading.value) {
+                return const Center(
+                  child: CircularProgressIndicator(
+                    color: AppColors.primaryColor,
+                  ),
+                );
+              }
+
+              if (controller.selectedReturnDetail.value != null) {
                 return MyReturnDetailsView(
-                    returnModel: controller.selectedReturn.value!);
+                    returnDetail: controller.selectedReturnDetail.value!);
               } else {
                 return const MyReturnListView();
               }
