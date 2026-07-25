@@ -176,7 +176,8 @@ class OrderDetailsView extends StatelessWidget {
                                           child: Padding(
                                             padding: const EdgeInsets.all(6),
                                             child: Image.network(
-                                                ApiUrl.buildImageUrl(item.product?.imageUrl),
+                                                ApiUrl.buildImageUrl(
+                                                    item.product?.imageUrl),
                                                 fit: BoxFit.contain,
                                                 errorBuilder: (c, e, s) =>
                                                     const Icon(Icons.image,
@@ -385,7 +386,8 @@ class OrderDetailsView extends StatelessWidget {
                                           child: Padding(
                                             padding: const EdgeInsets.all(6),
                                             child: Image.network(
-                                                ApiUrl.buildImageUrl(item.imageUrl),
+                                                ApiUrl.buildImageUrl(
+                                                    item.imageUrl),
                                                 fit: BoxFit.contain,
                                                 errorBuilder: (c, e, s) =>
                                                     const Icon(Icons.image,
@@ -758,11 +760,17 @@ class OrderDetailsView extends StatelessWidget {
     final canCancel =
         detail?.actions?.canCancel ?? order.actions?.canCancel ?? false;
     final status = detail?.status ?? order.status;
+    final orderItemId = detail?.items?.isNotEmpty == true
+        ? detail!.items!.first.id.toString()
+        : null;
 
     if (canCancel) {
       return AppButton(
         label: AppStrings.cancelOrders.tr,
-        onPressed: () {},
+        onPressed: () {
+          final id = detail?.id?.toString() ?? order.id.toString();
+          _showCancelOrderBottomSheet(context, id);
+        },
         backgroundColor: Colors.white,
         textColor: Colors.red,
         borderSideColor: Colors.red.withOpacity(0.3),
@@ -772,7 +780,9 @@ class OrderDetailsView extends StatelessWidget {
     } else if (status == 'DELIVERED') {
       return AppButton(
         label: AppStrings.returnRequest.tr,
-        onPressed: () => _showReturnRequestBottomSheet(context),
+        onPressed: orderItemId != null
+            ? () => _showReturnRequestBottomSheet(context, orderItemId)
+            : null,
         backgroundColor: const Color(0xFF1A1A1A),
         textColor: AppColors.primaryColor,
         borderSideColor: const Color(0xFF1A1A1A),
@@ -786,142 +796,235 @@ class OrderDetailsView extends StatelessWidget {
     }
   }
 
-  void _showReturnRequestBottomSheet(BuildContext context) {
+  void _showCancelOrderBottomSheet(BuildContext context, String orderId) {
+    controller.cancelReasonController.clear();
     AppBottomSheet(
       child: Container(
         padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  '- ${AppStrings.returnRequest.tr}',
-                  style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w800,
-                      fontStyle: FontStyle.italic),
-                ),
-                GestureDetector(
-                  onTap: () => Get.back(),
-                  child: const Icon(Icons.close, size: 20, color: Colors.grey),
-                ),
-              ],
-            ),
-            const SizedBox(height: 4),
-            Text(
-              AppStrings.returnInstruction.tr,
-              style: TextStyle(fontSize: 12, color: Colors.grey[400]),
-            ),
-            const SizedBox(height: 24),
-            Text(
-              AppStrings.returnReason.tr,
-              style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700,
-                  fontStyle: FontStyle.italic),
-            ),
-            const SizedBox(height: 10),
-            AppTextField(
-              controller: TextEditingController(),
-              hint: AppStrings.returnReasonPlaceholder.tr,
-              hintTextStyle: TextStyle(fontSize: 12, color: Colors.grey[400]),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              AppStrings.uploadEvidence.tr,
-              style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700,
-                  fontStyle: FontStyle.italic),
-            ),
-            const SizedBox(height: 10),
-            GestureDetector(
-              onTap: () => controller.pickReturnEvidenceImage(),
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: Colors.grey.withOpacity(0.3)),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.image_outlined,
-                        color: Colors.grey[400], size: 18),
-                    const SizedBox(width: 8),
-                    Text(AppStrings.uploadImagesHere.tr,
-                        style:
-                            TextStyle(color: Colors.grey[400], fontSize: 13)),
-                  ],
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '- ${AppStrings.cancelOrders.tr}',
+                    style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w800,
+                        fontStyle: FontStyle.italic),
+                  ),
+                  GestureDetector(
+                    onTap: () => Get.back(),
+                    child:
+                        const Icon(Icons.close, size: 20, color: Colors.grey),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 24),
+              Text(
+                "Cancel Reason",
+                style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    fontStyle: FontStyle.italic),
+              ),
+              const SizedBox(height: 10),
+              AppTextField(
+                controller: controller.cancelReasonController,
+                hint: "Reason for cancellation",
+                maxLines: 3,
+                hintTextStyle: TextStyle(fontSize: 12, color: Colors.grey[400]),
+              ),
+              const SizedBox(height: 24),
+              Row(
+                children: [
+                  Expanded(
+                    child: AppButton(
+                      label: AppStrings.cancel.tr,
+                      onPressed: () => Get.back(),
+                      backgroundColor: Colors.white,
+                      textColor: Colors.grey,
+                      borderSideColor: Colors.grey.withOpacity(0.3),
+                      height: 44,
+                      borderRadius: 8,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Obx(() => AppButton(
+                          label: AppStrings.cancelOrders.tr,
+                          isLoading: controller.isCancelSubmitting.value,
+                          onPressed: () async {
+                            final success =
+                                await controller.cancelOrder(orderId);
+                            if (success) {
+                              Get.back(); // close bottom sheet only if success
+                            }
+                          },
+                          backgroundColor: Colors.red,
+                          textColor: Colors.white,
+                          borderSideColor: Colors.red,
+                          height: 44,
+                          borderRadius: 8,
+                        )),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showReturnRequestBottomSheet(BuildContext context, String orderItemId) {
+    AppBottomSheet(
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '- ${AppStrings.returnRequest.tr}',
+                    style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w800,
+                        fontStyle: FontStyle.italic),
+                  ),
+                  GestureDetector(
+                    onTap: () => Get.back(),
+                    child:
+                        const Icon(Icons.close, size: 20, color: Colors.grey),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 4),
+              Text(
+                AppStrings.returnInstruction.tr,
+                style: TextStyle(fontSize: 12, color: Colors.grey[400]),
+              ),
+              const SizedBox(height: 24),
+              Text(
+                AppStrings.returnReason.tr,
+                style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    fontStyle: FontStyle.italic),
+              ),
+              const SizedBox(height: 10),
+              AppTextField(
+                controller: controller.returnReasonController,
+                hint: AppStrings.returnReasonPlaceholder.tr,
+                hintTextStyle: TextStyle(fontSize: 12, color: Colors.grey[400]),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                AppStrings.uploadEvidence.tr,
+                style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    fontStyle: FontStyle.italic),
+              ),
+              const SizedBox(height: 10),
+              GestureDetector(
+                onTap: () => controller.pickReturnEvidenceImage(),
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: Colors.grey.withOpacity(0.3)),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.image_outlined,
+                          color: Colors.grey[400], size: 18),
+                      const SizedBox(width: 8),
+                      Text(AppStrings.uploadImagesHere.tr,
+                          style:
+                              TextStyle(color: Colors.grey[400], fontSize: 13)),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 10),
-            Obx(() => Wrap(
-                  spacing: 10,
-                  runSpacing: 10,
-                  children: controller.returnEvidenceImages
-                      .asMap()
-                      .entries
-                      .map((entry) {
-                    return _buildMockImage(entry.value, entry.key);
-                  }).toList(),
-                )),
-            const SizedBox(height: 20),
-            Text(
-              AppStrings.describeReason.tr,
-              style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700,
-                  fontStyle: FontStyle.italic),
-            ),
-            const SizedBox(height: 10),
-            AppTextField(
-              controller: TextEditingController(),
-              maxLines: 4,
-              hint: AppStrings.returnDetailPlaceholder.tr,
-              hintTextStyle: TextStyle(fontSize: 12, color: Colors.grey[400]),
-            ),
-            const SizedBox(height: 24),
-            Row(
-              children: [
-                Expanded(
-                  child: AppButton(
-                    label: AppStrings.cancel.tr,
-                    onPressed: () => Get.back(),
-                    backgroundColor: Colors.white,
-                    textColor: Colors.grey,
-                    borderSideColor: Colors.grey.withOpacity(0.3),
-                    height: 44,
-                    borderRadius: 8,
+              const SizedBox(height: 10),
+              Obx(() => Wrap(
+                    spacing: 10,
+                    runSpacing: 10,
+                    children: controller.returnEvidenceImages
+                        .asMap()
+                        .entries
+                        .map((entry) {
+                      return _buildMockImage(entry.value, entry.key);
+                    }).toList(),
+                  )),
+              const SizedBox(height: 20),
+              Text(
+                AppStrings.describeReason.tr,
+                style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    fontStyle: FontStyle.italic),
+              ),
+              const SizedBox(height: 10),
+              AppTextField(
+                controller: controller.returnMessageController,
+                maxLines: 4,
+                hint: AppStrings.returnDetailPlaceholder.tr,
+                hintTextStyle: TextStyle(fontSize: 12, color: Colors.grey[400]),
+              ),
+              const SizedBox(height: 24),
+              Row(
+                children: [
+                  Expanded(
+                    child: AppButton(
+                      label: AppStrings.cancel.tr,
+                      onPressed: () => Get.back(),
+                      backgroundColor: Colors.white,
+                      textColor: Colors.grey,
+                      borderSideColor: Colors.grey.withOpacity(0.3),
+                      height: 44,
+                      borderRadius: 8,
+                    ),
                   ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: AppButton(
-                    label: AppStrings.submitRequest.tr,
-                    onPressed: () {
-                      Get.back(); // close bottom sheet
-                      AppAlerts.warning(
-                        title: AppStrings.returnRequest.tr,
-                        message: AppStrings.returnConfirmSubtitle.tr,
-                        onConfirm: () {},
-                      );
-                    },
-                    backgroundColor: const Color(0xFF1A1A1A),
-                    textColor: AppColors.primaryColor,
-                    borderSideColor: const Color(0xFF1A1A1A),
-                    height: 44,
-                    borderRadius: 8,
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Obx(() => AppButton(
+                          label: AppStrings.submitRequest.tr,
+                          isLoading: controller.isReturnSubmitting.value,
+                          onPressed: () {
+                            AppAlerts.warning(
+                              title: AppStrings.returnRequest.tr,
+                              message: AppStrings.returnConfirmSubtitle.tr,
+                              onConfirm: () async {
+                                final success = await controller
+                                    .submitReturnRequest(orderItemId);
+                                if (success) {
+                                  Get.back(); // close bottom sheet only if success
+                                }
+                              },
+                            );
+                          },
+                          backgroundColor: const Color(0xFF1A1A1A),
+                          textColor: AppColors.primaryColor,
+                          borderSideColor: const Color(0xFF1A1A1A),
+                          height: 44,
+                          borderRadius: 8,
+                        )),
                   ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

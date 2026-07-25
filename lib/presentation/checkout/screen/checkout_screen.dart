@@ -33,132 +33,161 @@ class CheckoutScreen extends StatelessWidget {
             children: [
               // ── Scrollable Body ─────────────────────────────────────
               Expanded(
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.symmetric(horizontal: Dimensions.w(16), vertical: Dimensions.h(16)),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Order Summary header row
-                      Obx(() {
-                        final count = controller.cartController.totalItemCount;
-                        return Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              width: 1,
-                              color: AppColors.greyColor,
+                child: Stack(
+                  children: [
+                    SingleChildScrollView(
+                      padding: EdgeInsets.symmetric(horizontal: Dimensions.w(16), vertical: Dimensions.h(16)),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Order Summary header row
+                          Obx(() {
+                            final count = controller.orderSummary.value?.data?.cartItemCount ?? 0;
+                            return Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  width: 1,
+                                  color: AppColors.greyColor,
+                                ),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    AppStrings.orderSummary.tr,
+                                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800, fontStyle: FontStyle.italic),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                    decoration: BoxDecoration(
+                                      color: Colors.transparent,
+                                      borderRadius: BorderRadius.circular(4),
+                                      border: Border.all(color: AppColors.primaryColor, width: 1),
+                                    ),
+                                    child: Text(
+                                      '$count'.padLeft(2, '0'),
+                                      style: TextStyle(
+                                        color: AppColors.primaryColor,
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }),
+                          const SizedBox(height: 14),
+
+                          // Order Items + Delivery Selection per seller
+                          CheckoutOrderItems(controller: controller),
+                          const SizedBox(height: 8),
+
+                          // Delivery Address
+                          CheckoutAddressSection(controller: controller),
+                          const SizedBox(height: 14),
+
+                          // Terms & Conditions
+                          Obx(() => Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 4),
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFFAFAFA),
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(color: Colors.grey.withOpacity(0.1)),
                             ),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Row(
-                            children: [
-                              Text(
-                                AppStrings.orderSummary.tr,
-                                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800, fontStyle: FontStyle.italic),
-                              ),
-                              const SizedBox(width: 8),
-                              Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                                decoration: BoxDecoration(
-                                  color: Colors.transparent,
-                                  borderRadius: BorderRadius.circular(4),
-                                  border: Border.all(color: AppColors.primaryColor, width: 1),
-                                ),
-                                child: Text(
-                                  '$count'.padLeft(2, '0'),
-                                  style: TextStyle(
-                                    color: AppColors.primaryColor,
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 12,
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: Checkbox(
+                                    value: controller.termsAgreed.value,
+                                    onChanged: controller.toggleTerms,
+                                    activeColor: const Color(0xFF1A1A1A),
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                                    side: BorderSide(color: Colors.grey.shade400, width: 1),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: RichText(
+                                    text: TextSpan(
+                                      style: const TextStyle(
+                                        fontSize: 10,
+                                        color: Colors.black,
+                                        fontStyle: FontStyle.italic,
+                                        fontWeight: FontWeight.w600,
+                                        height: 1.4,
+                                      ),
+                                      children: [
+                                        const TextSpan(text: 'I Agree To The '),
+                                        TextSpan(
+                                          text: 'Terms & Conditions',
+                                          style: TextStyle(
+                                            color: AppColors.primaryColor,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        ),
+                                        const TextSpan(text: ' And '),
+                                        TextSpan(
+                                          text: 'Privacy Policy',
+                                          style: TextStyle(
+                                            color: AppColors.primaryColor,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        ),
+                                        const TextSpan(text: ' Of BestKid.'),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )),
+                          const SizedBox(height: 14),
+
+                          // Price Details
+                          CheckoutPriceDetails(controller: controller),
+                          const SizedBox(height: 14),
+
+                          // Apply Coupon Section
+                          CheckoutCouponSection(controller: controller),
+                          const SizedBox(height: 20),
+
+                          // Proceed To Pay button
+                          Obx(() => AppButton(
+                                label: AppStrings.proceedToPay.tr,
+                                isLoading: controller.isSubmittingOrder.value,
+                                onPressed: controller.termsAgreed.value
+                                    ? () {
+                                        controller.placeOrder();
+                                      }
+                                    : null,
+                                backgroundColor: const Color(0xFF1A1A1A),
+                                textColor: AppColors.primaryColor,
+                                borderSideColor: const Color(0xFF1A1A1A),
+                                leadingIcon: Icon(Icons.sell, color: AppColors.primaryColor, size: 18),
+                                borderRadius: 12,
+                                height: 52,
+                              )),
+                          const SizedBox(height: 40),
+                        ],
+                      ),
+                    ),
+                    Obx(() {
+                      if (controller.isLoading.value) {
+                        return Container(
+                          color: const Color(0xFFF8F8F8),
+                          child: const Center(child: CircularProgressIndicator()),
                         );
-                      }),
-                      const SizedBox(height: 14),
-
-                      // Order Items + Delivery Selection per seller
-                      CheckoutOrderItems(controller: controller),
-                      const SizedBox(height: 8),
-
-                      // Delivery Address
-                      CheckoutAddressSection(controller: controller),
-                      const SizedBox(height: 14),
-
-                      // Terms & Conditions
-                      Obx(() => Row(
-                            children: [
-                              Checkbox(
-                                value: controller.termsAgreed.value,
-                                onChanged: controller.toggleTerms,
-                                activeColor: const Color(0xFF1A1A1A),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-                              ),
-                              Expanded(
-                                child: RichText(
-                                  text: TextSpan(
-                                    style: const TextStyle(fontSize: 11, color: Colors.grey),
-                                    children: [
-                                      TextSpan(text: AppStrings.iAgreeToThe.tr),
-                                      TextSpan(
-                                        text: AppStrings.termsCondition.tr,
-                                        style: TextStyle(
-                                          color: AppColors.primaryColor,
-                                        ),
-                                      ),
-                                      TextSpan(text: AppStrings.andText.tr),
-                                      TextSpan(
-                                        text: AppStrings.privacyPolicy.tr,
-                                        style: TextStyle(
-                                          color: AppColors.primaryColor,
-                                        ),
-                                      ),
-                                      TextSpan(text: AppStrings.ofBestKid.tr),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          )),
-                      const SizedBox(height: 14),
-
-                      // Price Details
-                      CheckoutPriceDetails(controller: controller),
-                      const SizedBox(height: 14),
-
-                      // Apply Coupon Section
-                      CheckoutCouponSection(controller: controller),
-                      const SizedBox(height: 20),
-
-                      // Proceed To Pay button
-                      Obx(() => AppButton(
-                            label: AppStrings.proceedToPay.tr,
-                            onPressed: controller.termsAgreed.value
-                                ? () {
-                                    Get.snackbar(
-                                      AppStrings.orderPlaced.tr,
-                                      AppStrings.orderPlacedSuccess.tr,
-                                      snackPosition: SnackPosition.TOP,
-                                      backgroundColor: const Color(0xFF1A1A1A),
-                                      colorText: AppColors.primaryColor,
-                                      borderRadius: 12,
-                                      margin: const EdgeInsets.all(16),
-                                      icon: Icon(Icons.check_circle, color: AppColors.primaryColor),
-                                    );
-                                  }
-                                : null,
-                            backgroundColor: const Color(0xFF1A1A1A),
-                            textColor: AppColors.primaryColor,
-                            borderSideColor: const Color(0xFF1A1A1A),
-                            leadingIcon: Icon(Icons.sell, color: AppColors.primaryColor, size: 18),
-                            borderRadius: 12,
-                            height: 52,
-                          )),
-                      const SizedBox(height: 40),
-                    ],
-                  ),
+                      }
+                      return const SizedBox.shrink();
+                    }),
+                  ],
                 ),
               ),
             ],

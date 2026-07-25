@@ -1,3 +1,4 @@
+import 'package:bestkits/helper/tost_message/show_snackbar.dart';
 import 'package:bestkits/utils/static_strings/static_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -5,7 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import '../../../../../service/api_service.dart';
 import '../../../../../service/api_url.dart';
 import '../model/MyOrderModel.dart';
-import '../../../../../helper/tost_message/show_snackbar.dart';
+import '../../../../../widget/show_snackbar.dart';
 import '../model/MyOrderDetailsModel.dart';
 
 class OrderController extends GetxController {
@@ -26,6 +27,9 @@ class OrderController extends GetxController {
   final RxList<String> returnEvidenceImages = <String>[].obs;
   final RxDouble reviewRating = 0.0.obs;
   final TextEditingController reviewTextController = TextEditingController();
+  final TextEditingController returnReasonController = TextEditingController();
+  final TextEditingController returnMessageController = TextEditingController();
+  final RxBool isReturnSubmitting = false.obs;
 
   @override
   void onInit() {
@@ -79,14 +83,16 @@ class OrderController extends GetxController {
     }
   }
 
-  Future<bool> submitReview(String orderItemId, double rating, String reviewText) async {
+  Future<bool> submitReview(
+      String orderItemId, double rating, String reviewText) async {
     try {
       String url = ApiUrl.orderDeliveryItemReview(orderItemId);
       var body = {
         "rating": rating.toInt(),
         "review": reviewText,
       };
-      var response = await ApiClient().post(url: url, body: body, isToken: true);
+      var response =
+          await ApiClient().post(url: url, body: body, isToken: true);
 
       if (response.statusCode == 201 || response.statusCode == 200) {
         AppSnackBar.success("Review submitted successfully");
@@ -95,7 +101,9 @@ class OrderController extends GetxController {
         }
         return true;
       } else {
-        AppSnackBar.fail(response.body?['message'] ?? response.statusText ?? "Failed to submit review");
+        AppSnackBar.fail(response.body?['message'] ??
+            response.statusText ??
+            "Failed to submit review");
         return false;
       }
     } catch (e) {
@@ -130,6 +138,78 @@ class OrderController extends GetxController {
     returnEvidenceImages.clear();
     reviewRating.value = 0.0;
     reviewTextController.clear();
+    returnReasonController.clear();
+    returnMessageController.clear();
+    isReturnSubmitting.value = false;
+  }
+
+  Future<bool> submitReturnRequest(String orderItemId) async {
+    final reason = returnReasonController.text.trim();
+    final message = returnMessageController.text.trim();
+
+    if (reason.isEmpty) {
+      AppSnackBar.fail("Please enter a return reason");
+      return false;
+    }
+
+    isReturnSubmitting.value = true;
+    try {
+      // Step 1: Upload each evidence image to /uploads and collect URLs
+      final List<String> imageUrls = [];
+      for (final imagePath in returnEvidenceImages) {
+        final uploadResponse = await ApiClient().multipart(
+          url: ApiUrl.upload,
+          fields: {},
+          files: [MultipartFileData(key: 'file', path: imagePath)],
+          isToken: true,
+        );
+        if (uploadResponse.statusCode == 200 ||
+            uploadResponse.statusCode == 201) {
+          final body = uploadResponse.body;
+          final filePath =
+              body is Map ? (body['data']?['filePath'] as String?) : null;
+          if (filePath != null && filePath.isNotEmpty) {
+            imageUrls.add(ApiUrl.buildImageUrl(filePath));
+          }
+        }
+      }
+
+      // Step 2: POST JSON to /returns — server expects JSON body, not multipart
+      final body = <String, dynamic>{
+        'orderItemId': int.tryParse(orderItemId) ?? orderItemId,
+        'reason': reason,
+        'message': message,
+        'images': imageUrls,
+      };
+
+      final response = await ApiClient().post(
+        url: ApiUrl.returnRequest,
+        body: body,
+        isToken: true,
+      );
+
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        ShowAppSnackBar.success("Return request submitted successfully");
+        clearReturnState();
+        if (selectedOrder.value != null) {
+          fetchOrderDetail(selectedOrder.value!.id.toString());
+        }
+        return true;
+      } else {
+        final raw = response.body?['message'] ??
+            response.statusText ??
+            "Failed to submit return request";
+        // message can be a List<dynamic> from validation errors
+        final msg = raw is List ? raw.join(', ') : raw.toString();
+        ShowAppSnackBar.fail(msg);
+        return false;
+      }
+    } catch (e) {
+      ShowAppSnackBar.fail("An error occurred: $e");
+      return false;
+    } finally {
+      isReturnSubmitting.value = false;
+    }
   }
 
   List<Data> get currentTabOrders {
@@ -152,5 +232,51 @@ class OrderController extends GetxController {
   void backToList() {
     selectedOrder.value = null;
     selectedOrderDetail.value = null;
+  }
+
+  final TextEditingController cancelReasonController = TextEditingController();
+  final RxBool isCancelSubmitting = false.obs;
+
+  Future<bool> cancelOrder(String orderId) async {
+    final reason = cancelReasonController.text.trim();
+    if (reason.isEmpty) {
+      ShowAppSnackBar.fail("Please enter a cancel reason");
+      return false;
+    }
+
+    isCancelSubmitting.value = true;
+    try {
+      final body = <String, dynamic>{
+        'reason': reason,
+      };
+
+      final response = await ApiClient().patch(
+        url: ApiUrl.cancelOrder(orderId),
+        body: body,
+        isToken: true,
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        ShowAppSnackBar.success("Order canceled successfully");
+        cancelReasonController.clear();
+        fetchOrders();
+        if (selectedOrder.value != null) {
+          fetchOrderDetail(selectedOrder.value!.id.toString());
+        }
+        return true;
+      } else {
+        final raw = response.body?['message'] ??
+            response.statusText ??
+            "Failed to cancel order";
+        final msg = raw is List ? raw.join(', ') : raw.toString();
+        ShowAppSnackBar.fail(msg);
+        return false;
+      }
+    } catch (e) {
+      ShowAppSnackBar.fail("An error occurred: $e");
+      return false;
+    } finally {
+      isCancelSubmitting.value = false;
+    }
   }
 }

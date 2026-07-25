@@ -12,74 +12,82 @@ class CheckoutPriceDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() => Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: Colors.grey.withOpacity(0.1)),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                '- ${AppStrings.priceDetails.tr}',
-                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800, fontStyle: FontStyle.italic),
-              ),
-              const SizedBox(height: 14),
-              const Divider(height: 1, color: Color(0xFFF0F0F0)),
-              const SizedBox(height: 12),
+    return Obx(() {
+      final groups = controller.orderSummary.value?.data?.sellerGroups ?? [];
+      final allItems = groups.expand((g) => g.items ?? []).toList();
 
-              // Per-item breakdown
-              ...controller.cartController.cartItems.map((item) => Padding(
-                    padding: const EdgeInsets.only(bottom: 8),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Row(
-                            children: [
-                              Flexible(
-                                child: Text(
-                                  item.name,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(fontSize: 12, color: Colors.grey, fontStyle: FontStyle.italic),
-                                ),
-                              ),
-                              const SizedBox(width: 4),
-                              Text(
-                                'x${item.quantity.value}',
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  color: AppColors.primaryColor,
-                                  fontWeight: FontWeight.w700,
-                                  fontStyle: FontStyle.italic,
-                                ),
-                              ),
-                            ],
+      return Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: Colors.grey.withOpacity(0.1)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '- ${AppStrings.priceDetails.tr}',
+              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800, fontStyle: FontStyle.italic),
+            ),
+            const SizedBox(height: 14),
+            const Divider(height: 1, color: Color(0xFFF0F0F0)),
+            const SizedBox(height: 12),
+
+            // Per-item breakdown
+            ...allItems.map((item) {
+              final quantity = item.quantity ?? 1;
+              final price = item.price ?? 0;
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Row(
+                        children: [
+                          Flexible(
+                            child: Text(
+                              item.product?.name ?? 'Unknown Product',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(fontSize: 12, color: Colors.grey, fontStyle: FontStyle.italic),
+                            ),
                           ),
-                        ),
-                        Text(
-                          '€${(double.parse(item.price) * item.quantity.value).toStringAsFixed(2)}',
-                          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
-                        ),
-                      ],
+                          const SizedBox(width: 4),
+                          Text(
+                            'x$quantity',
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: AppColors.primaryColor,
+                              fontWeight: FontWeight.w700,
+                              fontStyle: FontStyle.italic,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  )),
+                    Text(
+                      '€${(price * quantity).toStringAsFixed(2)}',
+                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                    ),
+                  ],
+                ),
+              );
+            }),
 
-              const Divider(height: 1, color: Color(0xFFF0F0F0)),
-              const SizedBox(height: 12),
+            const Divider(height: 1, color: Color(0xFFF0F0F0)),
+            const SizedBox(height: 12),
 
-              // Subtotal
-              _row(AppStrings.subtotal.tr, null, '€${controller.subtotal.toStringAsFixed(2)}'),
-              const SizedBox(height: 8),
-              _row(AppStrings.shippingFee.tr, 'x${controller.cartController.sellers.length}', '€${controller.shippingTotal.toStringAsFixed(2)}'),
+            // Subtotal
+            _row(AppStrings.subtotal.tr, null, '€${controller.subtotal.toStringAsFixed(2)}'),
+            const SizedBox(height: 8),
+            _row(AppStrings.shippingFee.tr, 'x${groups.length}', '€${controller.shippingTotal.toStringAsFixed(2)}'),
               if (controller.isCouponApplied.value) ...[
                 const SizedBox(height: 8),
                 _row(
                   'Discount',
-                  '${controller.discountPercentage.value.toInt()}%',
+                  controller.couponController.text.isNotEmpty ? '(${controller.couponController.text})' : null,
                   '-€${controller.discountAmount.toStringAsFixed(2)}',
                   isDiscount: true,
                 ),
@@ -101,7 +109,8 @@ class CheckoutPriceDetails extends StatelessWidget {
               ),
             ],
           ),
-        ));
+        );
+    });
   }
 
   Widget _row(String label, String? suffix, String value, {bool isDiscount = false}) {

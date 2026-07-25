@@ -3,12 +3,15 @@ import 'package:get/get.dart';
 import 'package:bestkits/data/model/product_model.dart';
 import 'package:bestkits/service/api_service.dart';
 import 'package:bestkits/service/api_url.dart';
+import 'package:bestkits/widget/show_snackbar.dart';
 import '../../../../utils/static_strings/static_strings.dart';
+import '../../bottom_nav/page/cart/controller/cart_controller.dart';
 
 class ProductDetailsController extends GetxController {
   // Product state
   final Rx<ProductModel?> productDetails = Rx<ProductModel?>(null);
   final RxBool isLoading = false.obs;
+  final RxBool isAddingToCart = false.obs;
   final RxString errorMessage = ''.obs;
 
   // Image selection
@@ -66,14 +69,62 @@ class ProductDetailsController extends GetxController {
           errorMessage.value = 'Product data not found';
         }
       } else {
-        errorMessage.value =
-            'Failed to load product (${response.statusCode})';
+        errorMessage.value = 'Failed to load product (${response.statusCode})';
       }
     } catch (e) {
       errorMessage.value = 'Error: $e';
       print('Error fetching product details: $e');
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  Future<void> addToCart() async {
+    if (productDetails.value == null) return;
+
+    // Find selected variant ID
+    final variant = productDetails.value!.variants.firstWhere(
+      (v) => v.variantName == selectedVariant.value,
+      orElse: () => ProductVariant(
+          id: 0, productId: 0, variantName: '', price: 0), // fallback
+    );
+
+    if (variant.id == 0 && productDetails.value!.variants.isNotEmpty) {
+      ShowAppSnackBar.fail('Please select a valid variant');
+      return;
+    }
+
+    isAddingToCart.value = true;
+    try {
+      final body = {
+        "productId": productDetails.value!.id,
+        "variantId": variant.id,
+        "quantity": quantity.value
+      };
+
+      final response = await _apiClient.post(
+        url: ApiUrl.addToCart,
+        body: body,
+        isToken: true,
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        ShowAppSnackBar.success("Product added to cart successfully");
+        // Increment cart badge count on home header immediately
+        if (Get.isRegistered<CartController>()) {
+          Get.find<CartController>().incrementCount();
+        }
+      } else {
+        final raw = response.body?['message'] ??
+            response.statusText ??
+            "Failed to add to cart";
+        final msg = raw is List ? raw.join(', ') : raw.toString();
+        ShowAppSnackBar.fail(msg);
+      }
+    } catch (e) {
+      ShowAppSnackBar.fail("An error occurred: $e");
+    } finally {
+      isAddingToCart.value = false;
     }
   }
 

@@ -10,6 +10,7 @@ import '../../../../../utils/app_icons/app_icons.dart';
 import '../controller/home_controller.dart';
 import '../../../../../service/api_url.dart';
 import '../../../../notification/controller/notification_controller.dart';
+import '../../../page/cart/controller/cart_controller.dart';
 
 class HomeHeader extends GetView<HomeController> {
   const HomeHeader({super.key});
@@ -31,6 +32,8 @@ class HomeHeader extends GetView<HomeController> {
   Widget build(BuildContext context) {
     // Ensure NotificationController is initialized here so we can show the badge
     final notifCtrl = Get.put(NotificationController());
+    // Ensure CartController is initialized for the cart badge
+    final cartCtrl = Get.put(CartController());
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
@@ -101,18 +104,52 @@ class HomeHeader extends GetView<HomeController> {
             onTap: () {
               Get.toNamed(RoutePath.cart);
             },
-            child: Container(
-              padding: EdgeInsets.all(Dimensions.w(8)),
-              decoration: BoxDecoration(
-                color: AppColors.navBarColor,
-                shape: BoxShape.circle,
-              ),
-              child: AppSvg(
-                path: AppIcons.cart,
-                color: AppColors.primaryColor,
-                size: Dimensions.icon(24),
-              ),
-            ),
+            child: Obx(() {
+              final count = cartCtrl.cartItemCount.value;
+              return Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(Dimensions.w(8)),
+                    decoration: const BoxDecoration(
+                      color: AppColors.navBarColor,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.shopping_bag_outlined,
+                      color: AppColors.primaryColor,
+                      size: Dimensions.icon(24),
+                    ),
+                  ),
+                  if (count > 0)
+                    Positioned(
+                      top: 0,
+                      right: 0,
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: AppColors.primaryColor,
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.white, width: 1),
+                        ),
+                        constraints: const BoxConstraints(
+                          minWidth: 16,
+                          minHeight: 16,
+                        ),
+                        child: Text(
+                          count > 99 ? '99+' : count.toString(),
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 8,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                ],
+              );
+            }),
           ),
           Dimensions.gapW(10),
           // Notification Bell
@@ -130,8 +167,8 @@ class HomeHeader extends GetView<HomeController> {
                       color: AppColors.navBarColor,
                       shape: BoxShape.circle,
                     ),
-                    child: AppSvg(
-                      path: AppIcons.notification,
+                    child: Icon(
+                      Icons.notifications_outlined,
                       color: AppColors.primaryColor,
                       size: Dimensions.icon(24),
                     ),

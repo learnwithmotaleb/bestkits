@@ -14,7 +14,7 @@ class CartScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(CartController());
+    final controller = Get.find<CartController>();
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8F8F8),
@@ -56,7 +56,7 @@ class CartScreen extends StatelessWidget {
                                 color: AppColors.primaryColor.withOpacity(0.4)),
                           ),
                           child: Text(
-                            '${controller.totalItemCount}'.padLeft(2, '0'),
+                            '${controller.cartItemCount.value}'.padLeft(2, '0'),
                             style: TextStyle(
                               color: AppColors.primaryColor,
                               fontWeight: FontWeight.w700,
@@ -104,7 +104,16 @@ class CartScreen extends StatelessWidget {
           // Scrollable content
           Expanded(
             child: Obx(() {
-              if (controller.cartItems.isEmpty) {
+              if (controller.isLoading.value) {
+                return const Center(
+                    child: CircularProgressIndicator(
+                        color: AppColors.primaryColor));
+              }
+
+              final sellerGroups =
+                  controller.cartModel.value?.data?.sellerGroups ?? [];
+
+              if (sellerGroups.isEmpty) {
                 return Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -130,9 +139,9 @@ class CartScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     // Seller groups
-                    ...controller.sellers.map(
-                      (seller) => SellerCartGroup(
-                        seller: seller,
+                    ...sellerGroups.map(
+                      (group) => SellerCartGroup(
+                        sellerGroup: group,
                         controller: controller,
                       ),
                     ),

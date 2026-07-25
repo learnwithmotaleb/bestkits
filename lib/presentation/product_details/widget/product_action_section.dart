@@ -139,16 +139,11 @@ class ProductActionSection extends StatelessWidget {
         Row(
           children: [
             Expanded(
-              child: AppButton(
+              child: Obx(() => AppButton(
                 label: AppStrings.addToCart.tr,
+                isLoading: controller.isAddingToCart.value,
                 onPressed: () {
-                  Get.snackbar(
-                    'Success',
-                    'Product added to cart successfully',
-                    backgroundColor: Colors.green,
-                    colorText: Colors.white,
-                    snackPosition: SnackPosition.BOTTOM,
-                  );
+                  controller.addToCart();
                 },
                 backgroundColor: const Color(0xFF1A1A1A),
                 textColor: AppColors.primaryColor,
@@ -156,7 +151,7 @@ class ProductActionSection extends StatelessWidget {
                     color: AppColors.primaryColor, size: 18),
                 borderRadius: 12,
                 height: 50,
-              ),
+              )),
             ),
             const SizedBox(width: 15),
             Expanded(

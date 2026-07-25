@@ -157,6 +157,8 @@ class ApiUrl {
   static String orderDeliveryItemReview(String orderItemId) => '$baseUrl/orders/items/$orderItemId/review'; //get met
   static String customerOrder = '$baseUrl/orders/seller/all'; //get method
   static String orderDetails(String id) => '$baseUrl/orders/seller/$id'; //get method
+  static String returnRequest = '$baseUrl/returns'; //post method
+  static String cancelOrder(String id) => '$baseUrl/orders/$id/cancel'; //Patch method
 
 
 //=====================return===================
@@ -171,6 +173,23 @@ class ApiUrl {
   static String notificationUnreadCount(String id) => '$baseUrl/notifications/unread-count'; //get method
   static String notificationRead(String id) => '$baseUrl/notifications/$id/read'; //Patch method
   static String notificationReadAll = '$baseUrl/notifications/read-all'; //Patch method
+
+
+
+//===========================Cart====================
+  static String addToCart = '$baseUrl/cart/items'; //Post method
+  static String getCart = '$baseUrl/cart'; //Post method
+  static String updateQuantityCart(String itemId) => '$baseUrl/cart/items/$itemId'; //Patch method
+  static String deleteCartItem(String itemId) => '$baseUrl/cart/items/$itemId'; //Delete method
+  static String clearEnterCart = '$baseUrl/cart'; //Delete method
+
+//=======================checkout================
+  static String orderCheckout = '$baseUrl/orders/checkout'; //Post method
+  static String orderCheckoutSummary = '$baseUrl/orders/checkout/summary'; //Post method
+  static String applyCouponCode = '$baseUrl/orders/checkout/apply-coupon'; //Post method
+
+
+
 
 
 }

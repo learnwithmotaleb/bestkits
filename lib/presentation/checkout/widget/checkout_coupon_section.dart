@@ -69,6 +69,7 @@ class _CheckoutCouponSectionState extends State<CheckoutCouponSection> {
                         fontWeight: FontWeight.bold,
                         padding: const EdgeInsets.symmetric(horizontal: 0),
                         borderRadius: 10,
+                        isLoading: widget.controller.isApplyingCoupon.value,
                         backgroundColor: widget.controller.isCouponApplied.value
                             ? AppColors.blackColor
                             : AppColors.primaryColor,
