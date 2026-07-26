@@ -14,7 +14,7 @@ class CheckoutOrderItems extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(() {
       final groups = controller.orderSummary.value?.data?.sellerGroups ?? [];
-      
+
       if (groups.isEmpty) return const SizedBox();
 
       return Column(
@@ -49,7 +49,8 @@ class CheckoutOrderItems extends StatelessWidget {
                       ),
                       Text(
                         '${AppStrings.totalAmount.tr} : €${subtotal.toStringAsFixed(2)}',
-                        style: TextStyle(fontSize: 11, color: AppColors.blackColor),
+                        style: TextStyle(
+                            fontSize: 11, color: AppColors.blackColor),
                       ),
                     ],
                   ),
@@ -62,7 +63,8 @@ class CheckoutOrderItems extends StatelessWidget {
                 // Products
                 ...items.map((item) {
                   final imageUrl = ApiUrl.buildImageUrl(
-                      item.product?.imageUrls != null && item.product!.imageUrls!.isNotEmpty
+                      item.product?.imageUrls != null &&
+                              item.product!.imageUrls!.isNotEmpty
                           ? item.product!.imageUrls!.first
                           : null);
                   final quantity = item.quantity ?? 1;
@@ -70,10 +72,12 @@ class CheckoutOrderItems extends StatelessWidget {
                   final size = item.variant?.variantName ?? 'N/A';
 
                   return Container(
-                    margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 14),
+                    margin: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 14),
                     decoration: BoxDecoration(
                         border: Border.all(
-                            color: AppColors.greyColor.withOpacity(0.5), width: 1),
+                            color: AppColors.greyColor.withOpacity(0.5),
+                            width: 1),
                         borderRadius: BorderRadius.circular(10)),
                     child: Padding(
                       padding: const EdgeInsets.all(12),
@@ -92,7 +96,10 @@ class CheckoutOrderItems extends StatelessWidget {
                             child: Padding(
                               padding: const EdgeInsets.all(6),
                               child: imageUrl.isNotEmpty
-                                  ? Image.network(imageUrl, fit: BoxFit.cover, errorBuilder: (c, e, s) => const Icon(Icons.broken_image))
+                                  ? Image.network(imageUrl,
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (c, e, s) =>
+                                          const Icon(Icons.broken_image))
                                   : const Icon(Icons.image_not_supported),
                             ),
                           ),
@@ -116,9 +123,9 @@ class CheckoutOrderItems extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
-                                  '€${(price * quantity).toStringAsFixed(2)}',
+                                  'Unit Price: €${price.toStringAsFixed(2)}\nTotal: €${(price * quantity).toStringAsFixed(2)}',
                                   style: const TextStyle(
-                                      fontSize: 15,
+                                      fontSize: 13,
                                       fontWeight: FontWeight.w800),
                                 ),
                               ],
@@ -138,7 +145,8 @@ class CheckoutOrderItems extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: AppColors.primaryColor, width: 1),
+                      border:
+                          Border.all(color: AppColors.primaryColor, width: 1),
                     ),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -149,7 +157,8 @@ class CheckoutOrderItems extends StatelessWidget {
                           height: 16,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            border: Border.all(color: AppColors.primaryColor, width: 2),
+                            border: Border.all(
+                                color: AppColors.primaryColor, width: 2),
                           ),
                           child: Center(
                             child: Container(
@@ -170,7 +179,10 @@ class CheckoutOrderItems extends StatelessWidget {
                               Row(
                                 children: [
                                   Text(
-                                    '${(delivery.type ?? '').capitalizeFirst} Delivery',
+                                    (delivery.type ?? '').toLowerCase() ==
+                                            'international'
+                                        ? 'International Delivery'
+                                        : 'Domestic Delivery',
                                     style: const TextStyle(
                                       fontSize: 13,
                                       fontWeight: FontWeight.w800,
@@ -179,7 +191,10 @@ class CheckoutOrderItems extends StatelessWidget {
                                   ),
                                   const SizedBox(width: 4),
                                   Text(
-                                    '(inside Country)',
+                                    (delivery.type ?? '').toLowerCase() ==
+                                            'international'
+                                        ? '(Outside Country)'
+                                        : '(Inside Country)',
                                     style: TextStyle(
                                       fontSize: 9,
                                       color: Colors.grey[400],
@@ -224,7 +239,8 @@ class CheckoutOrderItems extends StatelessWidget {
                                   children: [
                                     const TextSpan(text: 'Estimated Time - '),
                                     TextSpan(
-                                      text: '${delivery.daysMin}-${delivery.daysMax} Business Days',
+                                      text:
+                                          '${delivery.daysMin}-${delivery.daysMax} Business Days',
                                       style: TextStyle(color: Colors.grey[700]),
                                     ),
                                   ],

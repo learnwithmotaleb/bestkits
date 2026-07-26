@@ -162,30 +162,24 @@ class CheckoutAddressSection extends StatelessWidget {
                                     ),
                                   ),
 
-                                  if (address.isDefault == true) ...[
+                                  if (address.addressName != null &&
+                                      address.addressName!.isNotEmpty) ...[
                                     const SizedBox(width: 8),
                                     Container(
-                                      padding:
-                                      const EdgeInsets.symmetric(
+                                      padding: const EdgeInsets.symmetric(
                                         horizontal: 8,
-                                        vertical: 2,
+                                        vertical: 3,
                                       ),
                                       decoration: BoxDecoration(
-                                        color: isSelected
-                                            ? AppColors.primaryColor
-                                            .withOpacity(0.2)
-                                            : Colors.grey.shade200,
-                                        borderRadius:
-                                        BorderRadius.circular(6),
+                                        color: const Color(0xFFFFF3D6),
+                                        borderRadius: BorderRadius.circular(6),
                                       ),
                                       child: Text(
-                                        'Default',
-                                        style: TextStyle(
-                                          fontSize: 9,
+                                        '• ${address.addressName}',
+                                        style: const TextStyle(
+                                          fontSize: 10,
                                           fontWeight: FontWeight.w700,
-                                          color: isSelected
-                                              ? AppColors.primaryColor
-                                              : Colors.grey,
+                                          color: Color(0xFFD97706),
                                         ),
                                       ),
                                     ),
@@ -196,10 +190,7 @@ class CheckoutAddressSection extends StatelessWidget {
                               const SizedBox(height: 6),
 
                               Text(
-                                '${address.address ?? ''}, '
-                                    '${address.city ?? ''}, '
-                                    '${address.postalCode ?? ''}, '
-                                    '${address.country ?? ''}',
+                                '${address.address ?? ''}, ${address.city ?? ''} ${address.postalCode ?? ''}, ${address.country ?? ''}',
                                 style: const TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w500,

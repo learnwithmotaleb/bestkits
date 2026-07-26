@@ -154,42 +154,51 @@ class ApiUrl {
 //=======================Order sections============================
   static String myOrder = '$baseUrl/orders'; //get met
   static String myOrderDetails(String id) => '$baseUrl/orders/$id'; //get met
-  static String orderDeliveryItemReview(String orderItemId) => '$baseUrl/orders/items/$orderItemId/review'; //get met
+  static String orderDeliveryItemReview(String orderItemId) =>
+      '$baseUrl/orders/items/$orderItemId/review'; //get met
   static String customerOrder = '$baseUrl/orders/seller/all'; //get method
-  static String orderDetails(String id) => '$baseUrl/orders/seller/$id'; //get method
+  static String orderDetails(String id) =>
+      '$baseUrl/orders/seller/$id'; //get method
   static String returnRequest = '$baseUrl/returns'; //post method
-  static String cancelOrder(String id) => '$baseUrl/orders/$id/cancel'; //Patch method
-
+  static String cancelOrder(String id) =>
+      '$baseUrl/orders/$id/cancel'; //Patch method
 
 //=====================return===================
   static String myReturn = '$baseUrl/returns'; //get method
-  static String myReturnDetails(String id) => '$baseUrl/returns/$id'; //get method
-  static String returnOrder = '$baseUrl/returns/seller/all'; //get method for seller
-
+  static String myReturnDetails(String id) =>
+      '$baseUrl/returns/$id'; //get method
+  static String returnOrder =
+      '$baseUrl/returns/seller/all'; //get method for seller
 
 //notifications=============================
   static String notification = '$baseUrl/notifications'; //get method
-  static String notificationDelete(String id) => '$baseUrl/notifications/$id'; //delete method
-  static String notificationUnreadCount(String id) => '$baseUrl/notifications/unread-count'; //get method
-  static String notificationRead(String id) => '$baseUrl/notifications/$id/read'; //Patch method
-  static String notificationReadAll = '$baseUrl/notifications/read-all'; //Patch method
-
-
+  static String notificationDelete(String id) =>
+      '$baseUrl/notifications/$id'; //delete method
+  static String notificationUnreadCount(String id) =>
+      '$baseUrl/notifications/unread-count'; //get method
+  static String notificationRead(String id) =>
+      '$baseUrl/notifications/$id/read'; //Patch method
+  static String notificationReadAll =
+      '$baseUrl/notifications/read-all'; //Patch method
 
 //===========================Cart====================
   static String addToCart = '$baseUrl/cart/items'; //Post method
-  static String getCart = '$baseUrl/cart'; //Post method
-  static String updateQuantityCart(String itemId) => '$baseUrl/cart/items/$itemId'; //Patch method
-  static String deleteCartItem(String itemId) => '$baseUrl/cart/items/$itemId'; //Delete method
+  static String getCart = '$baseUrl/cart'; //Get method
+  static String updateQuantityCart(String itemId) =>
+      '$baseUrl/cart/items/$itemId'; //Patch method
+  static String deleteCartItem(String itemId) =>
+      '$baseUrl/cart/items/$itemId'; //Delete method
   static String clearEnterCart = '$baseUrl/cart'; //Delete method
 
 //=======================checkout================
   static String orderCheckout = '$baseUrl/orders/checkout'; //Post method
-  static String orderCheckoutSummary = '$baseUrl/orders/checkout/summary'; //Post method
-  static String applyCouponCode = '$baseUrl/orders/checkout/apply-coupon'; //Post method
+  static String orderCheckoutSummary =
+      '$baseUrl/orders/checkout/summary'; //Post method
+  static String applyCouponCode =
+      '$baseUrl/orders/checkout/apply-coupon'; //Post method
 
+  static String orderBuyNowSummary =
+      '$baseUrl/orders/checkout/buy-now-summary'; //Post method
 
-
-
-
+  static String accountAddress = '$baseUrl/account/addresses'; //Post method
 }

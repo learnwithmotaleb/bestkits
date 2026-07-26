@@ -13,13 +13,31 @@ import '../widget/checkout_coupon_section.dart';
 import '../widget/checkout_order_items.dart';
 import '../widget/checkout_price_details.dart';
 
-class CheckoutScreen extends StatelessWidget {
+class CheckoutScreen extends StatefulWidget {
   const CheckoutScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final controller = Get.put(CheckoutController());
+  State<CheckoutScreen> createState() => _CheckoutScreenState();
+}
 
+class _CheckoutScreenState extends State<CheckoutScreen> {
+  late final CheckoutController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    if (Get.isRegistered<CheckoutController>()) {
+      controller = Get.find<CheckoutController>();
+    } else {
+      controller = Get.put(CheckoutController());
+    }
+    // Handle Buy Now arguments and fetch data
+    controller.handleArguments(Get.arguments);
+    controller.fetchCheckoutSummary();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF8F8F8),
       resizeToAvoidBottomInset: false,
@@ -28,7 +46,8 @@ class CheckoutScreen extends StatelessWidget {
       ),
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           child: Column(
             children: [
               // ── Scrollable Body ─────────────────────────────────────
@@ -36,15 +55,27 @@ class CheckoutScreen extends StatelessWidget {
                 child: Stack(
                   children: [
                     SingleChildScrollView(
-                      padding: EdgeInsets.symmetric(horizontal: Dimensions.w(16), vertical: Dimensions.h(16)),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: Dimensions.w(16),
+                          vertical: Dimensions.h(16)),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           // Order Summary header row
                           Obx(() {
-                            final count = controller.orderSummary.value?.data?.cartItemCount ?? 0;
+                            // Calculate total unique items (rows) to match Cart logic
+                            int uniqueItemsCount = 0;
+                            final groups = controller
+                                .orderSummary.value?.data?.sellerGroups;
+                            if (groups != null) {
+                              for (var group in groups) {
+                                uniqueItemsCount += (group.items?.length ?? 0);
+                              }
+                            }
+
                             return Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 15),
                               decoration: BoxDecoration(
                                 border: Border.all(
                                   width: 1,
@@ -56,18 +87,24 @@ class CheckoutScreen extends StatelessWidget {
                                 children: [
                                   Text(
                                     AppStrings.orderSummary.tr,
-                                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800, fontStyle: FontStyle.italic),
+                                    style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w800,
+                                        fontStyle: FontStyle.italic),
                                   ),
                                   const SizedBox(width: 8),
                                   Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8, vertical: 2),
                                     decoration: BoxDecoration(
                                       color: Colors.transparent,
                                       borderRadius: BorderRadius.circular(4),
-                                      border: Border.all(color: AppColors.primaryColor, width: 1),
+                                      border: Border.all(
+                                          color: AppColors.primaryColor,
+                                          width: 1),
                                     ),
                                     child: Text(
-                                      '$count'.padLeft(2, '0'),
+                                      '$uniqueItemsCount'.padLeft(2, '0'),
                                       style: TextStyle(
                                         color: AppColors.primaryColor,
                                         fontWeight: FontWeight.w700,
@@ -88,66 +125,75 @@ class CheckoutScreen extends StatelessWidget {
                           // Delivery Address
                           CheckoutAddressSection(controller: controller),
                           const SizedBox(height: 14),
-
+                          // Delivery Address
                           // Terms & Conditions
                           Obx(() => Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 4),
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFFAFAFA),
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(color: Colors.grey.withOpacity(0.1)),
-                            ),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SizedBox(
-                                  height: 20,
-                                  width: 20,
-                                  child: Checkbox(
-                                    value: controller.termsAgreed.value,
-                                    onChanged: controller.toggleTerms,
-                                    activeColor: const Color(0xFF1A1A1A),
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-                                    side: BorderSide(color: Colors.grey.shade400, width: 1),
-                                  ),
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 4),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 12),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFFAFAFA),
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(
+                                      color: Colors.grey.withOpacity(0.1)),
                                 ),
-                                const SizedBox(width: 10),
-                                Expanded(
-                                  child: RichText(
-                                    text: TextSpan(
-                                      style: const TextStyle(
-                                        fontSize: 10,
-                                        color: Colors.black,
-                                        fontStyle: FontStyle.italic,
-                                        fontWeight: FontWeight.w600,
-                                        height: 1.4,
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(
+                                      height: 20,
+                                      width: 20,
+                                      child: Checkbox(
+                                        value: controller.termsAgreed.value,
+                                        onChanged: controller.toggleTerms,
+                                        activeColor: const Color(0xFF1A1A1A),
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(4)),
+                                        side: BorderSide(
+                                            color: Colors.grey.shade400,
+                                            width: 1),
                                       ),
-                                      children: [
-                                        const TextSpan(text: 'I Agree To The '),
-                                        TextSpan(
-                                          text: 'Terms & Conditions',
-                                          style: TextStyle(
-                                            color: AppColors.primaryColor,
-                                            fontWeight: FontWeight.w700,
-                                          ),
-                                        ),
-                                        const TextSpan(text: ' And '),
-                                        TextSpan(
-                                          text: 'Privacy Policy',
-                                          style: TextStyle(
-                                            color: AppColors.primaryColor,
-                                            fontWeight: FontWeight.w700,
-                                          ),
-                                        ),
-                                        const TextSpan(text: ' Of BestKid.'),
-                                      ],
                                     ),
-                                  ),
+                                    const SizedBox(width: 10),
+                                    Expanded(
+                                      child: RichText(
+                                        text: TextSpan(
+                                          style: const TextStyle(
+                                            fontSize: 10,
+                                            color: Colors.black,
+                                            fontStyle: FontStyle.italic,
+                                            fontWeight: FontWeight.w600,
+                                            height: 1.4,
+                                          ),
+                                          children: [
+                                            const TextSpan(
+                                                text: 'I Agree To The '),
+                                            TextSpan(
+                                              text: 'Terms & Conditions',
+                                              style: TextStyle(
+                                                color: AppColors.primaryColor,
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                            ),
+                                            const TextSpan(text: ' And '),
+                                            TextSpan(
+                                              text: 'Privacy Policy',
+                                              style: TextStyle(
+                                                color: AppColors.primaryColor,
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                            ),
+                                            const TextSpan(
+                                                text: ' Of BestKid.'),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                          )),
+                              )),
                           const SizedBox(height: 14),
 
                           // Price Details
@@ -170,7 +216,8 @@ class CheckoutScreen extends StatelessWidget {
                                 backgroundColor: const Color(0xFF1A1A1A),
                                 textColor: AppColors.primaryColor,
                                 borderSideColor: const Color(0xFF1A1A1A),
-                                leadingIcon: Icon(Icons.sell, color: AppColors.primaryColor, size: 18),
+                                leadingIcon: Icon(Icons.sell,
+                                    color: AppColors.primaryColor, size: 18),
                                 borderRadius: 12,
                                 height: 52,
                               )),
@@ -182,7 +229,8 @@ class CheckoutScreen extends StatelessWidget {
                       if (controller.isLoading.value) {
                         return Container(
                           color: const Color(0xFFF8F8F8),
-                          child: const Center(child: CircularProgressIndicator()),
+                          child:
+                              const Center(child: CircularProgressIndicator()),
                         );
                       }
                       return const SizedBox.shrink();

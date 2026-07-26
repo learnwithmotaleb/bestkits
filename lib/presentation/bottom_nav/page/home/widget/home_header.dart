@@ -33,7 +33,9 @@ class HomeHeader extends GetView<HomeController> {
     // Ensure NotificationController is initialized here so we can show the badge
     final notifCtrl = Get.put(NotificationController());
     // Ensure CartController is initialized for the cart badge
-    final cartCtrl = Get.put(CartController());
+    final cartCtrl = Get.isRegistered<CartController>()
+        ? Get.find<CartController>()
+        : Get.put(CartController());
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),

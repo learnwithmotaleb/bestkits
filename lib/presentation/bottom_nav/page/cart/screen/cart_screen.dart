@@ -9,13 +9,31 @@ import '../controller/cart_controller.dart';
 import '../widget/cart_order_summary.dart';
 import '../widget/seller_cart_group.dart';
 
-class CartScreen extends StatelessWidget {
+class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final controller = Get.find<CartController>();
+  State<CartScreen> createState() => _CartScreenState();
+}
 
+class _CartScreenState extends State<CartScreen> {
+  late final CartController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    // Use existing instance if registered (e.g. from HomeHeader), otherwise create new
+    if (Get.isRegistered<CartController>()) {
+      controller = Get.find<CartController>();
+    } else {
+      controller = Get.put(CartController());
+    }
+    // Always refresh cart data when the screen opens
+    controller.fetchCart();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF8F8F8),
       appBar: CommonAppBar(
@@ -43,17 +61,19 @@ class CartScreen extends StatelessWidget {
                         Text(
                           AppStrings.myCart.tr,
                           style: const TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.w700),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w800,
+                              fontStyle: FontStyle.italic),
                         ),
                         const SizedBox(width: 8),
                         Container(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 8, vertical: 2),
                           decoration: BoxDecoration(
-                            color: AppColors.navBarColor,
-                            borderRadius: BorderRadius.circular(6),
+                            color: Colors.transparent,
+                            borderRadius: BorderRadius.circular(4),
                             border: Border.all(
-                                color: AppColors.primaryColor.withOpacity(0.4)),
+                                color: AppColors.primaryColor, width: 1),
                           ),
                           child: Text(
                             '${controller.cartItemCount.value}'.padLeft(2, '0'),

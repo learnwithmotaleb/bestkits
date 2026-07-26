@@ -97,24 +97,7 @@ class CartItemCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 6),
-                    // Category Tag (API doesn't provide category in cart items, fallback to "Product")
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                      decoration: BoxDecoration(
-                        color: AppColors.navBarColor,
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: AppColors.primaryColor.withOpacity(0.3)),
-                      ),
-                      child: Text(
-                        "Product",
-                        style: TextStyle(
-                          color: AppColors.primaryColor,
-                          fontSize: 9,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
+
                   ],
                 ),
               ),

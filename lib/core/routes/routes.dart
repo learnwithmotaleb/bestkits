@@ -87,6 +87,7 @@ import 'package:bestkits/presentation/auth/forgot_password/screen/forgot_passwor
 import 'package:bestkits/presentation/auth/forgot_password/controller/forgot_password_controller.dart';
 
 import '../../presentation/account_setting/controller/account_setting_controller.dart';
+import '../../presentation/bottom_nav/page/cart/controller/cart_controller.dart';
 import '../../presentation/splash/controller/splash_controller.dart';
 import '../../presentation/splash/screen/splash_screen.dart';
 
@@ -321,6 +322,9 @@ class AppRouter {
       name: RoutePath.cart,
       page: () => const CartScreen(),
       transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.lazyPut<CartController>(() => CartController(), fenix: true);
+      }),
     ),
     GetPage(
       name: RoutePath.stripeConnect,

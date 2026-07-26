@@ -49,11 +49,9 @@ class ProductActionSection extends StatelessWidget {
                   final isSelected =
                       controller.selectedVariant.value == variant.variantName;
                   return GestureDetector(
-                    onTap: () =>
-                        controller.selectVariant(variant.variantName),
+                    onTap: () => controller.selectVariant(variant.variantName),
                     child: Container(
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 15),
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
                       decoration: BoxDecoration(
                         color: isSelected ? Colors.white : Colors.grey[200],
                         borderRadius: BorderRadius.circular(8),
@@ -110,8 +108,8 @@ class ProductActionSection extends StatelessWidget {
             children: [
               IconButton(
                 onPressed: controller.decrementQuantity,
-                icon: Icon(Icons.remove,
-                    color: AppColors.primaryColor, size: 18),
+                icon:
+                    Icon(Icons.remove, color: AppColors.primaryColor, size: 18),
               ),
               Expanded(
                 child: Container(
@@ -127,8 +125,7 @@ class ProductActionSection extends StatelessWidget {
               ),
               IconButton(
                 onPressed: controller.incrementQuantity,
-                icon: Icon(Icons.add,
-                    color: AppColors.primaryColor, size: 18),
+                icon: Icon(Icons.add, color: AppColors.primaryColor, size: 18),
               ),
             ],
           ),
@@ -140,25 +137,26 @@ class ProductActionSection extends StatelessWidget {
           children: [
             Expanded(
               child: Obx(() => AppButton(
-                label: AppStrings.addToCart.tr,
-                isLoading: controller.isAddingToCart.value,
-                onPressed: () {
-                  controller.addToCart();
-                },
-                backgroundColor: const Color(0xFF1A1A1A),
-                textColor: AppColors.primaryColor,
-                leadingIcon: Icon(Icons.shopping_bag_outlined,
-                    color: AppColors.primaryColor, size: 18),
-                borderRadius: 12,
-                height: 50,
-              )),
+                    label: AppStrings.addToCart.tr,
+                    isLoading: controller.isAddingToCart.value,
+                    onPressed: () {
+                      controller.addToCart();
+                    },
+                    backgroundColor: const Color(0xFF1A1A1A),
+                    textColor: AppColors.primaryColor,
+                    leadingIcon: Icon(Icons.shopping_bag_outlined,
+                        color: AppColors.primaryColor, size: 18),
+                    borderRadius: 12,
+                    height: 50,
+                  )),
             ),
             const SizedBox(width: 15),
             Expanded(
-              child: AppButton(
+              child: Obx(() => AppButton(
                 label: AppStrings.orderNow.tr,
+                isLoading: controller.isOrderingNow.value,
                 onPressed: () {
-                  Get.toNamed(RoutePath.checkOut);
+                  controller.orderNow();
                 },
                 backgroundColor: AppColors.primaryColor,
                 textColor: Colors.black,
@@ -167,7 +165,7 @@ class ProductActionSection extends StatelessWidget {
                 borderRadius: 12,
                 height: 50,
                 borderSideColor: AppColors.primaryColor,
-              ),
+              )),
             ),
           ],
         ),
