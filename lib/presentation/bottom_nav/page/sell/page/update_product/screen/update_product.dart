@@ -25,15 +25,12 @@ class _UpdateProductState extends State<UpdateProduct> {
   final _formKey = GlobalKey<FormState>();
   late final UpdateProductController _ctrl;
 
-  final _nameController = TextEditingController(text: 'Kids Soft Fit Sneakers');
+  final _nameController = TextEditingController();
   final _sizeController = TextEditingController();
-  final _descController = TextEditingController(
-    text:
-        'Comfortable and lightweight kids sneakers designed for everyday use. Made with breathable materials and a flexible sole to support active movement. Clean finish with a modern look, easy to match with any outfit.',
-  );
+  final _descController = TextEditingController();
 
-  final _categoryController = TextEditingController(text: 'Kids Shoes');
-  final _subCategoryController = TextEditingController(text: 'Kids Sneakers');
+  final _categoryController = TextEditingController();
+  final _subCategoryController = TextEditingController();
 
   @override
   void initState() {
@@ -42,6 +39,32 @@ class _UpdateProductState extends State<UpdateProduct> {
     _ctrl = Get.isRegistered<UpdateProductController>()
         ? Get.find<UpdateProductController>()
         : Get.put(UpdateProductController());
+
+    // Load actual product data
+    final product = _ctrl.product;
+    _nameController.text = product['name']?.toString() ?? '';
+    _descController.text = product['description']?.toString() ?? '';
+    
+    // Set category
+    final category = product['category'];
+    if (category is Map) {
+      _categoryController.text = category['name']?.toString() ?? '';
+    } else if (category != null) {
+      _categoryController.text = category.toString();
+    }
+    
+    // Set sub-category
+    final subCat = product['sub_category'];
+    if (subCat != null) {
+      _subCategoryController.text = subCat.toString();
+    }
+    
+    // Set Sizes
+    if (product['sizes'] != null && product['sizes'] is List) {
+      _selectedSizes.clear();
+      _selectedSizes.addAll(List<String>.from(product['sizes'].map((e) => e.toString())));
+    }
+    _ctrl.selectedSizes.assignAll(_selectedSizes);
   }
 
   // ── Category → Sub-category map ──────────────────────────────────────────
@@ -630,27 +653,30 @@ class _DropdownSheet extends StatelessWidget {
               itemBuilder: (_, i) {
                 final item = items[i];
                 final isChosen = item == selected;
-                return ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: Text(
-                    item,
-                    style: AppTextStyles.body.copyWith(
-                      fontSize: Dimensions.fs(14),
-                      fontStyle: FontStyle.italic,
-                      fontWeight: isChosen ? FontWeight.w600 : FontWeight.w400,
-                      color: AppColors.blackColor,
+                return Material(
+                  color: Colors.transparent,
+                  child: ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: Text(
+                      item,
+                      style: AppTextStyles.body.copyWith(
+                        fontSize: Dimensions.fs(14),
+                        fontStyle: FontStyle.italic,
+                        fontWeight: isChosen ? FontWeight.w600 : FontWeight.w400,
+                        color: AppColors.blackColor,
+                      ),
                     ),
+                    trailing: Icon(
+                      isChosen
+                          ? Icons.radio_button_checked
+                          : Icons.radio_button_unchecked,
+                      color: isChosen
+                          ? AppColors.blackColor.withOpacity(0.7)
+                          : AppColors.greyColor,
+                      size: 20,
+                    ),
+                    onTap: () => onSelect(item),
                   ),
-                  trailing: Icon(
-                    isChosen
-                        ? Icons.radio_button_checked
-                        : Icons.radio_button_unchecked,
-                    color: isChosen
-                        ? AppColors.blackColor.withOpacity(0.7)
-                        : AppColors.greyColor,
-                    size: 20,
-                  ),
-                  onTap: () => onSelect(item),
                 );
               },
             ),

@@ -100,61 +100,74 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   Widget _buildNoMatchesState() {
-    return Center(
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: Dimensions.w(40)),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              padding: EdgeInsets.all(Dimensions.w(30)),
-              decoration: BoxDecoration(
-                color: Colors.grey.withOpacity(0.05),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Icon(
-                Icons.search_off,
-                size: Dimensions.icon(80),
-                color: Colors.grey.withOpacity(0.2),
+    return RefreshIndicator(
+      onRefresh: () => controller.fetchProducts(isRefresh: true),
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        child: SizedBox(
+          height: MediaQuery.of(context).size.height * 0.7,
+          child: Center(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: Dimensions.w(40)),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(Dimensions.w(30)),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.withOpacity(0.05),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Icon(
+                      Icons.search_off,
+                      size: Dimensions.icon(80),
+                      color: Colors.grey.withOpacity(0.2),
+                    ),
+                  ),
+                  SizedBox(height: Dimensions.h(30)),
+                  Text(
+                    AppStrings.noMatchesFound.tr,
+                    textAlign: TextAlign.center,
+                    style: AppTextStyles.h3.copyWith(
+                      fontSize: Dimensions.fs(18),
+                      color: Colors.grey[400],
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
               ),
             ),
-            SizedBox(height: Dimensions.h(30)),
-            Text(
-              AppStrings.noMatchesFound.tr,
-              textAlign: TextAlign.center,
-              style: AppTextStyles.h3.copyWith(
-                fontSize: Dimensions.fs(18),
-                color: Colors.grey[400],
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
   }
 
   Widget _buildSearchResults() {
-    return GridView.builder(
-      padding: EdgeInsets.symmetric(
-        horizontal: Dimensions.w(20),
-        vertical: Dimensions.h(10),
+    return RefreshIndicator(
+      onRefresh: () => controller.fetchProducts(isRefresh: true),
+      child: GridView.builder(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: EdgeInsets.symmetric(
+          horizontal: Dimensions.w(20),
+          vertical: Dimensions.h(10),
+        ),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 15,
+          mainAxisSpacing: 15,
+          childAspectRatio: 0.62,
+        ),
+        itemCount: controller.filteredProducts.length,
+        itemBuilder: (context, index) {
+          final ProductModel product = controller.filteredProducts[index];
+          return ProductCard(
+            product: product,
+            width: double.infinity,
+            margin: EdgeInsets.zero,
+          );
+        },
       ),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 15,
-        mainAxisSpacing: 15,
-        childAspectRatio: 0.62,
-      ),
-      itemCount: controller.filteredProducts.length,
-      itemBuilder: (context, index) {
-        final ProductModel product = controller.filteredProducts[index];
-        return ProductCard(
-          product: product,
-          width: double.infinity,
-          margin: EdgeInsets.zero,
-        );
-      },
     );
   }
 }

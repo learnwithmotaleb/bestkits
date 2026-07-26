@@ -88,12 +88,13 @@ class ApiUrl {
   static const String createProduct = '$baseUrl/products';
   static const String getProducts = '$baseUrl/products';
   static const String productSellerMe = '$baseUrl/products/seller/my';
-
   static String detailsProduct(String id) => '$baseUrl/products/$id';
 
   static String updateProduct(String id) => '$baseUrl/products/$id';
-
   static String deleteProduct(String id) => '$baseUrl/products/$id';
+
+  static  String productOrder(String productId) => '$baseUrl/orders/seller/products/$productId/orders';//get method
+  static String markStatusChange(String id) => '$baseUrl/products/seller/$id/status'; //Patch Method
 
   ///===================Stripe===================
   static const String stripeCallBack = '$baseUrl/stripe/callback'; //get method
@@ -201,4 +202,11 @@ class ApiUrl {
       '$baseUrl/orders/checkout/buy-now-summary'; //Post method
 
   static String accountAddress = '$baseUrl/account/addresses'; //Post method
+
+
+  //======================Socket====================
+  static String socketUrl({required String userID}) =>
+      '$baseUrl?userId=$userID';
+
+
 }

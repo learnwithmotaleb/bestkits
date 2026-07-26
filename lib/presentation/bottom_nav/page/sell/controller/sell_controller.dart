@@ -26,8 +26,8 @@ class SellController extends GetxController {
     Get.to(() => const AddProduct());
   }
 
-  Future<void> fetchProducts() async {
-    isLoading.value = true;
+  Future<void> fetchProducts({bool isRefresh = false}) async {
+    if (!isRefresh) isLoading.value = true;
     try {
       await Future.wait([
         _fetchActiveProducts(),
@@ -36,7 +36,7 @@ class SellController extends GetxController {
     } catch (e) {
       print('Error fetching products: $e');
     } finally {
-      isLoading.value = false;
+      if (!isRefresh) isLoading.value = false;
     }
   }
 

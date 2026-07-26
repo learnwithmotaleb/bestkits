@@ -21,11 +21,40 @@ class UpdateProductPrice extends StatefulWidget {
 class _UpdateProductPriceState extends State<UpdateProductPrice> {
   final _formKey = GlobalKey<FormState>();
 
-  final _priceController = TextEditingController(text: '21.99');
-  final _discountController = TextEditingController(text: '10%');
-  late final _statusController = TextEditingController(text: AppStrings.activeStatus.tr);
+  final _priceController = TextEditingController();
+  final _discountController = TextEditingController();
+  late final _statusController = TextEditingController();
 
   late final List<String> _statusOptions = [AppStrings.activeStatus.tr, AppStrings.inactiveStatus.tr, AppStrings.outOfStockStatus.tr];
+
+  final UpdateProductController _ctrl = Get.find<UpdateProductController>();
+
+  @override
+  void initState() {
+    super.initState();
+    final product = _ctrl.product;
+    
+    // Load existing price & discount
+    final price = product['original_price'] ?? product['price'] ?? 0.0;
+    _priceController.text = price.toString();
+
+    final discount = product['discount_percentage'] ?? product['discount'] ?? 0;
+    if (discount.toString() != '0') {
+      _discountController.text = discount.toString();
+    }
+
+    // Set initial status
+    final currentStatus = product['status']?.toString().toUpperCase() ?? 'ACTIVE';
+    if (currentStatus == 'ACTIVE') {
+      _statusController.text = AppStrings.activeStatus.tr;
+    } else if (currentStatus == 'INACTIVE') {
+      _statusController.text = AppStrings.inactiveStatus.tr;
+    } else if (currentStatus == 'OUT_OF_STOCK') {
+      _statusController.text = AppStrings.outOfStockStatus.tr;
+    } else {
+      _statusController.text = AppStrings.activeStatus.tr;
+    }
+  }
 
   @override
   void dispose() {
@@ -49,8 +78,6 @@ class _UpdateProductPriceState extends State<UpdateProductPrice> {
       backgroundColor: Colors.transparent,
     );
   }
-
-  final UpdateProductController _ctrl = Get.find<UpdateProductController>();
 
   void _onSaveAndContinue() async {
     if (!_formKey.currentState!.validate()) return;

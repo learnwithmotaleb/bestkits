@@ -24,7 +24,10 @@ class ProductTabsSection extends StatelessWidget {
               child: Obx(() {
                 final isSelected = controller.selectedTabIndex.value == index;
                 String tabLabel = controller.tabs[index].tr;
-                if (index == 1) tabLabel += " (05)";
+                if (index == 1) {
+                  final count = controller.product['total_reviews'] ?? 0;
+                  tabLabel += ' ($count)';
+                }
                 
                 return GestureDetector(
                   onTap: () => controller.selectTab(index),
@@ -70,7 +73,7 @@ class ProductTabsSection extends StatelessWidget {
         Obx(() {
           switch (controller.selectedTabIndex.value) {
             case 0:
-              return _buildDescription();
+              return _buildDescription(controller.product);
             case 1:
               return _buildReviews();
             default:
@@ -81,7 +84,38 @@ class ProductTabsSection extends StatelessWidget {
     );
   }
 
-  Widget _buildDescription() {
+  Widget _buildDescription(Map<String, dynamic> product) {
+    final description = product['description']?.toString() ?? '';
+
+    // Category / subCategory
+    final category = (product['category'] is Map
+            ? product['category']['name']
+            : product['category'])
+        ?.toString() ?? '';
+    final subCategory = (product['subCategory'] is Map
+            ? product['subCategory']['name']
+            : product['sub_category'])
+        ?.toString() ?? '';
+
+    // Condition
+    final condition = product['condition']?.toString() ?? '';
+
+    // Created at (online since)
+    final createdAtRaw = product['createdAt']?.toString() ?? '';
+    final onlineSince = createdAtRaw.length >= 10 ? createdAtRaw.substring(0, 10) : createdAtRaw;
+
+    // Seller info from nested user object
+    String sellerName = '';
+    String location = '';
+    final user = product['user'];
+    if (user is Map) {
+      final profile = user['profile'];
+      if (profile is Map) {
+        sellerName = profile['full_name']?.toString() ?? '';
+        location = profile['country']?.toString() ?? '';
+      }
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -91,7 +125,7 @@ class ProductTabsSection extends StatelessWidget {
         ),
         const SizedBox(height: 10),
         Text(
-          AppStrings.dummyDescription.tr,
+          description.isNotEmpty ? description : AppStrings.dummyDescription.tr,
           style: TextStyle(
             fontSize: 12,
             color: Colors.grey[600],
@@ -104,19 +138,15 @@ class ProductTabsSection extends StatelessWidget {
           style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
         ),
         const SizedBox(height: 10),
-        _buildDetailRow('${AppStrings.onlineSince.tr}:', '2026-04-20'),
-        _buildDetailRow('${AppStrings.category.tr}:', 'Kids'),
-        _buildDetailRow('${AppStrings.subCategory.tr}:', 'Sneakers'),
-        _buildDetailRow('${AppStrings.condition.tr}:', 'New'),
-        _buildDetailRow('${AppStrings.material.tr}:', 'Textile & Rubber'),
-        _buildDetailRow('${AppStrings.color.tr}:', 'Black'),
-        _buildDetailRow('${AppStrings.size.tr}:', 'EU 28'),
-        _buildDetailRow('${AppStrings.location.tr}:', 'Bulgaria'),
-        _buildDetailRow('${AppStrings.sellerLabel.tr}:', 'Sofia Kids Closet'),
-        _buildDetailRow('${AppStrings.reference.tr}:', '87458231'),
+        if (onlineSince.isNotEmpty) _buildDetailRow('${AppStrings.onlineSince.tr}:', onlineSince),
+        if (category.isNotEmpty) _buildDetailRow('${AppStrings.category.tr}:', category),
+        if (subCategory.isNotEmpty) _buildDetailRow('${AppStrings.subCategory.tr}:', subCategory),
+        if (condition.isNotEmpty) _buildDetailRow('${AppStrings.condition.tr}:', condition),
+        if (location.isNotEmpty) _buildDetailRow('${AppStrings.location.tr}:', location),
+        if (sellerName.isNotEmpty) _buildDetailRow('${AppStrings.sellerLabel.tr}:', sellerName),
         const SizedBox(height: 30),
 
-        // Mark As Inactive Button (Image 1)
+        // Mark As Inactive Button
         AppButton(
           label: AppStrings.markAsInactiveBtn.tr,
           onPressed: () {
@@ -129,8 +159,8 @@ class ProductTabsSection extends StatelessWidget {
           height: 50,
         ),
         const SizedBox(height: 12),
-        
-        // Delete Product Button (Image 1)
+
+        // Delete Product Button
         AppButton(
           label: AppStrings.deleteProductBtn.tr,
           onPressed: () {
@@ -166,9 +196,15 @@ class ProductTabsSection extends StatelessWidget {
   }
 
   Widget _buildReviews() {
-    return Column(
+    return Obx(() => Column(
       children: [
-        ...controller.reviewsList.map((review) => ReviewCard(review: review)),
+        if (controller.reviewsList.isEmpty)
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 20),
+            child: Center(child: Text('No reviews yet.', style: TextStyle(color: Colors.grey))),
+          )
+        else
+          ...controller.reviewsList.map((review) => ReviewCard(review: review)),
         const SizedBox(height: 10),
         Center(
           child: Container(
@@ -191,6 +227,6 @@ class ProductTabsSection extends StatelessWidget {
           ),
         ),
       ],
-    );
+    ));
   }
 }

@@ -1,7 +1,7 @@
 /// success : true
 /// statusCode : 200
 /// message : "Request successful"
-/// data : [{"id":4,"userId":2,"address_name":"wrhb","address":"erhger","city":"erew","postal_code":"tee","country":"eree","is_default":true,"createdAt":"2026-07-23T05:05:23.837Z","updatedAt":"2026-07-23T05:05:23.837Z"}]
+/// data : [{"id":5,"userId":22,"address_name":"Home","address":"25 Ivan Vazov Street","city":"Plovdiv","postal_code":"4000","country":"Bulgaria","is_default":true,"createdAt":"2026-07-09T09:10:00.000Z","updatedAt":"2026-07-09T09:10:00.000Z"}]
 
 class AccountAddressModel {
   AccountAddressModel({
@@ -57,16 +57,16 @@ AccountAddressModel copyWith({  bool? success,
 
 }
 
-/// id : 4
-/// userId : 2
-/// address_name : "wrhb"
-/// address : "erhger"
-/// city : "erew"
-/// postal_code : "tee"
-/// country : "eree"
+/// id : 5
+/// userId : 22
+/// address_name : "Home"
+/// address : "25 Ivan Vazov Street"
+/// city : "Plovdiv"
+/// postal_code : "4000"
+/// country : "Bulgaria"
 /// is_default : true
-/// createdAt : "2026-07-23T05:05:23.837Z"
-/// updatedAt : "2026-07-23T05:05:23.837Z"
+/// createdAt : "2026-07-09T09:10:00.000Z"
+/// updatedAt : "2026-07-09T09:10:00.000Z"
 
 class Data {
   Data({

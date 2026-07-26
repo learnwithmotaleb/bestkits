@@ -110,8 +110,8 @@ class AppSearchController extends GetxController {
     }
   }
 
-  Future<void> fetchProducts() async {
-    isLoading.value = true;
+  Future<void> fetchProducts({bool isRefresh = false}) async {
+    if (!isRefresh) isLoading.value = true;
     try {
       final apiClient = ApiClient();
 
@@ -194,7 +194,7 @@ class AppSearchController extends GetxController {
     } catch (e) {
       print('Error fetching search products: $e');
     } finally {
-      isLoading.value = false;
+      if (!isRefresh) isLoading.value = false;
     }
   }
 

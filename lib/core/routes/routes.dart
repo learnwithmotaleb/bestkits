@@ -18,8 +18,8 @@ import 'package:bestkits/presentation/bottom_nav/page/sell/page/update_product/c
 import 'package:bestkits/presentation/bottom_nav/page/sell/page/update_product/screen/update_product.dart';
 import 'package:bestkits/presentation/bottom_nav/page/sell/page/update_product/screen/update_product_price.dart';
 import 'package:bestkits/presentation/bottom_nav/page/sell/page/update_product/screen/update_product_screen.dart';
-import 'package:bestkits/presentation/bottom_nav/page/sell/page/update_product/screen/product_order.dart';
-import 'package:bestkits/presentation/bottom_nav/page/sell/page/update_product/screen/order_details_screen.dart';
+import 'package:bestkits/presentation/bottom_nav/page/sell/page/product_order/screen/product_order.dart';
+import 'package:bestkits/presentation/bottom_nav/page/sell/page/product_order/screen/order_details_screen.dart';
 import 'package:bestkits/presentation/bottom_nav/page/sell/page/update_product/screen/add_product.dart';
 import 'package:bestkits/presentation/bottom_nav/page/sell/page/update_product/screen/add_product_price.dart';
 import 'package:bestkits/presentation/bottom_nav/page/sell/page/update_product/controller/add_product_controller.dart';

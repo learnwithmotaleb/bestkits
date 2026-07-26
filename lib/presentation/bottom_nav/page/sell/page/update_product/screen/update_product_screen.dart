@@ -35,30 +35,33 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
       appBar: CommonAppBar(
         title: AppStrings.productDetailsHeader.tr,
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ProductImageSection(controller: controller),
-                  const SizedBox(height: 20),
-                  ProductInfoSection(controller: controller),
-                  const SizedBox(height: 10),
-                  ProductActionSection(controller: controller),
-                  const SizedBox(height: 10),
-                  ProductTabsSection(controller: controller),
-                  const SizedBox(height: 30),
-
-
-                ],
+      body: Obx(() {
+        if (controller.isLoading.value) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        return Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ProductImageSection(controller: controller),
+                    const SizedBox(height: 20),
+                    ProductInfoSection(controller: controller),
+                    const SizedBox(height: 10),
+                    ProductActionSection(controller: controller),
+                    const SizedBox(height: 10),
+                    ProductTabsSection(controller: controller),
+                    const SizedBox(height: 30),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
-      ),
+          ],
+        );
+      }),
     );
   }
 }

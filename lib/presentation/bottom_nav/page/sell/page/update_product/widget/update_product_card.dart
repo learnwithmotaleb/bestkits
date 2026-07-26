@@ -36,11 +36,39 @@ class UpdateProductCard extends StatelessWidget {
         productData.originalPrice ??
         0;
     final oldPrice = productData.originalPrice ?? 0;
+    final pm = ProductModel(
+      id: productData.id?.toInt() ?? 0,
+      name: productData.name ?? '',
+      description: '',
+      originalPrice: productData.originalPrice ?? 0,
+      discountedPrice: productData.discountedPrice,
+      discountPercentage: productData.discountPercentage,
+      imageUrls: productData.imageUrls ?? [],
+      categoryId: productData.category?.id?.toInt() ?? 0,
+      subCategoryId: productData.subCategory?.id?.toInt() ?? 0,
+      userId: 0,
+      condition: '',
+      status: productData.status ?? '',
+      views: 0,
+      totalReviews: productData.totalReviews?.toInt() ?? 0,
+      averageRating: productData.averageRating ?? 0,
+      isAuthenticated: false,
+      authenticationStatus: '',
+      createdAt: productData.createdAt ?? '',
+      updatedAt: productData.updatedAt ?? '',
+      variants: [],
+      effectivePrice:
+          productData.effectivePrice ?? productData.originalPrice ?? 0,
+      isWishlisted:
+          favouriteController.isFavoriteById(productData.id?.toInt() ?? 0),
+    );
 
     return GestureDetector(
         onTap: () {
-          Get.to(() => const ProductDetailsScreen(),
-              arguments: {'productId': productData.id});
+          Get.to(() => const ProductDetailsScreen(), arguments: {
+            'productId': productData.id,
+            'productModel': pm,
+          });
         },
         child: Container(
           width: width ?? Dimensions.w(170),
@@ -62,12 +90,19 @@ class UpdateProductCard extends StatelessWidget {
                       child: Padding(
                         padding: EdgeInsets.all(Dimensions.w(8)),
                         child: imagePath.isNotEmpty
-                            ? Image.network(
-                                ApiUrl.buildImageUrl(imagePath),
-                                fit: BoxFit.contain,
-                                errorBuilder: (_, __, ___) =>
-                                    const Icon(Icons.image_not_supported),
-                              )
+                            ? imagePath.startsWith('assets/')
+                                ? Image.asset(
+                                    imagePath,
+                                    fit: BoxFit.contain,
+                                    errorBuilder: (_, __, ___) =>
+                                        const Icon(Icons.image_not_supported),
+                                  )
+                                : Image.network(
+                                    ApiUrl.buildImageUrl(imagePath),
+                                    fit: BoxFit.contain,
+                                    errorBuilder: (_, __, ___) =>
+                                        const Icon(Icons.image_not_supported),
+                                  )
                             : const Icon(Icons.image_not_supported),
                       ),
                     ),
@@ -110,38 +145,33 @@ class UpdateProductCard extends StatelessWidget {
                               favouriteController.isFavoriteById(productId);
                           return GestureDetector(
                             onTap: () {
-                              // Build a minimal ProductModel from seller Data so the API call works
-                              final pm = ProductModel(
-                                id: productId,
-                                name: productData.name ?? '',
-                                description: '',
-                                originalPrice: productData.originalPrice ?? 0,
-                                discountedPrice: productData.discountedPrice,
-                                discountPercentage:
-                                    productData.discountPercentage,
-                                imageUrls: productData.imageUrls ?? [],
-                                categoryId:
-                                    productData.category?.id?.toInt() ?? 0,
-                                subCategoryId:
-                                    productData.subCategory?.id?.toInt() ?? 0,
-                                userId: 0,
-                                condition: '',
-                                status: productData.status ?? '',
-                                views: 0,
-                                totalReviews:
-                                    productData.totalReviews?.toInt() ?? 0,
-                                averageRating: productData.averageRating ?? 0,
-                                isAuthenticated: false,
-                                authenticationStatus: '',
-                                createdAt: productData.createdAt ?? '',
-                                updatedAt: productData.updatedAt ?? '',
-                                variants: [],
-                                effectivePrice: productData.effectivePrice ??
-                                    productData.originalPrice ??
-                                    0,
+                              // pm is already built above, we just need to update isWishlisted
+                              final toggledPm = ProductModel(
+                                id: pm.id,
+                                name: pm.name,
+                                description: pm.description,
+                                originalPrice: pm.originalPrice,
+                                discountedPrice: pm.discountedPrice,
+                                discountPercentage: pm.discountPercentage,
+                                imageUrls: pm.imageUrls,
+                                categoryId: pm.categoryId,
+                                subCategoryId: pm.subCategoryId,
+                                userId: pm.userId,
+                                condition: pm.condition,
+                                status: pm.status,
+                                views: pm.views,
+                                totalReviews: pm.totalReviews,
+                                averageRating: pm.averageRating,
+                                isAuthenticated: pm.isAuthenticated,
+                                authenticationStatus: pm.authenticationStatus,
+                                createdAt: pm.createdAt,
+                                updatedAt: pm.updatedAt,
+                                variants: pm.variants,
+                                effectivePrice: pm.effectivePrice,
                                 isWishlisted: isFav,
                               );
-                              favouriteController.toggleFavoriteProduct(pm);
+                              favouriteController
+                                  .toggleFavoriteProduct(toggledPm);
                             },
                             child: Container(
                               padding: EdgeInsets.all(Dimensions.w(6)),

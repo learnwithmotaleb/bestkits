@@ -222,21 +222,23 @@ class OrderDetailsView extends StatelessWidget {
                                   if (item.actions?.canReview == true) ...[
                                     Row(
                                       children: [
-                                        AppButton(
-                                          label: AppStrings.leaveAReview.tr,
-                                          onPressed: () =>
-                                              _showReviewBottomSheet(
-                                                  context, item.id.toString()),
-                                          backgroundColor: Colors.white,
-                                          textColor: AppColors.primaryColor,
-                                          borderSideColor:
-                                              AppColors.primaryColor,
-                                          leadingIcon: const Icon(
-                                              Icons.star_border,
-                                              color: AppColors.primaryColor,
-                                              size: 14),
-                                          height: 36,
-                                          borderRadius: 8,
+                                        Expanded(
+                                          child: AppButton(
+                                            label: AppStrings.leaveAReview.tr,
+                                            onPressed: () =>
+                                                _showReviewBottomSheet(context,
+                                                    item.id.toString()),
+                                            backgroundColor: Colors.white,
+                                            textColor: AppColors.primaryColor,
+                                            borderSideColor:
+                                                AppColors.primaryColor,
+                                            leadingIcon: const Icon(
+                                                Icons.star_border,
+                                                color: AppColors.primaryColor,
+                                                size: 14),
+                                            height: 36,
+                                            borderRadius: 8,
+                                          ),
                                         ),
                                       ],
                                     ),
