@@ -92,8 +92,8 @@ class ApiUrl {
   static String detailsProduct(String id) => '$baseUrl/products/$id';
 
   static String updateProduct(String id) => '$baseUrl/products/$id';
-
   static String deleteProduct(String id) => '$baseUrl/products/$id';
+  static String markStatusChange(String id) => '$baseUrl/products/seller/$id/status'; //Patch Method
 
   ///===================Stripe===================
   static const String stripeCallBack = '$baseUrl/stripe/callback'; //get method

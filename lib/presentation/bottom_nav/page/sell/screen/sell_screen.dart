@@ -65,33 +65,43 @@ class _SellScreenState extends State<SellScreen> {
                     : controller.inactiveProducts;
 
                 if (list.isEmpty) {
-                  return Column(
-                    children: [
-                      SellEmptyState(
-                        message: isAct
-                            ? AppStrings.noActiveProductFound.tr
-                            : AppStrings.noInactiveProductFound.tr,
+                  return RefreshIndicator(
+                    onRefresh: () => controller.fetchProducts(isRefresh: true),
+                    child: SingleChildScrollView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      child: Column(
+                        children: [
+                          SellEmptyState(
+                            message: isAct
+                                ? AppStrings.noActiveProductFound.tr
+                                : AppStrings.noInactiveProductFound.tr,
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   );
                 }
 
-                return GridView.builder(
-                  padding: const EdgeInsets.only(bottom: 20),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    childAspectRatio: 0.65,
-                    crossAxisSpacing: 15,
-                    mainAxisSpacing: 15,
+                return RefreshIndicator(
+                  onRefresh: () => controller.fetchProducts(isRefresh: true),
+                  child: GridView.builder(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    padding: const EdgeInsets.only(bottom: 20),
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 0.65,
+                      crossAxisSpacing: 15,
+                      mainAxisSpacing: 15,
+                    ),
+                    itemCount: list.length,
+                    itemBuilder: (context, index) {
+                      return UpdateProductCard(
+                        productData: list[index],
+                        width: double.infinity,
+                        margin: EdgeInsets.zero,
+                      );
+                    },
                   ),
-                  itemCount: list.length,
-                  itemBuilder: (context, index) {
-                    return UpdateProductCard(
-                      productData: list[index],
-                      width: double.infinity,
-                      margin: EdgeInsets.zero,
-                    );
-                  },
                 );
               }),
             ),

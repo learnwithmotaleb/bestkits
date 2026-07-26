@@ -89,7 +89,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                       color: Colors.grey[200],
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(Icons.close, size: 18, color: Colors.black),
+                    child:
+                        const Icon(Icons.close, size: 18, color: Colors.black),
                   ),
                 ),
               ],
@@ -123,7 +124,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                     return GestureDetector(
                       onTap: () => tempSelected.value = status,
                       child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: Dimensions.h(6)),
+                        padding:
+                            EdgeInsets.symmetric(vertical: Dimensions.h(6)),
                         child: Row(
                           children: [
                             // Radio circle

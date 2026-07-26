@@ -16,12 +16,24 @@ class ProductInfoSection extends StatelessWidget {
     return Obx(() {
       final product = controller.product;
       final name = product['name'] ?? '';
-      final price = product['effective_price'] ?? product['discounted_price'] ?? product['original_price'] ?? product['price'] ?? '';
+      final price = product['effective_price'] ??
+          product['discounted_price'] ??
+          product['original_price'] ??
+          product['price'] ??
+          '';
       final oldPrice = product['original_price'] ?? product['oldPrice'] ?? '';
-      final discount = product['discount_percentage'] != null ? '${product['discount_percentage']}%' : (product['discount'] ?? '');
-      final rating = product['average_rating']?.toString() ?? product['rating'] ?? '4.9/5.0';
-      final material = (product['category'] is Map ? product['category']['name'] : product['category']) ?? product['material'] ?? '';
-      
+      final discount = product['discount_percentage'] != null
+          ? '${product['discount_percentage']}%'
+          : (product['discount'] ?? '');
+      final rating = product['average_rating']?.toString() ??
+          product['rating'] ??
+          '4.9/5.0';
+      final material = (product['category'] is Map
+              ? product['category']['name']
+              : product['category']) ??
+          product['material'] ??
+          '';
+
       // Dynamic active/inactive state check
       bool isActive = true;
       if (product['status'] != null) {
@@ -50,7 +62,8 @@ class ProductInfoSection extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: AppColors.primaryColor.withOpacity(0.5)),
+              border:
+                  Border.all(color: AppColors.primaryColor.withOpacity(0.5)),
             ),
             child: Text(
               material.toString().tr,
@@ -79,7 +92,8 @@ class ProductInfoSection extends StatelessWidget {
               const SizedBox(width: 4),
               Text(
                 rating,
-                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                style:
+                    const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
               ),
               const SizedBox(width: 4),
               Text(
@@ -91,23 +105,28 @@ class ProductInfoSection extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 decoration: BoxDecoration(
-                  color: isActive ? const Color(0xFFE8F5E9) : const Color(0xFFEEEEEE),
+                  color: isActive
+                      ? const Color(0xFFE8F5E9)
+                      : const Color(0xFFEEEEEE),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Row(
                   children: [
                     CircleAvatar(
-                      radius: 2, 
-                      backgroundColor: isActive ? const Color(0xFF4CAF50) : Colors.grey
-                    ),
+                        radius: 2,
+                        backgroundColor:
+                            isActive ? const Color(0xFF4CAF50) : Colors.grey),
                     const SizedBox(width: 4),
                     Text(
-                      isActive ? AppStrings.active.tr : AppStrings.inactiveStatus.tr,
+                      isActive
+                          ? AppStrings.active.tr
+                          : AppStrings.inactiveStatus.tr,
                       style: TextStyle(
-                        color: isActive ? const Color(0xFF4CAF50) : Colors.grey[600], 
-                        fontSize: 10, 
-                        fontWeight: FontWeight.w600
-                      ),
+                          color: isActive
+                              ? const Color(0xFF4CAF50)
+                              : Colors.grey[600],
+                          fontSize: 10,
+                          fontWeight: FontWeight.w600),
                     ),
                   ],
                 ),
@@ -140,7 +159,8 @@ class ProductInfoSection extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: AppColors.primaryColor.withOpacity(0.5)),
+                  border: Border.all(
+                      color: AppColors.primaryColor.withOpacity(0.5)),
                 ),
                 child: Text(
                   discount,

@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:bestkits/presentation/bottom_nav/page/sell/page/update_product/screen/update_product.dart';
 
 import '../../../../../../../widget/app_alert.dart';
+import '../../../../../../../widget/show_snackbar.dart';
 import '../../../../../../../utils/static_strings/static_strings.dart';
 import '../../../../../../../utils/assets_image/app_images.dart';
 import '../../../controller/sell_controller.dart';
@@ -118,10 +119,13 @@ class UpdateProductController extends GetxController {
 
     // Populate images based on product image
     productImages.clear();
-    if (product['image_urls'] != null && product['image_urls'] is List && (product['image_urls'] as List).isNotEmpty) {
+    if (product['image_urls'] != null &&
+        product['image_urls'] is List &&
+        (product['image_urls'] as List).isNotEmpty) {
       productImages.addAll(List<String>.from(product['image_urls']));
     } else {
-      final mainImg = product['image_url'] ?? product['image'] ?? AppImages.kidsCottonSho;
+      final mainImg =
+          product['image_url'] ?? product['image'] ?? AppImages.kidsCottonSho;
       productImages.addAll([
         mainImg,
         mainImg,
@@ -142,33 +146,54 @@ class UpdateProductController extends GetxController {
   void selectTab(int index) => selectedTabIndex.value = index;
 
   void markAsInactive() {
+    final currentStatus = product['status'] ?? 'ACTIVE';
+    final isCurrentlyActive = currentStatus == 'ACTIVE';
+    final newStatus = isCurrentlyActive ? 'INACTIVE' : 'ACTIVE';
+
     AppAlerts.warning(
-      title: AppStrings.markAsInactiveTitle.tr,
-      message: AppStrings.markAsInactiveSubtitle.tr,
+      title: isCurrentlyActive
+          ? AppStrings.markAsInactiveTitle.tr
+          : 'Mark as Active',
+      message: isCurrentlyActive
+          ? AppStrings.markAsInactiveSubtitle.tr
+          : 'Are you sure you want to mark this product as active?',
       confirmLabel: AppStrings.confirm.tr,
       cancelLabel: AppStrings.cancel.tr,
-      onConfirm: () {
+      onConfirm: () async {
+        final prodId = product['id'];
+        if (prodId == null) {
+          ShowAppSnackBar.fail('No product ID found.');
+          return;
+        }
+
+        Get.back(); // close dialog
         try {
-          final sellController = Get.find<SellController>();
-          final prodId = product['id'];
+          final apiClient = ApiClient();
+          final response = await apiClient.patch(
+            url: ApiUrl.markStatusChange(prodId.toString()),
+            body: {'status': newStatus},
+            isToken: true,
+          );
 
-          if (prodId != null) {
-            final activeItem = sellController.activeProducts.firstWhereOrNull((p) => p.id == prodId);
-            if (activeItem != null) {
-              sellController.activeProducts.remove(activeItem);
-              sellController.inactiveProducts.add(activeItem);
+          if (response.statusCode == 200 || response.statusCode == 201) {
+            // Update local product status
+            product['status'] = newStatus;
+
+            // Refresh the sell list
+            if (Get.isRegistered<SellController>()) {
+              await Get.find<SellController>().fetchProducts(isRefresh: true);
             }
+            Get.back(); // go back to sell screen
+            ShowAppSnackBar.success(isCurrentlyActive
+                ? AppStrings.productMarkedInactiveSuccess.tr
+                : 'Product marked as active successfully!');
           } else {
-            // Fallback for dummy data
-            sellController.activeProducts
-                .removeWhere((p) => p.name == product['name']);
+            final msg = response.body?['message']?.toString() ??
+                'Failed to update status';
+            ShowAppSnackBar.fail(msg);
           }
-          sellController.isActiveTab.value = false;
-
-          Get.back(); // go back
-          AppAlerts.success(message: AppStrings.productMarkedInactiveSuccess.tr);
         } catch (e) {
-          Get.back();
+          ShowAppSnackBar.fail('Error: $e');
         }
       },
     );
@@ -178,25 +203,37 @@ class UpdateProductController extends GetxController {
     AppAlerts.delete(
       title: AppStrings.deleteProductTitle.tr,
       message: AppStrings.deleteProductSubtitle.tr,
-      onDelete: () {
+      onDelete: () async {
+        final prodId = product['id'];
+        if (prodId == null) {
+          ShowAppSnackBar.fail('No product ID found.');
+          return;
+        }
+
+        Get.back(); // close dialog
         try {
-          final sellController = Get.find<SellController>();
-          final prodId = product['id'];
+          final apiClient = ApiClient();
+          final response = await apiClient.delete(
+            url: ApiUrl.deleteProduct(prodId.toString()),
+            isToken: true,
+          );
 
-          if (prodId != null) {
-            sellController.activeProducts.removeWhere((p) => p.id == prodId);
-            sellController.inactiveProducts.removeWhere((p) => p.id == prodId);
+          if (response.statusCode == 200 ||
+              response.statusCode == 201 ||
+              response.statusCode == 204) {
+            // Refresh the sell list
+            if (Get.isRegistered<SellController>()) {
+              await Get.find<SellController>().fetchProducts(isRefresh: true);
+            }
+            Get.back(); // go back to sell screen
+            ShowAppSnackBar.success(AppStrings.productDeletedSuccess.tr);
           } else {
-            sellController.activeProducts
-                .removeWhere((p) => p.name == product['name']);
-            sellController.inactiveProducts
-                .removeWhere((p) => p.name == product['name']);
+            final msg = response.body?['message']?.toString() ??
+                'Failed to delete product';
+            ShowAppSnackBar.fail(msg);
           }
-
-          Get.back(); // go back
-          AppAlerts.success(message: AppStrings.productDeletedSuccess.tr);
         } catch (e) {
-          Get.back();
+          ShowAppSnackBar.fail('Error: $e');
         }
       },
     );
@@ -258,9 +295,8 @@ class UpdateProductController extends GetxController {
   }
 
   void updateSubCategories(String categoryName) {
-    final selectedCat = categoryData.firstWhereOrNull(
-      (c) => c.name?.toLowerCase().trim() == categoryName.toLowerCase().trim()
-    );
+    final selectedCat = categoryData.firstWhereOrNull((c) =>
+        c.name?.toLowerCase().trim() == categoryName.toLowerCase().trim());
     subCategoryNames.clear();
     if (selectedCat != null && selectedCat.subCategories != null) {
       subCategoryNames.assignAll(selectedCat.subCategories!
@@ -290,7 +326,9 @@ class UpdateProductController extends GetxController {
           final data = response.body;
           if (data is Map && data.containsKey('url')) {
             urls.add(data['url'].toString());
-          } else if (data is Map && data['data'] != null && data['data']['url'] != null) {
+          } else if (data is Map &&
+              data['data'] != null &&
+              data['data']['url'] != null) {
             urls.add(data['data']['url'].toString());
           }
         }
@@ -311,7 +349,7 @@ class UpdateProductController extends GetxController {
     isLoading.value = true;
     try {
       final apiClient = ApiClient();
-      
+
       // Upload images if any picked, otherwise reuse existing
       final List<String> imageUrls = [];
       if (pickedImages.isNotEmpty) {
@@ -334,16 +372,17 @@ class UpdateProductController extends GetxController {
       int subCategoryId = 1;
 
       if (selectedCategory.value.isNotEmpty) {
-        final cat = categoryData.firstWhereOrNull(
-          (c) => c.name?.toLowerCase().trim() == selectedCategory.value.toLowerCase().trim()
-        );
+        final cat = categoryData.firstWhereOrNull((c) =>
+            c.name?.toLowerCase().trim() ==
+            selectedCategory.value.toLowerCase().trim());
         if (cat != null && cat.id != null) {
           categoryId = cat.id!.toInt();
-          
-          if (selectedSubCategory.value.isNotEmpty && cat.subCategories != null) {
-            final sub = cat.subCategories!.firstWhereOrNull(
-              (s) => s.name?.toLowerCase().trim() == selectedSubCategory.value.toLowerCase().trim()
-            );
+
+          if (selectedSubCategory.value.isNotEmpty &&
+              cat.subCategories != null) {
+            final sub = cat.subCategories!.firstWhereOrNull((s) =>
+                s.name?.toLowerCase().trim() ==
+                selectedSubCategory.value.toLowerCase().trim());
             if (sub != null && sub.id != null) {
               subCategoryId = sub.id!.toInt();
             }
@@ -376,8 +415,12 @@ class UpdateProductController extends GetxController {
       }
 
       final body = {
-        "name": name.value.isNotEmpty ? name.value : product['name']?.toString() ?? '',
-        "description": description.value.isNotEmpty ? description.value : product['description']?.toString() ?? '',
+        "name": name.value.isNotEmpty
+            ? name.value
+            : product['name']?.toString() ?? '',
+        "description": description.value.isNotEmpty
+            ? description.value
+            : product['description']?.toString() ?? '',
         "original_price": price,
         "discounted_price": discountPrice,
         "discount_percentage": discountPercentage.round(),
@@ -398,9 +441,12 @@ class UpdateProductController extends GetxController {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        if (Get.isRegistered<HomeController>()) Get.find<HomeController>().fetchHomeData();
-        if (Get.isRegistered<SellController>()) Get.find<SellController>().fetchProducts();
-        if (Get.isRegistered<FavouriteController>()) Get.find<FavouriteController>().fetchWishlist();
+        if (Get.isRegistered<HomeController>())
+          Get.find<HomeController>().fetchHomeData();
+        if (Get.isRegistered<SellController>())
+          Get.find<SellController>().fetchProducts();
+        if (Get.isRegistered<FavouriteController>())
+          Get.find<FavouriteController>().fetchWishlist();
         return null; // success
       } else {
         final resBody = response.body;

@@ -103,8 +103,9 @@ class ProductActionSection extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 20),
-        const Divider(color: Color(0xFFF5F5F5)),
+        const SizedBox(height: 12),
+        
+
       ],
     );
   }

@@ -1,13 +1,11 @@
 import 'package:bestkits/core/routes/route_path.dart';
+import 'package:bestkits/data/model/product_model.dart';
+import 'package:bestkits/presentation/favorite/controller/favourite_controller.dart';
 import 'package:flutter/material.dart';
 import '../../../../../core/responsive_layout/dimensions.dart';
 import '../../../../../utils/app_colors/app_colors.dart';
 import '../../../../../utils/app_text_style/app_text_style.dart';
 import 'package:get/get.dart';
-import '../../../../product_details/screen/product_details_screen.dart';
-import 'package:bestkits/presentation/favorite/controller/favourite_controller.dart';
-import 'package:bestkits/data/model/product_model.dart';
-import 'package:bestkits/service/api_url.dart';
 
 class ProductCard extends StatelessWidget {
   final ProductModel product;
@@ -35,8 +33,10 @@ class ProductCard extends StatelessWidget {
         ),
         child: GestureDetector(
           onTap: () {
-            Get.toNamed(RoutePath.productDetail,
-                arguments: {'productId': product.id.toString()});
+            Get.toNamed(RoutePath.productDetail, arguments: {
+              'productId': product.id.toString(),
+              'productModel': product
+            });
           },
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,13 +50,21 @@ class ProductCard extends StatelessWidget {
                       child: Padding(
                         padding: EdgeInsets.all(Dimensions.w(8)),
                         child: imageUrl.isNotEmpty
-                            ? Image.network(
-                                imageUrl,
-                                fit: BoxFit.contain,
-                                errorBuilder: (_, __, ___) => const Icon(
-                                    Icons.image_not_supported,
-                                    color: Colors.grey),
-                              )
+                            ? (imageUrl.contains('assets/')
+                                ? Image.asset(
+                                    product.imageUrls.first,
+                                    fit: BoxFit.contain,
+                                    errorBuilder: (_, __, ___) => const Icon(
+                                        Icons.image_not_supported,
+                                        color: Colors.grey),
+                                  )
+                                : Image.network(
+                                    imageUrl,
+                                    fit: BoxFit.contain,
+                                    errorBuilder: (_, __, ___) => const Icon(
+                                        Icons.image_not_supported,
+                                        color: Colors.grey),
+                                  ))
                             : const Icon(Icons.image_not_supported,
                                 color: Colors.grey),
                       ),
@@ -71,7 +79,8 @@ class ProductCard extends StatelessWidget {
                               vertical: Dimensions.h(2)),
                           decoration: BoxDecoration(
                             color: AppColors.navBarColor,
-                            borderRadius: BorderRadius.circular(Dimensions.r(5)),
+                            borderRadius:
+                                BorderRadius.circular(Dimensions.r(5)),
                           ),
                           child: Row(
                             children: [
