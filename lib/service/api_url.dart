@@ -92,6 +92,7 @@ class ApiUrl {
 
   static String updateProduct(String id) => '$baseUrl/products/$id';
   static String deleteProduct(String id) => '$baseUrl/products/$id';
+  static String markStatusChange(String id) => '$baseUrl/products/seller/$id/status'; //Patch Method
 
   static  String productOrder(String productId) => '$baseUrl/orders/seller/products/$productId/orders';//get method
   static String markStatusChange(String id) => '$baseUrl/products/seller/$id/status'; //Patch Method

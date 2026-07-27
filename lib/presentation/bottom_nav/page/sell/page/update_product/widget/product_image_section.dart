@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../../../utils/app_colors/app_colors.dart';
-import '../../../../../../../service/api_url.dart';
 
 import '../controller/update_product_controller.dart';
 
@@ -15,7 +14,7 @@ class ProductImageSection extends StatelessWidget {
     return Column(
       children: [
         // Main Image
-         Container(
+        Obx(() => Container(
               height: 250,
               width: double.infinity,
               decoration: BoxDecoration(
@@ -27,22 +26,13 @@ class ProductImageSection extends StatelessWidget {
                 borderRadius: BorderRadius.circular(25),
                 child: Padding(
                   padding: const EdgeInsets.all(20),
-                  child: Obx(() {
-                    if (controller.productImages.isEmpty) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-                    final imgPath = controller.productImages[controller.selectedImageIndex.value];
-                    return imgPath.startsWith('assets/')
-                        ? Image.asset(imgPath, fit: BoxFit.contain)
-                        : Image.network(
-                            ApiUrl.buildImageUrl(imgPath),
-                            fit: BoxFit.contain,
-                            errorBuilder: (_, __, ___) => const Icon(Icons.image_not_supported),
-                          );
-                  }),
+                  child: Image.asset(
+                    controller.productImages[controller.selectedImageIndex.value],
+                    fit: BoxFit.contain,
+                  ),
                 ),
               ),
-            ),
+            )),
         const SizedBox(height: 15),
         // Thumbnails
         SizedBox(
@@ -68,16 +58,10 @@ class ProductImageSection extends StatelessWidget {
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(5),
-                      child: Builder(builder: (context) {
-                        final imgPath = controller.productImages[index];
-                        return imgPath.startsWith('assets/')
-                            ? Image.asset(imgPath, fit: BoxFit.contain)
-                            : Image.network(
-                                ApiUrl.buildImageUrl(imgPath),
-                                fit: BoxFit.contain,
-                                errorBuilder: (_, __, ___) => const Icon(Icons.image_not_supported),
-                              );
-                      }),
+                      child: Image.asset(
+                        controller.productImages[index],
+                        fit: BoxFit.contain,
+                      ),
                     ),
                   ),
                 );
