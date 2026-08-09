@@ -135,7 +135,7 @@ class UpdateProductCard extends StatelessWidget {
                         ),
                       ),
                     ),
-                    if (productData.status?.toUpperCase() == 'ACTIVE')
+                    if (productData.status?.toUpperCase() == 'ACTIVE' || productData.status?.toUpperCase() == 'LIVE')
                       Positioned(
                         top: Dimensions.h(10),
                         right: Dimensions.w(10),

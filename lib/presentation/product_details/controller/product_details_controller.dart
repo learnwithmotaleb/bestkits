@@ -30,8 +30,6 @@ class ProductDetailsController extends GetxController {
   final selectedTabIndex = 0.obs;
   final List<String> tabs = [
     AppStrings.description,
-    AppStrings.reviews,
-    AppStrings.sellerLabel,
   ];
 
   final ApiClient _apiClient = ApiClient();

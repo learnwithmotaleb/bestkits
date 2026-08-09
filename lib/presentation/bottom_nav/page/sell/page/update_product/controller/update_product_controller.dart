@@ -315,7 +315,10 @@ class UpdateProductController extends GetxController {
   final RxString description = ''.obs;
   final RxString selectedCategory = ''.obs;
   final RxString selectedSubCategory = ''.obs;
-  final RxList<String> selectedSizes = <String>[].obs;
+
+  final RxString price = ''.obs;
+  final RxString discount = ''.obs;
+  final RxString condition = 'New'.obs;
 
   final RxList<Data> categoryData = <Data>[].obs;
   final RxList<String> categoryNames = <String>[].obs;
@@ -403,6 +406,8 @@ class UpdateProductController extends GetxController {
 
     isLoading.value = true;
     try {
+      await Future.delayed(const Duration(seconds: 1));
+      /* API INTEGRATION DISABLED FOR NOW
       final apiClient = ApiClient();
 
       // Upload images if any picked, otherwise reuse existing
@@ -449,20 +454,10 @@ class UpdateProductController extends GetxController {
       final List<Map<String, dynamic>> variants = [];
       final List<String> variantNames = [];
 
-      if (selectedSizes.isNotEmpty) {
-        variantNames.add("Size");
-        for (final size in selectedSizes) {
-          variants.add({
-            "variantName": size,
-            "price": price,
-          });
-        }
-      } else {
-        variants.add({
-          "variantName": "Default",
-          "price": price,
-        });
-      }
+      variants.add({
+        "variantName": "Default",
+        "price": price,
+      });
 
       String statusPayload = "ACTIVE";
       if (status.toLowerCase().contains("inactive")) {
@@ -510,6 +505,8 @@ class UpdateProductController extends GetxController {
         }
         return "Failed to update product. Status code: ${response.statusCode}";
       }
+      */
+      return null;
     } catch (e) {
       print("Error updating product: $e");
       return "Something went wrong: $e";

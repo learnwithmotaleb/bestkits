@@ -12,7 +12,7 @@ import '../../../../../../../widget/app_button.dart';
 import '../../../../../../../widget/app_text_field.dart';
 import '../../../../../../../widget/custom_appbar.dart';
 import '../controller/add_product_controller.dart';
-import 'add_product_price.dart';
+import 'product_verification.dart';
 
 class AddProduct extends StatefulWidget {
   const AddProduct({super.key});
@@ -26,10 +26,12 @@ class _AddProductState extends State<AddProduct> {
   late final AddProductController _ctrl;
 
   final _nameController = TextEditingController();
-  final _sizeController = TextEditingController();
   final _descController = TextEditingController();
   final _categoryController = TextEditingController();
   final _subCategoryController = TextEditingController();
+
+  final _priceController = TextEditingController();
+  final _discountController = TextEditingController();
 
   // ── Category → Sub-category map ──────────────────────────────────────────
   static const Map<String, List<String>> _categoryMap = {
@@ -105,8 +107,9 @@ class _AddProductState extends State<AddProduct> {
     return _categoryMap[selected] ?? [];
   }
 
-  final List<String> _allSizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
-  final List<String> _selectedSizes = [];
+  // Condition toggle
+  final List<String> _conditions = ['New', 'Used'];
+  String _selectedCondition = 'New';
 
   @override
   void initState() {
@@ -119,20 +122,17 @@ class _AddProductState extends State<AddProduct> {
   @override
   void dispose() {
     _nameController.dispose();
-    _sizeController.dispose();
     _descController.dispose();
     _categoryController.dispose();
     _subCategoryController.dispose();
+    _priceController.dispose();
+    _discountController.dispose();
     super.dispose();
   }
 
-  void _toggleSize(String size) {
+  void _toggleCondition(String condition) {
     setState(() {
-      if (_selectedSizes.contains(size)) {
-        _selectedSizes.remove(size);
-      } else {
-        _selectedSizes.add(size);
-      }
+      _selectedCondition = condition;
     });
   }
 
@@ -162,14 +162,16 @@ class _AddProductState extends State<AddProduct> {
 
   void _onContinue() {
     if (!_formKey.currentState!.validate()) return;
-    
+
     _ctrl.name.value = _nameController.text;
     _ctrl.description.value = _descController.text;
     _ctrl.selectedCategory.value = _categoryController.text;
     _ctrl.selectedSubCategory.value = _subCategoryController.text;
-    _ctrl.selectedSizes.assignAll(_selectedSizes);
+    _ctrl.price.value = _priceController.text;
+    _ctrl.discount.value = _discountController.text;
+    _ctrl.condition.value = _selectedCondition;
 
-    Get.to(() => const AddProductPrice());
+    Get.to(() => const ProductVerification());
   }
 
   @override
@@ -221,7 +223,9 @@ class _AddProductState extends State<AddProduct> {
                         controller: _categoryController,
                         hint: AppStrings.selectCategory.tr,
                         onTap: () => _openDropdown(
-                            AppStrings.productCategoryLabel.tr, cats, _categoryController),
+                            AppStrings.productCategoryLabel.tr,
+                            cats,
+                            _categoryController),
                       );
                     }),
                     SizedBox(height: Dimensions.h(16)),
@@ -234,26 +238,68 @@ class _AddProductState extends State<AddProduct> {
                       return _DropdownField(
                         controller: _subCategoryController,
                         hint: AppStrings.selectSubcategory.tr,
-                        onTap: () => _openDropdown(AppStrings.productSubcategoryLabel.tr,
-                            subs, _subCategoryController),
+                        onTap: () => _openDropdown(
+                            AppStrings.productSubcategoryLabel.tr,
+                            subs,
+                            _subCategoryController),
                       );
                     }),
                     SizedBox(height: Dimensions.h(16)),
 
-                    // ── Size / Variant ────────────────────────────────────
-                    _SectionLabel(label: AppStrings.sizeVariantLabel.tr),
+                    // ── Price ────────────────────────────────────────────
+                    _SectionLabel(label: AppStrings.priceLabel.tr),
                     SizedBox(height: Dimensions.h(8)),
                     AppTextField(
-                      controller: _sizeController,
-                      hint: AppStrings.enterSizesCommas.tr,
+                      controller: _priceController,
+                      hint: 'Enter product Price',
+                      keyboardType:
+                          const TextInputType.numberWithOptions(decimal: true),
+                      validator: (v) => (v == null || v.trim().isEmpty)
+                          ? AppStrings.priceRequired.tr
+                          : null,
                     ),
-                    SizedBox(height: Dimensions.h(10)),
-                    if (_allSizes.isNotEmpty)
-                      _SizeChips(
-                        allSizes: _allSizes,
-                        selected: _selectedSizes,
-                        onToggle: _toggleSize,
-                      ),
+                    SizedBox(height: Dimensions.h(16)),
+
+                    // ── Discount ─────────────────────────────────────────
+                    _SectionLabel(label: 'Discount (%) (Optional)'),
+                    SizedBox(height: Dimensions.h(8)),
+                    AppTextField(
+                      controller: _discountController,
+                      hint: 'Enter product Discount %',
+                      keyboardType: TextInputType.number,
+                    ),
+                    SizedBox(height: Dimensions.h(16)),
+
+                    // ── Condition ────────────────────────────────────────
+                    _SectionLabel(label: 'Product Condition'),
+                    SizedBox(height: Dimensions.h(8)),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _ConditionChip(
+                            label: 'New',
+                            icon: Icons.new_releases_rounded,
+                            isSelected: _selectedCondition == 'New',
+                            onTap: () => _toggleCondition('New'),
+                            selectedColor: AppColors.greenColor,
+                            selectedBgColor:
+                                AppColors.greenColor.withOpacity(0.15),
+                          ),
+                        ),
+                        SizedBox(width: Dimensions.w(12)),
+                        Expanded(
+                          child: _ConditionChip(
+                            label: 'Used',
+                            icon: Icons.history_rounded,
+                            isSelected: _selectedCondition == 'Used',
+                            onTap: () => _toggleCondition('Used'),
+                            selectedColor: AppColors.primaryColor,
+                            selectedBgColor:
+                                AppColors.primaryColor.withOpacity(0.15),
+                          ),
+                        ),
+                      ],
+                    ),
                     SizedBox(height: Dimensions.h(16)),
 
                     // ── Description ───────────────────────────────────────
@@ -286,7 +332,7 @@ class _AddProductState extends State<AddProduct> {
                 ),
               ),
               child: AppButton(
-                label: AppStrings.continueBtn.tr,
+                label: 'Continue to Verification >>',
                 onPressed: _onContinue,
                 backgroundColor: AppColors.secondaryColor,
                 textColor: AppColors.primaryColor,
@@ -475,60 +521,62 @@ class _DropdownField extends StatelessWidget {
   }
 }
 
-// ─── Size Chips ───────────────────────────────────────────────────────────────
-class _SizeChips extends StatelessWidget {
-  final List<String> allSizes;
-  final List<String> selected;
-  final void Function(String) onToggle;
+// ─── Condition Chip ─────────────────────────────────────────────────────────────
+class _ConditionChip extends StatelessWidget {
+  final String label;
+  final IconData icon;
+  final bool isSelected;
+  final VoidCallback onTap;
+  final Color selectedColor;
+  final Color selectedBgColor;
 
-  const _SizeChips(
-      {required this.allSizes, required this.selected, required this.onToggle});
+  const _ConditionChip({
+    required this.label,
+    required this.icon,
+    required this.isSelected,
+    required this.onTap,
+    required this.selectedColor,
+    required this.selectedBgColor,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Wrap(
-      spacing: Dimensions.w(8),
-      runSpacing: Dimensions.h(8),
-      children: allSizes.map((size) {
-        final isSelected = selected.contains(size);
-        return GestureDetector(
-          onTap: () => onToggle(size),
-          child: Container(
-            padding: EdgeInsets.symmetric(
-                horizontal: Dimensions.w(12), vertical: Dimensions.h(6)),
-            decoration: BoxDecoration(
-              color: isSelected
-                  ? AppColors.blackColor
-                  : AppColors.textFieldBackgroundColor,
-              borderRadius: BorderRadius.circular(Dimensions.r(8)),
-              border: Border.all(
-                color: isSelected
-                    ? AppColors.blackColor
-                    : AppColors.greyColor.withOpacity(0.3),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: Dimensions.h(14)),
+        decoration: BoxDecoration(
+          color:
+              isSelected ? selectedBgColor : AppColors.textFieldBackgroundColor,
+          borderRadius: BorderRadius.circular(Dimensions.r(12)),
+          border: Border.all(
+            color: isSelected
+                ? selectedColor
+                : AppColors.greyColor.withOpacity(0.2),
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              isSelected
+                  ? Icons.radio_button_checked
+                  : Icons.radio_button_unchecked,
+              color: isSelected ? selectedColor : AppColors.greyColor,
+              size: 18,
+            ),
+            SizedBox(width: Dimensions.w(8)),
+            Text(
+              label,
+              style: AppTextStyles.body.copyWith(
+                fontSize: Dimensions.fs(14),
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+                color: isSelected ? selectedColor : AppColors.blackColor,
               ),
             ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  size,
-                  style: AppTextStyles.body.copyWith(
-                    fontSize: Dimensions.fs(12),
-                    fontWeight: FontWeight.w600,
-                    color: isSelected
-                        ? AppColors.primaryColor
-                        : AppColors.blackColor,
-                  ),
-                ),
-                if (isSelected) ...[
-                  SizedBox(width: Dimensions.w(4)),
-                  Icon(Icons.close, size: 12, color: AppColors.primaryColor),
-                ],
-              ],
-            ),
-          ),
-        );
-      }).toList(),
+          ],
+        ),
+      ),
     );
   }
 }

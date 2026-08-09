@@ -18,7 +18,17 @@ class AddProductController extends GetxController {
   final RxString description = ''.obs;
   final RxString selectedCategory = ''.obs;
   final RxString selectedSubCategory = ''.obs;
-  final RxList<String> selectedSizes = <String>[].obs;
+  
+  final RxString price = ''.obs;
+  final RxString discount = ''.obs;
+  final RxString condition = 'New'.obs;
+
+  // Verification Page Data
+  final RxList<File> verificationImages = <File>[].obs;
+  final RxString selectedBrand = ''.obs;
+  final RxList<String> brandNames = <String>[
+    'Nike', 'Adidas', 'Puma', 'Gucci', 'Prada', 'Louis Vuitton', 'Rolex', 'Other'
+  ].obs;
 
   final RxList<Data> categoryData = <Data>[].obs;
   final RxList<String> categoryNames = <String>[].obs;
@@ -78,6 +88,22 @@ class AddProductController extends GetxController {
     }
   }
 
+  Future<void> pickVerificationImages() async {
+    final List<XFile> result = await _picker.pickMultiImage(imageQuality: 80);
+    if (result.isEmpty) return;
+    for (final xFile in result) {
+      if (verificationImages.length < 6) {
+        verificationImages.add(File(xFile.path));
+      }
+    }
+  }
+
+  void removeVerificationImage(int index) {
+    if (index >= 0 && index < verificationImages.length) {
+      verificationImages.removeAt(index);
+    }
+  }
+
   Future<List<String>> _uploadImages() async {
     final List<String> urls = [];
     final apiClient = ApiClient();
@@ -115,6 +141,8 @@ class AddProductController extends GetxController {
   }) async {
     isLoading.value = true;
     try {
+      await Future.delayed(const Duration(seconds: 1));
+      /* API INTEGRATION DISABLED FOR NOW
       final apiClient = ApiClient();
       
       // Upload images first
@@ -146,7 +174,7 @@ class AddProductController extends GetxController {
               (s) => s.name?.toLowerCase().trim() == selectedSubCategory.value.toLowerCase().trim()
             );
             if (sub != null && sub.id != null) {
-              subCategoryId = sub.id!.toInt();
+               subCategoryId = sub.id!.toInt();
             }
           }
         }
@@ -209,6 +237,8 @@ class AddProductController extends GetxController {
         }
         return "Failed to publish product. Status code: ${response.statusCode}";
       }
+      */
+      return null;
     } catch (e) {
       print("Error creating product: $e");
       return "Something went wrong: $e";

@@ -9,7 +9,7 @@ class ApiUrl {
 
   /// Change only this domain when switching servers.
   // static const String _mainDomain = "https://helena-sedimentological-emily.ngrok-free.dev";
-  static const String _mainDomain = "https://hqwwvtcz-5050.inc1.devtunnels.ms";
+  static const String _mainDomain = "https://075lrgv5-5050.inc1.devtunnels.ms";
 
   static const String baseUrl = _mainDomain;
 

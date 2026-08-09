@@ -26,11 +26,13 @@ class _UpdateProductState extends State<UpdateProduct> {
   late final UpdateProductController _ctrl;
 
   final _nameController = TextEditingController();
-  final _sizeController = TextEditingController();
   final _descController = TextEditingController();
 
   final _categoryController = TextEditingController();
   final _subCategoryController = TextEditingController();
+
+  final _priceController = TextEditingController();
+  final _discountController = TextEditingController();
 
   @override
   void initState() {
@@ -44,6 +46,9 @@ class _UpdateProductState extends State<UpdateProduct> {
     final product = _ctrl.product;
     _nameController.text = product['name']?.toString() ?? '';
     _descController.text = product['description']?.toString() ?? '';
+    _priceController.text = product['original_price']?.toString() ?? '';
+    _discountController.text = product['discounted_price']?.toString() ?? '';
+    _selectedCondition = product['condition']?.toString() == 'USED' ? 'Used' : 'New';
     
     // Set category
     final category = product['category'];
@@ -59,13 +64,12 @@ class _UpdateProductState extends State<UpdateProduct> {
       _subCategoryController.text = subCat.toString();
     }
     
-    // Set Sizes
-    if (product['sizes'] != null && product['sizes'] is List) {
-      _selectedSizes.clear();
-      _selectedSizes.addAll(List<String>.from(product['sizes'].map((e) => e.toString())));
-    }
-    _ctrl.selectedSizes.assignAll(_selectedSizes);
+    // Condition toggle will be initialized
   }
+
+  // Condition toggle
+  final List<String> _conditions = ['New', 'Used'];
+  String _selectedCondition = 'New';
 
   // ── Category → Sub-category map ──────────────────────────────────────────
   static const Map<String, List<String>> _categoryMap = {
@@ -141,26 +145,22 @@ class _UpdateProductState extends State<UpdateProduct> {
     return _categoryMap[selected] ?? [];
   }
 
-  final List<String> _allSizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
-  final List<String> _selectedSizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+
 
   @override
   void dispose() {
     _nameController.dispose();
-    _sizeController.dispose();
     _descController.dispose();
     _categoryController.dispose();
     _subCategoryController.dispose();
+    _priceController.dispose();
+    _discountController.dispose();
     super.dispose();
   }
 
-  void _toggleSize(String size) {
+  void _toggleCondition(String condition) {
     setState(() {
-      if (_selectedSizes.contains(size)) {
-        _selectedSizes.remove(size);
-      } else {
-        _selectedSizes.add(size);
-      }
+      _selectedCondition = condition;
     });
   }
 
@@ -194,9 +194,22 @@ class _UpdateProductState extends State<UpdateProduct> {
     _ctrl.description.value = _descController.text;
     _ctrl.selectedCategory.value = _categoryController.text;
     _ctrl.selectedSubCategory.value = _subCategoryController.text;
-    _ctrl.selectedSizes.assignAll(_selectedSizes);
+    _ctrl.price.value = _priceController.text;
+    _ctrl.discount.value = _discountController.text;
+    _ctrl.condition.value = _selectedCondition;
 
-    Get.to(() => const UpdateProductPrice());
+    _ctrl.updateProductApi(
+      price: double.tryParse(_priceController.text) ?? 0.0,
+      discountPrice: double.tryParse(_discountController.text) ?? 0.0,
+      status: 'ACTIVE',
+    ).then((error) {
+      if (error == null) {
+        AppAlerts.success(message: 'Product updated successfully!');
+        Get.until((route) => route.isFirst);
+      } else {
+        AppAlerts.error(message: error);
+      }
+    });
   }
 
   @override
@@ -272,18 +285,56 @@ class _UpdateProductState extends State<UpdateProduct> {
                     }),
                     SizedBox(height: Dimensions.h(16)),
 
-                    // ── Size / Variant ────────────────────────────────────
-                    _SectionLabel(label: AppStrings.sizeVariantLabel.tr),
+                    // ── Price ────────────────────────────────────────────
+                    _SectionLabel(label: AppStrings.priceLabel.tr),
                     SizedBox(height: Dimensions.h(8)),
                     AppTextField(
-                      controller: _sizeController,
-                      hint: AppStrings.enterSizesCommas.tr,
+                      controller: _priceController,
+                      hint: 'Enter product Price',
+                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                      validator: (v) => (v == null || v.trim().isEmpty)
+                          ? AppStrings.priceRequired.tr
+                          : null,
                     ),
-                    SizedBox(height: Dimensions.h(10)),
-                    _SizeChips(
-                      allSizes: _allSizes,
-                      selected: _selectedSizes,
-                      onToggle: _toggleSize,
+                    SizedBox(height: Dimensions.h(16)),
+
+                    // ── Discount ─────────────────────────────────────────
+                    _SectionLabel(label: 'Discount (%) (Optional)'),
+                    SizedBox(height: Dimensions.h(8)),
+                    AppTextField(
+                      controller: _discountController,
+                      hint: 'Enter product Discount %',
+                      keyboardType: TextInputType.number,
+                    ),
+                    SizedBox(height: Dimensions.h(16)),
+
+                    // ── Condition ────────────────────────────────────────
+                    _SectionLabel(label: 'Product Condition'),
+                    SizedBox(height: Dimensions.h(8)),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _ConditionChip(
+                            label: 'New',
+                            icon: Icons.new_releases_rounded,
+                            isSelected: _selectedCondition == 'New',
+                            onTap: () => _toggleCondition('New'),
+                            selectedColor: AppColors.greenColor,
+                            selectedBgColor: AppColors.greenColor.withOpacity(0.15),
+                          ),
+                        ),
+                        SizedBox(width: Dimensions.w(12)),
+                        Expanded(
+                          child: _ConditionChip(
+                            label: 'Used',
+                            icon: Icons.history_rounded,
+                            isSelected: _selectedCondition == 'Used',
+                            onTap: () => _toggleCondition('Used'),
+                            selectedColor: AppColors.primaryColor,
+                            selectedBgColor: AppColors.primaryColor.withOpacity(0.15),
+                          ),
+                        ),
+                      ],
                     ),
                     SizedBox(height: Dimensions.h(16)),
 
@@ -316,16 +367,15 @@ class _UpdateProductState extends State<UpdateProduct> {
                   top: BorderSide(color: AppColors.greyColor.withOpacity(0.12)),
                 ),
               ),
-              child: AppButton(
-                label: AppStrings.continueBtn.tr,
-                onPressed: _onContinue,
-                backgroundColor: AppColors.secondaryColor,
+              child: Obx(() => AppButton(
+                label: 'Save Changes >>',
+                onPressed: _ctrl.isLoading.value ? null : _onContinue,
+                isLoading: _ctrl.isLoading.value,
+                backgroundColor: AppColors.blackColor,
                 textColor: AppColors.primaryColor,
-                trailingIcon: const Icon(Icons.double_arrow_rounded,
-                    color: AppColors.primaryColor, size: 18),
                 borderRadius: 14,
                 height: 52,
-              ),
+              )),
             ),
           ],
         ),
@@ -524,65 +574,57 @@ class _DropdownField extends StatelessWidget {
   }
 }
 
-// ─── Size Chips ───────────────────────────────────────────────────────────────
-class _SizeChips extends StatelessWidget {
-  final List<String> allSizes;
-  final List<String> selected;
-  final void Function(String) onToggle;
+// ─── Condition Chip ─────────────────────────────────────────────────────────────
+class _ConditionChip extends StatelessWidget {
+  final String label;
+  final IconData icon;
+  final bool isSelected;
+  final VoidCallback onTap;
+  final Color selectedColor;
+  final Color selectedBgColor;
 
-  const _SizeChips({
-    required this.allSizes,
-    required this.selected,
-    required this.onToggle,
+  const _ConditionChip({
+    required this.label,
+    required this.icon,
+    required this.isSelected,
+    required this.onTap,
+    required this.selectedColor,
+    required this.selectedBgColor,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Wrap(
-      spacing: Dimensions.w(8),
-      runSpacing: Dimensions.h(8),
-      children: allSizes.map((size) {
-        final isSelected = selected.contains(size);
-        return GestureDetector(
-          onTap: () => onToggle(size),
-          child: Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: Dimensions.w(12),
-              vertical: Dimensions.h(6),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: Dimensions.h(14)),
+        decoration: BoxDecoration(
+          color: isSelected ? selectedBgColor : AppColors.textFieldBackgroundColor,
+          borderRadius: BorderRadius.circular(Dimensions.r(12)),
+          border: Border.all(
+            color: isSelected ? selectedColor : AppColors.greyColor.withOpacity(0.2),
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              isSelected ? Icons.radio_button_checked : Icons.radio_button_unchecked,
+              color: isSelected ? selectedColor : AppColors.greyColor,
+              size: 18,
             ),
-            decoration: BoxDecoration(
-              color: isSelected
-                  ? AppColors.blackColor
-                  : AppColors.textFieldBackgroundColor,
-              borderRadius: BorderRadius.circular(Dimensions.r(8)),
-              border: Border.all(
-                color: isSelected
-                    ? AppColors.blackColor
-                    : AppColors.greyColor.withOpacity(0.3),
+            SizedBox(width: Dimensions.w(8)),
+            Text(
+              label,
+              style: AppTextStyles.body.copyWith(
+                fontSize: Dimensions.fs(14),
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+                color: isSelected ? selectedColor : AppColors.blackColor,
               ),
             ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  size,
-                  style: AppTextStyles.body.copyWith(
-                    fontSize: Dimensions.fs(12),
-                    fontWeight: FontWeight.w600,
-                    color: isSelected
-                        ? AppColors.primaryColor
-                        : AppColors.blackColor,
-                  ),
-                ),
-                if (isSelected) ...[
-                  SizedBox(width: Dimensions.w(4)),
-                  Icon(Icons.close, size: 12, color: AppColors.primaryColor),
-                ],
-              ],
-            ),
-          ),
-        );
-      }).toList(),
+          ],
+        ),
+      ),
     );
   }
 }

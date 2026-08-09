@@ -5,6 +5,70 @@ import '../../../../utils/app_colors/app_colors.dart';
 import '../../../../utils/app_text_style/app_text_style.dart';
 import 'package:bestkits/data/model/product_model.dart';
 
+// ─── Status Helpers ────────────────────────────────────────────────────────────
+
+Color statusAccentColor(String status) {
+  switch (status.toUpperCase()) {
+    case 'UNDER_REVIEW':
+      return AppColors.statusUnderReview;
+    case 'ACTIVE':
+    case 'LIVE':
+      return AppColors.statusLive;
+    case 'ACTION_REQUIRED':
+      return AppColors.statusActionRequired;
+    case 'REJECTED':
+      return AppColors.statusRejected;
+    case 'SOLD':
+      return AppColors.statusSold;
+    case 'INACTIVE':
+      return AppColors.statusInactive;
+    default:
+      return AppColors.statusInactive;
+  }
+}
+
+Color statusBgColor(String status) {
+  switch (status.toUpperCase()) {
+    case 'UNDER_REVIEW':
+      return AppColors.statusUnderReviewBg;
+    case 'ACTIVE':
+    case 'LIVE':
+      return AppColors.statusLiveBg;
+    case 'ACTION_REQUIRED':
+      return AppColors.statusActionRequiredBg;
+    case 'REJECTED':
+      return AppColors.statusRejectedBg;
+    case 'SOLD':
+      return AppColors.statusSoldBg;
+    case 'INACTIVE':
+      return AppColors.statusInactiveBg;
+    default:
+      return AppColors.statusInactiveBg;
+  }
+}
+
+String statusLabel(String status) {
+  switch (status.toUpperCase()) {
+    case 'UNDER_REVIEW':
+      return 'Under Review';
+    case 'ACTIVE':
+    case 'LIVE':
+      return 'Live';
+    case 'ACTION_REQUIRED':
+      return 'Action Required';
+    case 'REJECTED':
+      return 'Rejected';
+    case 'SOLD':
+      return 'Sold';
+    case 'INACTIVE':
+      return 'Inactive';
+    default:
+      return status;
+  }
+}
+
+// ─── Product Info Section ──────────────────────────────────────────────────────
+
 class ProductInfoSection extends StatelessWidget {
   final ProductModel product;
 
@@ -16,28 +80,93 @@ class ProductInfoSection extends StatelessWidget {
         product.discountPercentage != null &&
         product.discountPercentage! > 0;
 
+    final rawStatus = product.status.toUpperCase();
+    final accentColor = statusAccentColor(rawStatus);
+    final bgColor = statusBgColor(rawStatus);
+    final label = statusLabel(rawStatus);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Category Tag
-        if (product.categoryName.isNotEmpty)
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              border:
-                  Border.all(color: AppColors.primaryColor.withOpacity(0.5)),
-            ),
-            child: Text(
-              product.categoryName,
-              style: TextStyle(
-                color: AppColors.primaryColor,
-                fontSize: 10,
-                fontWeight: FontWeight.w500,
+        // Category Tag + Status Badge in one Row
+        Row(
+          children: [
+            if (product.categoryName.isNotEmpty) ...[
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                      color: AppColors.primaryColor.withOpacity(0.5)),
+                ),
+                child: Text(
+                  product.categoryName,
+                  style: TextStyle(
+                    color: AppColors.primaryColor,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+            ],
+            if (product.subCategoryName.isNotEmpty) ...[
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: Colors.grey[100],
+                ),
+                child: Text(
+                  product.subCategoryName,
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                    fontSize: 10,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+            ],
+            // 6-state status badge
+            Container(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              decoration: BoxDecoration(
+                color: bgColor,
+                borderRadius: BorderRadius.circular(20),
+                border:
+                    Border.all(color: accentColor.withOpacity(0.4), width: 1),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 6,
+                    height: 6,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: accentColor,
+                    ),
+                  ),
+                  const SizedBox(width: 5),
+                  Text(
+                    label,
+                    style: TextStyle(
+                      color: accentColor,
+                      fontSize: 10,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ],
               ),
             ),
-          ),
+          ],
+        ),
         const SizedBox(height: 10),
+
         // Product Name
         Text(
           product.name,
@@ -48,57 +177,40 @@ class ProductInfoSection extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 8),
-        // Rating and Status
-        Row(
-          children: [
-            Icon(Icons.star, color: AppColors.primaryColor, size: 16),
-            const SizedBox(width: 4),
-            Text(
-              product.ratingDisplay,
-              style:
-                  const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+
+        // Product Condition label
+        Text(
+          'Product Condition',
+          style: TextStyle(
+            fontSize: 12,
+            color: Colors.grey[500],
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(height: 5),
+
+        // Condition chip
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+          decoration: BoxDecoration(
+            color: product.condition.toUpperCase() == 'NEW'
+                ? const Color(0xFFE8F5E9)
+                : const Color(0xFFFFF3E0),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Text(
+            product.condition.isNotEmpty ? product.condition : 'N/A',
+            style: TextStyle(
+              color: product.condition.toUpperCase() == 'NEW'
+                  ? const Color(0xFF22C55E)
+                  : const Color(0xFFFF6B35),
+              fontSize: 10,
+              fontWeight: FontWeight.w700,
             ),
-            const SizedBox(width: 4),
-            Text(
-              '[ ${product.totalReviews} ${AppStrings.reviews.tr} ]',
-              style: TextStyle(fontSize: 12, color: Colors.grey[400]),
-            ),
-            const Spacer(),
-            // Active / Condition Badge
-            Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-              decoration: BoxDecoration(
-                color: product.condition == 'NEW'
-                    ? const Color(0xFFE8F5E9)
-                    : const Color(0xFFFFF3E0),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    radius: 2,
-                    backgroundColor: product.condition == 'NEW'
-                        ? const Color(0xFF4CAF50)
-                        : const Color(0xFFFF9800),
-                  ),
-                  const SizedBox(width: 4),
-                  Text(
-                    product.condition,
-                    style: TextStyle(
-                      color: product.condition == 'NEW'
-                          ? const Color(0xFF4CAF50)
-                          : const Color(0xFFFF9800),
-                      fontSize: 10,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
+          ),
         ),
         const SizedBox(height: 15),
+
         // Price Row
         Row(
           children: [
@@ -122,7 +234,8 @@ class ProductInfoSection extends StatelessWidget {
               const SizedBox(width: 12),
               // Discount Badge
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(

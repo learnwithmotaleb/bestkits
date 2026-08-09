@@ -21,7 +21,7 @@ import 'package:bestkits/presentation/bottom_nav/page/sell/page/update_product/s
 import 'package:bestkits/presentation/bottom_nav/page/sell/page/product_order/screen/product_order.dart';
 import 'package:bestkits/presentation/bottom_nav/page/sell/page/product_order/screen/order_details_screen.dart';
 import 'package:bestkits/presentation/bottom_nav/page/sell/page/update_product/screen/add_product.dart';
-import 'package:bestkits/presentation/bottom_nav/page/sell/page/update_product/screen/add_product_price.dart';
+import 'package:bestkits/presentation/bottom_nav/page/sell/page/update_product/screen/product_verification.dart';
 import 'package:bestkits/presentation/bottom_nav/page/sell/page/update_product/controller/add_product_controller.dart';
 import 'package:bestkits/presentation/bottom_nav/page/sell/screen/sell_screen.dart';
 import 'package:bestkits/presentation/bottom_nav/screen/bottom_nav_screen.dart';
@@ -388,7 +388,7 @@ class AppRouter {
     ),
     GetPage(
       name: RoutePath.addProductPrice,
-      page: () => const AddProductPrice(),
+      page: () => const ProductVerification(),
       transition: Transition.rightToLeft,
     ),
     GetPage(
@@ -412,7 +412,6 @@ class AppRouter {
         Get.put(ReturnOrderController());
       }),
     ),
-
     GetPage(
       name: RoutePath.earning,
       page: () => const EarningScreen(),

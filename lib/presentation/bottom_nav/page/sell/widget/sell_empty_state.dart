@@ -1,8 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import '../../../../../utils/app_colors/app_colors.dart';
-import '../../../../../utils/static_strings/static_strings.dart';
-import '../../../controller/bottom_nav_controller.dart';
 
 class SellEmptyState extends StatelessWidget {
   final String message;
@@ -16,52 +12,28 @@ class SellEmptyState extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 20),
+      padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.withOpacity(0.2)),
-        borderRadius: BorderRadius.circular(12),
-        color: const Color(0xFFFDFDFD),
+        border: Border.all(color: Colors.grey.withOpacity(0.15)),
+        borderRadius: BorderRadius.circular(16),
+        color: Colors.white,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.inbox, size: 48, color: Colors.grey[400]),
+          Icon(
+            Icons.move_to_inbox_outlined,
+            size: 40,
+            color: Colors.grey[300],
+          ),
           const SizedBox(height: 12),
           Text(
             message,
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: Colors.grey[600],
-              fontSize: 13,
-              fontStyle: FontStyle.italic,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          const SizedBox(height: 20),
-          ElevatedButton.icon(
-            onPressed: () {
-              try {
-                final bottomNavController = Get.find<BottomNavController>();
-                bottomNavController.changeIndex(1); // Switch to Search/Shop tab
-              } catch (e) {
-                // Fail-safe
-              }
-            },
-            icon: const Icon(Icons.search, size: 16),
-            label: Text(
-              AppStrings.browseShop.tr,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 12,
-              ),
-            ),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.blackColor,
-              foregroundColor: AppColors.primaryColor,
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
+              color: Colors.grey[400],
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ],

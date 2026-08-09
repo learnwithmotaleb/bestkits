@@ -35,7 +35,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
     // Read the product ID and optional pre-built model from navigation arguments
     final args = Get.arguments;
-    final Map<String, dynamic>? argsMap = args is Map<String, dynamic> ? args : null;
+    final Map<String, dynamic>? argsMap =
+        args is Map<String, dynamic> ? args : null;
     final String productId = argsMap?['productId']?.toString() ?? '';
     final dynamic productModel = argsMap?['productModel'];
 
@@ -46,8 +47,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         controller.productDetails.value = productModel;
         controller.isLoading.value = false;
         controller.errorMessage.value = '';
-        if (productModel.variants != null && (productModel.variants as List).isNotEmpty) {
-          controller.selectedVariant.value = (productModel.variants as List).first.variantName;
+        if (productModel.variants != null &&
+            (productModel.variants as List).isNotEmpty) {
+          controller.selectedVariant.value =
+              (productModel.variants as List).first.variantName;
         }
       });
     } else if (productId.isNotEmpty) {
@@ -61,34 +64,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       backgroundColor: AppColors.backgroundColor,
       appBar: CommonAppBar(
         title: AppStrings.productDetailsHeader.tr,
-        actions: [
-          Obx(() {
-            final product = controller.productDetails.value;
-            if (product == null) return const SizedBox(width: 48);
-            final favController = Get.find<FavouriteController>();
-            final isFav = favController.isFavoriteById(product.id);
-            return IconButton(
-              onPressed: () {
-                favController.toggleFavoriteProduct(product);
-              },
-              icon: Icon(
-                isFav ? Icons.favorite : Icons.favorite_border,
-                color: AppColors.redColor,
-              ),
-            );
-          }),
-          Obx(() {
-            final product = controller.productDetails.value;
-            if (product == null) return const SizedBox.shrink();
-            return IconButton(
-              onPressed: () {
-                Get.to(() => const UpdateProductScreen(), arguments: product.toJson());
-              },
-              icon: const Icon(Icons.edit, color: AppColors.blackColor),
-            );
-          }),
-          const SizedBox(width: 10),
-        ],
       ),
       body: Obx(() {
         if (controller.isLoading.value) {
@@ -148,31 +123,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     const SizedBox(height: 10),
                     ProductTabsSection(
                         controller: controller, product: product),
-                    const SizedBox(height: 30),
-
-                    // Related Products Header
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          AppStrings.relatedProducts.tr,
-                          style: AppTextStyles.h4.copyWith(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
-                            fontStyle: FontStyle.italic,
-                          ),
-                        ),
-                        Text(
-                          AppStrings.seeAll.tr,
-                          style: TextStyle(
-                            color: Colors.grey[400],
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 40),
                   ],
                 ),
               ),
