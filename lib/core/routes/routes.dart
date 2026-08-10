@@ -16,13 +16,12 @@ import 'package:bestkits/presentation/bottom_nav/page/home/pages/categories/scre
 import 'package:bestkits/presentation/bottom_nav/page/sell/controller/sell_controller.dart';
 import 'package:bestkits/presentation/bottom_nav/page/sell/page/update_product/controller/update_product_controller.dart';
 import 'package:bestkits/presentation/bottom_nav/page/sell/page/update_product/screen/update_product.dart';
-import 'package:bestkits/presentation/bottom_nav/page/sell/page/update_product/screen/update_product_price.dart';
 import 'package:bestkits/presentation/bottom_nav/page/sell/page/update_product/screen/update_product_screen.dart';
 import 'package:bestkits/presentation/bottom_nav/page/sell/page/product_order/screen/product_order.dart';
 import 'package:bestkits/presentation/bottom_nav/page/sell/page/product_order/screen/order_details_screen.dart';
-import 'package:bestkits/presentation/bottom_nav/page/sell/page/update_product/screen/add_product.dart';
-import 'package:bestkits/presentation/bottom_nav/page/sell/page/update_product/screen/product_verification.dart';
-import 'package:bestkits/presentation/bottom_nav/page/sell/page/update_product/controller/add_product_controller.dart';
+import 'package:bestkits/presentation/bottom_nav/page/sell/page/add_product/screen/add_product.dart';
+import 'package:bestkits/presentation/bottom_nav/page/sell/page/add_product/widget/product_verification.dart';
+import 'package:bestkits/presentation/bottom_nav/page/sell/page/add_product/controller/add_product_controller.dart';
 import 'package:bestkits/presentation/bottom_nav/page/sell/screen/sell_screen.dart';
 import 'package:bestkits/presentation/bottom_nav/screen/bottom_nav_screen.dart';
 import 'package:bestkits/presentation/change_password/controller/change_password_controller.dart';
@@ -373,11 +372,7 @@ class AppRouter {
       page: () => const UpdateProduct(),
       transition: Transition.rightToLeft,
     ),
-    GetPage(
-      name: RoutePath.updateProductPrice,
-      page: () => const UpdateProductPrice(),
-      transition: Transition.rightToLeft,
-    ),
+
     GetPage(
       name: RoutePath.addProduct,
       page: () => const AddProduct(),

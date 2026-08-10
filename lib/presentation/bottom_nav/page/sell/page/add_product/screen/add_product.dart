@@ -12,7 +12,7 @@ import '../../../../../../../widget/app_button.dart';
 import '../../../../../../../widget/app_text_field.dart';
 import '../../../../../../../widget/custom_appbar.dart';
 import '../controller/add_product_controller.dart';
-import 'product_verification.dart';
+import '../widget/product_verification.dart';
 
 class AddProduct extends StatefulWidget {
   const AddProduct({super.key});
@@ -331,19 +331,15 @@ class _AddProductState extends State<AddProduct> {
                   top: BorderSide(color: AppColors.greyColor.withOpacity(0.12)),
                 ),
               ),
-              child: AppButton(
+              child: Obx(() => AppButton(
                 label: 'Continue to Verification >>',
-                onPressed: _onContinue,
-                backgroundColor: AppColors.secondaryColor,
+                onPressed: _ctrl.isLoading.value ? null : _onContinue,
+                isLoading: _ctrl.isLoading.value,
+                backgroundColor: AppColors.blackColor,
                 textColor: AppColors.primaryColor,
-                trailingIcon: const Icon(
-                  Icons.double_arrow_rounded,
-                  color: AppColors.primaryColor,
-                  size: 18,
-                ),
                 borderRadius: 14,
                 height: 52,
-              ),
+              )),
             ),
           ],
         ),
@@ -392,22 +388,32 @@ class _ImagePickerBox extends StatelessWidget {
         GestureDetector(
           onTap: onPick,
           child: Container(
-            height: Dimensions.h(50),
             width: double.infinity,
+            padding: EdgeInsets.symmetric(vertical: Dimensions.h(24)),
             decoration: BoxDecoration(
               color: AppColors.textFieldBackgroundColor,
-              borderRadius: BorderRadius.circular(Dimensions.r(12)),
-              border: Border.all(color: AppColors.greyColor.withOpacity(0.2)),
+              borderRadius: BorderRadius.circular(Dimensions.r(14)),
+              border: Border.all(
+                color: AppColors.greyColor.withOpacity(0.25),
+                style: BorderStyle.solid,
+              ),
             ),
-            child: Row(
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.add_photo_alternate_outlined,
-                    color: AppColors.greyColor, size: Dimensions.icon(20)),
-                SizedBox(width: Dimensions.w(8)),
-                Text(AppStrings.uploadImagesHere.tr,
-                    style: AppTextStyles.hint
-                        .copyWith(fontSize: Dimensions.fs(13))),
+                Icon(
+                  Icons.add_photo_alternate_outlined,
+                  color: AppColors.greyColor,
+                  size: Dimensions.icon(32),
+                ),
+                SizedBox(height: Dimensions.h(8)),
+                Text(
+                  'Upload High-Quality Product Images',
+                  style: AppTextStyles.hint.copyWith(
+                    fontSize: Dimensions.fs(13),
+                    color: AppColors.greyColor,
+                  ),
+                ),
               ],
             ),
           ),

@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import '../../../../../core/responsive_layout/dimensions.dart';
 import '../../../../../utils/app_colors/app_colors.dart';
 import '../../../../../service/api_url.dart';
-import '../controller/order_controller.dart';
+import '../controller/my_order_controller.dart';
 import '../../../../../widget/app_button.dart';
 import '../../../../../widget/app_bottom_sheet.dart';
 import '../../../../../widget/app_text_field.dart';
@@ -15,11 +15,11 @@ import '../model/MyOrderModel.dart';
 
 import '../model/MyOrderDetailsModel.dart';
 
-class OrderDetailsView extends StatelessWidget {
+class MyOrderDetailsView extends StatelessWidget {
   final Data order;
-  final OrderController controller;
+  final MyOrderController controller;
 
-  const OrderDetailsView(
+  const MyOrderDetailsView(
       {super.key, required this.order, required this.controller});
 
   @override
@@ -630,6 +630,7 @@ class OrderDetailsView extends StatelessWidget {
               ],
             ),
           ),
+          SizedBox(height: Dimensions.h(20))
         ],
       );
     });

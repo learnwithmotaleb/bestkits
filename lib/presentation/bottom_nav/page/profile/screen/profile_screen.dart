@@ -10,7 +10,7 @@ import '../../../../../core/responsive_layout/dimensions.dart';
 import '../../../../../utils/app_colors/app_colors.dart';
 import '../../../../../utils/app_icons/app_icons.dart';
 import '../../../../earnings/screen/earning_screen.dart';
-import '../../order/screen/order_screen.dart';
+import '../../../../my_order/screen/my_order_screen.dart';
 import '../controller/profile_controller.dart';
 import '../widget/profile_menu_item.dart';
 import '../../../../my_return/screen/my_return_screen.dart';
@@ -77,7 +77,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ProfileMenuItem(
               icon: AppIcons.order_icon,
               label: AppStrings.myOrders.tr,
-              onTap: () => Get.to(() => const OrderScreen()),
+              onTap: () => Get.to(() => const MyOrderScreen()),
             ),
             ProfileMenuItem(
               icon: AppIcons.my_return,

@@ -232,71 +232,6 @@ class _ProductOrderState extends State<ProductOrder>
             ],
           ),
 
-          // Preview item (if any)
-          if (previewItem != null) ...[
-            Dimensions.gapH(12),
-            const Divider(height: 1, color: Color(0xFFF5F5F5)),
-            Dimensions.gapH(12),
-            Row(
-              children: [
-                if (previewItem.imageUrl != null)
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(Dimensions.r(8)),
-                    child: Image.network(
-                      previewItem.imageUrl!,
-                      width: Dimensions.w(50),
-                      height: Dimensions.w(50),
-                      fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => Container(
-                        width: Dimensions.w(50),
-                        height: Dimensions.w(50),
-                        decoration: BoxDecoration(
-                          color: Colors.grey[100],
-                          borderRadius:
-                              BorderRadius.circular(Dimensions.r(8)),
-                        ),
-                        child: Icon(Icons.image_not_supported,
-                            color: Colors.grey[400]),
-                      ),
-                    ),
-                  ),
-                Dimensions.gapW(10),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        previewItem.name ?? '—',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: Dimensions.fs(12),
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      Dimensions.gapH(3),
-                      Text(
-                        'Qty: ${previewItem.quantity ?? 1}  •  Size: ${previewItem.variant?.variantName ?? '—'}',
-                        style: TextStyle(
-                          fontSize: Dimensions.fs(10),
-                          color: Colors.grey[500],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Text(
-                  '\$${order.total ?? 0}',
-                  style: TextStyle(
-                    fontSize: Dimensions.fs(14),
-                    fontWeight: FontWeight.w800,
-                    color: Colors.black,
-                  ),
-                ),
-              ],
-            ),
-          ],
-
           Dimensions.gapH(14),
 
           // View Details Button
@@ -318,7 +253,7 @@ class _ProductOrderState extends State<ProductOrder>
                   Text(
                     AppStrings.viewDetailsBtn.tr,
                     style: TextStyle(
-                      color: AppColors.primaryColor,
+                      color: const Color(0xFFFACC15), // Matches yellow from screenshot
                       fontSize: Dimensions.fs(13),
                       fontWeight: FontWeight.w700,
                     ),
@@ -326,7 +261,7 @@ class _ProductOrderState extends State<ProductOrder>
                   Dimensions.gapW(6),
                   Icon(
                     Icons.double_arrow_rounded,
-                    color: AppColors.primaryColor,
+                    color: const Color(0xFFFACC15),
                     size: Dimensions.icon(16),
                   ),
                 ],

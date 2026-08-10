@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../../../core/responsive_layout/dimensions.dart';
 import '../../../../../../../utils/app_colors/app_colors.dart';
@@ -17,28 +17,19 @@ class OrderDetailsScreen extends StatefulWidget {
 }
 
 class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
-  // The real order passed from ProductOrder screen
   late Data order;
   late ProductOrderController _controller;
-
-  // Reactive local status (reflects API changes optimistically)
   late RxString orderStatus;
-
-  // Tracks the current raw API status value for transition logic
   late RxString currentRawStatus;
 
-  // All known statuses (label → API value)
   final List<Map<String, String>> allStatuses = [
     {'label': 'Pending', 'value': 'PENDING'},
     {'label': 'Confirmed', 'value': 'CONFIRMED'},
-    {'label': 'Processing', 'value': 'PROCESSING'},
     {'label': 'Shipped', 'value': 'SHIPPED'},
     {'label': 'Delivered', 'value': 'DELIVERED'},
     {'label': 'Canceled', 'value': 'CANCELLED'},
   ];
 
-  /// Seller transition rules: returns ONLY the valid next status(es)
-  /// based on the current raw status value.
   List<Map<String, String>> _getValidNextStatuses(String rawStatus) {
     switch (rawStatus.toUpperCase()) {
       case 'PENDING':
@@ -47,10 +38,6 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
         ];
       case 'CONFIRMED':
         return [
-          {'label': 'Processing', 'value': 'PROCESSING'}
-        ];
-      case 'PROCESSING':
-        return [
           {'label': 'Shipped', 'value': 'SHIPPED'}
         ];
       case 'SHIPPED':
@@ -58,7 +45,6 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
           {'label': 'Delivered', 'value': 'DELIVERED'}
         ];
       default:
-        // DELIVERED / CANCELLED — no valid transitions
         return [];
     }
   }
@@ -73,7 +59,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
     _controller = Get.find<ProductOrderController>();
   }
 
-  // ── helpers ────────────────────────────────────────────────────────────────
+  // ── Helpers ────────────────────────────────────────────────────────────────
 
   Color _statusColor(String? statusTone) {
     switch (statusTone?.toLowerCase()) {
@@ -89,11 +75,26 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
     }
   }
 
+  String _statusToneFromLabel(String label) {
+    switch (label.toLowerCase()) {
+      case 'delivered':
+      case 'confirmed':
+        return 'success';
+      case 'cancelled':
+      case 'canceled':
+        return 'danger';
+      case 'shipped':
+        return 'info';
+      default:
+        return 'warning';
+    }
+  }
+
   String _formatDate(String? raw) {
     if (raw == null) return '—';
     try {
       final dt = DateTime.parse(raw).toLocal();
-      final months = [
+      const months = [
         'Jan',
         'Feb',
         'Mar',
@@ -120,12 +121,11 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
     }
   }
 
-  // ── bottom sheet ───────────────────────────────────────────────────────────
+  // ── Update Status Bottom Sheet ─────────────────────────────────────────────
 
   void _showUpdateStatusBottomSheet() {
     final validNextStatuses = _getValidNextStatuses(currentRawStatus.value);
 
-    // Nothing to transition to
     if (validNextStatuses.isEmpty) {
       Get.snackbar(
         'No transitions available',
@@ -136,8 +136,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
       return;
     }
 
-    // Auto-select the only valid next status
-    final tempSelected = validNextStatuses.first['value']!.obs;
+    final tempSelected = ''.obs;
 
     Get.bottomSheet(
       Container(
@@ -158,15 +157,16 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ── Header ──────────────────────────────────────────────────────
+            // Header
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  AppStrings.updateOrderStatusDash.tr,
+                  '- Update Order Status',
                   style: AppTextStyles.h3.copyWith(
-                    fontSize: Dimensions.fs(16),
+                    fontSize: Dimensions.fs(15),
                     fontWeight: FontWeight.w800,
+                    fontStyle: FontStyle.italic,
                   ),
                 ),
                 GestureDetector(
@@ -185,175 +185,123 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
             ),
             Dimensions.gapH(6),
             Text(
-              AppStrings.updateOrderStatusSubtitleDash.tr,
+              'Update the current order status to keep the customer informed about the delivery progress.',
               style: TextStyle(
                 fontSize: Dimensions.fs(11),
-                color: Colors.grey[600],
+                color: Colors.grey[500],
                 height: 1.5,
               ),
             ),
             Dimensions.gapH(16),
 
-            // ── Label ───────────────────────────────────────────────────────
+            // Label
             Text(
-              AppStrings.orderStatusSelect.tr,
+              'Order Status (Select)',
               style: TextStyle(
                 fontSize: Dimensions.fs(12),
-                fontWeight: FontWeight.w700,
-                color: Colors.grey[800],
+                fontWeight: FontWeight.w600,
+                color: Colors.grey[700],
               ),
             ),
-            Dimensions.gapH(10),
+            Dimensions.gapH(8),
 
-            // ── Current status info ─────────────────────────────────────────
-            Container(
-              padding: EdgeInsets.symmetric(
-                  horizontal: Dimensions.w(12), vertical: Dimensions.h(8)),
-              decoration: BoxDecoration(
-                color: Colors.grey[50],
-                borderRadius: BorderRadius.circular(Dimensions.r(8)),
-                border: Border.all(color: Colors.grey.withOpacity(0.15)),
-              ),
-              child: Row(
-                children: [
-                  Icon(Icons.info_outline, size: 14, color: Colors.grey[500]),
-                  Dimensions.gapW(8),
-                  Text(
-                    'Current: ',
-                    style: TextStyle(
-                        fontSize: Dimensions.fs(11), color: Colors.grey[500]),
+            // Dropdown field
+            Obx(() {
+              final selected = allStatuses.firstWhereOrNull(
+                (s) => s['value'] == tempSelected.value,
+              );
+              return GestureDetector(
+                onTap: () => _showServiceTypePicker(tempSelected),
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: Dimensions.w(14),
+                    vertical: Dimensions.h(13),
                   ),
-                  Text(
-                    orderStatus.value,
-                    style: TextStyle(
-                      fontSize: Dimensions.fs(11),
-                      fontWeight: FontWeight.w700,
-                      color: Colors.black,
-                    ),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(Dimensions.r(8)),
+                    border: Border.all(color: Colors.grey.withOpacity(0.25)),
                   ),
-                  const Spacer(),
-                  Icon(Icons.arrow_forward, size: 14, color: Colors.grey[400]),
-                  Dimensions.gapW(8),
-                  Text(
-                    validNextStatuses.first['label']!,
-                    style: TextStyle(
-                      fontSize: Dimensions.fs(11),
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.primaryColor,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Dimensions.gapH(16),
-
-            // ── Radio list (only valid next statuses) ──────────────────────────
-            Obx(() => Column(
-                  children: validNextStatuses.map((statusMap) {
-                    final isSelected = tempSelected.value == statusMap['value'];
-                    return GestureDetector(
-                      onTap: () => tempSelected.value = statusMap['value']!,
-                      child: Padding(
-                        padding:
-                            EdgeInsets.symmetric(vertical: Dimensions.h(6)),
-                        child: Row(
-                          children: [
-                            // Radio circle
-                            Container(
-                              width: Dimensions.w(20),
-                              height: Dimensions.w(20),
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                  color: isSelected
-                                      ? AppColors.primaryColor
-                                      : Colors.grey.shade400,
-                                  width: 2,
-                                ),
-                              ),
-                              child: isSelected
-                                  ? Center(
-                                      child: Container(
-                                        width: Dimensions.w(10),
-                                        height: Dimensions.w(10),
-                                        decoration: const BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: AppColors.primaryColor,
-                                        ),
-                                      ),
-                                    )
-                                  : null,
-                            ),
-                            Dimensions.gapW(12),
-                            Text(
-                              statusMap['label']!.tr,
-                              style: TextStyle(
-                                fontSize: Dimensions.fs(13),
-                                fontWeight: isSelected
-                                    ? FontWeight.w700
-                                    : FontWeight.w500,
-                                color: isSelected
-                                    ? Colors.black
-                                    : Colors.grey[700],
-                              ),
-                            ),
-                          ],
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        selected != null
+                            ? selected['label']!
+                            : 'Select Order Status',
+                        style: TextStyle(
+                          fontSize: Dimensions.fs(13),
+                          color: selected != null
+                              ? Colors.grey[800]
+                              : Colors.grey[400],
                         ),
                       ),
-                    );
-                  }).toList(),
-                )),
+                      Icon(Icons.keyboard_arrow_down,
+                          color: Colors.grey[400], size: 20),
+                    ],
+                  ),
+                ),
+              );
+            }),
 
             Dimensions.gapH(20),
 
-            // ── Update button ────────────────────────────────────────────────
+            // Update button
             Obx(() => GestureDetector(
-                  onTap: _controller.isUpdatingStatus.value
+                  onTap: tempSelected.value.isEmpty ||
+                          _controller.isUpdatingStatus.value
                       ? null
                       : () {
                           final chosen = tempSelected.value;
-                          final chosenLabel = validNextStatuses.firstWhere(
+                          final chosenLabel = allStatuses.firstWhere(
                               (s) => s['value'] == chosen)['label']!;
-                          Get.back(); // close bottom sheet
+                          Get.back();
                           _showConfirmUpdateDialog(chosen, chosenLabel);
                         },
-                  child: Container(
-                    width: double.infinity,
-                    height: Dimensions.h(50),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF1B1B1B),
-                      borderRadius: BorderRadius.circular(Dimensions.r(12)),
-                    ),
-                    alignment: Alignment.center,
-                    child: _controller.isUpdatingStatus.value
-                        ? const SizedBox(
-                            width: 22,
-                            height: 22,
-                            child: CircularProgressIndicator(
-                                color: AppColors.primaryColor, strokeWidth: 2),
-                          )
-                        : Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                AppStrings.updateBtn.tr,
-                                style: TextStyle(
-                                  color: AppColors.primaryColor,
-                                  fontSize: Dimensions.fs(14),
-                                  fontWeight: FontWeight.w700,
+                  child: Opacity(
+                    opacity: tempSelected.value.isEmpty ? 0.5 : 1.0,
+                    child: Container(
+                      width: double.infinity,
+                      height: Dimensions.h(50),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF1B1B1B),
+                        borderRadius: BorderRadius.circular(Dimensions.r(12)),
+                      ),
+                      alignment: Alignment.center,
+                      child: _controller.isUpdatingStatus.value
+                          ? const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                color: Color(0xFFFACC15),
+                                strokeWidth: 2,
+                              ),
+                            )
+                          : Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Update',
+                                  style: TextStyle(
+                                    color: const Color(0xFFFACC15),
+                                    fontSize: Dimensions.fs(14),
+                                    fontWeight: FontWeight.w700,
+                                    fontStyle: FontStyle.italic,
+                                  ),
                                 ),
-                              ),
-                              Dimensions.gapW(6),
-                              Icon(
-                                Icons.double_arrow_rounded,
-                                color: AppColors.primaryColor,
-                                size: Dimensions.icon(16),
-                              ),
-                            ],
-                          ),
+                                Dimensions.gapW(6),
+                                const Icon(
+                                  Icons.double_arrow_rounded,
+                                  color: Color(0xFFFACC15),
+                                  size: 16,
+                                ),
+                              ],
+                            ),
+                    ),
                   ),
                 )),
-            Dimensions.gapH(15),
+
+            Dimensions.gapH(10),
           ],
         ),
       ),
@@ -362,228 +310,480 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
     );
   }
 
-  // ── confirm dialog ─────────────────────────────────────────────────────────
+  // ── Service Type Picker (nested sheet) ─────────────────────────────────────
 
-  void _showConfirmUpdateDialog(String newStatusValue, String newStatusLabel) {
-    AppAlerts.warning(
-      title: AppStrings.updateOrderStatusTitle.tr,
-      message: AppStrings.updateOrderStatusConfirmMsg.tr,
-      confirmLabel: AppStrings.confirm.tr,
-      cancelLabel: AppStrings.cancel.tr,
-      onConfirm: () async {
-        Get.back(); // close alert
-        final orderId = order.id?.toString() ?? '';
-        final success = await _controller.updateOrderStatus(
-          orderId: orderId,
-          newStatus: newStatusValue,
-        );
-        if (success) {
-          // Update both the display label and raw status for next transition
-          orderStatus.value = newStatusLabel;
-          currentRawStatus.value = newStatusValue;
-          AppAlerts.success(message: AppStrings.orderStatusUpdatedSuccess.tr);
-        }
-      },
+  void _showServiceTypePicker(RxString tempSelected) {
+    Get.bottomSheet(
+      Obx(() => Container(
+            padding: EdgeInsets.fromLTRB(
+              Dimensions.w(20),
+              Dimensions.h(20),
+              Dimensions.w(20),
+              Dimensions.h(30),
+            ),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF4F4F4),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(Dimensions.r(20)),
+                topRight: Radius.circular(Dimensions.r(20)),
+              ),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Service Type',
+                  style: TextStyle(
+                    fontSize: Dimensions.fs(13),
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey[500],
+                  ),
+                ),
+                Dimensions.gapH(14),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(Dimensions.r(14)),
+                  ),
+                  child: Column(
+                    children: allStatuses.asMap().entries.map((entry) {
+                      final idx = entry.key;
+                      final statusMap = entry.value;
+                      final isSelected =
+                          tempSelected.value == statusMap['value'];
+                      final isLast = idx == allStatuses.length - 1;
+
+                      return GestureDetector(
+                        onTap: () {
+                          tempSelected.value = statusMap['value']!;
+                          Get.back();
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: Dimensions.w(16),
+                            vertical: Dimensions.h(14),
+                          ),
+                          decoration: BoxDecoration(
+                            border: isLast
+                                ? null
+                                : Border(
+                                    bottom: BorderSide(
+                                      color: Colors.grey.withOpacity(0.12),
+                                    ),
+                                  ),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                statusMap['label']!,
+                                style: TextStyle(
+                                  fontSize: Dimensions.fs(13),
+                                  fontWeight: isSelected
+                                      ? FontWeight.w600
+                                      : FontWeight.w400,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              // Custom radio dot
+                              Container(
+                                width: Dimensions.w(20),
+                                height: Dimensions.w(20),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: isSelected
+                                        ? Colors.black
+                                        : Colors.grey[350]!,
+                                    width: 1.5,
+                                  ),
+                                ),
+                                child: isSelected
+                                    ? Center(
+                                        child: Container(
+                                          width: Dimensions.w(10),
+                                          height: Dimensions.w(10),
+                                          decoration: const BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      )
+                                    : null,
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ],
+            ),
+          )),
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
     );
   }
 
-  // ── build ──────────────────────────────────────────────────────────────────
+  // ── Confirm Update Dialog ──────────────────────────────────────────────────
+
+  void _showConfirmUpdateDialog(String newStatusValue, String newStatusLabel) {
+    Get.dialog(
+      Dialog(
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(Dimensions.r(20)),
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(Dimensions.w(22)),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: Dimensions.w(60),
+                height: Dimensions.w(60),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFFE4E6),
+                  borderRadius: BorderRadius.circular(Dimensions.r(14)),
+                ),
+                child: const Icon(
+                  Icons.error_outline_rounded,
+                  color: Color(0xFFE63946),
+                  size: 32,
+                ),
+              ),
+              Dimensions.gapH(16),
+              Text(
+                'Update Order Status !',
+                style: TextStyle(
+                  fontSize: Dimensions.fs(14),
+                  fontWeight: FontWeight.w800,
+                  color: Colors.black,
+                ),
+              ),
+              Dimensions.gapH(8),
+              Text(
+                'Are you sure you want to update this order status? The customer will be notified immediately.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: Dimensions.fs(11),
+                  color: Colors.grey[500],
+                  height: 1.55,
+                ),
+              ),
+              Dimensions.gapH(22),
+              Row(
+                children: [
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () => Get.back(),
+                      child: Container(
+                        height: Dimensions.h(46),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(Dimensions.r(10)),
+                          border:
+                              Border.all(color: Colors.grey.withOpacity(0.3)),
+                        ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          'Cancel',
+                          style: TextStyle(
+                            color: Colors.grey[700],
+                            fontSize: Dimensions.fs(13),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Dimensions.gapW(12),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () async {
+                        Get.back();
+                        final orderId = order.id?.toString() ?? '';
+                        final success = await _controller.updateOrderStatus(
+                          orderId: orderId,
+                          newStatus: newStatusValue,
+                        );
+                        if (success) {
+                          orderStatus.value = newStatusLabel;
+                          currentRawStatus.value = newStatusValue;
+                          AppAlerts.success(
+                              message: AppStrings.orderStatusUpdatedSuccess.tr);
+                        }
+                      },
+                      child: Container(
+                        height: Dimensions.h(46),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF1B1B1B),
+                          borderRadius: BorderRadius.circular(Dimensions.r(10)),
+                        ),
+                        alignment: Alignment.center,
+                        child: Text(
+                          'Confirm',
+                          style: TextStyle(
+                            color: const Color(0xFFFACC15),
+                            fontSize: Dimensions.fs(13),
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // ── Build ──────────────────────────────────────────────────────────────────
 
   @override
   Widget build(BuildContext context) {
     final buyer = order.buyer;
     final matchedItems = order.matchedProductItems ?? [];
-    final timeline = order.timeline;
     final canUpdate = order.actions?.canUpdateStatus ?? false;
 
     return Scaffold(
       backgroundColor: const Color(0xFFF4F4F4),
       appBar: CommonAppBar(
-        title: AppStrings.ordersDetailsTitle.tr,
+        title: "Order's Details",
         backgroundColor: const Color(0xFFF4F4F4),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.symmetric(
+          horizontal: Dimensions.w(20),
+          vertical: Dimensions.h(12),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // ── Order Card ─────────────────────────────────────────────────
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.all(Dimensions.w(15)),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(Dimensions.r(15)),
+                border: Border.all(color: Colors.grey.withOpacity(0.1)),
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Dimensions.gapH(10),
-
-                  // ── Main Order Details Card ──────────────────────────────
-                  Container(
-                    width: double.infinity,
-                    padding: EdgeInsets.all(Dimensions.w(15)),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(Dimensions.r(15)),
-                      border: Border.all(color: Colors.grey.withOpacity(0.1)),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Order ID & Status
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    '${AppStrings.orderIdLabelWithDash.tr}${order.displayId ?? '—'}',
-                                    style: TextStyle(
-                                      fontSize: Dimensions.fs(13),
-                                      fontWeight: FontWeight.w800,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                  Dimensions.gapH(4),
-                                  Text(
-                                    _formatDate(order.createdAt),
-                                    style: TextStyle(
-                                      fontSize: Dimensions.fs(10),
-                                      color: Colors.grey[500],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Obx(() {
-                              final statusTone =
-                                  _statusToneFromLabel(orderStatus.value);
-                              final badgeColor = _statusColor(statusTone);
-                              return Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: Dimensions.w(8),
-                                  vertical: Dimensions.h(4),
-                                ),
-                                decoration: BoxDecoration(
-                                  color: badgeColor.withOpacity(0.1),
-                                  borderRadius:
-                                      BorderRadius.circular(Dimensions.r(20)),
-                                ),
-                                child: Text(
-                                  '• ${orderStatus.value}',
-                                  style: TextStyle(
-                                    color: badgeColor,
-                                    fontSize: Dimensions.fs(9),
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                              );
-                            }),
-                          ],
-                        ),
-
-                        if (matchedItems.isNotEmpty) ...[
-                          Dimensions.gapH(15),
-                          const Divider(height: 1, color: Color(0xFFF5F5F5)),
-                          Dimensions.gapH(12),
-                          // Matched product items from API
-                          ...matchedItems
-                              .map((item) => _buildMatchedItem(item)),
-                        ],
-
-                        // Total row
-                        Dimensions.gapH(12),
-                        const Divider(height: 1, color: Color(0xFFF5F5F5)),
-                        Dimensions.gapH(10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  // Order ID & Status badge row
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Order Total',
+                              '- Order ID: ${order.displayId ?? '—'}',
                               style: TextStyle(
-                                fontSize: Dimensions.fs(12),
-                                fontWeight: FontWeight.w700,
-                                color: Colors.grey[700],
-                              ),
-                            ),
-                            Text(
-                              '\$${order.total ?? 0}',
-                              style: TextStyle(
-                                fontSize: Dimensions.fs(15),
-                                fontWeight: FontWeight.w900,
+                                fontSize: Dimensions.fs(13),
+                                fontWeight: FontWeight.w800,
+                                fontStyle: FontStyle.italic,
                                 color: Colors.black,
                               ),
                             ),
+                            Dimensions.gapH(4),
+                            Text(
+                              _formatDate(order.createdAt),
+                              style: TextStyle(
+                                fontSize: Dimensions.fs(10),
+                                color: Colors.grey[500],
+                              ),
+                            ),
                           ],
                         ),
-                      ],
-                    ),
-                  ),
-
-                  Dimensions.gapH(20),
-
-                  // ── Order Timeline ──────────────────────────────────────
-                  if (timeline != null) ...[
-                    Text(
-                      'Order Timeline',
-                      style: TextStyle(
-                        fontSize: Dimensions.fs(13),
-                        fontWeight: FontWeight.w800,
-                        color: Colors.black,
                       ),
-                    ),
-                    Dimensions.gapH(10),
-                    _buildTimeline(timeline),
-                    Dimensions.gapH(20),
-                  ],
-
-                  // ── Ordered By ──────────────────────────────────────────
-                  Text(
-                    AppStrings.orderedBy.tr,
-                    style: TextStyle(
-                      fontSize: Dimensions.fs(13),
-                      fontWeight: FontWeight.w800,
-                      color: Colors.black,
-                    ),
-                  ),
-                  Dimensions.gapH(10),
-                  _buildBuyerCard(buyer),
-
-                  Dimensions.gapH(30),
-
-                  // ── Update Order Status button ───────────────────────────
-                  if (canUpdate)
-                    Obx(() => GestureDetector(
-                          onTap: _controller.isUpdatingStatus.value
-                              ? null
-                              : _showUpdateStatusBottomSheet,
-                          child: Container(
-                            width: double.infinity,
-                            height: Dimensions.h(50),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF1B1B1B),
-                              borderRadius:
-                                  BorderRadius.circular(Dimensions.r(12)),
-                            ),
-                            alignment: Alignment.center,
-                            child: _controller.isUpdatingStatus.value
-                                ? const SizedBox(
-                                    width: 22,
-                                    height: 22,
-                                    child: CircularProgressIndicator(
-                                        color: AppColors.primaryColor,
-                                        strokeWidth: 2),
-                                  )
-                                : Text(
-                                    AppStrings.updateOrderStatusBtn.tr,
-                                    style: TextStyle(
-                                      color: AppColors.primaryColor,
-                                      fontSize: Dimensions.fs(14),
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
+                      Obx(() {
+                        final statusTone =
+                            _statusToneFromLabel(orderStatus.value);
+                        final badgeColor = _statusColor(statusTone);
+                        return Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: Dimensions.w(8),
+                            vertical: Dimensions.h(4),
                           ),
-                        )),
+                          decoration: BoxDecoration(
+                            color: badgeColor.withOpacity(0.12),
+                            borderRadius:
+                                BorderRadius.circular(Dimensions.r(20)),
+                          ),
+                          child: Text(
+                            '• ${orderStatus.value}',
+                            style: TextStyle(
+                              color: badgeColor,
+                              fontSize: Dimensions.fs(9),
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        );
+                      }),
+                    ],
+                  ),
 
-                  Dimensions.gapH(40),
+                  // Matched product items
+                  if (matchedItems.isNotEmpty) ...[
+                    Dimensions.gapH(14),
+                    const Divider(height: 1, color: Color(0xFFF5F5F5)),
+                    Dimensions.gapH(12),
+                    ...matchedItems.map((item) => _buildMatchedItem(item)),
+                  ],
                 ],
               ),
+            ),
+
+            Dimensions.gapH(20),
+
+            // ── Ordered By ─────────────────────────────────────────────────
+            Text(
+              '- Ordered By',
+              style: TextStyle(
+                fontSize: Dimensions.fs(13),
+                fontWeight: FontWeight.w800,
+                fontStyle: FontStyle.italic,
+                color: Colors.black,
+              ),
+            ),
+            Dimensions.gapH(10),
+            _buildBuyerCard(buyer),
+
+            Dimensions.gapH(20),
+
+            // ── Delivery Address ────────────────────────────────────────────
+            Text(
+              '- Delivery Address',
+              style: TextStyle(
+                fontSize: Dimensions.fs(13),
+                fontWeight: FontWeight.w800,
+                fontStyle: FontStyle.italic,
+                color: Colors.black,
+              ),
+            ),
+            Dimensions.gapH(10),
+            _buildDeliveryAddressCard(),
+
+            Dimensions.gapH(28),
+
+            // ── Update Order Status button ──────────────────────────────────
+            if (canUpdate)
+              Obx(() => GestureDetector(
+                    onTap: _controller.isUpdatingStatus.value
+                        ? null
+                        : _showUpdateStatusBottomSheet,
+                    child: Container(
+                      width: double.infinity,
+                      height: Dimensions.h(52),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF1B1B1B),
+                        borderRadius: BorderRadius.circular(Dimensions.r(12)),
+                      ),
+                      alignment: Alignment.center,
+                      child: _controller.isUpdatingStatus.value
+                          ? const SizedBox(
+                              width: 22,
+                              height: 22,
+                              child: CircularProgressIndicator(
+                                color: Color(0xFFFACC15),
+                                strokeWidth: 2,
+                              ),
+                            )
+                          : Text(
+                              'Update Order Status',
+                              style: TextStyle(
+                                color: const Color(0xFFFACC15),
+                                fontSize: Dimensions.fs(14),
+                                fontWeight: FontWeight.w700,
+                                fontStyle: FontStyle.italic,
+                              ),
+                            ),
+                    ),
+                  )),
+
+            Dimensions.gapH(40),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ── Matched Item ───────────────────────────────────────────────────────────
+
+  Widget _buildMatchedItem(MatchedProductItems item) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: Dimensions.h(12)),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Image with yellow border
+          Container(
+            width: Dimensions.w(64),
+            height: Dimensions.w(64),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(Dimensions.r(10)),
+              border: Border.all(color: const Color(0xFFFACC15), width: 1.5),
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(Dimensions.r(9)),
+              child: item.imageUrl != null
+                  ? Image.network(
+                      item.imageUrl!,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) => Icon(
+                        Icons.image_not_supported,
+                        color: Colors.grey[400],
+                        size: 24,
+                      ),
+                    )
+                  : Icon(Icons.image_not_supported,
+                      color: Colors.grey[400], size: 24),
+            ),
+          ),
+          Dimensions.gapW(12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  item.name ?? '—',
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: Dimensions.fs(13),
+                    fontWeight: FontWeight.w700,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+                Dimensions.gapH(3),
+                Text(
+                  'Quantity :- ${(item.quantity ?? 1).toString().padLeft(2, '0')}  •  Size / Variant :- ${item.variant?.variantName ?? '—'}',
+                  style: TextStyle(
+                    fontSize: Dimensions.fs(10),
+                    color: Colors.grey[500],
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+                Dimensions.gapH(5),
+                Text(
+                  '\$${item.price ?? 0}.00',
+                  style: TextStyle(
+                    fontSize: Dimensions.fs(13),
+                    fontWeight: FontWeight.w800,
+                    color: Colors.black,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -591,194 +791,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
     );
   }
 
-  // ── Helper: matched product item row ──────────────────────────────────────
-
-  Widget _buildMatchedItem(MatchedProductItems item) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: Dimensions.h(10)),
-      child: Container(
-        padding: EdgeInsets.all(Dimensions.w(10)),
-        decoration: BoxDecoration(
-          color: const Color(0xFFFBFBFB),
-          borderRadius: BorderRadius.circular(Dimensions.r(12)),
-          border: Border.all(color: Colors.grey.withOpacity(0.05)),
-        ),
-        child: Row(
-          children: [
-            // Product image
-            Container(
-              width: Dimensions.w(60),
-              height: Dimensions.w(60),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(Dimensions.r(10)),
-                border: Border.all(color: Colors.grey.withOpacity(0.1)),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(Dimensions.r(10)),
-                child: item.imageUrl != null
-                    ? Image.network(
-                        item.imageUrl!,
-                        fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) => Icon(
-                          Icons.image_not_supported,
-                          color: Colors.grey[400],
-                          size: 24,
-                        ),
-                      )
-                    : Icon(Icons.image_not_supported,
-                        color: Colors.grey[400], size: 24),
-              ),
-            ),
-            Dimensions.gapW(12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    item.name ?? '—',
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: Dimensions.fs(12),
-                      fontWeight: FontWeight.w700,
-                      fontStyle: FontStyle.italic,
-                    ),
-                  ),
-                  Dimensions.gapH(4),
-                  Text(
-                    '${AppStrings.quantityPrefix.tr}${item.quantity ?? 1}  •  Size: ${item.variant?.variantName ?? '—'}',
-                    style: TextStyle(
-                      fontSize: Dimensions.fs(10),
-                      color: Colors.grey[500],
-                      fontStyle: FontStyle.italic,
-                    ),
-                  ),
-                  Dimensions.gapH(6),
-                  Row(
-                    children: [
-                      Text(
-                        '\$${item.price ?? 0}',
-                        style: TextStyle(
-                          fontSize: Dimensions.fs(13),
-                          fontWeight: FontWeight.w800,
-                          color: Colors.black,
-                        ),
-                      ),
-                      if (item.quantity != null && item.quantity! > 1) ...[
-                        Dimensions.gapW(6),
-                        Text(
-                          '× ${item.quantity}  =  \$${item.lineTotal ?? 0}',
-                          style: TextStyle(
-                            fontSize: Dimensions.fs(10),
-                            color: Colors.grey[500],
-                          ),
-                        ),
-                      ],
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // ── Helper: timeline card ─────────────────────────────────────────────────
-
-  Widget _buildTimeline(Timeline timeline) {
-    final steps = [
-      {'label': 'Order Placed', 'time': order.createdAt},
-      {'label': 'Confirmed', 'time': timeline.confirmedAt?.toString()},
-      {'label': 'Processing', 'time': timeline.processingAt?.toString()},
-      {'label': 'Shipped', 'time': timeline.shippedAt?.toString()},
-      {'label': 'Delivered', 'time': timeline.deliveredAt?.toString()},
-      if (timeline.cancelledAt != null)
-        {'label': 'Cancelled', 'time': timeline.cancelledAt?.toString()},
-    ];
-
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.all(Dimensions.w(15)),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(Dimensions.r(15)),
-        border: Border.all(color: Colors.grey.withOpacity(0.1)),
-      ),
-      child: Column(
-        children: List.generate(steps.length, (i) {
-          final step = steps[i];
-          final isDone = step['time'] != null;
-          final isLast = i == steps.length - 1;
-          return Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Column(
-                children: [
-                  Container(
-                    width: Dimensions.w(14),
-                    height: Dimensions.w(14),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: isDone ? AppColors.primaryColor : Colors.grey[300],
-                      border: isDone
-                          ? null
-                          : Border.all(color: Colors.grey[400]!, width: 1.5),
-                    ),
-                    child: isDone
-                        ? Icon(Icons.check,
-                            size: Dimensions.icon(9), color: Colors.black)
-                        : null,
-                  ),
-                  if (!isLast)
-                    Container(
-                      width: 1.5,
-                      height: Dimensions.h(28),
-                      color: isDone
-                          ? AppColors.primaryColor.withOpacity(0.4)
-                          : Colors.grey[300],
-                    ),
-                ],
-              ),
-              Dimensions.gapW(12),
-              Expanded(
-                child: Padding(
-                  padding:
-                      EdgeInsets.only(bottom: isLast ? 0 : Dimensions.h(14)),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        step['label']!,
-                        style: TextStyle(
-                          fontSize: Dimensions.fs(12),
-                          fontWeight:
-                              isDone ? FontWeight.w700 : FontWeight.w500,
-                          color: isDone ? Colors.black : Colors.grey[500],
-                        ),
-                      ),
-                      if (isDone)
-                        Text(
-                          _formatDate(step['time']),
-                          style: TextStyle(
-                            fontSize: Dimensions.fs(10),
-                            color: Colors.grey[500],
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          );
-        }),
-      ),
-    );
-  }
-
-  // ── Helper: buyer card ────────────────────────────────────────────────────
+  // ── Buyer Card ─────────────────────────────────────────────────────────────
 
   Widget _buildBuyerCard(Buyer? buyer) {
     return Container(
@@ -795,10 +808,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
           Container(
             width: Dimensions.w(44),
             height: Dimensions.w(44),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.grey[200],
-            ),
+            decoration: const BoxDecoration(shape: BoxShape.circle),
             child: ClipOval(
               child: buyer?.avatarUrl != null
                   ? Image.network(
@@ -819,9 +829,10 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                   style: TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: Dimensions.fs(13),
+                    fontStyle: FontStyle.italic,
                   ),
                 ),
-                Dimensions.gapH(3),
+                Dimensions.gapH(2),
                 Text(
                   buyer?.email ?? '—',
                   style: TextStyle(
@@ -833,23 +844,21 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
             ),
           ),
           GestureDetector(
-            onTap: () {
-              Get.snackbar(
-                AppStrings.chatInfo.tr,
-                AppStrings.messageCustomerFeature.tr,
-                backgroundColor: AppColors.primaryColor,
-                colorText: Colors.black,
-              );
-            },
+            onTap: () => Get.snackbar(
+              'Chat',
+              'Message customer feature coming soon.',
+              backgroundColor: const Color(0xFFFACC15),
+              colorText: Colors.black,
+            ),
             child: Container(
               padding: EdgeInsets.all(Dimensions.w(8)),
               decoration: BoxDecoration(
-                color: AppColors.primaryColor,
+                color: const Color(0xFF1B1B1B),
                 borderRadius: BorderRadius.circular(Dimensions.r(8)),
               ),
               child: const Icon(
-                Icons.message_outlined,
-                color: Colors.black,
+                Icons.chat_bubble_outline_rounded,
+                color: Color(0xFFFACC15),
                 size: 18,
               ),
             ),
@@ -877,18 +886,73 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
     );
   }
 
-  String _statusToneFromLabel(String label) {
-    switch (label.toLowerCase()) {
-      case 'delivered':
-      case 'confirmed':
-        return 'success';
-      case 'cancelled':
-      case 'canceled':
-        return 'danger';
-      case 'shipped':
-        return 'info';
-      default:
-        return 'warning';
-    }
+  // ── Delivery Address Card ──────────────────────────────────────────────────
+
+  Widget _buildDeliveryAddressCard() {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(Dimensions.w(14)),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(Dimensions.r(15)),
+        border: Border.all(color: Colors.grey.withOpacity(0.1)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  order.buyer?.name ?? 'Roberts Junior',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: Dimensions.fs(13),
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: Dimensions.w(8),
+                  vertical: Dimensions.h(4),
+                ),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFEF3C7),
+                  borderRadius: BorderRadius.circular(Dimensions.r(20)),
+                ),
+                child: Text(
+                  '• Home',
+                  style: TextStyle(
+                    color: const Color(0xFFFACC15),
+                    fontSize: Dimensions.fs(9),
+                    fontWeight: FontWeight.w700,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Dimensions.gapH(8),
+          Text(
+            '+359 77 123 4567',
+            style: TextStyle(
+              color: Colors.grey[600],
+              fontSize: Dimensions.fs(12),
+              fontStyle: FontStyle.italic,
+            ),
+          ),
+          Dimensions.gapH(4),
+          Text(
+            '25 "Ivan Vazov" Street, Plovdiv 4000, Bulgaria',
+            style: TextStyle(
+              color: Colors.grey[600],
+              fontSize: Dimensions.fs(12),
+              fontStyle: FontStyle.italic,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

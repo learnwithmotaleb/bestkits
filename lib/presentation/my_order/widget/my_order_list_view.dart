@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../core/responsive_layout/dimensions.dart';
 import '../../../../../utils/app_colors/app_colors.dart';
-import '../controller/order_controller.dart';
+import '../controller/my_order_controller.dart';
 
-class OrderListView extends StatelessWidget {
-  final OrderController controller;
+class MyOrderListView extends StatelessWidget {
+  final MyOrderController controller;
 
-  const OrderListView({super.key, required this.controller});
+  const MyOrderListView({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {

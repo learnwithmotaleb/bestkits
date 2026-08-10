@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import '../../../../../service/api_service.dart';
 import '../../../../../service/api_url.dart';
 import '../model/SellerMyModel.dart';
-import '../page/update_product/screen/add_product.dart';
+import '../page/add_product/screen/add_product.dart';
 
 /// Status strings expected from backend
 class ProductStatus {

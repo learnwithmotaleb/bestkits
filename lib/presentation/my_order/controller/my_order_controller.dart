@@ -9,7 +9,7 @@ import '../model/MyOrderModel.dart';
 import '../../../../../widget/show_snackbar.dart';
 import '../model/MyOrderDetailsModel.dart';
 
-class OrderController extends GetxController {
+class MyOrderController extends GetxController {
   final List<String> tabs = [
     AppStrings.activeOrder,
     AppStrings.complete,

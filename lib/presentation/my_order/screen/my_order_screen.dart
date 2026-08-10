@@ -5,16 +5,16 @@ import 'package:get/get.dart';
 import '../../../../../core/responsive_layout/dimensions.dart';
 import '../../../../../utils/app_colors/app_colors.dart';
 import '../../../../../utils/app_text_style/app_text_style.dart';
-import '../controller/order_controller.dart';
-import '../widget/order_list_view.dart';
-import '../widget/order_details_view.dart';
+import '../controller/my_order_controller.dart';
+import '../widget/my_order_list_view.dart';
+import '../widget/my_order_details_view.dart';
 
-class OrderScreen extends StatelessWidget {
-  const OrderScreen({super.key});
+class MyOrderScreen extends StatelessWidget {
+  const MyOrderScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(OrderController());
+    final controller = Get.put(MyOrderController());
 
     return Scaffold(
       backgroundColor:AppColors.backgroundColor,
@@ -79,14 +79,15 @@ class OrderScreen extends StatelessWidget {
             Expanded(
               child: Obx(() {
                 if (controller.selectedOrder.value != null) {
-                  return OrderDetailsView(
+                  return MyOrderDetailsView(
                     order: controller.selectedOrder.value!,
                     controller: controller,
                   );
                 }
-                return OrderListView(controller: controller);
+                return MyOrderListView(controller: controller);
               }),
             ),
+
           ],
         ),
 

@@ -130,7 +130,20 @@ class ProductActionSection extends StatelessWidget {
         Expanded(
           child: AppButton(
             label: 'Update Product',
-            onPressed: () {},
+            onPressed: () {
+              Get.toNamed(RoutePath.updateProductSell, arguments: {
+                'id': product.id,
+                'name': product.name,
+                'description': product.description,
+                'original_price': product.originalPrice,
+                'discounted_price': product.discountedPrice,
+                'condition': product.condition,
+                'status': product.status,
+                'image_url': product.primaryImageUrl,
+                'image_urls': product.imageUrls,
+                'category': {'name': product.categoryName},
+              });
+            },
             backgroundColor: const Color(0xFF1A1A1A),
             textColor: AppColors.primaryColor,
             leadingIcon:
@@ -144,10 +157,7 @@ class ProductActionSection extends StatelessWidget {
           child: AppButton(
             label: "View Order's",
             onPressed: () {
-
-              RoutePath.productOrder;
-              print("Click Order");
-
+              Get.toNamed(RoutePath.productOrder, arguments: {'productId': product.id});
             },
             backgroundColor: AppColors.primaryColor,
             textColor: Colors.black,
@@ -161,6 +171,7 @@ class ProductActionSection extends StatelessWidget {
       ],
     );
   }
+
 
   // ── ACTION REQUIRED: Both disabled ───────────────────────────────────────────
   Widget _buildActionRequiredButtons() {
@@ -188,7 +199,9 @@ class ProductActionSection extends StatelessWidget {
   Widget _buildSoldButtons() {
     return AppButton(
       label: "View Order's",
-      onPressed: () {},
+      onPressed: () {
+        Get.toNamed(RoutePath.productOrder, arguments: {'productId': product.id});
+      },
       backgroundColor: AppColors.primaryColor,
       textColor: Colors.black,
       leadingIcon:
@@ -206,7 +219,20 @@ class ProductActionSection extends StatelessWidget {
         Expanded(
           child: AppButton(
             label: 'Update Product',
-            onPressed: () {},
+            onPressed: () {
+              Get.toNamed(RoutePath.updateProductSell, arguments: {
+                'id': product.id,
+                'name': product.name,
+                'description': product.description,
+                'original_price': product.originalPrice,
+                'discounted_price': product.discountedPrice,
+                'condition': product.condition,
+                'status': product.status,
+                'image_url': product.primaryImageUrl,
+                'image_urls': product.imageUrls,
+                'category': {'name': product.categoryName},
+              });
+            },
             backgroundColor: const Color(0xFF1A1A1A),
             textColor: AppColors.primaryColor,
             leadingIcon:
@@ -220,6 +246,7 @@ class ProductActionSection extends StatelessWidget {
       ],
     );
   }
+
 }
 
 // ─── Disabled Button ──────────────────────────────────────────────────────────

@@ -12,7 +12,6 @@ import '../../../../../../../widget/app_button.dart';
 import '../../../../../../../widget/app_text_field.dart';
 import '../../../../../../../widget/custom_appbar.dart';
 import '../controller/update_product_controller.dart';
-import 'update_product_price.dart';
 
 class UpdateProduct extends StatefulWidget {
   const UpdateProduct({super.key});
