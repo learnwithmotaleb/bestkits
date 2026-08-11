@@ -65,8 +65,6 @@ class CheckoutController extends GetxController {
       if (isBuyNow) {
         final Map<String, dynamic> buyNowBody = {
           "productId": buyNowArgs?['productId'] ?? 0,
-          "variantId": buyNowArgs?['variantId'] ?? 0,
-          "quantity": buyNowArgs?['quantity'] ?? 1,
           "addressId": buyNowArgs?['addressId'] ?? 0,
           "shippingAddress": buyNowArgs?['shippingAddress'] ?? "",
           "city": buyNowArgs?['city'] ?? "",

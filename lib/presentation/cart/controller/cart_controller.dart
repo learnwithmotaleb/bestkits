@@ -43,34 +43,6 @@ class CartController extends GetxController {
     }
   }
 
-  Future<void> updateQty(String itemId, int newQuantity) async {
-    if (newQuantity < 1) return;
-
-    isActionLoading.value = true;
-    try {
-      final body = {"quantity": newQuantity};
-      final response = await _apiClient.patch(
-        url: ApiUrl.updateQuantityCart(itemId),
-        body: body,
-        isToken: true,
-      );
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        await fetchCart(); // Refresh cart after successful update
-      } else {
-        final raw = response.body?['message'] ??
-            response.statusText ??
-            "Failed to update quantity";
-        final msg = raw is List ? raw.join(', ') : raw.toString();
-        ShowAppSnackBar.fail(msg);
-      }
-    } catch (e) {
-      ShowAppSnackBar.fail("An error occurred: $e");
-    } finally {
-      isActionLoading.value = false;
-    }
-  }
-
   Future<void> removeItem(String itemId) async {
     isActionLoading.value = true;
     try {

@@ -10,6 +10,7 @@ import '../../../../../../../widget/app_alert.dart';
 import '../../../../../../../widget/app_button.dart';
 import '../../../../../../../widget/app_text_field.dart';
 import '../../../../../../../widget/custom_appbar.dart';
+import '../../../../../../../widget/show_snackbar.dart';
 import '../controller/add_product_controller.dart';
 
 class ProductVerification extends StatefulWidget {
@@ -137,12 +138,15 @@ class _ProductVerificationState extends State<ProductVerification> {
                     SizedBox(width: Dimensions.w(12)),
                     Expanded(
                       child: ElevatedButton(
-                        onPressed: () {
+                        onPressed: () async {
                           Get.back(); // close dialog
-                          // Proceed with actual API submit if needed. For now just show success.
-                          AppAlerts.success(
-                              message: AppStrings.productPublishedSuccess.tr);
-                          Get.until((route) => route.isFirst);
+                          final error = await _ctrl.saveProduct(status: "INACTIVE");
+                          if (error == null) {
+                            ShowAppSnackBar.success(AppStrings.productPublishedSuccess.tr);
+                            Get.until((route) => route.isFirst);
+                          } else {
+                            ShowAppSnackBar.error(error);
+                          }
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.blackColor,

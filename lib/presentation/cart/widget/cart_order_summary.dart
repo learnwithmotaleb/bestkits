@@ -2,7 +2,6 @@ import 'package:bestkits/utils/static_strings/static_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../utils/app_colors/app_colors.dart';
-import '../../../../../utils/app_text_style/app_text_style.dart';
 import '../../../../../widget/app_button.dart';
 import '../../../../../../presentation/checkout/screen/checkout_screen.dart';
 import '../controller/cart_controller.dart';
@@ -67,20 +66,11 @@ class CartOrderSummary extends StatelessWidget {
                                     fontSize: 13, fontWeight: FontWeight.w500),
                               ),
                             ),
-                            const SizedBox(width: 4),
-                            Text(
-                              'x${item.quantity ?? 1}',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: AppColors.primaryColor,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
                           ],
                         ),
                       ),
                       Text(
-                        '€${((item.price ?? 0) * (item.quantity ?? 1)).toStringAsFixed(2)}',
+                        '€${(item.price ?? 0).toStringAsFixed(2)}',
                         style: const TextStyle(
                             fontSize: 14, fontWeight: FontWeight.w700),
                       ),

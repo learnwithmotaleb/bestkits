@@ -18,7 +18,7 @@ class AddProductController extends GetxController {
   final RxString description = ''.obs;
   final RxString selectedCategory = ''.obs;
   final RxString selectedSubCategory = ''.obs;
-  
+
   final RxString price = ''.obs;
   final RxString discount = ''.obs;
   final RxString condition = 'New'.obs;
@@ -27,7 +27,14 @@ class AddProductController extends GetxController {
   final RxList<File> verificationImages = <File>[].obs;
   final RxString selectedBrand = ''.obs;
   final RxList<String> brandNames = <String>[
-    'Nike', 'Adidas', 'Puma', 'Gucci', 'Prada', 'Louis Vuitton', 'Rolex', 'Other'
+    'Nike',
+    'Adidas',
+    'Puma',
+    'Gucci',
+    'Prada',
+    'Louis Vuitton',
+    'Rolex',
+    'Other'
   ].obs;
 
   final RxList<Data> categoryData = <Data>[].obs;
@@ -60,9 +67,8 @@ class AddProductController extends GetxController {
   }
 
   void updateSubCategories(String categoryName) {
-    final selectedCat = categoryData.firstWhereOrNull(
-      (c) => c.name?.toLowerCase().trim() == categoryName.toLowerCase().trim()
-    );
+    final selectedCat = categoryData.firstWhereOrNull((c) =>
+        c.name?.toLowerCase().trim() == categoryName.toLowerCase().trim());
     subCategoryNames.clear();
     if (selectedCat != null && selectedCat.subCategories != null) {
       subCategoryNames.assignAll(selectedCat.subCategories!
@@ -122,7 +128,8 @@ class AddProductController extends GetxController {
         );
         if (response.statusCode == 200 || response.statusCode == 201) {
           final data = response.body;
-          final filePath = data is Map ? (data['data']?['filePath'] as String?) : null;
+          final filePath =
+              data is Map ? (data['data']?['filePath'] as String?) : null;
           if (filePath != null && filePath.isNotEmpty) {
             urls.add(ApiUrl.buildImageUrl(filePath));
           }
@@ -135,27 +142,24 @@ class AddProductController extends GetxController {
   }
 
   Future<String?> saveProduct({
-    required double price,
-    required double discountPrice,
-    required String status,
+    String status = "INACTIVE",
   }) async {
     isLoading.value = true;
     try {
-      await Future.delayed(const Duration(seconds: 1));
-      /* API INTEGRATION DISABLED FOR NOW
       final apiClient = ApiClient();
-      
+
       // Upload images first
       final List<String> imageUrls = await _uploadImages();
-      if (imageUrls.isEmpty) {
-        // Fallback placeholder image URL as in the user's example
-        imageUrls.add("https://example.com/images/iphone15pro-front.jpg");
-      }
 
-      // Compute discount percentage
-      double discountPercentage = 0;
-      if (price > 0 && discountPrice > 0 && discountPrice < price) {
-        discountPercentage = ((price - discountPrice) / price) * 100;
+      double p = double.tryParse(price.value) ?? 0.0;
+      double enteredDiscountPercentage = double.tryParse(discount.value) ?? 0.0;
+
+      // Calculate discounted price from the percentage entered
+      double discountedPrice = p;
+      if (p > 0 &&
+          enteredDiscountPercentage > 0 &&
+          enteredDiscountPercentage <= 100) {
+        discountedPrice = p - (p * (enteredDiscountPercentage / 100.0));
       }
 
       // Resolve category & subcategory IDs
@@ -163,40 +167,22 @@ class AddProductController extends GetxController {
       int subCategoryId = 1;
 
       if (selectedCategory.value.isNotEmpty) {
-        final cat = categoryData.firstWhereOrNull(
-          (c) => c.name?.toLowerCase().trim() == selectedCategory.value.toLowerCase().trim()
-        );
+        final cat = categoryData.firstWhereOrNull((c) =>
+            c.name?.toLowerCase().trim() ==
+            selectedCategory.value.toLowerCase().trim());
         if (cat != null && cat.id != null) {
           categoryId = cat.id!.toInt();
-          
-          if (selectedSubCategory.value.isNotEmpty && cat.subCategories != null) {
-            final sub = cat.subCategories!.firstWhereOrNull(
-              (s) => s.name?.toLowerCase().trim() == selectedSubCategory.value.toLowerCase().trim()
-            );
+
+          if (selectedSubCategory.value.isNotEmpty &&
+              cat.subCategories != null) {
+            final sub = cat.subCategories!.firstWhereOrNull((s) =>
+                s.name?.toLowerCase().trim() ==
+                selectedSubCategory.value.toLowerCase().trim());
             if (sub != null && sub.id != null) {
-               subCategoryId = sub.id!.toInt();
+              subCategoryId = sub.id!.toInt();
             }
           }
         }
-      }
-
-      // Map sizes to variants
-      final List<Map<String, dynamic>> variants = [];
-      final List<String> variantNames = [];
-
-      if (selectedSizes.isNotEmpty) {
-        variantNames.add("Size");
-        for (final size in selectedSizes) {
-          variants.add({
-            "variantName": size,
-            "price": price,
-          });
-        }
-      } else {
-        variants.add({
-          "variantName": "Default",
-          "price": price,
-        });
       }
 
       String statusPayload = "ACTIVE";
@@ -207,16 +193,14 @@ class AddProductController extends GetxController {
       final body = {
         "name": name.value,
         "description": description.value,
-        "original_price": price,
-        "discounted_price": discountPrice,
-        "discount_percentage": discountPercentage.round(),
+        "original_price": p,
+        "discounted_price": discountedPrice,
+        "discount_percentage": enteredDiscountPercentage.round(),
         "image_urls": imageUrls,
         "categoryId": categoryId,
         "subCategoryId": subCategoryId,
-        "condition": "NEW",
+        "condition": condition.value.toUpperCase(),
         "status": statusPayload,
-        "variants": variants,
-        "variant_names": variantNames
       };
 
       final response = await apiClient.post(
@@ -226,9 +210,12 @@ class AddProductController extends GetxController {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        if (Get.isRegistered<HomeController>()) Get.find<HomeController>().fetchHomeData();
-        if (Get.isRegistered<SellController>()) Get.find<SellController>().fetchProducts();
-        if (Get.isRegistered<FavouriteController>()) Get.find<FavouriteController>().fetchWishlist();
+        if (Get.isRegistered<HomeController>())
+          Get.find<HomeController>().fetchHomeData();
+        if (Get.isRegistered<SellController>())
+          Get.find<SellController>().fetchProducts();
+        if (Get.isRegistered<FavouriteController>())
+          Get.find<FavouriteController>().fetchWishlist();
         return null; // success
       } else {
         final resBody = response.body;
@@ -237,8 +224,6 @@ class AddProductController extends GetxController {
         }
         return "Failed to publish product. Status code: ${response.statusCode}";
       }
-      */
-      return null;
     } catch (e) {
       print("Error creating product: $e");
       return "Something went wrong: $e";

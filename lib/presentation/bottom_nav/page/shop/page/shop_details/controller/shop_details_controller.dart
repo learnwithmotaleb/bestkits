@@ -1,6 +1,7 @@
 import 'package:bestkits/core/routes/route_path.dart';
 import 'package:bestkits/presentation/cart/controller/cart_controller.dart';
-import 'package:bestkits/presentation/product_details/model/AccountAddressModel.dart';
+import 'package:bestkits/presentation/checkout/screen/checkout_screen.dart';
+import 'package:bestkits/presentation/my_address/controller/my_address_controller.dart';
 import 'package:bestkits/utils/static_strings/static_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -96,8 +97,6 @@ class ShopDetailsController extends GetxController {
     try {
       final body = {
         "productId": productDetails.value!.id,
-        "variantId": variant.id,
-        "quantity": quantity.value
       };
 
       final response = await _apiClient.post(
@@ -128,65 +127,45 @@ class ShopDetailsController extends GetxController {
   Future<void> orderNow() async {
     if (productDetails.value == null) return;
 
-    final variant = productDetails.value!.variants.firstWhere(
-      (v) => v.variantName == selectedVariant.value,
-      orElse: () =>
-          ProductVariant(id: 0, productId: 0, variantName: '', price: 0),
-    );
-
-    if (variant.id == 0 && productDetails.value!.variants.isNotEmpty) {
-      ShowAppSnackBar.fail('Please select a valid variant');
-      return;
-    }
-
     isOrderingNow.value = true;
-    int addressId = 0;
-    String shippingAddress = "";
-    String city = "";
-    String postalCode = "";
-    String country = "";
-
     try {
-      final response = await _apiClient.get(
-        url: ApiUrl.accountAddress,
-        isToken: true,
-      );
-      if (response.statusCode == 200 && response.body['success'] == true) {
-        final addressModel = AccountAddressModel.fromJson(response.body);
-        if (addressModel.data != null && addressModel.data!.isNotEmpty) {
-          final defaultAddress = addressModel.data!.firstWhere(
-            (a) => a.isDefault == true,
-            orElse: () => addressModel.data!.first,
-          );
-          addressId = (defaultAddress.id ?? 0).toInt();
-          shippingAddress = defaultAddress.address ?? "";
-          city = defaultAddress.city ?? "";
-          postalCode = defaultAddress.postalCode ?? "";
-          country = defaultAddress.country ?? "";
+      final addressController = Get.isRegistered<MyAddressController>()
+          ? Get.find<MyAddressController>()
+          : Get.put(MyAddressController());
+
+      await addressController.getAddresses();
+      final addresses = addressController.addresses;
+
+      int addressId = 0;
+      if (addresses.isNotEmpty) {
+        final defaultAddress =
+            addresses.firstWhereOrNull((a) => a.isDefault == true);
+        if (defaultAddress != null) {
+          addressId = defaultAddress.id?.toInt() ?? 0;
+        } else {
+          addressId = addresses.first.id?.toInt() ?? 0;
         }
       }
+
+      if (addressId == 0) {
+        ShowAppSnackBar.fail("Please add a delivery address first.");
+        // We can navigate to address page if needed, but for now just return.
+        return;
+      }
+
+      final args = {
+        'isBuyNow': true,
+        'productId': productDetails.value!.id,
+        'addressId': addressId,
+      };
+
+      ShowAppSnackBar.success("Proceeding to checkout");
+      Get.to(() => const CheckoutScreen(), arguments: args);
     } catch (e) {
-      print("Failed to fetch address: $e");
+      ShowAppSnackBar.fail("An error occurred: $e");
     } finally {
       isOrderingNow.value = false;
     }
-
-    Get.toNamed(RoutePath.checkOut, arguments: {
-      'isBuyNow': true,
-      'productId': productDetails.value!.id,
-      'variantId': variant.id,
-      'quantity': quantity.value,
-      'addressId': addressId,
-      'shippingAddress': shippingAddress,
-      'city': city,
-      'postalCode': postalCode,
-      'country': country,
-    });
-  }
-
-  void incrementQuantity() => quantity.value++;
-  void decrementQuantity() {
-    if (quantity.value > 1) quantity.value--;
   }
 
   void selectImage(int index) => selectedImageIndex.value = index;

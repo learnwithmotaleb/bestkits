@@ -93,8 +93,10 @@ class ApiUrl {
   static String updateProduct(String id) => '$baseUrl/products/$id';
   static String deleteProduct(String id) => '$baseUrl/products/$id';
 
-  static  String productOrder(String productId) => '$baseUrl/orders/seller/products/$productId/orders';//get method
-  static String markStatusChange(String id) => '$baseUrl/products/seller/$id/status'; //Patch Method
+  static String productOrder(String productId) =>
+      '$baseUrl/orders/seller/products/$productId/orders'; //get method
+  static String markStatusChange(String id) =>
+      '$baseUrl/products/seller/$id/status'; //Patch Method
 
   ///===================Stripe===================
   static const String stripeCallBack = '$baseUrl/stripe/callback'; //get method
@@ -182,31 +184,35 @@ class ApiUrl {
   static String notificationReadAll =
       '$baseUrl/notifications/read-all'; //Patch method
 
-//===========================Cart====================
+
+
+
+
+
+
+
+//===========================Cart====================//completed
   static String addToCart = '$baseUrl/cart/items'; //Post method
   static String getCart = '$baseUrl/cart'; //Get method
-  static String updateQuantityCart(String itemId) =>
-      '$baseUrl/cart/items/$itemId'; //Patch method
-  static String deleteCartItem(String itemId) =>
-      '$baseUrl/cart/items/$itemId'; //Delete method
+  static String deleteCartItem(String itemId) => '$baseUrl/cart/items/$itemId'; //Delete method
   static String clearEnterCart = '$baseUrl/cart'; //Delete method
+
+
+
+
+
+
 
 //=======================checkout================
   static String orderCheckout = '$baseUrl/orders/checkout'; //Post method
-  static String orderCheckoutSummary =
-      '$baseUrl/orders/checkout/summary'; //Post method
-  static String applyCouponCode =
-      '$baseUrl/orders/checkout/apply-coupon'; //Post method
+  static String orderCheckoutSummary = '$baseUrl/orders/checkout/summary'; //Post method
+  static String applyCouponCode = '$baseUrl/orders/checkout/apply-coupon'; //Post method
+  static String orderBuyNowSummary = '$baseUrl/orders/checkout/buy-now-summary'; //Post method
 
-  static String orderBuyNowSummary =
-      '$baseUrl/orders/checkout/buy-now-summary'; //Post method
 
   static String accountAddress = '$baseUrl/account/addresses'; //Post method
-
 
   //======================Socket====================
   static String socketUrl({required String userID}) =>
       '$baseUrl?userId=$userID';
-
-
 }

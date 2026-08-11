@@ -48,14 +48,15 @@ class _CartScreenState extends State<CartScreen> {
             padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
             child: Obx(() => Container(
                   decoration: BoxDecoration(
+                      color: Colors.white,
                       border: Border.all(
-                        color: AppColors.greyColor,
+                        color: Colors.grey.withValues(alpha: 0.2),
                         width: 1,
                       ),
                       borderRadius: BorderRadius.circular(10)),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
-                        vertical: 15.0, horizontal: 10),
+                        vertical: 12.0, horizontal: 16),
                     child: Row(
                       children: [
                         Text(
@@ -70,7 +71,7 @@ class _CartScreenState extends State<CartScreen> {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 8, vertical: 2),
                           decoration: BoxDecoration(
-                            color: Colors.transparent,
+                            color: AppColors.primaryColor.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(4),
                             border: Border.all(
                                 color: AppColors.primaryColor, width: 1),
@@ -92,14 +93,14 @@ class _CartScreenState extends State<CartScreen> {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 12, vertical: 6),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFFEE2E2),
+                              color: const Color(0xFFFEE2E2).withValues(alpha: 0.5),
                               borderRadius: BorderRadius.circular(8),
                               border: Border.all(
-                                  color: Colors.red.withOpacity(0.3)),
+                                  color: Colors.red.withValues(alpha: 0.3)),
                             ),
                             child: Row(
                               children: [
-                                const Icon(Icons.shopping_bag_outlined,
+                                const Icon(Icons.delete_outline,
                                     color: Colors.red, size: 14),
                                 const SizedBox(width: 5),
                                 Text(

@@ -196,77 +196,50 @@ class Items {
   Items({
     num? id,
     num? productId,
-    num? variantId,
-    num? quantity,
     num? price,
     Product? product,
-    Variant? variant,
   }) {
     _id = id;
     _productId = productId;
-    _variantId = variantId;
-    _quantity = quantity;
     _price = price;
     _product = product;
-    _variant = variant;
   }
 
   Items.fromJson(dynamic json) {
     _id = json['id'];
     _productId = json['productId'];
-    _variantId = json['variantId'];
-    _quantity = json['quantity'];
     _price = json['price'];
     _product =
         json['product'] != null ? Product.fromJson(json['product']) : null;
-    _variant =
-        json['variant'] != null ? Variant.fromJson(json['variant']) : null;
   }
   num? _id;
   num? _productId;
-  num? _variantId;
-  num? _quantity;
   num? _price;
   Product? _product;
-  Variant? _variant;
   Items copyWith({
     num? id,
     num? productId,
-    num? variantId,
-    num? quantity,
     num? price,
     Product? product,
-    Variant? variant,
   }) =>
       Items(
         id: id ?? _id,
         productId: productId ?? _productId,
-        variantId: variantId ?? _variantId,
-        quantity: quantity ?? _quantity,
         price: price ?? _price,
         product: product ?? _product,
-        variant: variant ?? _variant,
       );
   num? get id => _id;
   num? get productId => _productId;
-  num? get variantId => _variantId;
-  num? get quantity => _quantity;
   num? get price => _price;
   Product? get product => _product;
-  Variant? get variant => _variant;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['id'] = _id;
     map['productId'] = _productId;
-    map['variantId'] = _variantId;
-    map['quantity'] = _quantity;
     map['price'] = _price;
     if (_product != null) {
       map['product'] = _product?.toJson();
-    }
-    if (_variant != null) {
-      map['variant'] = _variant?.toJson();
     }
     return map;
   }

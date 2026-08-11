@@ -177,31 +177,45 @@ class CheckoutOrderItems extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    (delivery.type ?? '').toLowerCase() ==
-                                            'international'
-                                        ? 'International Delivery'
-                                        : 'Domestic Delivery',
-                                    style: const TextStyle(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w800,
-                                      fontStyle: FontStyle.italic,
+                                  Expanded(
+                                    child: Wrap(
+                                      crossAxisAlignment:
+                                          WrapCrossAlignment.end,
+                                      children: [
+                                        Text(
+                                          (delivery.type ?? '').toLowerCase() ==
+                                                  'international'
+                                              ? 'International Delivery'
+                                              : 'Domestic Delivery',
+                                          style: const TextStyle(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w800,
+                                            fontStyle: FontStyle.italic,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 4),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              bottom: 1.0),
+                                          child: Text(
+                                            (delivery.type ?? '')
+                                                        .toLowerCase() ==
+                                                    'international'
+                                                ? '(Outside Country)'
+                                                : '(Inside Country)',
+                                            style: TextStyle(
+                                              fontSize: 9,
+                                              color: Colors.grey[400],
+                                              fontStyle: FontStyle.italic,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    (delivery.type ?? '').toLowerCase() ==
-                                            'international'
-                                        ? '(Outside Country)'
-                                        : '(Inside Country)',
-                                    style: TextStyle(
-                                      fontSize: 9,
-                                      color: Colors.grey[400],
-                                      fontStyle: FontStyle.italic,
-                                    ),
-                                  ),
-                                  const Spacer(),
+                                  const SizedBox(width: 8),
                                   Text(
                                     '€${delivery.cost?.toStringAsFixed(2) ?? '0.00'}',
                                     style: const TextStyle(
