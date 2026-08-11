@@ -7,10 +7,10 @@ import '../../../../../utils/app_colors/app_colors.dart';
 import '../../../../../utils/app_text_style/app_text_style.dart';
 import '../../../../../core/widgets/app_svg.dart';
 import '../../../../../utils/app_icons/app_icons.dart';
+import '../../../../cart/controller/cart_controller.dart';
 import '../controller/home_controller.dart';
 import '../../../../../service/api_url.dart';
 import '../../../../notification/controller/notification_controller.dart';
-import '../../../page/cart/controller/cart_controller.dart';
 
 class HomeHeader extends GetView<HomeController> {
   const HomeHeader({super.key});

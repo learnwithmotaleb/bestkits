@@ -685,4 +685,5 @@ class AppStrings {
   static const String reasonForRejection2 = "Reason For Rejection";
   static const String noReturnOrdersFound = "No Return Orders Found";
   static const String returnOrdersTitle = "Return Orders";
+  static const String sellerProfile = "Seller Profile";
 }

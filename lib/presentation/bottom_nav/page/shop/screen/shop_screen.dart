@@ -2,22 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:bestkits/data/model/product_model.dart';
 import '../../../../../core/responsive_layout/dimensions.dart';
+import '../../../../../core/routes/route_path.dart';
 import '../../../../../utils/app_colors/app_colors.dart';
 import '../../../../../utils/app_text_style/app_text_style.dart';
 import '../../../../../utils/static_strings/static_strings.dart';
-import '../controller/search_controller.dart';
+import '../controller/shop_controller.dart';
 import '../widget/filter_bottom_sheet.dart';
 import '../../home/widget/product_card.dart';
 
-class SearchScreen extends StatefulWidget {
-  const SearchScreen({super.key});
+class ShopScreen extends StatefulWidget {
+  const ShopScreen({super.key});
 
   @override
-  State<SearchScreen> createState() => _SearchScreenState();
+  State<ShopScreen> createState() => _ShopScreenState();
 }
 
-class _SearchScreenState extends State<SearchScreen> {
-  final controller = Get.put(AppSearchController());
+class _ShopScreenState extends State<ShopScreen> {
+  final controller = Get.put(ShopController());
 
   @override
   Widget build(BuildContext context) {
@@ -162,6 +163,15 @@ class _SearchScreenState extends State<SearchScreen> {
         itemBuilder: (context, index) {
           final ProductModel product = controller.filteredProducts[index];
           return ProductCard(
+            onTap: () {
+              Get.toNamed(
+                RoutePath.shopDetails,
+                arguments: {
+                  'productId': product.id.toString(),
+                  'productModel': product,
+                },
+              );
+            },
             product: product,
             width: double.infinity,
             margin: EdgeInsets.zero,

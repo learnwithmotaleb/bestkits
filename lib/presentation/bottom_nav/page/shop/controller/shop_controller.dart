@@ -6,7 +6,7 @@ import 'package:bestkits/service/api_url.dart';
 import '../../home/pages/categories/model/CategoryModel.dart';
 import '../../../../../utils/static_strings/static_strings.dart';
 
-class AppSearchController extends GetxController {
+class ShopController extends GetxController {
   final searchTextController = TextEditingController();
   final searchQuery = ''.obs;
   final isSearching = false.obs;

@@ -1,3 +1,4 @@
+import 'package:bestkits/presentation/return_order/widget/return_order_details.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -10,7 +11,6 @@ import '../../../widget/app_button.dart';
 import '../../../utils/static_strings/static_strings.dart';
 import '../controller/return_order_controller.dart';
 import '../model/ReturnOrderModel.dart';
-import '../../my_return/widget/my_return_details_view.dart';
 
 class ReturnOrderScreen extends StatefulWidget {
   const ReturnOrderScreen({super.key});
@@ -26,174 +26,182 @@ class _ReturnOrderScreenState extends State<ReturnOrderScreen> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      canPop: false,
-      onPopInvoked: (didPop) {
-        if (didPop) return;
-        if (_ctrl.selectedReturnDetail.value != null) {
-          _ctrl.backToList();
-        } else {
-          Get.back();
-        }
-      },
-      child: Scaffold(
-      backgroundColor: AppColors.backgroundColor,
-      appBar: CommonAppBar(
-        title: AppStrings.returnOrdersTitle.tr,
-        onBack: () {
+        canPop: false,
+        onPopInvoked: (didPop) {
+          if (didPop) return;
           if (_ctrl.selectedReturnDetail.value != null) {
             _ctrl.backToList();
           } else {
             Get.back();
           }
         },
-      ),
-      body: Column(
-        children: [
-          SizedBox(height: Dimensions.h(10)),
-          // ── Horizontal Tabs ───────────────────────────────────────────────
-          SizedBox(
-            height: Dimensions.h(38),
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
-              itemCount: _ctrl.tabs.length,
-              separatorBuilder: (_, __) => SizedBox(width: Dimensions.w(10)),
-              itemBuilder: (context, index) {
-                final tab = _ctrl.tabs[index];
-                return Obx(() {
-                  final isSelected = _ctrl.selectedTab.value == tab;
-                  return GestureDetector(
-                    onTap: () => _ctrl.setTab(tab),
-                    child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: Dimensions.w(16)),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: isSelected
-                            ? AppColors.blackColor
-                            : Colors.transparent,
-                        borderRadius: BorderRadius.circular(Dimensions.r(8)),
-                        border: Border.all(
-                          color: isSelected
-                              ? AppColors.blackColor
-                              : AppColors.greyColor.withOpacity(0.3),
-                        ),
-                      ),
-                      child: Text(
-                        tab.tr,
-                        style: AppTextStyles.body.copyWith(
-                          fontSize: Dimensions.fs(13),
-                          fontWeight:
-                              isSelected ? FontWeight.w600 : FontWeight.w500,
-                          color: isSelected
-                              ? AppColors.primaryColor
-                              : AppColors.greyColor,
-                        ),
-                      ),
-                    ),
-                  );
-                });
+        child: Obx(() {
+          final isDetailView = _ctrl.selectedReturnDetail.value != null;
+          return Scaffold(
+            backgroundColor: AppColors.backgroundColor,
+            appBar: CommonAppBar(
+              title: isDetailView
+                  ? AppStrings.returnDetails.tr
+                  : AppStrings.returnOrdersTitle.tr,
+              onBack: () {
+                if (isDetailView) {
+                  _ctrl.backToList();
+                } else {
+                  Get.back();
+                }
               },
             ),
-          ),
-          SizedBox(height: Dimensions.h(20)),
-
-          // ── Body ──────────────────────────────────────────────────────────
-          Expanded(
-            child: Obx(() {
-              // Show detail loading
-              if (_ctrl.isDetailLoading.value) {
-                return const Center(
-                  child: CircularProgressIndicator(
-                      color: AppColors.primaryColor),
-                );
-              }
-
-              // Show detail view when selected
-              if (_ctrl.selectedReturnDetail.value != null) {
-                return MyReturnDetailsView(
-                  returnDetail: _ctrl.selectedReturnDetail.value!,
-                  onBack: () => _ctrl.backToList(),
-                );
-              }
-
-              // Show list loading
-              if (_ctrl.isLoading.value) {
-                return const Center(
-                  child: CircularProgressIndicator(
-                      color: AppColors.primaryColor),
-                );
-              }
-
-              final orders = _ctrl.allOrders;
-
-              if (orders.isEmpty) {
-                return Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
-                  child: Container(
-                    width: double.infinity,
-                    padding:
-                        EdgeInsets.symmetric(vertical: Dimensions.h(32)),
-                    decoration: BoxDecoration(
-                      color: AppColors.whiteColor,
-                      borderRadius:
-                          BorderRadius.circular(Dimensions.r(12)),
-                      border: Border.all(
-                          color: AppColors.greyColor.withOpacity(0.15)),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.inbox_outlined,
-                            size: Dimensions.icon(48),
-                            color: AppColors.greyColor.withOpacity(0.5)),
-                        SizedBox(height: Dimensions.h(12)),
-                        Text(
-                          AppStrings.noReturnOrdersFound.tr,
-                          style: AppTextStyles.body.copyWith(
-                            color: AppColors.greyColor,
-                            fontSize: Dimensions.fs(13),
-                            fontStyle: FontStyle.italic,
-                          ),
+            body: isDetailView
+                ? ReturnOrderDetails(
+                    returnDetail: _ctrl.selectedReturnDetail.value!,
+                    onBack: () => _ctrl.backToList(),
+                  )
+                : Column(
+                    children: [
+                      SizedBox(height: Dimensions.h(10)),
+                      // ── Horizontal Tabs ───────────────────────────────────────────────
+                      SizedBox(
+                        height: Dimensions.h(38),
+                        child: ListView.separated(
+                          scrollDirection: Axis.horizontal,
+                          padding: EdgeInsets.symmetric(
+                              horizontal: Dimensions.w(20)),
+                          itemCount: _ctrl.tabs.length,
+                          separatorBuilder: (_, __) =>
+                              SizedBox(width: Dimensions.w(10)),
+                          itemBuilder: (context, index) {
+                            final tab = _ctrl.tabs[index];
+                            return Obx(() {
+                              final isSelected = _ctrl.selectedTab.value == tab;
+                              return GestureDetector(
+                                onTap: () => _ctrl.setTab(tab),
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: Dimensions.w(16)),
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    color: isSelected
+                                        ? AppColors.blackColor
+                                        : Colors.transparent,
+                                    borderRadius:
+                                        BorderRadius.circular(Dimensions.r(8)),
+                                    border: Border.all(
+                                      color: isSelected
+                                          ? AppColors.blackColor
+                                          : AppColors.greyColor
+                                              .withOpacity(0.3),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    tab.tr,
+                                    style: AppTextStyles.body.copyWith(
+                                      fontSize: Dimensions.fs(13),
+                                      fontWeight: isSelected
+                                          ? FontWeight.w600
+                                          : FontWeight.w500,
+                                      color: isSelected
+                                          ? AppColors.primaryColor
+                                          : AppColors.greyColor,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            });
+                          },
                         ),
-                      ],
-                    ),
-                  ),
-                );
-              }
+                      ),
+                      SizedBox(height: Dimensions.h(20)),
 
-              return ListView.separated(
-                padding: EdgeInsets.symmetric(
-                    horizontal: Dimensions.w(20),
-                    vertical: Dimensions.h(4)),
-                itemCount: orders.length,
-                separatorBuilder: (_, __) =>
-                    SizedBox(height: Dimensions.h(16)),
-                itemBuilder: (context, index) {
-                  final order = orders[index];
-                  return _buildOrderCard(order);
-                },
-              );
-            }),
-          ),
-        ],
-      ),
-    ));
+                      // ── Body ──────────────────────────────────────────────────────────
+                      Expanded(
+                        child: Obx(() {
+                          // Show detail loading
+                          if (_ctrl.isDetailLoading.value) {
+                            return const Center(
+                              child: CircularProgressIndicator(
+                                  color: AppColors.primaryColor),
+                            );
+                          }
+
+                          // Show list loading
+                          if (_ctrl.isLoading.value) {
+                            return const Center(
+                              child: CircularProgressIndicator(
+                                  color: AppColors.primaryColor),
+                            );
+                          }
+
+                          final orders = _ctrl.allOrders;
+
+                          if (orders.isEmpty) {
+                            return Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: Dimensions.w(20)),
+                              child: Container(
+                                width: double.infinity,
+                                padding: EdgeInsets.symmetric(
+                                    vertical: Dimensions.h(32)),
+                                decoration: BoxDecoration(
+                                  color: AppColors.whiteColor,
+                                  borderRadius:
+                                      BorderRadius.circular(Dimensions.r(12)),
+                                  border: Border.all(
+                                      color: AppColors.greyColor
+                                          .withOpacity(0.15)),
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.inbox_outlined,
+                                        size: Dimensions.icon(48),
+                                        color: AppColors.greyColor
+                                            .withOpacity(0.5)),
+                                    SizedBox(height: Dimensions.h(12)),
+                                    Text(
+                                      AppStrings.noReturnOrdersFound.tr,
+                                      style: AppTextStyles.body.copyWith(
+                                        color: AppColors.greyColor,
+                                        fontSize: Dimensions.fs(13),
+                                        fontStyle: FontStyle.italic,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          }
+
+                          return ListView.separated(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: Dimensions.w(20),
+                                vertical: Dimensions.h(4)),
+                            itemCount: orders.length,
+                            separatorBuilder: (_, __) =>
+                                SizedBox(height: Dimensions.h(16)),
+                            itemBuilder: (context, index) {
+                              final order = orders[index];
+                              return _buildOrderCard(order);
+                            },
+                          );
+                        }),
+                      ),
+                    ],
+                  ),
+          );
+        }));
   }
 
   Widget _buildOrderCard(Data order) {
     final status = order.status ?? '';
     final statusLabel = order.statusLabel ?? status;
-    final imageUrl =
-        ApiUrl.buildImageUrl(order.previewItem?.imageUrl);
+    final imageUrl = ApiUrl.buildImageUrl(order.previewItem?.imageUrl);
 
     return Container(
       padding: Dimensions.pSym(h: 16, v: 16),
       decoration: BoxDecoration(
         color: AppColors.whiteColor,
         borderRadius: BorderRadius.circular(Dimensions.r(16)),
-        border:
-            Border.all(color: AppColors.greyColor.withOpacity(0.15)),
+        border: Border.all(color: AppColors.greyColor.withOpacity(0.15)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -229,8 +237,7 @@ class _ReturnOrderScreenState extends State<ReturnOrderScreen> {
               ),
               Container(
                 padding: EdgeInsets.symmetric(
-                    horizontal: Dimensions.w(8),
-                    vertical: Dimensions.h(4)),
+                    horizontal: Dimensions.w(8), vertical: Dimensions.h(4)),
                 decoration: BoxDecoration(
                   color: _statusBgColor(status),
                   borderRadius: BorderRadius.circular(Dimensions.r(12)),
@@ -247,9 +254,7 @@ class _ReturnOrderScreenState extends State<ReturnOrderScreen> {
             ],
           ),
           SizedBox(height: Dimensions.h(16)),
-          Divider(
-              height: 1,
-              color: AppColors.greyColor.withOpacity(0.15)),
+          Divider(height: 1, color: AppColors.greyColor.withOpacity(0.15)),
           SizedBox(height: Dimensions.h(12)),
 
           // Product row
@@ -319,10 +324,8 @@ class _ReturnOrderScreenState extends State<ReturnOrderScreen> {
                 CircleAvatar(
                   radius: Dimensions.r(14),
                   backgroundImage: NetworkImage(
-                      ApiUrl.buildImageUrl(
-                          order.buyer?.profile?.avatarUrl)),
-                  backgroundColor:
-                      AppColors.greyColor.withOpacity(0.2),
+                      ApiUrl.buildImageUrl(order.buyer?.profile?.avatarUrl)),
+                  backgroundColor: AppColors.greyColor.withOpacity(0.2),
                   onBackgroundImageError: (_, __) {},
                 ),
                 SizedBox(width: Dimensions.w(8)),
@@ -338,9 +341,7 @@ class _ReturnOrderScreenState extends State<ReturnOrderScreen> {
             SizedBox(height: Dimensions.h(12)),
           ],
 
-          Divider(
-              height: 1,
-              color: AppColors.greyColor.withOpacity(0.15)),
+          Divider(height: 1, color: AppColors.greyColor.withOpacity(0.15)),
           SizedBox(height: Dimensions.h(12)),
 
           // View details button

@@ -6,7 +6,6 @@ import '../../../utils/app_text_style/app_text_style.dart';
 import '../../../utils/static_strings/static_strings.dart';
 import '../../../widget/app_button.dart';
 import '../../../widget/custom_appbar.dart';
-import '../../bottom_nav/page/cart/controller/cart_controller.dart';
 import '../controller/checkout_controller.dart';
 import '../widget/checkout_address_section.dart';
 import '../widget/checkout_coupon_section.dart';

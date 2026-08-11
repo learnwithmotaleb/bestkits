@@ -5,7 +5,7 @@ import '../../../service/api_service.dart';
 import '../../../service/api_url.dart';
 import '../../../utils/static_strings/static_strings.dart';
 import '../../../widget/show_snackbar.dart';
-import '../../bottom_nav/page/cart/controller/cart_controller.dart';
+import '../../cart/controller/cart_controller.dart';
 import '../model/OrderSummaryModel.dart';
 
 class CheckoutController extends GetxController {

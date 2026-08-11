@@ -1,15 +1,15 @@
+import 'package:bestkits/core/routes/route_path.dart';
+import 'package:bestkits/presentation/cart/controller/cart_controller.dart';
+import 'package:bestkits/presentation/product_details/model/AccountAddressModel.dart';
+import 'package:bestkits/utils/static_strings/static_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:bestkits/data/model/product_model.dart';
 import 'package:bestkits/service/api_service.dart';
 import 'package:bestkits/service/api_url.dart';
 import 'package:bestkits/widget/show_snackbar.dart';
-import '../../cart/controller/cart_controller.dart';
-import '../model/AccountAddressModel.dart';
-import '../../../../utils/static_strings/static_strings.dart';
-import '../../../../core/routes/route_path.dart';
 
-class ProductDetailsController extends GetxController {
+class ShopDetailsController extends GetxController {
   // Product state
   final Rx<ProductModel?> productDetails = Rx<ProductModel?>(null);
   final RxBool isLoading = false.obs;
@@ -30,11 +30,11 @@ class ProductDetailsController extends GetxController {
   final selectedTabIndex = 0.obs;
   final List<String> tabs = [
     AppStrings.description,
+    AppStrings.sellerProfile,
   ];
 
   final ApiClient _apiClient = ApiClient();
 
-  /// Call this after navigation with the product ID.
   Future<void> fetchProductDetails(String id) async {
     isLoading.value = true;
     errorMessage.value = '';
@@ -49,7 +49,6 @@ class ProductDetailsController extends GetxController {
       if (response.statusCode == 200 &&
           response.body is Map &&
           response.body['data'] != null) {
-        // The API returns data as a List (array of products matching id)
         final dynamic data = response.body['data'];
         Map<String, dynamic>? productMap;
 
@@ -61,7 +60,6 @@ class ProductDetailsController extends GetxController {
 
         if (productMap != null) {
           productDetails.value = ProductModel.fromJson(productMap);
-          // Set the first variant as selected by default
           if (productDetails.value!.variants.isNotEmpty) {
             selectedVariant.value =
                 productDetails.value!.variants.first.variantName;
@@ -83,11 +81,10 @@ class ProductDetailsController extends GetxController {
   Future<void> addToCart() async {
     if (productDetails.value == null) return;
 
-    // Find selected variant ID
     final variant = productDetails.value!.variants.firstWhere(
       (v) => v.variantName == selectedVariant.value,
-      orElse: () => ProductVariant(
-          id: 0, productId: 0, variantName: '', price: 0), // fallback
+      orElse: () =>
+          ProductVariant(id: 0, productId: 0, variantName: '', price: 0),
     );
 
     if (variant.id == 0 && productDetails.value!.variants.isNotEmpty) {
@@ -111,7 +108,6 @@ class ProductDetailsController extends GetxController {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         ShowAppSnackBar.success("Product added to cart successfully");
-        // Increment cart badge count on home header immediately
         if (Get.isRegistered<CartController>()) {
           Get.find<CartController>().incrementCount();
         }
@@ -132,11 +128,10 @@ class ProductDetailsController extends GetxController {
   Future<void> orderNow() async {
     if (productDetails.value == null) return;
 
-    // Find selected variant ID
     final variant = productDetails.value!.variants.firstWhere(
       (v) => v.variantName == selectedVariant.value,
-      orElse: () => ProductVariant(
-          id: 0, productId: 0, variantName: '', price: 0), // fallback
+      orElse: () =>
+          ProductVariant(id: 0, productId: 0, variantName: '', price: 0),
     );
 
     if (variant.id == 0 && productDetails.value!.variants.isNotEmpty) {

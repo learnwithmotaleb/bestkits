@@ -6,10 +6,10 @@ import '../../../../../utils/app_text_style/app_text_style.dart';
 import '../../../../../utils/static_strings/static_strings.dart';
 import '../../../../../widget/bottom_sheet_textfield.dart';
 import '../../../../../widget/app_button.dart';
-import '../controller/search_controller.dart';
+import '../controller/shop_controller.dart';
 
 class FilterBottomSheet extends StatelessWidget {
-  final AppSearchController controller;
+  final ShopController controller;
 
   const FilterBottomSheet({super.key, required this.controller});
 

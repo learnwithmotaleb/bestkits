@@ -1,13 +1,13 @@
-import 'package:bestkits/utils/static_strings/static_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../../utils/app_colors/app_colors.dart';
-import '../../../../utils/app_text_style/app_text_style.dart';
+import 'package:bestkits/utils/app_colors/app_colors.dart';
+import 'package:bestkits/utils/app_text_style/app_text_style.dart';
+import 'package:bestkits/utils/static_strings/static_strings.dart';
 import 'package:bestkits/data/model/product_model.dart';
 
 // ─── Status Helpers ────────────────────────────────────────────────────────────
 
-Color statusAccentColor(String status) {
+Color _statusAccentColor(String status) {
   switch (status.toUpperCase()) {
     case 'UNDER_REVIEW':
       return AppColors.statusUnderReview;
@@ -27,7 +27,7 @@ Color statusAccentColor(String status) {
   }
 }
 
-Color statusBgColor(String status) {
+Color _statusBgColor(String status) {
   switch (status.toUpperCase()) {
     case 'UNDER_REVIEW':
       return AppColors.statusUnderReviewBg;
@@ -47,7 +47,7 @@ Color statusBgColor(String status) {
   }
 }
 
-String statusLabel(String status) {
+String _statusLabel(String status) {
   switch (status.toUpperCase()) {
     case 'UNDER_REVIEW':
       return 'Under Review';
@@ -67,12 +67,12 @@ String statusLabel(String status) {
   }
 }
 
-// ─── Product Info Section ──────────────────────────────────────────────────────
+// ─── Shop Product Info Section ─────────────────────────────────────────────────
 
-class ProductInfoSection extends StatelessWidget {
+class ShopProductInfoSection extends StatelessWidget {
   final ProductModel product;
 
-  const ProductInfoSection({super.key, required this.product});
+  const ShopProductInfoSection({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {
@@ -81,9 +81,9 @@ class ProductInfoSection extends StatelessWidget {
         product.discountPercentage! > 0;
 
     final rawStatus = product.status.toUpperCase();
-    final accentColor = statusAccentColor(rawStatus);
-    final bgColor = statusBgColor(rawStatus);
-    final label = statusLabel(rawStatus);
+    final accentColor = _statusAccentColor(rawStatus);
+    final bgColor = _statusBgColor(rawStatus);
+    final label = _statusLabel(rawStatus);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -93,8 +93,7 @@ class ProductInfoSection extends StatelessWidget {
           children: [
             if (product.categoryName.isNotEmpty) ...[
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
@@ -125,8 +124,7 @@ class ProductInfoSection extends StatelessWidget {
             ],
             if (product.subCategoryName.isNotEmpty)
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   color: Colors.grey[100],
@@ -144,7 +142,10 @@ class ProductInfoSection extends StatelessWidget {
         ),
         const SizedBox(height: 10),
 
-        // ── Row 2: Product Name ────────────────────────────────────────────────
+        // ── Row 2: Status Badge ────────────────────────────────────────────────
+
+
+        // ── Row 3: Product Name ────────────────────────────────────────────────
         Text(
           product.name,
           style: AppTextStyles.h3.copyWith(
@@ -154,15 +155,12 @@ class ProductInfoSection extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 5),
-
-        // ── Row 3: Status Badge ────────────────────────────────────────────────
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
           decoration: BoxDecoration(
             color: bgColor,
             borderRadius: BorderRadius.circular(20),
-            border:
-                Border.all(color: accentColor.withValues(alpha: 0.4), width: 1),
+            border: Border.all(color: accentColor.withValues(alpha: 0.4), width: 1),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,

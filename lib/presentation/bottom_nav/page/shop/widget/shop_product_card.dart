@@ -5,10 +5,10 @@ import 'package:get/get.dart';
 import '../../../../product_details/screen/product_details_screen.dart';
 import 'package:bestkits/presentation/favorite/controller/favourite_controller.dart';
 
-class SearchProductCard extends StatelessWidget {
+class ShopProductCard extends StatelessWidget {
   final Map<String, dynamic> product;
 
-  const SearchProductCard({super.key, required this.product});
+  const ShopProductCard({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {

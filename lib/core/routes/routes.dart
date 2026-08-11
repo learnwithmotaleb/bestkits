@@ -23,6 +23,10 @@ import 'package:bestkits/presentation/bottom_nav/page/sell/page/add_product/scre
 import 'package:bestkits/presentation/bottom_nav/page/sell/page/add_product/widget/product_verification.dart';
 import 'package:bestkits/presentation/bottom_nav/page/sell/page/add_product/controller/add_product_controller.dart';
 import 'package:bestkits/presentation/bottom_nav/page/sell/screen/sell_screen.dart';
+import 'package:bestkits/presentation/bottom_nav/page/shop/page/shop_details/controller/shop_details_controller.dart';
+import 'package:bestkits/presentation/bottom_nav/page/shop/page/shop_details/screen/shop_details_screen.dart';
+import 'package:bestkits/presentation/view_all_review/controller/view_all_review_controller.dart';
+import 'package:bestkits/presentation/view_all_review/screen/view_all_review_screen.dart';
 import 'package:bestkits/presentation/bottom_nav/screen/bottom_nav_screen.dart';
 import 'package:bestkits/presentation/change_password/controller/change_password_controller.dart';
 import 'package:bestkits/presentation/change_password/screen/change_password_screen.dart';
@@ -39,7 +43,6 @@ import 'package:bestkits/presentation/earnings/controller/earning_controller.dar
 import 'package:bestkits/presentation/earnings/screen/earning_screen.dart';
 import 'package:bestkits/presentation/favorite/controller/favourite_controller.dart';
 import 'package:bestkits/presentation/favorite/screen/favourite_screen.dart';
-import 'package:bestkits/presentation/bottom_nav/page/cart/screen/cart_screen.dart';
 import 'package:bestkits/presentation/help_support/controller/help_support_controller.dart';
 import 'package:bestkits/presentation/help_support/screen/help_support_screen.dart';
 import 'package:bestkits/presentation/language_preference/controller/language_preference_controller.dart';
@@ -86,7 +89,8 @@ import 'package:bestkits/presentation/auth/forgot_password/screen/forgot_passwor
 import 'package:bestkits/presentation/auth/forgot_password/controller/forgot_password_controller.dart';
 
 import '../../presentation/account_setting/controller/account_setting_controller.dart';
-import '../../presentation/bottom_nav/page/cart/controller/cart_controller.dart';
+import '../../presentation/cart/controller/cart_controller.dart';
+import '../../presentation/cart/screen/cart_screen.dart';
 import '../../presentation/splash/controller/splash_controller.dart';
 import '../../presentation/splash/screen/splash_screen.dart';
 
@@ -407,6 +411,26 @@ class AppRouter {
         Get.put(ReturnOrderController());
       }),
     ),
+
+
+    GetPage(
+      name: RoutePath.shopDetails,
+      page: () => const ShopDetailsScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(ShopDetailsController());
+      }),
+    ),
+    GetPage(
+      name: RoutePath.viewAllReview,
+      page: () => const ViewAllReviewScreen(),
+      transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(ViewAllReviewController());
+      }),
+    ),
+
+
     GetPage(
       name: RoutePath.earning,
       page: () => const EarningScreen(),
