@@ -27,6 +27,9 @@ class UpdateProductController extends GetxController {
   final selectedImageIndex = 0.obs;
   final RxList<String> productImages = <String>[].obs;
 
+  // ── Existing images from server (shown in update form) ─────────────────────
+  final RxList<String> existingImageUrls = <String>[].obs;
+
   // ── Image picker (for update product form) ─────────────────────────────────
   final _picker = ImagePicker();
   final RxList<File> pickedImages = <File>[].obs;
@@ -44,6 +47,14 @@ class UpdateProductController extends GetxController {
   void removePickedImage(int index) {
     if (index >= 0 && index < pickedImages.length) {
       pickedImages.removeAt(index);
+    }
+  }
+
+  void removeExistingImage(int index) {
+    if (index >= 0 && index < existingImageUrls.length) {
+      existingImageUrls.removeAt(index);
+      // Also sync productImages
+      _initImages();
     }
   }
 
@@ -95,7 +106,7 @@ class UpdateProductController extends GetxController {
     try {
       final ApiClient apiClient = ApiClient();
       final response = await apiClient.get(
-        url: ApiUrl.detailsProduct(id),
+        url: ApiUrl.productSellerDetails(id),
         isToken: true,
       );
 
@@ -112,9 +123,14 @@ class UpdateProductController extends GetxController {
 
         if (productMap != null) {
           product.value = productMap;
-          productModel.value = ProductModel.fromJson(productMap);
           _initImages();
+          _syncExistingImages();
           _populateReviews(productMap);
+          // Re-populate subcategories after fresh data
+          final cat = productMap['category'];
+          if (cat is Map && cat['name'] != null) {
+            updateSubCategories(cat['name'].toString());
+          }
         }
       }
     } catch (e) {
@@ -126,25 +142,37 @@ class UpdateProductController extends GetxController {
 
   void _initImages() {
     productImages.clear();
-    if (product['image_urls'] != null &&
-        product['image_urls'] is List &&
-        (product['image_urls'] as List).isNotEmpty) {
-      productImages.addAll(List<String>.from(product['image_urls']));
+    final urls = existingImageUrls.isNotEmpty
+        ? existingImageUrls
+        : (product['image_urls'] is List
+            ? List<String>.from(product['image_urls'])
+            : <String>[]);
+    if (urls.isNotEmpty) {
+      productImages.addAll(urls);
     } else {
       final mainImg =
           product['image_url'] ?? product['image'] ?? AppImages.kidsCottonSho;
-      productImages.addAll([
-        mainImg,
-        mainImg,
-        mainImg,
-        mainImg,
-        mainImg,
-      ]);
+      productImages.add(mainImg);
+    }
+  }
+
+  void _syncExistingImages() {
+    if (existingImageUrls.isEmpty) {
+      final raw = product['image_urls'];
+      if (raw is List && raw.isNotEmpty) {
+        existingImageUrls.assignAll(List<String>.from(raw));
+      } else {
+        final img = product['image_url'];
+        if (img != null && img.toString().isNotEmpty) {
+          existingImageUrls.add(img.toString());
+        }
+      }
     }
   }
 
   void _populateReviews(Map<String, dynamic> productMap) {
-    final rawReviews = productMap['reviews'];
+    final rawReviews =
+        productMap['reviews'] ?? productMap['authentication_requests'];
     if (rawReviews == null || rawReviews is! List) return;
     reviewsList.clear();
     for (final r in rawReviews) {
@@ -341,9 +369,6 @@ class UpdateProductController extends GetxController {
           final cat = product['category'];
           if (cat is Map && cat['name'] != null) {
             updateSubCategories(cat['name'].toString());
-          } else if (productModel.value?.categoryName != null &&
-              productModel.value!.categoryName.isNotEmpty) {
-            updateSubCategories(productModel.value!.categoryName);
           }
         }
       }
@@ -399,37 +424,42 @@ class UpdateProductController extends GetxController {
 
   Future<String?> updateProductApi({
     required double price,
-    required double discountPrice,
-    required String status,
+    required double discountPercentage,
+    required String conditionValue,
   }) async {
-    final prodId = product['id']?.toString() ?? '1'; // Fallback to 1 if dummy
+    final prodId = product['id']?.toString() ?? '';
+    if (prodId.isEmpty) return 'No product ID found.';
 
     isLoading.value = true;
     try {
-      await Future.delayed(const Duration(seconds: 1));
-      /* API INTEGRATION DISABLED FOR NOW
       final apiClient = ApiClient();
 
-      // Upload images if any picked, otherwise reuse existing
+      // Upload new images if any were picked, otherwise keep existing
       final List<String> imageUrls = [];
       if (pickedImages.isNotEmpty) {
         imageUrls.addAll(await _uploadImages());
       }
       if (imageUrls.isEmpty) {
-        imageUrls.addAll(productImages);
-      }
-      if (imageUrls.isEmpty) {
-        imageUrls.add("https://example.com/images/iphone15pro-front.jpg");
+        // Keep existing image_urls from the product data
+        final existing = product['image_urls'];
+        if (existing is List) {
+          imageUrls.addAll(List<String>.from(existing));
+        }
       }
 
-      double discountPercentage = 0;
-      if (price > 0 && discountPrice > 0 && discountPrice < price) {
-        discountPercentage = ((price - discountPrice) / price) * 100;
+      // Calculate discounted price from discount %
+      double discountedPrice = price;
+      if (discountPercentage > 0 && discountPercentage < 100) {
+        discountedPrice = price - (price * discountPercentage / 100);
       }
 
       // Resolve category & subcategory IDs
-      int categoryId = 1;
-      int subCategoryId = 1;
+      int categoryId = (product['categoryId'] as num?)?.toInt() ??
+          (product['category']?['id'] as num?)?.toInt() ??
+          1;
+      int subCategoryId = (product['subCategoryId'] as num?)?.toInt() ??
+          (product['subCategory']?['id'] as num?)?.toInt() ??
+          1;
 
       if (selectedCategory.value.isNotEmpty) {
         final cat = categoryData.firstWhereOrNull((c) =>
@@ -437,7 +467,6 @@ class UpdateProductController extends GetxController {
             selectedCategory.value.toLowerCase().trim());
         if (cat != null && cat.id != null) {
           categoryId = cat.id!.toInt();
-
           if (selectedSubCategory.value.isNotEmpty &&
               cat.subCategories != null) {
             final sub = cat.subCategories!.firstWhereOrNull((s) =>
@@ -450,20 +479,6 @@ class UpdateProductController extends GetxController {
         }
       }
 
-      // Map sizes to variants
-      final List<Map<String, dynamic>> variants = [];
-      final List<String> variantNames = [];
-
-      variants.add({
-        "variantName": "Default",
-        "price": price,
-      });
-
-      String statusPayload = "ACTIVE";
-      if (status.toLowerCase().contains("inactive")) {
-        statusPayload = "INACTIVE";
-      }
-
       final body = {
         "name": name.value.isNotEmpty
             ? name.value
@@ -471,17 +486,13 @@ class UpdateProductController extends GetxController {
         "description": description.value.isNotEmpty
             ? description.value
             : product['description']?.toString() ?? '',
-        "original_price": price,
-        "discounted_price": discountPrice,
-        "discount_percentage": discountPercentage.round(),
+        "original_price": price.toInt(),
+        "discounted_price": discountedPrice.toInt(),
+        "discount_percentage": discountPercentage.toInt(),
         "image_urls": imageUrls,
         "categoryId": categoryId,
         "subCategoryId": subCategoryId,
-        "condition": "NEW",
-        "status": statusPayload,
-        "variants": variants,
-        "variant_names": variantNames,
-        "replace_variants": true
+        "condition": conditionValue.toUpperCase(),
       };
 
       final response = await apiClient.patch(
@@ -491,22 +502,24 @@ class UpdateProductController extends GetxController {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        if (Get.isRegistered<HomeController>())
+        // Refresh relevant controllers
+        if (Get.isRegistered<SellController>()) {
+          Get.find<SellController>().fetchProducts(isRefresh: true);
+        }
+        if (Get.isRegistered<HomeController>()) {
           Get.find<HomeController>().fetchHomeData();
-        if (Get.isRegistered<SellController>())
-          Get.find<SellController>().fetchProducts();
-        if (Get.isRegistered<FavouriteController>())
+        }
+        if (Get.isRegistered<FavouriteController>()) {
           Get.find<FavouriteController>().fetchWishlist();
+        }
         return null; // success
       } else {
         final resBody = response.body;
         if (resBody is Map && resBody.containsKey('message')) {
           return resBody['message'].toString();
         }
-        return "Failed to update product. Status code: ${response.statusCode}";
+        return "Failed to update product. Status: ${response.statusCode}";
       }
-      */
-      return null;
     } catch (e) {
       print("Error updating product: $e");
       return "Something went wrong: $e";

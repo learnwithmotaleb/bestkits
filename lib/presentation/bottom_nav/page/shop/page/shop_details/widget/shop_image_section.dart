@@ -2,6 +2,7 @@ import 'package:bestkits/utils/app_colors/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:bestkits/core/responsive_layout/dimensions.dart';
+import 'package:bestkits/service/api_url.dart';
 import '../controller/shop_details_controller.dart';
 
 class ShopImageSection extends StatelessWidget {
@@ -13,7 +14,11 @@ class ShopImageSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(() {
       final product = controller.productDetails.value;
-      final images = product?.fullImageUrls ?? [];
+      final rawImages = product?.imageUrls ?? [];
+      // Build full URLs using the shared helper so relative paths like
+      // "/uploads/shoes.jpg" are resolved against the active domain.
+      final images =
+          rawImages.map((p) => ApiUrl.buildImageUrl(p)).toList();
       final selectedIndex = controller.selectedImageIndex.value;
 
       return Column(

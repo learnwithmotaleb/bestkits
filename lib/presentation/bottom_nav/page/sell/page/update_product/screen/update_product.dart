@@ -58,8 +58,10 @@ class _UpdateProductState extends State<UpdateProduct> {
     }
     
     // Set sub-category
-    final subCat = product['sub_category'];
-    if (subCat != null) {
+    final subCat = product['subCategory'];
+    if (subCat is Map) {
+      _subCategoryController.text = subCat['name']?.toString() ?? '';
+    } else if (subCat != null) {
       _subCategoryController.text = subCat.toString();
     }
     
@@ -199,8 +201,8 @@ class _UpdateProductState extends State<UpdateProduct> {
 
     _ctrl.updateProductApi(
       price: double.tryParse(_priceController.text) ?? 0.0,
-      discountPrice: double.tryParse(_discountController.text) ?? 0.0,
-      status: 'ACTIVE',
+      discountPercentage: double.tryParse(_discountController.text) ?? 0.0,
+      conditionValue: _selectedCondition,
     ).then((error) {
       if (error == null) {
         AppAlerts.success(message: 'Product updated successfully!');
@@ -210,6 +212,7 @@ class _UpdateProductState extends State<UpdateProduct> {
       }
     });
   }
+
 
   @override
   Widget build(BuildContext context) {

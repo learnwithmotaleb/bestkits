@@ -1,9 +1,10 @@
 import 'package:bestkits/utils/static_strings/static_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../../utils/app_colors/app_colors.dart';
-import '../../../../utils/app_text_style/app_text_style.dart';
-import 'package:bestkits/data/model/product_model.dart';
+import '../../../../../../../utils/app_colors/app_colors.dart';
+import '../../../../../../../utils/app_text_style/app_text_style.dart';
+import 'package:bestkits/presentation/bottom_nav/page/sell/page/seller_product_details/model/seller_product_details.dart'
+    as sellModel;
 
 // ─── Status Helpers ────────────────────────────────────────────────────────────
 
@@ -70,7 +71,7 @@ String statusLabel(String status) {
 // ─── Product Info Section ──────────────────────────────────────────────────────
 
 class ProductInfoSection extends StatelessWidget {
-  final ProductModel product;
+  final sellModel.Data product;
 
   const ProductInfoSection({super.key, required this.product});
 
@@ -80,10 +81,19 @@ class ProductInfoSection extends StatelessWidget {
         product.discountPercentage != null &&
         product.discountPercentage! > 0;
 
-    final rawStatus = product.status.toUpperCase();
+    final rawStatus = (product.status ?? '').toUpperCase();
     final accentColor = statusAccentColor(rawStatus);
     final bgColor = statusBgColor(rawStatus);
     final label = statusLabel(rawStatus);
+
+    final categoryName = product.category?.name ?? '';
+    final subCategoryName = product.subCategory?.name ?? '';
+    final condition = product.condition ?? '';
+
+    final effectivePrice =
+        ((product.effectivePrice ?? 0).toDouble() / 100).toStringAsFixed(2);
+    final originalPrice =
+        ((product.originalPrice ?? 0).toDouble() / 100).toStringAsFixed(2);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -91,7 +101,7 @@ class ProductInfoSection extends StatelessWidget {
         // ── Row 1: Category / Subcategory (with divider between them) ──────────
         Row(
           children: [
-            if (product.categoryName.isNotEmpty) ...[
+            if (categoryName.isNotEmpty) ...[
               Container(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -101,7 +111,7 @@ class ProductInfoSection extends StatelessWidget {
                       color: AppColors.primaryColor.withValues(alpha: 0.5)),
                 ),
                 child: Text(
-                  product.categoryName,
+                  categoryName,
                   style: TextStyle(
                     color: AppColors.primaryColor,
                     fontSize: 10,
@@ -109,7 +119,7 @@ class ProductInfoSection extends StatelessWidget {
                   ),
                 ),
               ),
-              if (product.subCategoryName.isNotEmpty) ...[
+              if (subCategoryName.isNotEmpty) ...[
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 6),
                   child: Text(
@@ -123,7 +133,7 @@ class ProductInfoSection extends StatelessWidget {
                 ),
               ],
             ],
-            if (product.subCategoryName.isNotEmpty)
+            if (subCategoryName.isNotEmpty)
               Container(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -132,7 +142,7 @@ class ProductInfoSection extends StatelessWidget {
                   color: Colors.grey[100],
                 ),
                 child: Text(
-                  product.subCategoryName,
+                  subCategoryName,
                   style: TextStyle(
                     color: Colors.grey[600],
                     fontSize: 10,
@@ -146,7 +156,7 @@ class ProductInfoSection extends StatelessWidget {
 
         // ── Row 2: Product Name ────────────────────────────────────────────────
         Text(
-          product.name,
+          product.name ?? '',
           style: AppTextStyles.h3.copyWith(
             fontSize: 20,
             fontWeight: FontWeight.w700,
@@ -206,21 +216,21 @@ class ProductInfoSection extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
               decoration: BoxDecoration(
-                color: product.condition.toUpperCase() == 'NEW'
+                color: condition.toUpperCase() == 'NEW'
                     ? const Color(0xFFE8F5E9)
                     : const Color(0xFFFFF3E0),
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(
-                  color: product.condition.toUpperCase() == 'NEW'
+                  color: condition.toUpperCase() == 'NEW'
                       ? const Color(0xFF22C55E)
                       : const Color(0xFFFF6B35),
                   width: 1,
                 ),
               ),
               child: Text(
-                product.condition.isNotEmpty ? product.condition : 'N/A',
+                condition.isNotEmpty ? condition : 'N/A',
                 style: TextStyle(
-                  color: product.condition.toUpperCase() == 'NEW'
+                  color: condition.toUpperCase() == 'NEW'
                       ? const Color(0xFF22C55E)
                       : const Color(0xFFFF6B35),
                   fontSize: 10,
@@ -237,7 +247,7 @@ class ProductInfoSection extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              product.formattedPrice,
+              '\$$effectivePrice',
               style: AppTextStyles.h2.copyWith(
                 fontSize: 24,
                 fontWeight: FontWeight.w800,
@@ -246,7 +256,7 @@ class ProductInfoSection extends StatelessWidget {
             if (hasDiscount) ...[
               const SizedBox(width: 8),
               Text(
-                product.formattedOriginalPrice,
+                '\$$originalPrice',
                 style: TextStyle(
                   fontSize: 13,
                   color: Colors.grey[400],

@@ -6,7 +6,6 @@ import '../../../../../core/routes/route_path.dart';
 import '../../../../../utils/app_colors/app_colors.dart';
 import '../../../../../utils/app_text_style/app_text_style.dart';
 import '../../../../../utils/assets_image/app_images.dart';
-import '../../../../product_details/screen/product_details_screen.dart';
 import '../controller/home_controller.dart';
 
 class HomeBanner extends StatefulWidget {
@@ -32,7 +31,9 @@ class _HomeBannerState extends State<HomeBanner> {
   void _startAutoPlay() {
     _autoPlayTimer?.cancel();
     _autoPlayTimer = Timer.periodic(const Duration(seconds: 4), (timer) {
-      final bannerCount = controller.promotedProducts.isNotEmpty ? controller.promotedProducts.length : 1;
+      final bannerCount = controller.promotedProducts.isNotEmpty
+          ? controller.promotedProducts.length
+          : 1;
       if (_pageController.hasClients && bannerCount > 1) {
         final nextPage = (_currentPage + 1) % bannerCount;
         _pageController.animateToPage(
@@ -96,7 +97,8 @@ class _HomeBannerState extends State<HomeBanner> {
               itemCount: productList.length,
               itemBuilder: (context, index) {
                 final product = productList[index];
-                final hasDiscount = product.discountPercentage != null && product.discountPercentage! > 0;
+                final hasDiscount = product.discountPercentage != null &&
+                    product.discountPercentage! > 0;
                 final imageUrl = product.primaryImageUrl;
 
                 return GestureDetector(
@@ -135,8 +137,10 @@ class _HomeBannerState extends State<HomeBanner> {
                                       vertical: Dimensions.h(4),
                                     ),
                                     decoration: BoxDecoration(
-                                      color: AppColors.primaryColor.withOpacity(0.1),
-                                      borderRadius: BorderRadius.circular(Dimensions.r(20)),
+                                      color: AppColors.primaryColor
+                                          .withOpacity(0.1),
+                                      borderRadius: BorderRadius.circular(
+                                          Dimensions.r(20)),
                                       border: Border.all(
                                         color: AppColors.primaryColor,
                                         width: 1,
@@ -166,7 +170,7 @@ class _HomeBannerState extends State<HomeBanner> {
                                     ),
                                   ),
                                   Dimensions.gapH(8),
-                              
+
                                   // Title Text
                                   Text(
                                     product.name,
@@ -178,7 +182,7 @@ class _HomeBannerState extends State<HomeBanner> {
                                       fontWeight: FontWeight.w800,
                                     ),
                                   ),
-                              
+
                                   // Price
                                   Dimensions.gapH(4),
                                   Row(
@@ -198,14 +202,15 @@ class _HomeBannerState extends State<HomeBanner> {
                                           style: TextStyle(
                                             fontSize: Dimensions.fs(10),
                                             color: Colors.grey,
-                                            decoration: TextDecoration.lineThrough,
+                                            decoration:
+                                                TextDecoration.lineThrough,
                                           ),
                                         ),
                                       ],
                                     ],
                                   ),
                                   Dimensions.gapH(6),
-                              
+
                                   // Long Description
                                   Text(
                                     product.description,
@@ -222,7 +227,7 @@ class _HomeBannerState extends State<HomeBanner> {
                             ),
                           ),
                         ),
- 
+
                         // Image layout right-aligned
                         if (imageUrl.isNotEmpty)
                           Positioned(
@@ -230,7 +235,8 @@ class _HomeBannerState extends State<HomeBanner> {
                             bottom: Dimensions.h(10),
                             top: Dimensions.h(10),
                             child: ClipRRect(
-                              borderRadius: BorderRadius.circular(Dimensions.r(10)),
+                              borderRadius:
+                                  BorderRadius.circular(Dimensions.r(10)),
                               child: Image.network(
                                 imageUrl,
                                 width: Dimensions.w(110),

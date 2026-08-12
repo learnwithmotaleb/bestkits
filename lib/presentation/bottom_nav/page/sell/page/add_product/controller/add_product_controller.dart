@@ -26,25 +26,22 @@ class AddProductController extends GetxController {
   // Verification Page Data
   final RxList<File> verificationImages = <File>[].obs;
   final RxString selectedBrand = ''.obs;
-  final RxList<String> brandNames = <String>[
-    'Nike',
-    'Adidas',
-    'Puma',
-    'Gucci',
-    'Prada',
-    'Louis Vuitton',
-    'Rolex',
-    'Other'
-  ].obs;
+  final RxList<String> brandNames = <String>[].obs;
 
   final RxList<Data> categoryData = <Data>[].obs;
   final RxList<String> categoryNames = <String>[].obs;
   final RxList<String> subCategoryNames = <String>[].obs;
 
+  // LegitGrails categories list
+  final RxList<String> legitgrailsCategories = <String>[].obs;
+  final RxString selectedLegitCategory = ''.obs;
+
   @override
   void onInit() {
     super.onInit();
     fetchCategories();
+    fetchLegitgrailsBrands();
+    fetchLegitgrailsCategories();
   }
 
   Future<void> fetchCategories() async {
@@ -63,6 +60,45 @@ class AddProductController extends GetxController {
       }
     } catch (e) {
       print("Error fetching categories in AddProductController: $e");
+    }
+  }
+
+  Future<void> fetchLegitgrailsBrands() async {
+    try {
+      final apiClient = ApiClient();
+      final response = await apiClient.get(url: ApiUrl.legitgrailsBrandAPI);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        if (response.body is Map && response.body['data'] != null) {
+          final List dataList = response.body['data'];
+          final brands = dataList
+              .map((b) => b['name']?.toString() ?? '')
+              .where((n) => n.isNotEmpty)
+              .toList();
+          brandNames.assignAll(brands);
+        }
+      }
+    } catch (e) {
+      print("Error fetching legitgrails brands: $e");
+    }
+  }
+
+  Future<void> fetchLegitgrailsCategories() async {
+    try {
+      final apiClient = ApiClient();
+      final response =
+          await apiClient.get(url: ApiUrl.legitgrailsCategoriesAPI);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        if (response.body is Map && response.body['data'] != null) {
+          final List dataList = response.body['data'];
+          final categories = dataList
+              .map((c) => c['name']?.toString() ?? '')
+              .where((n) => n.isNotEmpty)
+              .toList();
+          legitgrailsCategories.assignAll(categories);
+        }
+      }
+    } catch (e) {
+      print("Error fetching legitgrails categories: $e");
     }
   }
 
@@ -110,10 +146,10 @@ class AddProductController extends GetxController {
     }
   }
 
-  Future<List<String>> _uploadImages() async {
+  Future<List<String>> _uploadImages(List<File> imagesList) async {
     final List<String> urls = [];
     final apiClient = ApiClient();
-    for (final img in pickedImages) {
+    for (final img in imagesList) {
       try {
         final response = await apiClient.multipart(
           url: ApiUrl.upload,
@@ -131,7 +167,8 @@ class AddProductController extends GetxController {
           final filePath =
               data is Map ? (data['data']?['filePath'] as String?) : null;
           if (filePath != null && filePath.isNotEmpty) {
-            urls.add(ApiUrl.buildImageUrl(filePath));
+            // Keep the exact relative filePath returned by the API so that product creation payload is correct.
+            urls.add(filePath);
           }
         }
       } catch (e) {
@@ -141,20 +178,19 @@ class AddProductController extends GetxController {
     return urls;
   }
 
-  Future<String?> saveProduct({
+  Future<Map<String, dynamic>?> saveProduct({
     String status = "INACTIVE",
   }) async {
     isLoading.value = true;
     try {
       final apiClient = ApiClient();
 
-      // Upload images first
-      final List<String> imageUrls = await _uploadImages();
+      // Upload product main images first
+      final List<String> imageUrls = await _uploadImages(pickedImages);
 
       double p = double.tryParse(price.value) ?? 0.0;
       double enteredDiscountPercentage = double.tryParse(discount.value) ?? 0.0;
 
-      // Calculate discounted price from the percentage entered
       double discountedPrice = p;
       if (p > 0 &&
           enteredDiscountPercentage > 0 &&
@@ -162,7 +198,6 @@ class AddProductController extends GetxController {
         discountedPrice = p - (p * (enteredDiscountPercentage / 100.0));
       }
 
-      // Resolve category & subcategory IDs
       int categoryId = 1;
       int subCategoryId = 1;
 
@@ -185,11 +220,6 @@ class AddProductController extends GetxController {
         }
       }
 
-      String statusPayload = "ACTIVE";
-      if (status.toLowerCase().contains("inactive")) {
-        statusPayload = "INACTIVE";
-      }
-
       final body = {
         "name": name.value,
         "description": description.value,
@@ -200,7 +230,7 @@ class AddProductController extends GetxController {
         "categoryId": categoryId,
         "subCategoryId": subCategoryId,
         "condition": condition.value.toUpperCase(),
-        "status": statusPayload,
+        "status": status,
       };
 
       final response = await apiClient.post(
@@ -216,17 +246,59 @@ class AddProductController extends GetxController {
           Get.find<SellController>().fetchProducts();
         if (Get.isRegistered<FavouriteController>())
           Get.find<FavouriteController>().fetchWishlist();
-        return null; // success
-      } else {
-        final resBody = response.body;
-        if (resBody is Map && resBody.containsKey('message')) {
-          return resBody['message'].toString();
+
+        if (response.body is Map && response.body['data'] != null) {
+          return response.body['data'] as Map<String, dynamic>;
         }
-        return "Failed to publish product. Status code: ${response.statusCode}";
+        return {};
+      } else {
+        return null;
       }
     } catch (e) {
       print("Error creating product: $e");
-      return "Something went wrong: $e";
+      return null;
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<bool> submitVerification(int productId) async {
+    isLoading.value = true;
+    try {
+      final apiClient = ApiClient();
+      // Upload verification images
+      final List<String> vImages = await _uploadImages(verificationImages);
+
+      final List<Map<String, String>> photos = [];
+      for (int i = 0; i < vImages.length; i++) {
+        photos.add({
+          "index_code": (i + 1).toString(),
+          "url": vImages[i],
+        });
+      }
+
+      final body = {
+        "category_code": selectedLegitCategory.value,
+        "brand_code": selectedBrand.value,
+        "item": name.value,
+        "photos": photos,
+        "answer_time": 1440,
+        "note": "First submission"
+      };
+
+      final response = await apiClient.post(
+        url: ApiUrl.authenticationSubmitAPI(productId.toString()),
+        body: body,
+        isToken: true,
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      print("Error submitting verification: $e");
+      return false;
     } finally {
       isLoading.value = false;
     }

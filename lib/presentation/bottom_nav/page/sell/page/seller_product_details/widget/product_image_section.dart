@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../../core/responsive_layout/dimensions.dart';
-import '../../../../utils/app_colors/app_colors.dart';
-import '../controller/product_details_controller.dart';
+import 'package:bestkits/service/api_url.dart';
+
+import '../../../../../../../utils/app_colors/app_colors.dart';
+import '../controller/seller_product_details_controller.dart';
 
 class ProductImageSection extends StatelessWidget {
-  final ProductDetailsController controller;
+  final SellerProductDetailsController controller;
 
   const ProductImageSection({super.key, required this.controller});
 
@@ -13,7 +14,8 @@ class ProductImageSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(() {
       final product = controller.productDetails.value;
-      final images = product?.fullImageUrls ?? [];
+      final rawImages = product?.imageUrls ?? [];
+      final images = rawImages.map((e) => ApiUrl.buildImageUrl(e)).toList();
       final selectedIndex = controller.selectedImageIndex.value;
 
       return Column(

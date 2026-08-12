@@ -2,36 +2,34 @@ import 'package:bestkits/utils/static_strings/static_strings.dart';
 import 'package:bestkits/widget/custom_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../../core/responsive_layout/dimensions.dart';
-import '../../../../utils/app_colors/app_colors.dart';
-import '../../../../utils/app_text_style/app_text_style.dart';
-import '../controller/product_details_controller.dart';
+import '../../../../../../../core/responsive_layout/dimensions.dart';
+import '../../../../../../../utils/app_colors/app_colors.dart';
+import '../controller/seller_product_details_controller.dart';
 import '../widget/product_action_section.dart';
 import '../widget/product_image_section.dart';
 import '../widget/product_info_section.dart';
 import '../widget/product_tabs_section.dart';
-import '../../favorite/controller/favourite_controller.dart';
-import 'package:bestkits/data/model/product_model.dart';
+import 'package:bestkits/presentation/bottom_nav/page/sell/page/seller_product_details/model/seller_product_details.dart' as sellModel;
 import 'package:bestkits/presentation/bottom_nav/page/sell/page/update_product/screen/update_product_screen.dart';
 
-class ProductDetailsScreen extends StatefulWidget {
-  const ProductDetailsScreen({super.key});
+class SellerProductDetailsScreen extends StatefulWidget {
+  const SellerProductDetailsScreen({super.key});
 
   @override
-  State<ProductDetailsScreen> createState() => _ProductDetailsScreenState();
+  State<SellerProductDetailsScreen> createState() => _SellerProductDetailsScreenState();
 }
 
-class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
-  late final ProductDetailsController controller;
+class _SellerProductDetailsScreenState extends State<SellerProductDetailsScreen> {
+  late final SellerProductDetailsController controller;
 
   @override
   void initState() {
     super.initState();
     // Use find instead of put to get the controller registered by the route binding.
     // Fall back to put if not found (e.g. navigated via Get.to instead of Get.toNamed).
-    controller = Get.isRegistered<ProductDetailsController>()
-        ? Get.find<ProductDetailsController>()
-        : Get.put(ProductDetailsController());
+    controller = Get.isRegistered<SellerProductDetailsController>()
+        ? Get.find<SellerProductDetailsController>()
+        : Get.put(SellerProductDetailsController());
 
     // Read the product ID and optional pre-built model from navigation arguments
     final args = Get.arguments;
@@ -41,16 +39,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     final dynamic productModel = argsMap?['productModel'];
 
     if (productModel != null) {
-      // Use the injected ProductModel directly — skips the /products/:id API call entirely.
-      // This prevents 404 errors for products that aren't globally visible.
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        controller.productDetails.value = productModel;
-        controller.isLoading.value = false;
-        controller.errorMessage.value = '';
-        if (productModel.variants != null &&
-            (productModel.variants as List).isNotEmpty) {
-          controller.selectedVariant.value =
-              (productModel.variants as List).first.variantName;
+        // If needed, we can map it here, but generally we should fetch to get full seller details.
+        // For now, let's just fetch it anyway to ensure we have the correct model.
+        if (productId.isNotEmpty) {
+          controller.fetchProductDetails(productId);
         }
       });
     } else if (productId.isNotEmpty) {
@@ -101,7 +94,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           );
         }
 
-        final ProductModel? product = controller.productDetails.value;
+        final sellModel.Data? product = controller.productDetails.value;
         if (product == null) {
           return const Center(child: Text('No product data'));
         }

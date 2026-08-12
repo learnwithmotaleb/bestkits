@@ -1,15 +1,15 @@
 import 'package:bestkits/utils/static_strings/static_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../../utils/app_colors/app_colors.dart';
-import '../../../../utils/app_text_style/app_text_style.dart';
-import '../../../../widget/app_button.dart';
-import '../controller/product_details_controller.dart';
-import 'package:bestkits/data/model/product_model.dart';
+import '../../../../../../../utils/app_colors/app_colors.dart';
+import '../../../../../../../widget/app_button.dart';
+import '../controller/seller_product_details_controller.dart';
+import 'package:bestkits/presentation/bottom_nav/page/sell/page/seller_product_details/model/seller_product_details.dart' as sellModel;
+import 'package:bestkits/service/api_url.dart';
 
 class ProductTabsSection extends StatelessWidget {
-  final ProductDetailsController controller;
-  final ProductModel product;
+  final SellerProductDetailsController controller;
+  final sellModel.Data product;
 
   const ProductTabsSection({
     super.key,
@@ -30,7 +30,7 @@ class ProductTabsSection extends StatelessWidget {
                 final isSelected = controller.selectedTabIndex.value == index;
                 String tabLabel = controller.tabs[index].tr;
                 if (index == 1) {
-                  tabLabel += ' (${product.totalReviews})';
+                  tabLabel += ' (${product.totalReviews ?? 0})';
                 }
 
                 return GestureDetector(
@@ -38,14 +38,6 @@ class ProductTabsSection extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal:10, vertical: 10),
                     decoration: BoxDecoration(
-                      // border: Border(
-                      //   bottom: BorderSide(
-                      //     color: isSelected
-                      //         ? AppColors.whiteColor
-                      //         : Colors.grey.withOpacity(0.1),
-                      //     width: 1,
-                      //   ),
-                      // ),
                       gradient: isSelected
                           ? LinearGradient(
                               begin: Alignment.topCenter,
@@ -98,7 +90,8 @@ class ProductTabsSection extends StatelessWidget {
 
   // ─── Description Tab ────────────────────────────────────────────────────────
   Widget _buildDescription() {
-    final rawStatus = product.status.toUpperCase();
+    final rawStatus = (product.status ?? '').toUpperCase();
+    final desc = product.description ?? '';
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -124,8 +117,8 @@ class ProductTabsSection extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                product.description.isNotEmpty
-                    ? product.description
+                desc.isNotEmpty
+                    ? desc
                     : AppStrings.dummyDescription.tr,
                 style: TextStyle(
                   fontSize: 12,
@@ -144,17 +137,17 @@ class ProductTabsSection extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               _buildDetailRow('${AppStrings.onlineSince.tr}:',
-                  _formatDate(product.createdAt)),
+                  _formatDate(product.createdAt ?? '')),
               _buildDetailRow(
-                  '${AppStrings.category.tr}:', product.categoryName),
+                  '${AppStrings.category.tr}:', product.category?.name ?? ''),
               _buildDetailRow(
-                  '${AppStrings.subCategory.tr}:', product.subCategoryName),
-              _buildDetailRow('${AppStrings.condition.tr}:', product.condition),
-              if (product.user?.profile?.country != null)
+                  '${AppStrings.subCategory.tr}:', product.subCategory?.name ?? ''),
+              _buildDetailRow('${AppStrings.condition.tr}:', product.condition ?? ''),
+              if (product.seller?.profile?.country != null)
                 _buildDetailRow('${AppStrings.location.tr}:',
-                    product.user!.profile!.country!),
+                    product.seller!.profile!.country!),
               _buildDetailRow(
-                  '${AppStrings.sellerLabel.tr}:', product.sellerName),
+                  '${AppStrings.sellerLabel.tr}:', product.seller?.profile?.fullName ?? ''),
               _buildDetailRow(
                   '${AppStrings.reference.tr}:', product.id.toString()),
             ],
@@ -338,7 +331,7 @@ class ProductTabsSection extends StatelessWidget {
       children: [
         AppButton(
           label: 'Mark As Inactive',
-          onPressed: () {},
+          onPressed: controller.markAsInactive,
           backgroundColor: const Color(0xFF1B1B1B),
           textColor: AppColors.primaryColor,
           leadingIcon: Icon(Icons.block_outlined,
@@ -349,7 +342,7 @@ class ProductTabsSection extends StatelessWidget {
         const SizedBox(height: 12),
         AppButton(
           label: 'Delete Product',
-          onPressed: () {},
+          onPressed: controller.deleteProduct,
           backgroundColor: const Color(0xFFFFEBEE),
           textColor: AppColors.redColor,
           leadingIcon: Icon(Icons.delete_outline_rounded,
@@ -387,7 +380,7 @@ class ProductTabsSection extends StatelessWidget {
         const SizedBox(height: 16),
         AppButton(
           label: 'Delete Product',
-          onPressed: () {},
+          onPressed: controller.deleteProduct,
           backgroundColor: const Color(0xFFFFEBEE),
           textColor: AppColors.redColor,
           leadingIcon: Icon(Icons.delete_outline_rounded,
@@ -412,7 +405,7 @@ class ProductTabsSection extends StatelessWidget {
       children: [
         AppButton(
           label: 'Mark As Live',
-          onPressed: () {},
+          onPressed: controller.markAsInactive,
           backgroundColor: const Color(0xFF1B1B1B),
           textColor: AppColors.primaryColor,
           leadingIcon: Icon(Icons.remove_red_eye_sharp,
@@ -423,7 +416,7 @@ class ProductTabsSection extends StatelessWidget {
         const SizedBox(height: 12),
         AppButton(
           label: 'Delete Product',
-          onPressed: () {},
+          onPressed: controller.deleteProduct,
           backgroundColor: const Color(0xFFFFEBEE),
           textColor: AppColors.redColor,
           leadingIcon: Icon(Icons.delete_outline_rounded,
@@ -462,6 +455,7 @@ class ProductTabsSection extends StatelessWidget {
   }
 
   String _formatDate(String isoDate) {
+    if (isoDate.isEmpty) return '—';
     try {
       final dt = DateTime.parse(isoDate);
       return '${dt.year}-${dt.month.toString().padLeft(2, '0')}-${dt.day.toString().padLeft(2, '0')}';
@@ -472,7 +466,7 @@ class ProductTabsSection extends StatelessWidget {
 
   // ─── Reviews Tab ─────────────────────────────────────────────────────────────
   Widget _buildReviews() {
-    if (product.totalReviews == 0) {
+    if ((product.totalReviews ?? 0) == 0) {
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 30),
         child: Center(
@@ -499,7 +493,7 @@ class ProductTabsSection extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 20),
       child: Center(
         child: Text(
-          '${product.totalReviews} review(s) — details coming soon',
+          '${product.totalReviews ?? 0} review(s) — details coming soon',
           style: TextStyle(color: Colors.grey[500], fontSize: 13),
         ),
       ),
@@ -508,12 +502,12 @@ class ProductTabsSection extends StatelessWidget {
 
   // ─── Seller Tab ──────────────────────────────────────────────────────────────
   Widget _buildSeller(BuildContext context) {
-    final seller = product.user;
+    final seller = product.seller;
     final profile = seller?.profile;
     final sellerName =
-        (profile?.fullName.isNotEmpty ?? false) ? profile!.fullName : 'Seller';
+        (profile?.fullName?.isNotEmpty ?? false) ? profile!.fullName! : 'Seller';
     final country = profile?.country ?? '';
-    final avatarUrl = product.sellerAvatarUrl;
+    final avatarUrl = ApiUrl.buildImageUrl(profile?.avatarUrl);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -601,13 +595,13 @@ class ProductTabsSection extends StatelessWidget {
         const SizedBox(height: 12),
         _buildSellerStat(
           Icons.star_border,
-          '${AppStrings.totalRating.tr} ( ${product.totalReviews} ${AppStrings.reviews.tr} )',
-          product.ratingDisplay,
+          '${AppStrings.totalRating.tr} ( ${product.totalReviews ?? 0} ${AppStrings.reviews.tr} )',
+          (product.averageRating ?? 0.0).toString(),
         ),
         _buildSellerStat(
           Icons.category_outlined,
           AppStrings.totalItems.tr,
-          '${product.categoryName} • ${product.subCategoryName}',
+          '${product.category?.name ?? ''} • ${product.subCategory?.name ?? ''}',
           highlight: true,
         ),
       ],

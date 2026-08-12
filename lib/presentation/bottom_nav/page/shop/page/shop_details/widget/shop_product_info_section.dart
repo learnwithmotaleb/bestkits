@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:bestkits/utils/app_colors/app_colors.dart';
 import 'package:bestkits/utils/app_text_style/app_text_style.dart';
 import 'package:bestkits/utils/static_strings/static_strings.dart';
-import 'package:bestkits/data/model/product_model.dart';
+import 'package:bestkits/presentation/bottom_nav/page/shop/page/shop_details/model/shop_details_model.dart';
+import 'package:get/get_utils/src/extensions/internacionalization.dart';
 
 // ─── Status Helpers ────────────────────────────────────────────────────────────
 
@@ -70,37 +70,46 @@ String _statusLabel(String status) {
 // ─── Shop Product Info Section ─────────────────────────────────────────────────
 
 class ShopProductInfoSection extends StatelessWidget {
-  final ProductModel product;
+  final ShopDetailsData product;
 
   const ShopProductInfoSection({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {
-    final hasDiscount = product.discountedPrice != null &&
-        product.discountPercentage != null &&
-        product.discountPercentage! > 0;
+    final effectivePrice = product.effectivePrice ??
+        product.discountedPrice ??
+        product.originalPrice ??
+        0;
+    final originalPrice = product.originalPrice ?? 0;
+    final discountPct = product.discountPercentage ?? 0;
+    final hasDiscount = discountPct > 0 && effectivePrice != originalPrice;
 
-    final rawStatus = product.status.toUpperCase();
+    final rawStatus = (product.status ?? '').toUpperCase();
     final accentColor = _statusAccentColor(rawStatus);
     final bgColor = _statusBgColor(rawStatus);
     final label = _statusLabel(rawStatus);
 
+    final categoryName = product.category?.name ?? '';
+    final subCategoryName = product.subCategory?.name ?? '';
+    final condition = product.condition ?? '';
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // ── Row 1: Category / Subcategory (with divider between them) ──────────
+        // ── Row 1: Category / Subcategory ────────────────────────────────────
         Row(
           children: [
-            if (product.categoryName.isNotEmpty) ...[
+            if (categoryName.isNotEmpty) ...[
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
                       color: AppColors.primaryColor.withValues(alpha: 0.5)),
                 ),
                 child: Text(
-                  product.categoryName,
+                  categoryName,
                   style: TextStyle(
                     color: AppColors.primaryColor,
                     fontSize: 10,
@@ -108,7 +117,7 @@ class ShopProductInfoSection extends StatelessWidget {
                   ),
                 ),
               ),
-              if (product.subCategoryName.isNotEmpty) ...[
+              if (subCategoryName.isNotEmpty) ...[
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 6),
                   child: Text(
@@ -122,15 +131,16 @@ class ShopProductInfoSection extends StatelessWidget {
                 ),
               ],
             ],
-            if (product.subCategoryName.isNotEmpty)
+            if (subCategoryName.isNotEmpty)
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   color: Colors.grey[100],
                 ),
                 child: Text(
-                  product.subCategoryName,
+                  subCategoryName,
                   style: TextStyle(
                     color: Colors.grey[600],
                     fontSize: 10,
@@ -142,12 +152,9 @@ class ShopProductInfoSection extends StatelessWidget {
         ),
         const SizedBox(height: 10),
 
-        // ── Row 2: Status Badge ────────────────────────────────────────────────
-
-
-        // ── Row 3: Product Name ────────────────────────────────────────────────
+        // ── Product Name ──────────────────────────────────────────────────────
         Text(
-          product.name,
+          product.name ?? '',
           style: AppTextStyles.h3.copyWith(
             fontSize: 20,
             fontWeight: FontWeight.w700,
@@ -155,87 +162,93 @@ class ShopProductInfoSection extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 5),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-          decoration: BoxDecoration(
-            color: bgColor,
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: accentColor.withValues(alpha: 0.4), width: 1),
+
+        // ── Status Badge ──────────────────────────────────────────────────────
+        if (rawStatus.isNotEmpty)
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            decoration: BoxDecoration(
+              color: bgColor,
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                  color: accentColor.withValues(alpha: 0.4), width: 1),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 6,
+                  height: 6,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: accentColor,
+                  ),
+                ),
+                const SizedBox(width: 5),
+                Text(
+                  label,
+                  style: TextStyle(
+                    color: accentColor,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
           ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
+        const SizedBox(height: 10),
+
+        // ── Condition ─────────────────────────────────────────────────────────
+        if (condition.isNotEmpty)
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                width: 6,
-                height: 6,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: accentColor,
+              Text(
+                'Product Condition - ',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey[500],
+                  fontWeight: FontWeight.w500,
                 ),
               ),
-              const SizedBox(width: 5),
-              Text(
-                label,
-                style: TextStyle(
-                  color: accentColor,
-                  fontSize: 10,
-                  fontWeight: FontWeight.w700,
+              const SizedBox(height: 5),
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                decoration: BoxDecoration(
+                  color: condition.toUpperCase() == 'NEW'
+                      ? const Color(0xFFE8F5E9)
+                      : const Color(0xFFFFF3E0),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: condition.toUpperCase() == 'NEW'
+                        ? const Color(0xFF22C55E)
+                        : const Color(0xFFFF6B35),
+                    width: 1,
+                  ),
+                ),
+                child: Text(
+                  condition,
+                  style: TextStyle(
+                    color: condition.toUpperCase() == 'NEW'
+                        ? const Color(0xFF22C55E)
+                        : const Color(0xFFFF6B35),
+                    fontSize: 10,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
             ],
           ),
-        ),
-        const SizedBox(height: 10),
-
-        // ── Row 4: Condition label + chip ──────────────────────────────────────
-        Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Product Condition - ',
-              style: TextStyle(
-                fontSize: 12,
-                color: Colors.grey[500],
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            const SizedBox(height: 5),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-              decoration: BoxDecoration(
-                color: product.condition.toUpperCase() == 'NEW'
-                    ? const Color(0xFFE8F5E9)
-                    : const Color(0xFFFFF3E0),
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: product.condition.toUpperCase() == 'NEW'
-                      ? const Color(0xFF22C55E)
-                      : const Color(0xFFFF6B35),
-                  width: 1,
-                ),
-              ),
-              child: Text(
-                product.condition.isNotEmpty ? product.condition : 'N/A',
-                style: TextStyle(
-                  color: product.condition.toUpperCase() == 'NEW'
-                      ? const Color(0xFF22C55E)
-                      : const Color(0xFFFF6B35),
-                  fontSize: 10,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ),
-          ],
-        ),
         const SizedBox(height: 15),
 
-        // ── Row 5: Price Row ───────────────────────────────────────────────────
+        // ── Price Row ─────────────────────────────────────────────────────────
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              product.formattedPrice,
+              '\$$effectivePrice',
               style: AppTextStyles.h2.copyWith(
                 fontSize: 24,
                 fontWeight: FontWeight.w800,
@@ -244,7 +257,7 @@ class ShopProductInfoSection extends StatelessWidget {
             if (hasDiscount) ...[
               const SizedBox(width: 8),
               Text(
-                product.formattedOriginalPrice,
+                '\$$originalPrice',
                 style: TextStyle(
                   fontSize: 13,
                   color: Colors.grey[400],
@@ -260,7 +273,7 @@ class ShopProductInfoSection extends StatelessWidget {
                       color: AppColors.primaryColor.withValues(alpha: 0.5)),
                 ),
                 child: Text(
-                  '${product.discountPercentage!.toInt()}% ${AppStrings.off.tr}',
+                  '$discountPct% ${AppStrings.off.tr}',
                   style: TextStyle(
                     color: AppColors.primaryColor,
                     fontSize: 10,

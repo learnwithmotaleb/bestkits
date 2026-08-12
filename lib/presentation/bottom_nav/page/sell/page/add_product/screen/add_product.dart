@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:bestkits/presentation/bottom_nav/page/sell/page/product_verification/screen/product_verification_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../../../utils/static_strings/static_strings.dart';
@@ -11,8 +12,8 @@ import '../../../../../../../widget/app_alert.dart';
 import '../../../../../../../widget/app_button.dart';
 import '../../../../../../../widget/app_text_field.dart';
 import '../../../../../../../widget/custom_appbar.dart';
+import '../../../../../../../widget/show_snackbar.dart';
 import '../controller/add_product_controller.dart';
-import '../widget/product_verification.dart';
 
 class AddProduct extends StatefulWidget {
   const AddProduct({super.key});
@@ -33,79 +34,9 @@ class _AddProductState extends State<AddProduct> {
   final _priceController = TextEditingController();
   final _discountController = TextEditingController();
 
-  // ── Category → Sub-category map ──────────────────────────────────────────
-  static const Map<String, List<String>> _categoryMap = {
-    'Tops & Shirts': [
-      'T-Shirts',
-      'Casual Shirts',
-      'Flannel Shirts',
-      'Polo Shirts',
-      'Tank Tops',
-      'Blouses',
-    ],
-    'Bottoms': [
-      'Denim & Jeans',
-      'Trousers & Chinos',
-      'Leggings',
-      'Shorts',
-      'Skirts',
-      'Joggers',
-    ],
-    'Outerwear': [
-      'Jackets & Coats',
-      'Trench Coats',
-      'Hoodies & Sweatshirts',
-      'Blazers',
-      'Cardigans & Sweaters',
-      'Raincoats',
-    ],
-    'Swimwear': [
-      'One-Piece Swimsuits',
-      'Bikinis',
-      'Swim Shorts',
-      'Rash Guards',
-      'Cover-Ups',
-    ],
-    'Accessories': [
-      'Beanies & Hats',
-      'Baseball Caps',
-      'Scarves & Wraps',
-      'Belts',
-      'Bags & Backpacks',
-      'Sunglasses',
-    ],
-    'Kids Clothing': [
-      'Kids Sneakers',
-      'Kids Boots',
-      'Kids Sandals',
-      'Kids Tops',
-      'Kids Bottoms',
-      'Kids Outerwear',
-    ],
-    'Footwear': [
-      'Sneakers',
-      'Boots',
-      'Sandals & Slides',
-      'Loafers',
-      'Heels',
-      'Sports Shoes',
-    ],
-    'Underwear & Socks': [
-      'Briefs & Boxers',
-      'Bras & Lingerie',
-      'Thermal Underwear',
-      'Ankle Socks',
-      'Knee-High Socks',
-      'Tights & Stockings',
-    ],
-  };
+  List<String> get _categories => _ctrl.categoryNames.toList();
 
-  List<String> get _categories => _categoryMap.keys.toList();
-
-  List<String> get _subCategories {
-    final selected = _categoryController.text;
-    return _categoryMap[selected] ?? [];
-  }
+  List<String> get _subCategories => _ctrl.subCategoryNames.toList();
 
   // Condition toggle
   final List<String> _conditions = ['New', 'Used'];
@@ -160,8 +91,12 @@ class _AddProductState extends State<AddProduct> {
     );
   }
 
-  void _onContinue() {
+  Future<void> _onContinue() async {
     if (!_formKey.currentState!.validate()) return;
+    if (_ctrl.pickedImages.isEmpty) {
+      ShowAppSnackBar.fail("Please upload at least one product image.");
+      return;
+    }
 
     _ctrl.name.value = _nameController.text;
     _ctrl.description.value = _descController.text;
@@ -171,7 +106,19 @@ class _AddProductState extends State<AddProduct> {
     _ctrl.discount.value = _discountController.text;
     _ctrl.condition.value = _selectedCondition;
 
-    Get.to(() => const ProductVerification());
+    final productData = await _ctrl.saveProduct(status: "INACTIVE");
+    if (productData != null) {
+      final productId = productData['id'];
+      if (productId != null) {
+        ShowAppSnackBar.success(
+            "Product created successfully as inactive. Proceeding to verification.");
+        Get.to(() => const ProductVerificationScreen(), arguments: productId);
+      } else {
+        ShowAppSnackBar.fail("Failed to parse product ID from response.");
+      }
+    } else {
+      ShowAppSnackBar.fail("Failed to add product. Please try again.");
+    }
   }
 
   @override
@@ -332,14 +279,14 @@ class _AddProductState extends State<AddProduct> {
                 ),
               ),
               child: Obx(() => AppButton(
-                label: 'Continue to Verification >>',
-                onPressed: _ctrl.isLoading.value ? null : _onContinue,
-                isLoading: _ctrl.isLoading.value,
-                backgroundColor: AppColors.blackColor,
-                textColor: AppColors.primaryColor,
-                borderRadius: 14,
-                height: 52,
-              )),
+                    label: 'Continue to Verification >>',
+                    onPressed: _ctrl.isLoading.value ? null : _onContinue,
+                    isLoading: _ctrl.isLoading.value,
+                    backgroundColor: AppColors.blackColor,
+                    textColor: AppColors.primaryColor,
+                    borderRadius: 14,
+                    height: 52,
+                  )),
             ),
           ],
         ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:bestkits/service/api_url.dart';
 import '../../../../../../../utils/app_colors/app_colors.dart';
-
 import '../controller/update_product_controller.dart';
 
 class ProductImageSection extends StatelessWidget {
@@ -11,65 +11,105 @@ class ProductImageSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        // Main Image
-        Obx(() => Container(
-              height: 250,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(25),
-                border: Border.all(color: Colors.grey.withOpacity(0.1)),
+    return Obx(() {
+      final rawImages = controller.productImages;
+      final images = rawImages.map((e) => ApiUrl.buildImageUrl(e)).toList();
+      final selectedIndex = controller.selectedImageIndex.value;
+
+      return Column(
+        children: [
+          // ── Main Image ──────────────────────────────────────────────────────
+          Container(
+            height: 250,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(25),
+              border: Border.all(color: Colors.grey.withOpacity(0.1)),
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(25),
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: images.isNotEmpty
+                    ? _buildImage(
+                        images[selectedIndex.clamp(0, images.length - 1)])
+                    : const Icon(Icons.image_not_supported,
+                        color: Colors.grey, size: 60),
               ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(25),
-                child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Image.asset(
-                    controller.productImages[controller.selectedImageIndex.value],
-                    fit: BoxFit.contain,
-                  ),
-                ),
-              ),
-            )),
-        const SizedBox(height: 15),
-        // Thumbnails
-        SizedBox(
-          height: 60,
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            itemCount: controller.productImages.length,
-            separatorBuilder: (_, __) => const SizedBox(width: 10),
-            itemBuilder: (context, index) {
-              return Obx(() {
-                final isSelected = controller.selectedImageIndex.value == index;
-                return GestureDetector(
-                  onTap: () => controller.selectImage(index),
-                  child: Container(
-                    width: 60,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                        color: isSelected ? AppColors.primaryColor : Colors.grey.withOpacity(0.2),
-                        width: isSelected ? 2 : 1,
-                      ),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(5),
-                      child: Image.asset(
-                        controller.productImages[index],
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                  ),
-                );
-              });
-            },
+            ),
           ),
-        ),
-      ],
+          const SizedBox(height: 15),
+          // ── Thumbnails ──────────────────────────────────────────────────────
+          if (images.length > 1)
+            SizedBox(
+              height: 60,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemCount: images.length,
+                separatorBuilder: (_, __) => const SizedBox(width: 10),
+                itemBuilder: (context, index) {
+                  final isSelected = selectedIndex == index;
+                  return GestureDetector(
+                    onTap: () => controller.selectImage(index),
+                    child: Container(
+                      width: 60,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: isSelected
+                              ? AppColors.primaryColor
+                              : Colors.grey.withOpacity(0.2),
+                          width: isSelected ? 2 : 1,
+                        ),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(5),
+                        child: _buildImage(images[index]),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+        ],
+      );
+    });
+  }
+
+  Widget _buildImage(String url) {
+    if (url.isEmpty) {
+      return const Icon(Icons.image_not_supported,
+          color: Colors.grey, size: 40);
+    }
+    // Already a full URL (http/https) — use network, else asset
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      return Image.network(
+        url,
+        fit: BoxFit.contain,
+        errorBuilder: (_, __, ___) =>
+            const Icon(Icons.image_not_supported, color: Colors.grey, size: 40),
+        loadingBuilder: (_, child, progress) {
+          if (progress == null) return child;
+          return Center(
+            child: CircularProgressIndicator(
+              value: progress.expectedTotalBytes != null
+                  ? progress.cumulativeBytesLoaded /
+                      progress.expectedTotalBytes!
+                  : null,
+              strokeWidth: 2,
+              color: AppColors.primaryColor,
+            ),
+          );
+        },
+      );
+    }
+    return Image.asset(
+      url,
+      fit: BoxFit.contain,
+      errorBuilder: (_, __, ___) =>
+          const Icon(Icons.image_not_supported, color: Colors.grey, size: 40),
     );
   }
 }

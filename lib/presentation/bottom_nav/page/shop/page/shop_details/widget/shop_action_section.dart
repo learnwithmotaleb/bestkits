@@ -4,12 +4,11 @@ import 'package:get/get.dart';
 import 'package:bestkits/utils/app_colors/app_colors.dart';
 import 'package:bestkits/widget/app_button.dart';
 import '../controller/shop_details_controller.dart';
-import 'package:bestkits/data/model/product_model.dart';
-import 'package:bestkits/utils/static_strings/static_strings.dart';
+import '../model/shop_details_model.dart';
 
 class ShopActionSection extends StatelessWidget {
   final ShopDetailsController controller;
-  final ProductModel product;
+  final ShopDetailsData product;
 
   const ShopActionSection({
     super.key,
@@ -19,67 +18,9 @@ class ShopActionSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final variants = product.variants;
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // ── Variant Selection ─────────────────────────────────────────────────
-        if (variants.isNotEmpty) ...[
-          Text(
-            '${AppStrings.variant.tr} -',
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: Colors.grey[600],
-            ),
-          ),
-          const SizedBox(height: 10),
-          SizedBox(
-            height: 35,
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              itemCount: variants.length,
-              separatorBuilder: (_, __) => const SizedBox(width: 10),
-              itemBuilder: (context, index) {
-                return Obx(() {
-                  final variant = variants[index];
-                  final isSelected =
-                      controller.selectedVariant.value == variant.variantName;
-                  return GestureDetector(
-                    onTap: () => controller.selectVariant(variant.variantName),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      decoration: BoxDecoration(
-                        color: isSelected ? Colors.white : Colors.grey[200],
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(
-                          color: isSelected
-                              ? AppColors.primaryColor
-                              : Colors.transparent,
-                          width: 1,
-                        ),
-                      ),
-                      alignment: Alignment.center,
-                      child: Text(
-                        variant.variantName,
-                        style: TextStyle(
-                          color: isSelected
-                              ? AppColors.primaryColor
-                              : Colors.grey[500],
-                          fontWeight: FontWeight.w600,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ),
-                  );
-                });
-              },
-            ),
-          ),
-          const SizedBox(height: 20),
-        ],
-
         // ── Actions ───────────────────────────────────────────────────────
         Row(
           children: [

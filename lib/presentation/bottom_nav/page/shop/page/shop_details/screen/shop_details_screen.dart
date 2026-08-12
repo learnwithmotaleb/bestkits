@@ -1,6 +1,5 @@
 import 'package:bestkits/core/responsive_layout/dimensions.dart';
 import 'package:bestkits/core/routes/route_path.dart';
-import 'package:bestkits/presentation/bottom_nav/page/home/widget/product_card.dart';
 import '../widget/shop_product_info_section.dart';
 import 'package:bestkits/utils/app_colors/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -9,10 +8,11 @@ import 'package:bestkits/utils/static_strings/static_strings.dart';
 import 'package:bestkits/widget/custom_appbar.dart';
 import 'package:bestkits/presentation/bottom_nav/controller/bottom_nav_controller.dart';
 import '../controller/shop_details_controller.dart';
+import '../model/shop_details_model.dart';
 import '../widget/shop_image_section.dart';
 import '../widget/shop_action_section.dart';
 import '../widget/shop_tabs_section.dart';
-import 'package:bestkits/data/model/product_model.dart';
+import 'package:bestkits/service/api_url.dart';
 
 class ShopDetailsScreen extends StatefulWidget {
   const ShopDetailsScreen({super.key});
@@ -35,20 +35,8 @@ class _ShopDetailsScreenState extends State<ShopDetailsScreen> {
     final Map<String, dynamic>? argsMap =
         args is Map<String, dynamic> ? args : null;
     final String productId = argsMap?['productId']?.toString() ?? '';
-    final dynamic productModel = argsMap?['productModel'];
 
-    if (productModel != null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        controller.productDetails.value = productModel;
-        controller.isLoading.value = false;
-        controller.errorMessage.value = '';
-        if (productModel.variants != null &&
-            (productModel.variants as List).isNotEmpty) {
-          controller.selectedVariant.value =
-              (productModel.variants as List).first.variantName;
-        }
-      });
-    } else if (productId.isNotEmpty) {
+    if (productId.isNotEmpty) {
       controller.fetchProductDetails(productId);
     }
   }
@@ -111,7 +99,7 @@ class _ShopDetailsScreenState extends State<ShopDetailsScreen> {
           );
         }
 
-        final ProductModel? product = controller.productDetails.value;
+        final ShopDetailsData? product = controller.productDetails.value;
         if (product == null) {
           return const Center(child: Text('No product data'));
         }
@@ -133,65 +121,60 @@ class _ShopDetailsScreenState extends State<ShopDetailsScreen> {
                     ShopTabsSection(controller: controller, product: product),
 
                     // Related Products Header
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Related Products',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700,
-                            fontStyle: FontStyle.italic,
-                            color: Colors.grey[800],
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            if (Get.isRegistered<BottomNavController>()) {
-                              Get.until((route) =>
-                                  route.settings.name == RoutePath.bottomNav ||
-                                  Get.currentRoute == RoutePath.bottomNav);
-                              Get.find<BottomNavController>().changeIndex(1);
-                            } else {
-                              Get.offAllNamed(RoutePath.bottomNav);
-                            }
-                          },
-                          child: Text(
-                            'View all',
+                    if (product.relatedProducts != null &&
+                        product.relatedProducts!.isNotEmpty) ...[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Related Products',
                             style: TextStyle(
-                              fontSize: 12,
+                              fontSize: 14,
                               fontWeight: FontWeight.w700,
-                              color: AppColors.primaryColor,
+                              fontStyle: FontStyle.italic,
+                              color: Colors.grey[800],
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 15),
-
-                    // Dummy related products layout
-                    // Normally we would use a GridView or a horizontal list. The design shows a grid.
-                    GridView.builder(
-                      shrinkWrap: true,
-                      physics:
-                          const NeverScrollableScrollPhysics(), // Since it's inside a SingleChildScrollView
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 15,
-                        mainAxisSpacing: 15,
-                        childAspectRatio: 0.65,
+                          GestureDetector(
+                            onTap: () {
+                              if (Get.isRegistered<BottomNavController>()) {
+                                Get.until((route) =>
+                                    route.settings.name == RoutePath.bottomNav ||
+                                    Get.currentRoute == RoutePath.bottomNav);
+                                Get.find<BottomNavController>().changeIndex(1);
+                              } else {
+                                Get.offAllNamed(RoutePath.bottomNav);
+                              }
+                            },
+                            child: Text(
+                              'View all',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w700,
+                                color: AppColors.primaryColor,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                      itemCount: 2, // Dummy count
-                      itemBuilder: (context, index) {
-                        return ProductCard(
-                          product:
-                              product, // Using the same product as dummy data
-                          width: double.infinity,
-                          margin: EdgeInsets.zero,
-                        );
-                      },
-                    ),
+                      const SizedBox(height: 15),
+                      GridView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 15,
+                          mainAxisSpacing: 15,
+                          childAspectRatio: 0.65,
+                        ),
+                        itemCount: product.relatedProducts!.length,
+                        itemBuilder: (context, index) {
+                          final related = product.relatedProducts![index];
+                          return _RelatedProductCard(product: related);
+                        },
+                      ),
+                    ],
                     const SizedBox(height: 40),
                   ],
                 ),
@@ -200,6 +183,87 @@ class _ShopDetailsScreenState extends State<ShopDetailsScreen> {
           ],
         );
       }),
+    );
+  }
+}
+
+class _RelatedProductCard extends StatelessWidget {
+  final ShopDetailsRelatedProduct product;
+
+  const _RelatedProductCard({required this.product});
+
+  @override
+  Widget build(BuildContext context) {
+    final imageUrl = ApiUrl.buildImageUrl(
+        product.imageUrls?.isNotEmpty == true ? product.imageUrls!.first : null);
+    final name = product.name ?? 'Unknown';
+    final price = product.effectivePrice ?? product.discountedPrice ?? 0;
+
+    return GestureDetector(
+      onTap: () {
+        Get.toNamed(
+          '/shop-details',
+          arguments: {'productId': product.id?.toString() ?? ''},
+        );
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: Colors.grey.withOpacity(0.1)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: ClipRRect(
+                borderRadius:
+                    const BorderRadius.vertical(top: Radius.circular(16)),
+                child: imageUrl.isNotEmpty
+                    ? Image.network(
+                        imageUrl,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) => const Center(
+                          child: Icon(Icons.image_not_supported,
+                              color: Colors.grey),
+                        ),
+                      )
+                    : const Center(
+                        child: Icon(Icons.image_not_supported,
+                            color: Colors.grey),
+                      ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    name,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    '\$$price',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w800,
+                      color: AppColors.primaryColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

@@ -1,18 +1,17 @@
-import 'package:bestkits/core/routes/route_path.dart';
 import 'package:bestkits/presentation/cart/controller/cart_controller.dart';
 import 'package:bestkits/presentation/checkout/screen/checkout_screen.dart';
 import 'package:bestkits/presentation/my_address/controller/my_address_controller.dart';
 import 'package:bestkits/utils/static_strings/static_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:bestkits/data/model/product_model.dart';
+import 'package:bestkits/presentation/bottom_nav/page/shop/page/shop_details/model/shop_details_model.dart';
 import 'package:bestkits/service/api_service.dart';
 import 'package:bestkits/service/api_url.dart';
 import 'package:bestkits/widget/show_snackbar.dart';
 
 class ShopDetailsController extends GetxController {
   // Product state
-  final Rx<ProductModel?> productDetails = Rx<ProductModel?>(null);
+  final Rx<ShopDetailsData?> productDetails = Rx<ShopDetailsData?>(null);
   final RxBool isLoading = false.obs;
   final RxBool isAddingToCart = false.obs;
   final RxBool isOrderingNow = false.obs;
@@ -21,7 +20,7 @@ class ShopDetailsController extends GetxController {
   // Image selection
   final selectedImageIndex = 0.obs;
 
-  // Variant selection (using variant name)
+  // Variant selection
   final selectedVariant = ''.obs;
 
   // Quantity selection
@@ -50,30 +49,15 @@ class ShopDetailsController extends GetxController {
       if (response.statusCode == 200 &&
           response.body is Map &&
           response.body['data'] != null) {
-        final dynamic data = response.body['data'];
-        Map<String, dynamic>? productMap;
-
-        if (data is List && data.isNotEmpty) {
-          productMap = data.first as Map<String, dynamic>;
-        } else if (data is Map<String, dynamic>) {
-          productMap = data;
-        }
-
-        if (productMap != null) {
-          productDetails.value = ProductModel.fromJson(productMap);
-          if (productDetails.value!.variants.isNotEmpty) {
-            selectedVariant.value =
-                productDetails.value!.variants.first.variantName;
-          }
-        } else {
-          errorMessage.value = 'Product data not found';
-        }
+        final dataJson = response.body['data'] as Map<String, dynamic>;
+        productDetails.value = ShopDetailsData.fromJson(dataJson);
       } else {
-        errorMessage.value = 'Failed to load product (${response.statusCode})';
+        errorMessage.value = response.body?['message']?.toString() ??
+            'Failed to load product (${response.statusCode})';
       }
     } catch (e) {
       errorMessage.value = 'Error: $e';
-      print('Error fetching product details: $e');
+      debugPrint('Error fetching product details: $e');
     } finally {
       isLoading.value = false;
     }
@@ -81,17 +65,6 @@ class ShopDetailsController extends GetxController {
 
   Future<void> addToCart() async {
     if (productDetails.value == null) return;
-
-    final variant = productDetails.value!.variants.firstWhere(
-      (v) => v.variantName == selectedVariant.value,
-      orElse: () =>
-          ProductVariant(id: 0, productId: 0, variantName: '', price: 0),
-    );
-
-    if (variant.id == 0 && productDetails.value!.variants.isNotEmpty) {
-      ShowAppSnackBar.fail('Please select a valid variant');
-      return;
-    }
 
     isAddingToCart.value = true;
     try {
@@ -149,7 +122,6 @@ class ShopDetailsController extends GetxController {
 
       if (addressId == 0) {
         ShowAppSnackBar.fail("Please add a delivery address first.");
-        // We can navigate to address page if needed, but for now just return.
         return;
       }
 

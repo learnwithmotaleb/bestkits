@@ -9,7 +9,7 @@ class ApiUrl {
 
   /// Change only this domain when switching servers.
   // static const String _mainDomain = "https://helena-sedimentological-emily.ngrok-free.dev";
-  static const String _mainDomain = "https://075lrgv5-5050.inc1.devtunnels.ms";
+  static const String _mainDomain = "https://wj0qph4g-5050.inc1.devtunnels.ms";
 
   static const String baseUrl = _mainDomain;
 
@@ -85,18 +85,23 @@ class ApiUrl {
   // PRODUCTS
   //══════════════════════════════════════════════════════════
 
-  static const String createProduct = '$baseUrl/products';
+  static const String createProduct = '$baseUrl/products'; //post
   static const String getProducts = '$baseUrl/products';
+  static String detailsProduct(String id) => '$baseUrl/products/$id'; //get method
+
   static const String productSellerMe = '$baseUrl/products/seller/my';
-  static String detailsProduct(String id) => '$baseUrl/products/$id';
-
-  static String updateProduct(String id) => '$baseUrl/products/$id';
+  static String productSellerDetails(String id) => '$baseUrl/products/seller/$id'; //get method
+  static String updateProduct(String id) => '$baseUrl/products/$id'; //patch method update product
   static String deleteProduct(String id) => '$baseUrl/products/$id';
+  static String markStatusChange(String id) => '$baseUrl/products/seller/$id/status'; //Patch Method
 
-  static String productOrder(String productId) =>
-      '$baseUrl/orders/seller/products/$productId/orders'; //get method
-  static String markStatusChange(String id) =>
-      '$baseUrl/products/seller/$id/status'; //Patch Method
+
+  static String productReview(String productId) => '$baseUrl/products/$productId/reviews'; //get Method
+
+
+
+  static String productOrder(String productId) => '$baseUrl/orders/seller/products/$productId/orders'; //get method
+
 
   ///===================Stripe===================
   static const String stripeCallBack = '$baseUrl/stripe/callback'; //get method
@@ -184,33 +189,30 @@ class ApiUrl {
   static String notificationReadAll =
       '$baseUrl/notifications/read-all'; //Patch method
 
-
-
-
-
-
-
-
 //===========================Cart====================//completed
   static String addToCart = '$baseUrl/cart/items'; //Post method
   static String getCart = '$baseUrl/cart'; //Get method
-  static String deleteCartItem(String itemId) => '$baseUrl/cart/items/$itemId'; //Delete method
+  static String deleteCartItem(String itemId) =>
+      '$baseUrl/cart/items/$itemId'; //Delete method
   static String clearEnterCart = '$baseUrl/cart'; //Delete method
-
-
-
-
-
-
 
 //=======================checkout================
   static String orderCheckout = '$baseUrl/orders/checkout'; //Post method
-  static String orderCheckoutSummary = '$baseUrl/orders/checkout/summary'; //Post method
-  static String applyCouponCode = '$baseUrl/orders/checkout/apply-coupon'; //Post method
-  static String orderBuyNowSummary = '$baseUrl/orders/checkout/buy-now-summary'; //Post method
-
+  static String orderCheckoutSummary =
+      '$baseUrl/orders/checkout/summary'; //Post method
+  static String applyCouponCode =
+      '$baseUrl/orders/checkout/apply-coupon'; //Post method
+  static String orderBuyNowSummary =
+      '$baseUrl/orders/checkout/buy-now-summary'; //Post method
 
   static String accountAddress = '$baseUrl/account/addresses'; //Post method
+
+  static String legitgrailsBrandAPI =
+      '$baseUrl/legitgrails/brands'; //get method
+  static String legitgrailsCategoriesAPI =
+      '$baseUrl/legitgrails/categories'; //get method
+  static String authenticationSubmitAPI(String productId) =>
+      '$baseUrl/products/$productId/authentication/submit'; //Post method
 
   //======================Socket====================
   static String socketUrl({required String userID}) =>

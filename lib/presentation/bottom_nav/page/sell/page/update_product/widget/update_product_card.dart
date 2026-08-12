@@ -1,4 +1,3 @@
-import 'package:bestkits/presentation/product_details/screen/product_details_screen.dart';
 import 'package:bestkits/service/api_url.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -11,6 +10,7 @@ import 'package:bestkits/data/model/product_model.dart';
 import '../../../model/SellerMyModel.dart' as sellerModel;
 
 import '../../../../../../../utils/app_text_style/app_text_style.dart';
+import '../../seller_product_details/screen/seller_product_details_screen.dart';
 
 class UpdateProductCard extends StatelessWidget {
   final sellerModel.Data productData;
@@ -77,7 +77,7 @@ class UpdateProductCard extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       child: GestureDetector(
         onTap: () {
-          Get.to(() => const ProductDetailsScreen(), arguments: {
+          Get.to(() => const SellerProductDetailsScreen(), arguments: {
             'productId': productData.id,
             'productModel': pm,
           });

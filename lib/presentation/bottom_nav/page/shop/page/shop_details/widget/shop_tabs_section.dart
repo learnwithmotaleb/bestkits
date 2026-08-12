@@ -3,15 +3,14 @@ import 'package:get/get.dart';
 import 'package:bestkits/utils/app_colors/app_colors.dart';
 import 'package:bestkits/widget/app_button.dart';
 import '../controller/shop_details_controller.dart';
-import 'package:bestkits/data/model/product_model.dart';
+import '../model/shop_details_model.dart';
 import 'package:bestkits/utils/static_strings/static_strings.dart';
 import 'package:bestkits/core/routes/route_path.dart';
-import 'package:bestkits/presentation/message/controller/message_controller.dart';
-import 'package:bestkits/presentation/message/page/chat/chat_screen/chat_screen.dart';
+import 'package:bestkits/service/api_url.dart';
 
 class ShopTabsSection extends StatelessWidget {
   final ShopDetailsController controller;
-  final ProductModel product;
+  final ShopDetailsData product;
 
   const ShopTabsSection({
     super.key,
@@ -81,15 +80,17 @@ class ShopTabsSection extends StatelessWidget {
               return const SizedBox();
           }
         }),
-        const SizedBox(
-          height: 20,
-        )
+        const SizedBox(height: 20),
       ],
     );
   }
 
   // ─── Description Tab ────────────────────────────────────────────────────────
   Widget _buildDescription() {
+    final seller = product.user;
+    final sellerName = seller?.profile?.fullName ?? '';
+    final country = seller?.profile?.country ?? '';
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -114,8 +115,8 @@ class ShopTabsSection extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                product.description.isNotEmpty
-                    ? product.description
+                (product.description?.isNotEmpty ?? false)
+                    ? product.description!
                     : AppStrings.dummyDescription.tr,
                 style: TextStyle(
                   fontSize: 12,
@@ -134,19 +135,19 @@ class ShopTabsSection extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               _buildDetailRow('${AppStrings.onlineSince.tr}:',
-                  _formatDate(product.createdAt)),
+                  _formatDate(product.createdAt ?? '')),
               _buildDetailRow(
-                  '${AppStrings.category.tr}:', product.categoryName),
+                  '${AppStrings.category.tr}:', product.category?.name ?? ''),
+              _buildDetailRow('${AppStrings.subCategory.tr}:',
+                  product.subCategory?.name ?? ''),
               _buildDetailRow(
-                  '${AppStrings.subCategory.tr}:', product.subCategoryName),
-              _buildDetailRow('${AppStrings.condition.tr}:', product.condition),
-              if (product.user?.profile?.country != null)
-                _buildDetailRow('${AppStrings.location.tr}:',
-                    product.user!.profile!.country!),
+                  '${AppStrings.condition.tr}:', product.condition ?? ''),
+              if (country.isNotEmpty)
+                _buildDetailRow('${AppStrings.location.tr}:', country),
+              if (sellerName.isNotEmpty)
+                _buildDetailRow('${AppStrings.sellerLabel.tr}:', sellerName),
               _buildDetailRow(
-                  '${AppStrings.sellerLabel.tr}:', product.sellerName),
-              _buildDetailRow(
-                  '${AppStrings.reference.tr}:', product.id.toString()),
+                  '${AppStrings.reference.tr}:', product.id?.toString() ?? ''),
             ],
           ),
         ),
@@ -192,13 +193,19 @@ class ShopTabsSection extends StatelessWidget {
   Widget _buildSeller(BuildContext context) {
     final seller = product.user;
     final profile = seller?.profile;
-    final sellerName =
-        (profile?.fullName.isNotEmpty ?? false) ? profile!.fullName : 'Seller';
+    final sellerName = (profile?.fullName?.isNotEmpty ?? false)
+        ? profile!.fullName!
+        : 'Seller';
     final country = profile?.country ?? '';
-    final address = 'Ivan Vaso, Plovdiv 4000, Bulgaria';
-    final email = 'Support@mayoral.com';
-    final fullLocation = country.isNotEmpty ? '$address, $country' : address;
-    final avatarUrl = product.sellerAvatarUrl;
+    final email = seller?.email ?? '';
+    final avatarUrl = ApiUrl.buildImageUrl(profile?.avatarUrl);
+
+    // Seller overview from API
+    final overview = product.sellerOverview;
+    final itemsSold = overview?.itemsSold ?? 0;
+    final activeProducts = overview?.activeProducts ?? 0;
+    final avgRating = overview?.averageRating ?? 0;
+    final totalReviews = overview?.totalReviews ?? 0;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -273,7 +280,7 @@ class ShopTabsSection extends StatelessWidget {
                         ],
                       ),
                     ),
-                  if (fullLocation.isNotEmpty)
+                  if (country.isNotEmpty)
                     Padding(
                       padding: const EdgeInsets.only(top: 4),
                       child: Row(
@@ -283,7 +290,7 @@ class ShopTabsSection extends StatelessWidget {
                           const SizedBox(width: 4),
                           Expanded(
                             child: Text(
-                              fullLocation,
+                              country,
                               style: TextStyle(
                                   color: Colors.grey[500], fontSize: 11),
                               maxLines: 1,
@@ -339,19 +346,19 @@ class ShopTabsSection extends StatelessWidget {
                     _buildSellerStat(
                       Icons.insights_outlined,
                       'Items Sold',
-                      '1680 Sold',
+                      '$itemsSold Sold',
                       highlight: true,
                     ),
                     _buildSellerStat(
                       Icons.inventory_2_outlined,
                       AppStrings.totalItems.tr,
-                      '56 Products',
+                      '$activeProducts Products',
                       highlight: true,
                     ),
                     _buildSellerReviewStat(
                       Icons.star_border,
-                      '${AppStrings.totalRating.tr} [ ${product.totalReviews} ${AppStrings.reviews.tr} ]',
-                      product.ratingDisplay,
+                      '${AppStrings.totalRating.tr} [ $totalReviews ${AppStrings.reviews.tr} ]',
+                      avgRating.toString(),
                     ),
                   ],
                 ),
@@ -476,7 +483,8 @@ class ShopTabsSection extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () {
-              Get.toNamed(RoutePath.viewAllReview);
+              Get.toNamed(RoutePath.viewAllReview,
+                  arguments: product.id?.toString());
             },
             child: Container(
               padding: const EdgeInsets.all(8),

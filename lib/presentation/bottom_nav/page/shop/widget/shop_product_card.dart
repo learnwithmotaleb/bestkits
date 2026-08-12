@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import '../../../../../utils/app_colors/app_colors.dart';
 import '../../../../../utils/app_text_style/app_text_style.dart';
 import 'package:get/get.dart';
-import '../../../../product_details/screen/product_details_screen.dart';
 import 'package:bestkits/presentation/favorite/controller/favourite_controller.dart';
+
+import '../../sell/page/seller_product_details/screen/seller_product_details_screen.dart';
 
 class ShopProductCard extends StatelessWidget {
   final Map<String, dynamic> product;
@@ -15,7 +16,7 @@ class ShopProductCard extends StatelessWidget {
     final favouriteController = Get.find<FavouriteController>();
 
     return GestureDetector(
-      onTap: () => Get.to(() => const ProductDetailsScreen()),
+      onTap: () => Get.to(() => const SellerProductDetailsScreen()),
       child: Container(
       decoration: BoxDecoration(
         color: Colors.white,

@@ -32,12 +32,13 @@ class RoutePath {
   static const String stripeConnect = '/StripeConnectScreen';
   static const String checkOut = '/CheckoutScreen';
   static const String sell = '/SellScreen';
-  static const String updateProduct = '/UpdateProductScreen';
+  static String get updateProduct => '/UpdateProductScreen';
   static const String productOrder = '/ProductOrder';
   static const String orderDetails = '/OrderDetailsScreen';
   static const String updateProductSell = '/UpdateProduct';
   static const String updateProductPrice = '/UpdateProductPrice';
   static const String addProduct = '/AddProduct';
+  static const String productVerification = '/ProductVerificationScreen';
   static const String addProductPrice = '/AddProductPrice';
   static const String customerOrder = '/CustomerOrderScreen';
   static const String customerOrderDetails = '/CustomerOrderDetails';

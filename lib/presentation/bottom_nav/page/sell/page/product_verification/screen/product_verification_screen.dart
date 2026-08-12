@@ -6,35 +6,24 @@ import '../../../../../../../utils/static_strings/static_strings.dart';
 import '../../../../../../../core/responsive_layout/dimensions.dart';
 import '../../../../../../../utils/app_colors/app_colors.dart';
 import '../../../../../../../utils/app_text_style/app_text_style.dart';
-import '../../../../../../../widget/app_alert.dart';
 import '../../../../../../../widget/app_button.dart';
-import '../../../../../../../widget/app_text_field.dart';
 import '../../../../../../../widget/custom_appbar.dart';
 import '../../../../../../../widget/show_snackbar.dart';
-import '../controller/add_product_controller.dart';
+import '../../add_product/controller/add_product_controller.dart';
 
-class ProductVerification extends StatefulWidget {
-  const ProductVerification({super.key});
+class ProductVerificationScreen extends StatefulWidget {
+  const ProductVerificationScreen({super.key});
 
   @override
-  State<ProductVerification> createState() => _ProductVerificationState();
+  State<ProductVerificationScreen> createState() => _ProductVerificationScreenState();
 }
 
-class _ProductVerificationState extends State<ProductVerification> {
+class _ProductVerificationScreenState extends State<ProductVerificationScreen> {
   final _formKey = GlobalKey<FormState>();
   final AddProductController _ctrl = Get.find<AddProductController>();
 
   final _brandController = TextEditingController();
   final _categoryController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    // Pre-fill category if already selected
-    if (_ctrl.selectedCategory.value.isNotEmpty) {
-      _categoryController.text = _ctrl.selectedCategory.value;
-    }
-  }
 
   @override
   void dispose() {
@@ -55,6 +44,8 @@ class _ProductVerificationState extends State<ProductVerification> {
             ctrl.text = val;
             if (ctrl == _brandController) {
               _ctrl.selectedBrand.value = val;
+            } else if (ctrl == _categoryController) {
+              _ctrl.selectedLegitCategory.value = val;
             }
           });
           Get.back();
@@ -140,12 +131,21 @@ class _ProductVerificationState extends State<ProductVerification> {
                       child: ElevatedButton(
                         onPressed: () async {
                           Get.back(); // close dialog
-                          final error = await _ctrl.saveProduct(status: "INACTIVE");
-                          if (error == null) {
-                            ShowAppSnackBar.success(AppStrings.productPublishedSuccess.tr);
-                            Get.until((route) => route.isFirst);
+                          
+                          // Retrieve productId from page arguments
+                          final dynamic args = Get.arguments;
+                          final int? productId = args is int ? args : int.tryParse(args?.toString() ?? '');
+
+                          if (productId != null) {
+                            final success = await _ctrl.submitVerification(productId);
+                            if (success) {
+                              ShowAppSnackBar.success("Product added successfully! Your product is now Inactive and submitted for authenticity verification.");
+                              Get.until((route) => route.isFirst);
+                            } else {
+                              ShowAppSnackBar.error("Verification submission failed.");
+                            }
                           } else {
-                            ShowAppSnackBar.error(error);
+                            ShowAppSnackBar.error("Failed to parse product ID from arguments.");
                           }
                         },
                         style: ElevatedButton.styleFrom(
@@ -179,6 +179,10 @@ class _ProductVerificationState extends State<ProductVerification> {
 
   void _onSubmit() {
     if (!_formKey.currentState!.validate()) return;
+    if (_ctrl.verificationImages.isEmpty) {
+      ShowAppSnackBar.error("Please upload verification images");
+      return;
+    }
     _showVerificationAlert();
   }
 
@@ -191,7 +195,6 @@ class _ProductVerificationState extends State<ProductVerification> {
         key: _formKey,
         child: Column(
           children: [
-            // ── Scrollable fields ─────────────────────────────────────────
             Expanded(
               child: SingleChildScrollView(
                 padding: EdgeInsets.symmetric(
@@ -201,7 +204,6 @@ class _ProductVerificationState extends State<ProductVerification> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // ── Upload Product Images ────────────────────────────
                     _FieldLabel(label: AppStrings.uploadProductImages.tr),
                     SizedBox(height: Dimensions.h(8)),
                     _VerificationImagePickerBox(
@@ -211,7 +213,6 @@ class _ProductVerificationState extends State<ProductVerification> {
                     ),
                     SizedBox(height: Dimensions.h(24)),
 
-                    // ── Brand ────────────────────────────────────────────
                     _FieldLabel(label: 'Brand'),
                     SizedBox(height: Dimensions.h(8)),
                     Obx(() {
@@ -225,11 +226,10 @@ class _ProductVerificationState extends State<ProductVerification> {
                     }),
                     SizedBox(height: Dimensions.h(18)),
 
-                    // ── Category ─────────────────────────────────────────
                     _FieldLabel(label: AppStrings.productCategoryLabel.tr),
                     SizedBox(height: Dimensions.h(8)),
                     Obx(() {
-                      final cats = _ctrl.categoryNames.toList();
+                      final cats = _ctrl.legitgrailsCategories.toList();
                       return _DropdownField(
                         controller: _categoryController,
                         hint: 'Select Category',
@@ -245,7 +245,6 @@ class _ProductVerificationState extends State<ProductVerification> {
               ),
             ),
 
-            // ── Save And Continue button ──────────────────────────────────
             Container(
               padding: EdgeInsets.symmetric(
                 horizontal: Dimensions.w(20),
@@ -274,7 +273,6 @@ class _ProductVerificationState extends State<ProductVerification> {
   }
 }
 
-// ─── Field Label ─────────────────────────────────────────────────────────────
 class _FieldLabel extends StatelessWidget {
   final String label;
   const _FieldLabel({required this.label});
@@ -292,7 +290,6 @@ class _FieldLabel extends StatelessWidget {
   }
 }
 
-// ─── Verification Image Picker Box ─────────────────────────────────────────────
 class _VerificationImagePickerBox extends StatelessWidget {
   final RxList<dart_io.File> images;
   final Future<void> Function() onPick;
@@ -403,7 +400,6 @@ class _VerificationImagePickerBox extends StatelessWidget {
   }
 }
 
-// ─── Dropdown Field ───────────────────────────────────────────────────────────
 class _DropdownField extends StatelessWidget {
   final TextEditingController controller;
   final String hint;
@@ -452,7 +448,6 @@ class _DropdownField extends StatelessWidget {
   }
 }
 
-// ─── Dropdown Bottom Sheet ──────────────────────────────────────────────────────
 class _DropdownSheet extends StatelessWidget {
   final String title;
   final List<String> items;
@@ -525,8 +520,8 @@ class _DropdownSheet extends StatelessWidget {
                         )),
                     trailing: Icon(
                       isChosen
-                          ? Icons.radio_button_checked
-                          : Icons.radio_button_unchecked,
+                        ? Icons.radio_button_checked
+                        : Icons.radio_button_unchecked,
                       color: isChosen
                           ? AppColors.blackColor.withOpacity(0.7)
                           : AppColors.greyColor,

@@ -14,13 +14,14 @@ import 'package:bestkits/presentation/bottom_nav/controller/bottom_nav_controlle
 import 'package:bestkits/presentation/bottom_nav/page/home/pages/categories/controller/categories_controller.dart';
 import 'package:bestkits/presentation/bottom_nav/page/home/pages/categories/screen/categories_screen.dart';
 import 'package:bestkits/presentation/bottom_nav/page/sell/controller/sell_controller.dart';
+import 'package:bestkits/presentation/bottom_nav/page/sell/page/product_verification/controller/product_verification_controller.dart';
+import 'package:bestkits/presentation/bottom_nav/page/sell/page/product_verification/screen/product_verification_screen.dart';
 import 'package:bestkits/presentation/bottom_nav/page/sell/page/update_product/controller/update_product_controller.dart';
 import 'package:bestkits/presentation/bottom_nav/page/sell/page/update_product/screen/update_product.dart';
 import 'package:bestkits/presentation/bottom_nav/page/sell/page/update_product/screen/update_product_screen.dart';
 import 'package:bestkits/presentation/bottom_nav/page/sell/page/product_order/screen/product_order.dart';
 import 'package:bestkits/presentation/bottom_nav/page/sell/page/product_order/screen/order_details_screen.dart';
 import 'package:bestkits/presentation/bottom_nav/page/sell/page/add_product/screen/add_product.dart';
-import 'package:bestkits/presentation/bottom_nav/page/sell/page/add_product/widget/product_verification.dart';
 import 'package:bestkits/presentation/bottom_nav/page/sell/page/add_product/controller/add_product_controller.dart';
 import 'package:bestkits/presentation/bottom_nav/page/sell/screen/sell_screen.dart';
 import 'package:bestkits/presentation/bottom_nav/page/shop/page/shop_details/controller/shop_details_controller.dart';
@@ -65,8 +66,6 @@ import 'package:bestkits/presentation/notification/controller/notification_contr
 import 'package:bestkits/presentation/notification/screen/notification_screen.dart';
 import 'package:bestkits/presentation/privacy_policy/controller/privacy_policy_controller.dart';
 import 'package:bestkits/presentation/privacy_policy/screen/privacy_policy_screen.dart';
-import 'package:bestkits/presentation/product_details/controller/product_details_controller.dart';
-import 'package:bestkits/presentation/product_details/screen/product_details_screen.dart';
 import 'package:bestkits/presentation/return_order/controller/return_order_controller.dart';
 
 import 'package:bestkits/presentation/return_order/screen/return_order_screen.dart';
@@ -89,6 +88,8 @@ import 'package:bestkits/presentation/auth/forgot_password/screen/forgot_passwor
 import 'package:bestkits/presentation/auth/forgot_password/controller/forgot_password_controller.dart';
 
 import '../../presentation/account_setting/controller/account_setting_controller.dart';
+import '../../presentation/bottom_nav/page/sell/page/seller_product_details/controller/seller_product_details_controller.dart';
+import '../../presentation/bottom_nav/page/sell/page/seller_product_details/screen/seller_product_details_screen.dart';
 import '../../presentation/cart/controller/cart_controller.dart';
 import '../../presentation/cart/screen/cart_screen.dart';
 import '../../presentation/splash/controller/splash_controller.dart';
@@ -179,10 +180,10 @@ class AppRouter {
     ),
     GetPage(
       name: RoutePath.productDetail,
-      page: () => const ProductDetailsScreen(),
+      page: () => const SellerProductDetailsScreen(),
       transition: Transition.rightToLeft,
       binding: BindingsBuilder(() {
-        Get.put(ProductDetailsController());
+        Get.put(SellerProductDetailsController());
       }),
     ),
     GetPage(
@@ -386,9 +387,12 @@ class AppRouter {
       }),
     ),
     GetPage(
-      name: RoutePath.addProductPrice,
-      page: () => const ProductVerification(),
+      name: RoutePath.productVerification,
+      page: () => const ProductVerificationScreen(),
       transition: Transition.rightToLeft,
+      binding: BindingsBuilder(() {
+        Get.put(ProductVerificationController());
+      }),
     ),
     GetPage(
       name: RoutePath.customerOrder,
