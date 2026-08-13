@@ -8,7 +8,6 @@ import 'package:bestkits/widget/app_button.dart';
 import 'package:bestkits/widget/app_text_field.dart';
 import 'package:bestkits/widget/custom_appbar.dart';
 import 'package:bestkits/widget/show_snackbar.dart';
-import 'package:bestkits/presentation/bottom_nav/page/sell/page/add_product/controller/add_product_controller.dart';
 import 'package:bestkits/presentation/bottom_nav/page/sell/page/product_verification/controller/product_verification_controller.dart';
 import 'package:bestkits/presentation/bottom_nav/page/sell/page/product_verification/widget/photo_requirement_widget.dart';
 
@@ -22,7 +21,6 @@ class ProductVerificationScreen extends StatefulWidget {
 
 class _ProductVerificationScreenState extends State<ProductVerificationScreen> {
   late final ProductVerificationController _ctrl;
-  late final AddProductController _addCtrl;
 
   final _brandController = TextEditingController();
   final _categoryController = TextEditingController();
@@ -31,7 +29,6 @@ class _ProductVerificationScreenState extends State<ProductVerificationScreen> {
   void initState() {
     super.initState();
     _ctrl = Get.put(ProductVerificationController());
-    _addCtrl = Get.find<AddProductController>();
   }
 
   @override
@@ -44,14 +41,14 @@ class _ProductVerificationScreenState extends State<ProductVerificationScreen> {
   // ── Open brand bottom-sheet ────────────────────────────────────────────────
   void _openBrandDropdown() {
     Get.bottomSheet(
-      _SearchableDropdownSheet(
+      _SimpleDropdownSheet(
         title: 'Select Brand',
-        items: _ctrl.brandNames,
+        items: _ctrl.brandDisplayList,
         selected: _brandController.text,
         onSelect: (val) {
           setState(() => _brandController.text = val);
           _categoryController.clear();
-          _ctrl.selectBrandByName(val);
+          _ctrl.selectBrandByCode(val);
           Get.back();
         },
       ),
@@ -62,19 +59,19 @@ class _ProductVerificationScreenState extends State<ProductVerificationScreen> {
 
   // ── Open category bottom-sheet ─────────────────────────────────────────────
   void _openCategoryDropdown() {
-    final cats = _ctrl.categoryNames;
+    final cats = _ctrl.categoryDisplayList;
     if (cats.isEmpty) {
       ShowAppSnackBar.info('Please select a brand first');
       return;
     }
     Get.bottomSheet(
-      _SearchableDropdownSheet(
+      _SimpleDropdownSheet(
         title: AppStrings.productCategoryLabel.tr,
         items: cats,
         selected: _categoryController.text,
         onSelect: (val) {
           setState(() => _categoryController.text = val);
-          _ctrl.selectCategoryByName(val);
+          _ctrl.selectCategoryByCode(val);
           Get.back();
         },
       ),
@@ -161,7 +158,6 @@ class _ProductVerificationScreenState extends State<ProductVerificationScreen> {
                         label: 'Confirm',
                         onPressed: () async {
                           Get.back();
-                          _ctrl.productName = _addCtrl.name.value;
                           final outcome = await _ctrl.submitVerification();
                           if (outcome != null) {
                             _showOutcomeToast(outcome);
@@ -576,15 +572,15 @@ class _LoadingPhotoRequirements extends StatelessWidget {
   }
 }
 
-// ── Searchable dropdown bottom-sheet ──────────────────────────────────────────
+// ── Simple dropdown bottom-sheet (Search removed) ────────────────────────────
 
-class _SearchableDropdownSheet extends StatefulWidget {
+class _SimpleDropdownSheet extends StatelessWidget {
   final String title;
   final List<String> items;
   final String selected;
   final void Function(String) onSelect;
 
-  const _SearchableDropdownSheet({
+  const _SimpleDropdownSheet({
     required this.title,
     required this.items,
     required this.selected,
@@ -592,45 +588,18 @@ class _SearchableDropdownSheet extends StatefulWidget {
   });
 
   @override
-  State<_SearchableDropdownSheet> createState() =>
-      _SearchableDropdownSheetState();
-}
-
-class _SearchableDropdownSheetState extends State<_SearchableDropdownSheet> {
-  late List<String> _filtered;
-  final _searchCtrl = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    _filtered = widget.items;
-    _searchCtrl.addListener(() {
-      final q = _searchCtrl.text.toLowerCase();
-      setState(() {
-        _filtered = widget.items
-            .where((item) => item.toLowerCase().contains(q))
-            .toList();
-      });
-    });
-  }
-
-  @override
-  void dispose() {
-    _searchCtrl.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Container(
+      constraints: BoxConstraints(
+        maxHeight: MediaQuery.of(context).size.height * 0.65,
+      ),
       decoration: BoxDecoration(
         color: AppColors.whiteColor,
         borderRadius:
             BorderRadius.vertical(top: Radius.circular(Dimensions.r(20))),
       ),
-      padding:
-          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-      child: SingleChildScrollView(
+      child: SafeArea(
+        top: false,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -645,60 +614,43 @@ class _SearchableDropdownSheetState extends State<_SearchableDropdownSheet> {
               ),
             ),
             SizedBox(height: Dimensions.h(18)),
-        
+
             // ── Title ───────────────────────────────────────────────────────
             Padding(
               padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  widget.title,
+                  title,
                   style: AppTextStyles.h3,
                 ),
               ),
             ),
             SizedBox(height: Dimensions.h(14)),
-        
-            // ── Search field ─────────────────────────────────────────────────
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
-              child: AppTextField(
-                controller: _searchCtrl,
-                hint: 'Search…',
-                prefixIcon: Icon(
-                  Icons.search_rounded,
-                  color: AppColors.greyColor,
-                  size: Dimensions.icon(20),
-                ),
-              ),
-            ),
-            SizedBox(height: Dimensions.h(4)),
-        
+
             // ── List ─────────────────────────────────────────────────────────
-            ConstrainedBox(
-              constraints: BoxConstraints(
-                  maxHeight: MediaQuery.of(context).size.height * 0.45),
-              child: _filtered.isEmpty
+            Flexible(
+              child: items.isEmpty
                   ? Padding(
                       padding: EdgeInsets.symmetric(vertical: Dimensions.h(32)),
                       child: Text(
-                        'No results found',
+                        'No options available',
                         style: AppTextStyles.hint
                             .copyWith(fontSize: Dimensions.fs(13)),
                       ),
                     )
                   : ListView.separated(
-                      shrinkWrap: true,
                       physics: const BouncingScrollPhysics(),
                       padding: EdgeInsets.symmetric(
                           horizontal: Dimensions.w(20),
                           vertical: Dimensions.h(8)),
-                      itemCount: _filtered.length,
+                      itemCount: items.length,
                       separatorBuilder: (_, __) => Divider(
-                          height: 1, color: AppColors.greyColor.withOpacity(0.1)),
+                          height: 1,
+                          color: AppColors.greyColor.withOpacity(0.1)),
                       itemBuilder: (_, i) {
-                        final item = _filtered[i];
-                        final isChosen = item == widget.selected;
+                        final item = items[i];
+                        final isChosen = item == selected;
                         return ListTile(
                           contentPadding: EdgeInsets.zero,
                           dense: true,
@@ -722,12 +674,12 @@ class _SearchableDropdownSheetState extends State<_SearchableDropdownSheet> {
                                 : AppColors.greyColor,
                             size: Dimensions.icon(20),
                           ),
-                          onTap: () => widget.onSelect(item),
+                          onTap: () => onSelect(item),
                         );
                       },
                     ),
             ),
-            SizedBox(height: Dimensions.h(32)),
+            SizedBox(height: Dimensions.h(16)),
           ],
         ),
       ),

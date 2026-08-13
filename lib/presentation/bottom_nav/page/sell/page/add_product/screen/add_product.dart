@@ -112,7 +112,10 @@ class _AddProductState extends State<AddProduct> {
       if (productId != null) {
         ShowAppSnackBar.success(
             "Product created successfully as inactive. Proceeding to verification.");
-        Get.to(() => const ProductVerificationScreen(), arguments: productId);
+        Get.to(
+          () => const ProductVerificationScreen(),
+          arguments: productId,
+        );
       } else {
         ShowAppSnackBar.fail("Failed to parse product ID from response.");
       }

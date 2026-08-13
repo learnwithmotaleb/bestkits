@@ -3,8 +3,24 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:bestkits/service/api_service.dart';
 import 'package:bestkits/service/api_url.dart';
+import 'package:bestkits/widget/show_snackbar.dart';
 import 'package:bestkits/presentation/bottom_nav/page/sell/page/product_verification/model/legitgrails_brand_model.dart';
+import 'package:bestkits/presentation/bottom_nav/page/sell/page/product_verification/model/legitgrails_category_model.dart';
 import 'package:bestkits/presentation/bottom_nav/page/sell/page/product_verification/model/legitgrails_photo_category_model.dart';
+
+class UploadedPhoto {
+  final File file;
+  String? url;
+  bool isUploading;
+  bool isError;
+
+  UploadedPhoto({
+    required this.file,
+    this.url,
+    this.isUploading = false,
+    this.isError = false,
+  });
+}
 
 class ProductVerificationController extends GetxController {
   final _picker = ImagePicker();
@@ -14,6 +30,7 @@ class ProductVerificationController extends GetxController {
 
   // ── Loading flags ────────────────────────────────────────────────────────
   final RxBool isLoadingBrands = false.obs;
+  final RxBool isLoadingCategories = false.obs;
   final RxBool isLoadingPhotoRequirements = false.obs;
   final RxBool isSubmitting = false.obs;
 
@@ -34,8 +51,9 @@ class ProductVerificationController extends GetxController {
   final RxList<PhotoRequirementData> photoRequirements =
       <PhotoRequirementData>[].obs;
 
-  /// Map: photo_requirement_code → list of picked files
-  final RxMap<String, List<File>> pickedPhotos = <String, List<File>>{}.obs;
+  /// Map: photo_requirement_code → list of picked photos
+  final RxMap<String, List<UploadedPhoto>> pickedPhotos =
+      <String, List<UploadedPhoto>>{}.obs;
 
   // ── Product name (forwarded from AddProductController for the payload) ─────
   String productName = '';
@@ -44,7 +62,7 @@ class ProductVerificationController extends GetxController {
   void onInit() {
     super.onInit();
 
-    // ── Read productId from route arguments set by AddProduct ────────────────
+    // ── Read productId from route arguments ──────────────────────────────────
     final dynamic args = Get.arguments;
     if (args is int) {
       productId = args;
@@ -79,7 +97,7 @@ class ProductVerificationController extends GetxController {
   Future<void> fetchBrands() async {
     isLoadingBrands.value = true;
     try {
-      final url = '${ApiUrl.legitgrailsBrandAPI}?limit=1000';
+      final url = ApiUrl.legitgrailsBrandAPI;
       print('=== [fetchBrands] Request URL: $url ===');
 
       final apiClient = ApiClient();
@@ -92,13 +110,20 @@ class ProductVerificationController extends GetxController {
       print('=== [fetchBrands] Response Body: ${response.body} ===');
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        final model = LegitgrailsBrandModel.fromJson(response.body);
-        if (model.data?.data != null) {
-          brands.assignAll(model.data!.data!);
+        final body = response.body;
+        if (body != null && body is Map) {
+          final Map<String, dynamic> jsonMap = Map<String, dynamic>.from(body);
+          final model = LegitgrailsBrandModel.fromJson(jsonMap);
+          if (model.data?.data != null) {
+            brands.assignAll(model.data!.data!);
+            print(
+                '=== [fetchBrands] Successfully loaded ${brands.length} brands ===');
+          }
         }
       }
-    } catch (e) {
+    } catch (e, stack) {
       print('=== [fetchBrands] Error: $e ===');
+      print('=== [fetchBrands] StackTrace: $stack ===');
     } finally {
       isLoadingBrands.value = false;
     }
@@ -106,11 +131,61 @@ class ProductVerificationController extends GetxController {
 
   void _updateAvailableCategories() {
     final brand = selectedBrand.value;
-    if (brand == null || brand.categories == null) {
-      availableCategories.clear();
-      return;
+    if (brand != null &&
+        brand.categories != null &&
+        brand.categories!.isNotEmpty) {
+      availableCategories.assignAll(brand.categories!);
+      print(
+          '=== [_updateAvailableCategories] Loaded ${availableCategories.length} categories from selected brand: ${brand.name} ===');
+    } else {
+      // Fallback: fetch categories from legitgrailsCategoriesAPI
+      fetchCategories();
     }
-    availableCategories.assignAll(brand.categories!);
+  }
+
+  // ── Fetch categories from API ──────────────────────────────────────────────
+  Future<void> fetchCategories() async {
+    isLoadingCategories.value = true;
+    try {
+      final url = '${ApiUrl.legitgrailsCategoriesAPI}?limit=1000';
+      print('=== [fetchCategories] Request URL: $url ===');
+
+      final apiClient = ApiClient();
+      final response = await apiClient.get(
+        url: url,
+        isToken: true,
+      );
+
+      print(
+          '=== [fetchCategories] Response Status: ${response.statusCode} ===');
+      print('=== [fetchCategories] Response Body: ${response.body} ===');
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final body = response.body;
+        if (body != null && body is Map) {
+          final Map<String, dynamic> jsonMap = Map<String, dynamic>.from(body);
+          final model = LegitgrailsCategoryModel.fromJson(jsonMap);
+          if (model.data?.data != null) {
+            final list = model.data!.data!
+                .map((c) => BrandCategoryData(
+                      code: c.code,
+                      name: c.name,
+                      nameLocale: c.nameLocale,
+                      iconUrl: c.iconUrl,
+                    ))
+                .toList();
+            availableCategories.assignAll(list);
+            print(
+                '=== [fetchCategories] Loaded ${availableCategories.length} categories from API ===');
+          }
+        }
+      }
+    } catch (e, stack) {
+      print('=== [fetchCategories] Error: $e ===');
+      print('=== [fetchCategories] StackTrace: $stack ===');
+    } finally {
+      isLoadingCategories.value = false;
+    }
   }
 
   // ── Fetch photo-index requirements ────────────────────────────────────────
@@ -137,31 +212,40 @@ class ProductVerificationController extends GetxController {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final body = response.body;
-        if (body is Map && body['data'] != null) {
-          final wrapper = body['data'];
-          if (wrapper is Map && wrapper['data'] != null) {
-            final list = (wrapper['data'] as List)
-                .map((e) => PhotoRequirementData.fromJson(e))
-                .toList();
-            photoRequirements.assignAll(list);
+        if (body != null && body is Map) {
+          final Map<String, dynamic> jsonMap = Map<String, dynamic>.from(body);
+          final wrapper = jsonMap['data'];
+          if (wrapper != null && wrapper is Map) {
+            final Map<String, dynamic> wrapperMap =
+                Map<String, dynamic>.from(wrapper);
+            if (wrapperMap['data'] != null && wrapperMap['data'] is List) {
+              final list = (wrapperMap['data'] as List)
+                  .map((e) => PhotoRequirementData.fromJson(
+                      Map<String, dynamic>.from(e as Map)))
+                  .toList();
+              photoRequirements.assignAll(list);
+              print(
+                  '=== [fetchPhotoRequirements] Loaded ${photoRequirements.length} photo requirements ===');
 
-            // Initialise an empty slot for each requirement
-            final newMap = <String, List<File>>{};
-            for (final req in list) {
-              if (req.code != null) newMap[req.code!] = [];
+              // Initialise an empty slot for each requirement
+              final newMap = <String, List<UploadedPhoto>>{};
+              for (final req in list) {
+                if (req.code != null) newMap[req.code!] = [];
+              }
+              pickedPhotos.assignAll(newMap);
             }
-            pickedPhotos.assignAll(newMap);
           }
         }
       }
-    } catch (e) {
+    } catch (e, stack) {
       print('=== [fetchPhotoRequirements] Error: $e ===');
+      print('=== [fetchPhotoRequirements] StackTrace: $stack ===');
     } finally {
       isLoadingPhotoRequirements.value = false;
     }
   }
 
-  // ── Image picking ─────────────────────────────────────────────────────────
+  // ── Image picking & Auto-Upload ───────────────────────────────────────────
   Future<void> pickPhotosForRequirement(String code, int limit) async {
     final current = pickedPhotos[code] ?? [];
     final remaining = limit - current.length;
@@ -170,17 +254,72 @@ class ProductVerificationController extends GetxController {
     final result = await _picker.pickMultiImage(imageQuality: 80);
     if (result.isEmpty) return;
 
-    final updated = List<File>.from(current);
+    final updated = List<UploadedPhoto>.from(current);
+    final newlyAdded = <UploadedPhoto>[];
+
     for (final xFile in result) {
       if (updated.length >= limit) break;
-      updated.add(File(xFile.path));
+      final photo = UploadedPhoto(file: File(xFile.path), isUploading: true);
+      updated.add(photo);
+      newlyAdded.add(photo);
     }
     pickedPhotos[code] = updated;
     pickedPhotos.refresh();
+
+    if (newlyAdded.isNotEmpty) {
+      _uploadPhotosBatch(code, newlyAdded);
+    }
+  }
+
+  Future<void> _uploadPhotosBatch(
+      String code, List<UploadedPhoto> photosToUpload) async {
+    try {
+      final apiClient = ApiClient();
+
+      final multipartFiles = photosToUpload
+          .map((p) => MultipartFileData(key: 'photos', path: p.file.path))
+          .toList();
+
+      final uploadResponse = await apiClient.multipart(
+        url: ApiUrl.uploadPhotoProductVerification,
+        fields: {'index_code': code},
+        files: multipartFiles,
+        isToken: true,
+      );
+
+      if (uploadResponse.statusCode == 200 ||
+          uploadResponse.statusCode == 201) {
+        final body = uploadResponse.body;
+        if (body is Map && body['data'] is List) {
+          final dataList = body['data'] as List;
+          for (int i = 0; i < photosToUpload.length; i++) {
+            if (i < dataList.length) {
+              photosToUpload[i].url = dataList[i]['url']?.toString();
+            }
+            photosToUpload[i].isUploading = false;
+            photosToUpload[i].isError = photosToUpload[i].url == null;
+          }
+          pickedPhotos.refresh();
+          return;
+        }
+      }
+
+      for (var p in photosToUpload) {
+        p.isUploading = false;
+        p.isError = true;
+      }
+      pickedPhotos.refresh();
+    } catch (e) {
+      for (var p in photosToUpload) {
+        p.isUploading = false;
+        p.isError = true;
+      }
+      pickedPhotos.refresh();
+    }
   }
 
   void removePhotoForRequirement(String code, int index) {
-    final current = List<File>.from(pickedPhotos[code] ?? []);
+    final current = List<UploadedPhoto>.from(pickedPhotos[code] ?? []);
     if (index >= 0 && index < current.length) {
       current.removeAt(index);
       pickedPhotos[code] = current;
@@ -199,44 +338,35 @@ class ProductVerificationController extends GetxController {
     return true;
   }
 
-  // ── Upload photos + submit to authentication API ──────────────────────────
+  // ── Submit to authentication API ─────────────────────────────────────────
   /// Returns the mock_outcome string on success (e.g. 'authentic', 'fake', 'UTV'),
   /// or null on failure.
   Future<String?> submitVerification() async {
+    // 1. Validate that no uploads are still pending or failed
+    for (final req in photoRequirements) {
+      final photos = pickedPhotos[req.code ?? ''] ?? [];
+      if (photos.any((p) => p.isUploading)) {
+        ShowAppSnackBar.info('Please wait for all photos to finish uploading.');
+        return null;
+      }
+      if (photos.any((p) => p.isError)) {
+        ShowAppSnackBar.fail(
+            'Some photos failed to upload. Please remove and re-add them.');
+        return null;
+      }
+    }
+
     isSubmitting.value = true;
     try {
       final apiClient = ApiClient();
-      final List<Map<String, String>> photos = [];
+      final List<Map<String, String>> photosPayload = [];
 
-      // Upload each picked file to the LegitGrails photo endpoint
       for (final req in photoRequirements) {
         final code = req.code ?? '';
         final files = pickedPhotos[code] ?? [];
-        for (final file in files) {
-          print(
-              '=== [uploadPhoto] Uploading index_code: $code, Path: ${file.path} ===');
-          final uploadResponse = await apiClient.multipart(
-            url: ApiUrl.uploadPhotoProductVerification,
-            fields: {'index_code': code},
-            files: [MultipartFileData(key: 'photo', path: file.path)],
-            isToken: true,
-          );
-
-          print(
-              '=== [uploadPhoto] Response Status: ${uploadResponse.statusCode} ===');
-          print('=== [uploadPhoto] Response Body: ${uploadResponse.body} ===');
-
-          if (uploadResponse.statusCode == 200 ||
-              uploadResponse.statusCode == 201) {
-            final uploadBody = uploadResponse.body;
-            String? url;
-            if (uploadBody is Map) {
-              url = uploadBody['data']?['url']?.toString() ??
-                  uploadBody['data']?['filePath']?.toString();
-            }
-            if (url != null && url.isNotEmpty) {
-              photos.add({'index_code': code, 'url': url});
-            }
+        for (final photo in files) {
+          if (photo.url != null) {
+            photosPayload.add({'index_code': code, 'url': photo.url!});
           }
         }
       }
@@ -247,7 +377,7 @@ class ProductVerificationController extends GetxController {
         'brand_code': selectedBrand.value?.code ?? '',
         'answer_time': 1440,
         'mock_outcome': mockOutcome.value,
-        'photos': photos,
+        'photos': photosPayload,
       };
 
       final submitUrl = ApiUrl.authenticationSubmitAPI(productId.toString());
@@ -285,17 +415,35 @@ class ProductVerificationController extends GetxController {
   }
 
   // ── Helpers ───────────────────────────────────────────────────────────────
-  List<String> get brandNames => brands.map((b) => b.name ?? '').toList();
+  List<String> get brandDisplayList => brands
+      .map((b) =>
+          (b.code != null && b.code!.isNotEmpty) ? b.code! : (b.name ?? ''))
+      .where((s) => s.isNotEmpty)
+      .toList();
 
-  List<String> get categoryNames =>
-      availableCategories.map((c) => c.name ?? '').toList();
+  List<String> get categoryDisplayList => availableCategories
+      .map((c) =>
+          (c.code != null && c.code!.isNotEmpty) ? c.code! : (c.name ?? ''))
+      .where((s) => s.isNotEmpty)
+      .toList();
 
-  void selectBrandByName(String name) {
-    selectedBrand.value = brands.firstWhereOrNull((b) => b.name == name);
+  void selectBrandByCode(String code) {
+    selectedBrand.value = brands.firstWhereOrNull(
+      (b) =>
+          b.code?.trim().toLowerCase() == code.trim().toLowerCase() ||
+          b.name?.trim().toLowerCase() == code.trim().toLowerCase(),
+    );
+    print(
+        '=== [selectBrandByCode] Selected brand: ${selectedBrand.value?.name} (code: ${selectedBrand.value?.code}), Categories: ${selectedBrand.value?.categories?.length} ===');
   }
 
-  void selectCategoryByName(String name) {
-    selectedCategory.value =
-        availableCategories.firstWhereOrNull((c) => c.name == name);
+  void selectCategoryByCode(String code) {
+    selectedCategory.value = availableCategories.firstWhereOrNull(
+      (c) =>
+          c.code?.trim().toLowerCase() == code.trim().toLowerCase() ||
+          c.name?.trim().toLowerCase() == code.trim().toLowerCase(),
+    );
+    print(
+        '=== [selectCategoryByCode] Selected category: ${selectedCategory.value?.name} (code: ${selectedCategory.value?.code}) ===');
   }
 }

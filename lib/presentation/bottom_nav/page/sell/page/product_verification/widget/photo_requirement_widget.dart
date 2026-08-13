@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -118,7 +117,7 @@ class PhotoRequirementWidget extends StatelessWidget {
                       return Padding(
                         padding: EdgeInsets.only(right: Dimensions.w(10)),
                         child: _PickedImageTile(
-                          file: photos[i],
+                          photo: photos[i],
                           onRemove: () =>
                               ctrl.removePhotoForRequirement(code, i),
                         ),
@@ -320,10 +319,10 @@ class _RequiredBadge extends StatelessWidget {
 }
 
 class _PickedImageTile extends StatelessWidget {
-  final File file;
+  final UploadedPhoto photo;
   final VoidCallback onRemove;
 
-  const _PickedImageTile({required this.file, required this.onRemove});
+  const _PickedImageTile({required this.photo, required this.onRemove});
 
   @override
   Widget build(BuildContext context) {
@@ -333,12 +332,51 @@ class _PickedImageTile extends StatelessWidget {
         ClipRRect(
           borderRadius: BorderRadius.circular(Dimensions.r(10)),
           child: Image.file(
-            file,
+            photo.file,
             width: Dimensions.w(78),
             height: Dimensions.h(78),
             fit: BoxFit.cover,
           ),
         ),
+        // Upload overlay
+        if (photo.isUploading)
+          Positioned.fill(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(Dimensions.r(10)),
+              child: Container(
+                color: AppColors.blackColor.withOpacity(0.4),
+                child: const Center(
+                  child: SizedBox(
+                    width: 22,
+                    height: 22,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: AppColors.whiteColor,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        // Error indicator
+        if (photo.isError)
+          Positioned(
+            bottom: 4,
+            left: 4,
+            child: Container(
+              padding: const EdgeInsets.all(2),
+              decoration: const BoxDecoration(
+                color: AppColors.redColor,
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.error_outline,
+                color: AppColors.whiteColor,
+                size: 14,
+              ),
+            ),
+          ),
+        // Remove button
         Positioned(
           top: -6,
           right: -6,
