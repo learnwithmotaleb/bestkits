@@ -5,6 +5,7 @@ import '../../../../utils/app_colors/app_colors.dart';
 import '../../../../utils/static_strings/static_strings.dart';
 import '../../../../widget/app_empty_state.dart';
 import '../../../../widget/custom_appbar.dart';
+import '../../../core/routes/route_path.dart';
 import '../../bottom_nav/page/home/widget/product_card.dart';
 import '../../bottom_nav/page/home/pages/categories/widget/category_grid_card.dart';
 import '../controller/favourite_controller.dart';
@@ -146,7 +147,17 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                     delegate: SliverChildBuilderDelegate(
                       (context, index) {
                         final ProductModel product = controller.favoriteList[index];
-                        return ProductCard(product: product);
+                        return ProductCard(
+                            onTap: () {
+                              Get.toNamed(
+                                RoutePath.shopDetails,
+                                arguments: {
+                                  'productId': product.id.toString(),
+                                  'productModel': product,
+                                },
+                              );
+                            },
+                            product: product);
                       },
                       childCount: controller.favoriteList.length,
                     ),

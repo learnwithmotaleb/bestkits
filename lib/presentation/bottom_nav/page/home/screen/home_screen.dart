@@ -118,6 +118,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   itemBuilder: (context, index) {
                     final product = controller.trendingProducts[index];
                     return ProductCard(
+                      onTap: () {
+                        Get.toNamed(
+                          RoutePath.shopDetails,
+                          arguments: {
+                            'productId': product.id.toString(),
+                            'productModel': product,
+                          },
+                        );
+                      },
                       product: product,
                       width: Dimensions.w(160),
                       margin: EdgeInsets.only(right: Dimensions.w(15)),
@@ -132,7 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
             SectionTitle(
               title: AppStrings.recentlyViewed.tr,
               onTapViewAll: () {
-                //  Get.toNamed(RoutePath.searchscreen);
+                 //Get.toNamed(RoutePath.searchscreen);
               },
             ),
             Dimensions.gapH(15),
@@ -155,6 +164,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   itemBuilder: (context, index) {
                     final product = controller.recentlyViewed[index];
                     return ProductCard(
+                      onTap: () {
+                        Get.toNamed(
+                          RoutePath.shopDetails,
+                          arguments: {
+                            'productId': product.id.toString(),
+                            'productModel': product,
+                          },
+                        );
+                      },
                       product: product,
                       width: Dimensions.w(160),
                       margin: EdgeInsets.only(right: Dimensions.w(15)),
@@ -192,7 +210,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   itemCount: controller.newArrivals.length,
                   itemBuilder: (context, index) {
                     final product = controller.newArrivals[index];
-                    return ProductCard(
+                    return ProductCard( onTap: () {
+                      Get.toNamed(
+                        RoutePath.shopDetails,
+                        arguments: {
+                          'productId': product.id.toString(),
+                          'productModel': product,
+                        },
+                      );
+                    },
                       product: product,
                       width: Dimensions.w(160),
                       margin: EdgeInsets.only(right: Dimensions.w(15)),

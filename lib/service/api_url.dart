@@ -87,21 +87,23 @@ class ApiUrl {
 
   static const String createProduct = '$baseUrl/products'; //post
   static const String getProducts = '$baseUrl/products';
-  static String detailsProduct(String id) => '$baseUrl/products/$id'; //get method
+  static String detailsProduct(String id) =>
+      '$baseUrl/products/$id'; //get method
 
   static const String productSellerMe = '$baseUrl/products/seller/my';
-  static String productSellerDetails(String id) => '$baseUrl/products/seller/$id'; //get method
-  static String updateProduct(String id) => '$baseUrl/products/$id'; //patch method update product
+  static String productSellerDetails(String id) =>
+      '$baseUrl/products/seller/$id'; //get method
+  static String updateProduct(String id) =>
+      '$baseUrl/products/$id'; //patch method update product
   static String deleteProduct(String id) => '$baseUrl/products/$id';
-  static String markStatusChange(String id) => '$baseUrl/products/seller/$id/status'; //Patch Method
+  static String markStatusChange(String id) =>
+      '$baseUrl/products/seller/$id/status'; //Patch Method
 
+  static String productReview(String productId) =>
+      '$baseUrl/products/$productId/reviews'; //get Method
 
-  static String productReview(String productId) => '$baseUrl/products/$productId/reviews'; //get Method
-
-
-
-  static String productOrder(String productId) => '$baseUrl/orders/seller/products/$productId/orders'; //get method
-
+  static String productOrder(String productId) =>
+      '$baseUrl/orders/seller/products/$productId/orders'; //get method
 
   ///===================Stripe===================
   static const String stripeCallBack = '$baseUrl/stripe/callback'; //get method
@@ -207,10 +209,15 @@ class ApiUrl {
 
   static String accountAddress = '$baseUrl/account/addresses'; //Post method
 
+  //=====================================Product verifications===================
   static String legitgrailsBrandAPI =
       '$baseUrl/legitgrails/brands'; //get method
   static String legitgrailsCategoriesAPI =
       '$baseUrl/legitgrails/categories'; //get method
+  static String photoIndexForCategory(String categoryCode, String brandCode) =>
+      '$baseUrl/legitgrails/photo-index?category_code=$categoryCode&brand_code=$brandCode'; //get method
+  static String uploadPhotoProductVerification =
+      '$baseUrl/legitgrails/photos'; //post method
   static String authenticationSubmitAPI(String productId) =>
       '$baseUrl/products/$productId/authentication/submit'; //Post method
 
