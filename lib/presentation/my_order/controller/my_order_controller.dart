@@ -24,6 +24,11 @@ class MyOrderController extends GetxController {
   final RxBool isLoading = false.obs;
   final RxList<Data> orders = <Data>[].obs;
 
+  int page = 1;
+  int limit = 10;
+  bool hasNextPage = true;
+  String? currentStatus;
+
   final RxList<String> returnEvidenceImages = <String>[].obs;
   final RxDouble reviewRating = 0.0.obs;
   final TextEditingController reviewTextController = TextEditingController();
@@ -37,8 +42,23 @@ class MyOrderController extends GetxController {
     fetchOrders();
   }
 
-  Future<void> fetchOrders() async {
-    isLoading.value = true;
+  Future<void> fetchOrders({bool isLoadMore = false, String? status}) async {
+    if (isLoadMore) {
+      if (!hasNextPage) return;
+      page++;
+    } else {
+      page = 1;
+      hasNextPage = true;
+      isLoading.value = true;
+      if (orders.isEmpty) {
+        // optionally clear but maybe we want to keep current orders until loaded
+      }
+    }
+    
+    if (status != null) {
+      currentStatus = status;
+    }
+
     try {
       // ACTIVE, COMPLETE, CANCELED
       String tabStr = "ACTIVE";
@@ -46,13 +66,27 @@ class MyOrderController extends GetxController {
         tabStr = "COMPLETE";
       else if (selectedTab.value == 2) tabStr = "CANCELED";
 
-      String url = "${ApiUrl.myOrder}?page=1&limit=10&tab=$tabStr";
+      String url = "${ApiUrl.myOrder}?page=$page&limit=$limit&tab=$tabStr";
+      if (currentStatus != null && currentStatus!.isNotEmpty) {
+        url += "&status=$currentStatus";
+      }
 
       var response = await ApiClient().get(url: url, isToken: true);
 
       if (response.statusCode == 200) {
         MyOrderModel model = MyOrderModel.fromJson(response.body);
-        orders.assignAll(model.data ?? []);
+        
+        if (isLoadMore) {
+          orders.addAll(model.data ?? []);
+        } else {
+          orders.assignAll(model.data ?? []);
+        }
+
+        if (model.meta != null) {
+          hasNextPage = page < (model.meta!.pages?.toInt() ?? 1);
+        } else {
+          hasNextPage = false;
+        }
       } else {
         AppSnackBar.fail(response.statusText ?? "Failed to load orders");
       }

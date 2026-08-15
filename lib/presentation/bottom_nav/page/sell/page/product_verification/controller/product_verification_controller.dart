@@ -375,7 +375,7 @@ class ProductVerificationController extends GetxController {
       final body = {
         'category_code': selectedCategory.value?.code ?? '',
         'brand_code': selectedBrand.value?.code ?? '',
-        'answer_time': 1440,
+        // 'answer_time': 1440,
         'mock_outcome': mockOutcome.value,
         'photos': photosPayload,
       };

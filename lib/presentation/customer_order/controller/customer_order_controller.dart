@@ -20,6 +20,11 @@ class CustomerOrderController extends GetxController {
   final RxList<Data> allOrders = <Data>[].obs;
   final RxBool isLoading = false.obs;
 
+  int page = 1;
+  int limit = 50;
+  bool hasNextPage = true;
+  String? currentStatus;
+
   final Rx<details_model.Data?> selectedOrderDetails = Rx<details_model.Data?>(null);
   final RxBool isDetailsLoading = false.obs;
 
@@ -29,18 +34,46 @@ class CustomerOrderController extends GetxController {
     fetchOrders();
   }
 
-  Future<void> fetchOrders() async {
-    isLoading.value = true;
+  Future<void> fetchOrders({bool isLoadMore = false, String? status}) async {
+    if (isLoadMore) {
+      if (!hasNextPage) return;
+      page++;
+    } else {
+      page = 1;
+      hasNextPage = true;
+      isLoading.value = true;
+      if (allOrders.isEmpty) {
+        // keep old list until refreshed if desired
+      }
+    }
+
+    if (status != null) {
+      currentStatus = status;
+    }
+
     try {
       final tabParam = _getSellerTabParam(selectedTab.value);
+      String url = '${ApiUrl.customerOrder}?page=$page&limit=$limit&sellerTab=$tabParam';
+      if (currentStatus != null && currentStatus!.isNotEmpty) {
+        url += '&status=$currentStatus';
+      }
+
       final response = await ApiClient().get(
-        url: '${ApiUrl.customerOrder}?page=1&limit=50&sellerTab=$tabParam',
+        url: url,
         isToken: true,
       );
       if (response.statusCode == 200) {
         final model = CustomerOrderModel.fromJson(response.body);
-        if (model.data != null) {
-          allOrders.value = model.data!;
+        if (isLoadMore) {
+          if (model.data != null) allOrders.addAll(model.data!);
+        } else {
+          if (model.data != null) allOrders.assignAll(model.data!);
+        }
+
+        if (model.meta != null) {
+          hasNextPage = page < (model.meta!.pages?.toInt() ?? 1);
+        } else {
+          hasNextPage = false;
         }
       }
     } catch (e) {
