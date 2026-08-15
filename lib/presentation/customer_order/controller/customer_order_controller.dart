@@ -104,18 +104,28 @@ class CustomerOrderController extends GetxController {
     }
   }
 
-  void updateOrderStatus(String orderId, String newStatus) {
-    // API update status logic would go here
-    final index = allOrders.indexWhere(
-        (o) => o.id.toString() == orderId || o.displayId == orderId);
-    if (index != -1) {
-      // Local UI update for now
-      fetchOrders();
-    }
-    
-    if (selectedOrderDetails.value != null && 
-        (selectedOrderDetails.value!.id.toString() == orderId || selectedOrderDetails.value!.displayId == orderId)) {
-      selectedOrderDetails.value = selectedOrderDetails.value!.copyWith(status: newStatus);
+  final RxBool isUpdateLoading = false.obs;
+
+  Future<void> updateOrderStatus(String orderId, String newStatus) async {
+    isUpdateLoading.value = true;
+    try {
+      final response = await ApiClient().patch(
+        url: ApiUrl.updateOrderStatus(orderId),
+        body: {"status": newStatus},
+        isToken: true,
+      );
+      if (response.statusCode == 200) {
+        // Local UI update for now
+        fetchOrders();
+        if (selectedOrderDetails.value != null && 
+            (selectedOrderDetails.value!.id.toString() == orderId || selectedOrderDetails.value!.displayId == orderId)) {
+          selectedOrderDetails.value = selectedOrderDetails.value!.copyWith(status: newStatus);
+        }
+      }
+    } catch (e) {
+      debugPrint("Error updating customer order status: $e");
+    } finally {
+      isUpdateLoading.value = false;
     }
   }
 

@@ -134,54 +134,68 @@ class _ReturnOrderScreenState extends State<ReturnOrderScreen> {
                           final orders = _ctrl.allOrders;
 
                           if (orders.isEmpty) {
-                            return Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: Dimensions.w(20)),
-                              child: Container(
-                                width: double.infinity,
-                                padding: EdgeInsets.symmetric(
-                                    vertical: Dimensions.h(32)),
-                                decoration: BoxDecoration(
-                                  color: AppColors.whiteColor,
-                                  borderRadius:
-                                      BorderRadius.circular(Dimensions.r(12)),
-                                  border: Border.all(
-                                      color: AppColors.greyColor
-                                          .withOpacity(0.15)),
-                                ),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(Icons.inbox_outlined,
-                                        size: Dimensions.icon(48),
-                                        color: AppColors.greyColor
-                                            .withOpacity(0.5)),
-                                    SizedBox(height: Dimensions.h(12)),
-                                    Text(
-                                      AppStrings.noReturnOrdersFound.tr,
-                                      style: AppTextStyles.body.copyWith(
-                                        color: AppColors.greyColor,
-                                        fontSize: Dimensions.fs(13),
-                                        fontStyle: FontStyle.italic,
-                                      ),
+                            return RefreshIndicator(
+                              onRefresh: () => _ctrl.fetchOrders(isRefresh: true),
+                              color: AppColors.primaryColor,
+                              backgroundColor: AppColors.whiteColor,
+                              child: SingleChildScrollView(
+                                physics: const AlwaysScrollableScrollPhysics(),
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: Dimensions.w(20)),
+                                  child: Container(
+                                    width: double.infinity,
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: Dimensions.h(32)),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.whiteColor,
+                                      borderRadius:
+                                          BorderRadius.circular(Dimensions.r(12)),
+                                      border: Border.all(
+                                          color: AppColors.greyColor
+                                              .withOpacity(0.15)),
                                     ),
-                                  ],
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(Icons.inbox_outlined,
+                                            size: Dimensions.icon(48),
+                                            color: AppColors.greyColor
+                                                .withOpacity(0.5)),
+                                        SizedBox(height: Dimensions.h(12)),
+                                        Text(
+                                          AppStrings.noReturnOrdersFound.tr,
+                                          style: AppTextStyles.body.copyWith(
+                                            color: AppColors.greyColor,
+                                            fontSize: Dimensions.fs(13),
+                                            fontStyle: FontStyle.italic,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 ),
                               ),
                             );
                           }
 
-                          return ListView.separated(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: Dimensions.w(20),
-                                vertical: Dimensions.h(4)),
-                            itemCount: orders.length,
-                            separatorBuilder: (_, __) =>
-                                SizedBox(height: Dimensions.h(16)),
-                            itemBuilder: (context, index) {
-                              final order = orders[index];
-                              return _buildOrderCard(order);
-                            },
+                          return RefreshIndicator(
+                            onRefresh: () => _ctrl.fetchOrders(isRefresh: true),
+                            color: AppColors.primaryColor,
+                            backgroundColor: AppColors.whiteColor,
+                            child: ListView.separated(
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: Dimensions.w(20),
+                                  vertical: Dimensions.h(4)),
+                              itemCount: orders.length,
+                              separatorBuilder: (_, __) =>
+                                  SizedBox(height: Dimensions.h(16)),
+                              itemBuilder: (context, index) {
+                                final order = orders[index];
+                                return _buildOrderCard(order);
+                              },
+                            ),
                           );
                         }),
                       ),

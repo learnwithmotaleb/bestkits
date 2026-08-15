@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../core/responsive_layout/dimensions.dart';
 import '../../../../../utils/app_colors/app_colors.dart';
-import '../../../../../utils/app_text_style/app_text_style.dart';
 import '../controller/my_order_controller.dart';
 import '../widget/my_order_list_view.dart';
 import '../widget/my_order_details_view.dart';

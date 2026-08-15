@@ -255,28 +255,104 @@ class _CustomerOrderDetailsState extends State<CustomerOrderDetails> {
     );
   }
 
+  String _mapUIToApiStatus(String uiStatus) {
+    if (uiStatus == AppStrings.pending) return 'PENDING';
+    if (uiStatus == AppStrings.confirmed) return 'CONFIRMED';
+    if (uiStatus == AppStrings.shipped) return 'SHIPPED';
+    if (uiStatus == AppStrings.delivered) return 'DELIVERED';
+    if (uiStatus == AppStrings.canceled) return 'CANCELLED';
+    return 'PENDING';
+  }
+
   void _confirmUpdateStatus(
-      String newStatus, String currentStatus, details.Data order) {
-    if (newStatus == currentStatus) return;
+      String uiStatus, String currentStatus, details.Data order) {
+    final apiStatus = _mapUIToApiStatus(uiStatus);
+    if (apiStatus == currentStatus) return;
 
-    AppAlerts.warning(
-      title: AppStrings.updateOrderStatusAlertTitle.tr,
-      message: AppStrings.updateOrderStatusAlertSubtitle.tr,
-      confirmLabel: AppStrings.confirm.tr,
-      cancelLabel: AppStrings.cancel.tr,
-      onConfirm: () {
-        _ctrl.updateOrderStatus(order.id.toString(), newStatus);
-        Get.back(); // close alert
-
-        // Show success snackbar
-        Get.snackbar(
-          AppStrings.success.tr,
-          '${AppStrings.orderStatusUpdatedTo.tr} ${newStatus.tr}',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-        );
-      },
+    Get.dialog(
+      Dialog(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(Dimensions.r(16))),
+        backgroundColor: Colors.white,
+        child: Padding(
+          padding: EdgeInsets.all(Dimensions.w(24)),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                padding: EdgeInsets.all(Dimensions.w(16)),
+                decoration: BoxDecoration(
+                  color: Colors.red.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(Dimensions.r(16)),
+                ),
+                child: const Icon(Icons.error_outline,
+                    color: Colors.red, size: 40),
+              ),
+              SizedBox(height: Dimensions.h(16)),
+              Text(
+                "Update Order Status !",
+                style: AppTextStyles.body.copyWith(
+                    fontSize: Dimensions.fs(16), fontWeight: FontWeight.w700),
+              ),
+              SizedBox(height: Dimensions.h(8)),
+              Text(
+                "Are you sure you want to update this order status? The customer will be notified immediately.",
+                textAlign: TextAlign.center,
+                style: AppTextStyles.body.copyWith(
+                    fontSize: Dimensions.fs(12),
+                    color: AppColors.greyColor,
+                    height: 1.5),
+              ),
+              SizedBox(height: Dimensions.h(24)),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => Get.back(),
+                      style: OutlinedButton.styleFrom(
+                        padding:
+                            EdgeInsets.symmetric(vertical: Dimensions.h(14)),
+                        side: BorderSide(
+                            color: AppColors.greyColor.withOpacity(0.3)),
+                        shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(Dimensions.r(8))),
+                      ),
+                      child: Text("Cancel",
+                          style: AppTextStyles.body.copyWith(
+                              color: AppColors.greyColor,
+                              fontWeight: FontWeight.w600)),
+                    ),
+                  ),
+                  SizedBox(width: Dimensions.w(12)),
+                  Expanded(
+                    child: Obx(() => AppButton(
+                          label: "Confirm",
+                          isLoading: _ctrl.isUpdateLoading.value,
+                          onPressed: () async {
+                            await _ctrl.updateOrderStatus(
+                                order.id.toString(), apiStatus);
+                            Get.back(); // close alert
+                            Get.snackbar(
+                              AppStrings.success.tr,
+                              '${AppStrings.orderStatusUpdatedTo.tr} ${uiStatus.tr}',
+                              snackPosition: SnackPosition.BOTTOM,
+                              backgroundColor: Colors.green,
+                              colorText: Colors.white,
+                            );
+                          },
+                          backgroundColor: AppColors.blackColor,
+                          textColor: AppColors.primaryColor,
+                          height: 48,
+                          borderRadius: 8,
+                        )),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
@@ -298,351 +374,358 @@ class _CustomerOrderDetailsState extends State<CustomerOrderDetails> {
         final bool canUpdate =
             currentStatus != 'DELIVERED' && currentStatus != 'CANCELLED';
 
-        return SingleChildScrollView(
-          padding: EdgeInsets.symmetric(
-              horizontal: Dimensions.w(20), vertical: Dimensions.h(20)),
-          child: Column(
-            children: [
-              // ── Main Card ──────────────────────────────────────────────────
-              Container(
-                padding: EdgeInsets.all(Dimensions.w(16)),
-                decoration: BoxDecoration(
-                  color: AppColors.whiteColor,
-                  borderRadius: BorderRadius.circular(Dimensions.r(16)),
-                  border:
-                      Border.all(color: AppColors.greyColor.withOpacity(0.15)),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Order ID & Status
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "${AppStrings.orderIdPrefix.tr}${order.displayId ?? order.id ?? 'N/A'}",
-                              style: AppTextStyles.body.copyWith(
-                                fontWeight: FontWeight.w700,
-                                fontSize: Dimensions.fs(13),
-                              ),
-                            ),
-                            SizedBox(height: Dimensions.h(4)),
-                            Text(
-                              order.createdAt ?? '',
-                              style: AppTextStyles.body.copyWith(
-                                fontSize: Dimensions.fs(10),
-                                color: AppColors.greyColor,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: Dimensions.w(8),
-                              vertical: Dimensions.h(4)),
-                          decoration: BoxDecoration(
-                            color: _getStatusBgColor(currentStatus),
-                            borderRadius:
-                                BorderRadius.circular(Dimensions.r(12)),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
+        return RefreshIndicator(
+          onRefresh: () => _ctrl.fetchOrderDetails(widget.orderId),
+          color: AppColors.primaryColor,
+          backgroundColor: AppColors.whiteColor,
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: EdgeInsets.symmetric(
+                horizontal: Dimensions.w(20), vertical: Dimensions.h(20)),
+            child: Column(
+              children: [
+                // ── Main Card ──────────────────────────────────────────────────
+                Container(
+                  padding: EdgeInsets.all(Dimensions.w(16)),
+                  decoration: BoxDecoration(
+                    color: AppColors.whiteColor,
+                    borderRadius: BorderRadius.circular(Dimensions.r(16)),
+                    border: Border.all(
+                        color: AppColors.greyColor.withOpacity(0.15)),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Order ID & Status
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Icon(Icons.circle,
-                                  size: 6,
-                                  color: _getStatusTextColor(currentStatus)),
-                              SizedBox(width: Dimensions.w(4)),
                               Text(
-                                currentStatus.tr,
+                                "${AppStrings.orderIdPrefix.tr}${order.displayId ?? order.id ?? 'N/A'}",
+                                style: AppTextStyles.body.copyWith(
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: Dimensions.fs(13),
+                                ),
+                              ),
+                              SizedBox(height: Dimensions.h(4)),
+                              Text(
+                                order.createdAt ?? '',
                                 style: AppTextStyles.body.copyWith(
                                   fontSize: Dimensions.fs(10),
-                                  fontWeight: FontWeight.w600,
-                                  color: _getStatusTextColor(currentStatus),
+                                  color: AppColors.greyColor,
                                 ),
                               ),
                             ],
-                          ),
-                        )
-                      ],
-                    ),
-                    SizedBox(height: Dimensions.h(16)),
-                    Divider(
-                        height: 1,
-                        color: AppColors.greyColor.withOpacity(0.15)),
-                    SizedBox(height: Dimensions.h(16)),
-
-                    // Product Info
-                    Row(
-                      children: [
-                        Container(
-                          width: Dimensions.w(50),
-                          height: Dimensions.h(50),
-                          decoration: BoxDecoration(
-                            borderRadius:
-                                BorderRadius.circular(Dimensions.r(8)),
-                            border: Border.all(color: AppColors.primaryColor),
-                          ),
-                          child: ClipRRect(
-                            borderRadius:
-                                BorderRadius.circular(Dimensions.r(7)),
-                            child: (order.items != null &&
-                                    order.items!.isNotEmpty &&
-                                    order.items![0].product != null)
-                                ? Image.network(
-                                    ApiUrl.buildImageUrl(
-                                        order.items![0].product!.imageUrl),
-                                    fit: BoxFit.cover,
-                                    errorBuilder: (_, __, ___) => const Icon(
-                                        Icons.image,
-                                        color: AppColors.greyColor))
-                                : const Icon(Icons.image,
-                                    color: AppColors.greyColor),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: Dimensions.h(12)),
-                    if (order.items != null && order.items!.isNotEmpty) ...[
-                      Text(
-                        order.items![0].product?.name ?? '',
-                        style: AppTextStyles.body.copyWith(
-                          fontWeight: FontWeight.w700,
-                          fontSize: Dimensions.fs(14),
-                        ),
-                      ),
-                      SizedBox(height: Dimensions.h(4)),
-                      Text(
-                        "${AppStrings.quantityPrefix.tr}${order.items![0].quantity}",
-                        style: AppTextStyles.body.copyWith(
-                          fontSize: Dimensions.fs(11),
-                          color: AppColors.greyColor,
-                          fontStyle: FontStyle.italic,
-                        ),
-                      ),
-                      SizedBox(height: Dimensions.h(8)),
-                      Text(
-                        "€${order.items![0].price}",
-                        style: AppTextStyles.body.copyWith(
-                          fontWeight: FontWeight.w700,
-                          fontSize: Dimensions.fs(14),
-                        ),
-                      ),
-                    ],
-                    SizedBox(height: Dimensions.h(16)),
-                    Divider(
-                        height: 1,
-                        color: AppColors.greyColor.withOpacity(0.15)),
-                    SizedBox(height: Dimensions.h(16)),
-
-                    // Ordered By
-                    Text(
-                      AppStrings.orderedBy.tr,
-                      style: AppTextStyles.body.copyWith(
-                        fontWeight: FontWeight.w600,
-                        fontSize: Dimensions.fs(13),
-                      ),
-                    ),
-                    SizedBox(height: Dimensions.h(12)),
-                    if (order.buyer != null)
-                      Row(
-                        children: [
-                          CircleAvatar(
-                            radius: Dimensions.r(20),
-                            backgroundImage: NetworkImage(ApiUrl.buildImageUrl(
-                                order.buyer?.profile?.avatarUrl)),
-                            backgroundColor:
-                                AppColors.greyColor.withOpacity(0.2),
-                          ),
-                          SizedBox(width: Dimensions.w(12)),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  order.buyer?.profile?.fullName ?? '',
-                                  style: AppTextStyles.body.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: Dimensions.fs(13),
-                                  ),
-                                ),
-                                Text(
-                                  order.buyer?.email ?? '',
-                                  style: AppTextStyles.body.copyWith(
-                                    fontSize: Dimensions.fs(11),
-                                    color: AppColors.greyColor,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            padding: EdgeInsets.all(Dimensions.w(8)),
-                            decoration: BoxDecoration(
-                              color: AppColors.blackColor,
-                              borderRadius:
-                                  BorderRadius.circular(Dimensions.r(8)),
-                            ),
-                            child: Icon(Icons.chat_bubble_outline,
-                                color: AppColors.primaryColor,
-                                size: Dimensions.icon(16)),
-                          ),
-                        ],
-                      ),
-                    SizedBox(height: Dimensions.h(16)),
-                    Divider(
-                        height: 1,
-                        color: AppColors.greyColor.withOpacity(0.15)),
-                    SizedBox(height: Dimensions.h(16)),
-
-                    // Delivery Address
-                    Text(
-                      AppStrings.deliveryAddress.tr,
-                      style: AppTextStyles.body.copyWith(
-                        fontWeight: FontWeight.w600,
-                        fontSize: Dimensions.fs(13),
-                      ),
-                    ),
-                    SizedBox(height: Dimensions.h(12)),
-                    if (order.buyer != null) ...[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            order.buyer?.profile?.fullName ?? '',
-                            style: AppTextStyles.body.copyWith(
-                              fontWeight: FontWeight.w600,
-                              fontSize: Dimensions.fs(13),
-                            ),
                           ),
                           Container(
                             padding: EdgeInsets.symmetric(
                                 horizontal: Dimensions.w(8),
                                 vertical: Dimensions.h(4)),
                             decoration: BoxDecoration(
-                              color: AppColors.primaryColor.withOpacity(0.2),
+                              color: _getStatusBgColor(currentStatus),
                               borderRadius:
                                   BorderRadius.circular(Dimensions.r(12)),
                             ),
                             child: Row(
+                              mainAxisSize: MainAxisSize.min,
                               children: [
                                 Icon(Icons.circle,
-                                    size: 6, color: AppColors.primaryColor),
+                                    size: 6,
+                                    color: _getStatusTextColor(currentStatus)),
                                 SizedBox(width: Dimensions.w(4)),
                                 Text(
-                                  AppStrings.home.tr,
+                                  order.statusLabel?.tr ?? currentStatus.tr,
                                   style: AppTextStyles.body.copyWith(
                                     fontSize: Dimensions.fs(10),
                                     fontWeight: FontWeight.w600,
-                                    color: AppColors.primaryColor,
+                                    color: _getStatusTextColor(currentStatus),
                                   ),
                                 ),
                               ],
                             ),
+                          )
+                        ],
+                      ),
+                      SizedBox(height: Dimensions.h(16)),
+                      Divider(
+                          height: 1,
+                          color: AppColors.greyColor.withOpacity(0.15)),
+                      SizedBox(height: Dimensions.h(16)),
+
+                      // Product Info
+                      Row(
+                        children: [
+                          Container(
+                            width: Dimensions.w(50),
+                            height: Dimensions.h(50),
+                            decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.circular(Dimensions.r(8)),
+                              border: Border.all(color: AppColors.primaryColor),
+                            ),
+                            child: ClipRRect(
+                              borderRadius:
+                                  BorderRadius.circular(Dimensions.r(7)),
+                              child: (order.items != null &&
+                                      order.items!.isNotEmpty &&
+                                      order.items![0].product != null)
+                                  ? Image.network(
+                                      ApiUrl.buildImageUrl(
+                                          order.items![0].product!.imageUrl),
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (_, __, ___) => const Icon(
+                                          Icons.image,
+                                          color: AppColors.greyColor))
+                                  : const Icon(Icons.image,
+                                      color: AppColors.greyColor),
+                            ),
                           ),
                         ],
                       ),
-                      SizedBox(height: Dimensions.h(4)),
-                      Text(
-                        order.buyer?.profile?.phone ?? '',
-                        style: AppTextStyles.body.copyWith(
-                          fontSize: Dimensions.fs(12),
-                          color: AppColors.greyColor,
+                      SizedBox(height: Dimensions.h(12)),
+                      if (order.items != null && order.items!.isNotEmpty) ...[
+                        Text(
+                          order.items![0].product?.name ?? '',
+                          style: AppTextStyles.body.copyWith(
+                            fontWeight: FontWeight.w700,
+                            fontSize: Dimensions.fs(14),
+                          ),
                         ),
-                      ),
-                      SizedBox(height: Dimensions.h(4)),
-                      Text(
-                        order.deliveryAddress != null
-                            ? "${order.deliveryAddress!.address ?? ''}, ${order.deliveryAddress!.city ?? ''}, ${order.deliveryAddress!.country ?? ''}"
-                            : "Address not provided",
-                        style: AppTextStyles.body.copyWith(
-                          fontSize: Dimensions.fs(12),
-                          color: AppColors.greyColor,
+                        SizedBox(height: Dimensions.h(4)),
+                        Text(
+                          "${AppStrings.quantityPrefix.tr}${order.items![0].quantity}",
+                          style: AppTextStyles.body.copyWith(
+                            fontSize: Dimensions.fs(11),
+                            color: AppColors.greyColor,
+                            fontStyle: FontStyle.italic,
+                          ),
                         ),
-                      ),
-                    ],
-                  ],
-                ),
-              ),
+                        SizedBox(height: Dimensions.h(8)),
+                        Text(
+                          "€${order.items![0].price}",
+                          style: AppTextStyles.body.copyWith(
+                            fontWeight: FontWeight.w700,
+                            fontSize: Dimensions.fs(14),
+                          ),
+                        ),
+                      ],
+                      SizedBox(height: Dimensions.h(16)),
+                      Divider(
+                          height: 1,
+                          color: AppColors.greyColor.withOpacity(0.15)),
+                      SizedBox(height: Dimensions.h(16)),
 
-              SizedBox(height: Dimensions.h(24)),
-
-              // ── Update Order Status Button OR Status Banner ───────────────
-              if (canUpdate)
-                AppButton(
-                  label: AppStrings.updateOrderStatusBtn.tr,
-                  onPressed: _openUpdateStatusSheet,
-                  backgroundColor: AppColors.blackColor,
-                  textColor: AppColors.primaryColor,
-                  borderRadius: 12,
-                  height: 52,
-                )
-              else if (currentStatus == AppStrings.delivered)
-                Container(
-                  width: double.infinity,
-                  padding: Dimensions.pSym(h: 16, v: 16),
-                  decoration: BoxDecoration(
-                    color: AppColors.whiteColor,
-                    borderRadius: BorderRadius.circular(Dimensions.r(8)),
-                    border: Border.all(color: AppColors.primaryColor),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+                      // Ordered By
                       Text(
-                        AppStrings.deliveredOn.tr,
-                        style: AppTextStyles.body.copyWith(
-                          fontSize: Dimensions.fs(11),
-                          color: AppColors.greyColor,
-                        ),
-                      ),
-                      SizedBox(height: Dimensions.h(4)),
-                      Text(
-                        order.createdAt ?? '',
+                        AppStrings.orderedBy.tr,
                         style: AppTextStyles.body.copyWith(
                           fontWeight: FontWeight.w600,
                           fontSize: Dimensions.fs(13),
                         ),
                       ),
-                    ],
-                  ),
-                )
-              else if (currentStatus == AppStrings.canceled)
-                Container(
-                  width: double.infinity,
-                  padding: Dimensions.pSym(h: 16, v: 16),
-                  decoration: BoxDecoration(
-                    color: AppColors.whiteColor,
-                    borderRadius: BorderRadius.circular(Dimensions.r(8)),
-                    border: Border.all(color: Colors.red.withOpacity(0.5)),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        AppStrings.canceledByCustomerOn.tr,
-                        style: AppTextStyles.body.copyWith(
-                          fontSize: Dimensions.fs(11),
-                          color: AppColors.greyColor,
+                      SizedBox(height: Dimensions.h(12)),
+                      if (order.buyer != null)
+                        Row(
+                          children: [
+                            CircleAvatar(
+                              radius: Dimensions.r(20),
+                              backgroundImage: NetworkImage(
+                                  ApiUrl.buildImageUrl(
+                                      order.buyer?.profile?.avatarUrl)),
+                              backgroundColor:
+                                  AppColors.greyColor.withOpacity(0.2),
+                            ),
+                            SizedBox(width: Dimensions.w(12)),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    order.buyer?.profile?.fullName ?? '',
+                                    style: AppTextStyles.body.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: Dimensions.fs(13),
+                                    ),
+                                  ),
+                                  Text(
+                                    order.buyer?.email ?? '',
+                                    style: AppTextStyles.body.copyWith(
+                                      fontSize: Dimensions.fs(11),
+                                      color: AppColors.greyColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(Dimensions.w(8)),
+                              decoration: BoxDecoration(
+                                color: AppColors.blackColor,
+                                borderRadius:
+                                    BorderRadius.circular(Dimensions.r(8)),
+                              ),
+                              child: Icon(Icons.chat_bubble_outline,
+                                  color: AppColors.primaryColor,
+                                  size: Dimensions.icon(16)),
+                            ),
+                          ],
                         ),
-                      ),
-                      SizedBox(height: Dimensions.h(4)),
+                      SizedBox(height: Dimensions.h(16)),
+                      Divider(
+                          height: 1,
+                          color: AppColors.greyColor.withOpacity(0.15)),
+                      SizedBox(height: Dimensions.h(16)),
+
+                      // Delivery Address
                       Text(
-                        order.createdAt ?? '',
+                        AppStrings.deliveryAddress.tr,
                         style: AppTextStyles.body.copyWith(
                           fontWeight: FontWeight.w600,
                           fontSize: Dimensions.fs(13),
                         ),
                       ),
+                      SizedBox(height: Dimensions.h(12)),
+                      if (order.buyer != null) ...[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              order.buyer?.profile?.fullName ?? '',
+                              style: AppTextStyles.body.copyWith(
+                                fontWeight: FontWeight.w600,
+                                fontSize: Dimensions.fs(13),
+                              ),
+                            ),
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: Dimensions.w(8),
+                                  vertical: Dimensions.h(4)),
+                              decoration: BoxDecoration(
+                                color: AppColors.primaryColor.withOpacity(0.2),
+                                borderRadius:
+                                    BorderRadius.circular(Dimensions.r(12)),
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.circle,
+                                      size: 6, color: AppColors.primaryColor),
+                                  SizedBox(width: Dimensions.w(4)),
+                                  Text(
+                                    AppStrings.home.tr,
+                                    style: AppTextStyles.body.copyWith(
+                                      fontSize: Dimensions.fs(10),
+                                      fontWeight: FontWeight.w600,
+                                      color: AppColors.primaryColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: Dimensions.h(4)),
+                        Text(
+                          order.buyer?.profile?.phone ?? '',
+                          style: AppTextStyles.body.copyWith(
+                            fontSize: Dimensions.fs(12),
+                            color: AppColors.greyColor,
+                          ),
+                        ),
+                        SizedBox(height: Dimensions.h(4)),
+                        Text(
+                          order.deliveryAddress != null
+                              ? "${order.deliveryAddress!.address ?? ''}, ${order.deliveryAddress!.city ?? ''}, ${order.deliveryAddress!.country ?? ''}"
+                              : "Address not provided",
+                          style: AppTextStyles.body.copyWith(
+                            fontSize: Dimensions.fs(12),
+                            color: AppColors.greyColor,
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                 ),
 
-              SizedBox(height: Dimensions.h(40)),
-            ],
+                SizedBox(height: Dimensions.h(24)),
+
+                // ── Update Order Status Button OR Status Banner ───────────────
+                if (canUpdate)
+                  AppButton(
+                    label: AppStrings.updateOrderStatusBtn.tr,
+                    onPressed: _openUpdateStatusSheet,
+                    backgroundColor: AppColors.blackColor,
+                    textColor: AppColors.primaryColor,
+                    borderRadius: 12,
+                    height: 52,
+                  )
+                else if (currentStatus == 'DELIVERED')
+                  Container(
+                    width: double.infinity,
+                    padding: Dimensions.pSym(h: 16, v: 16),
+                    decoration: BoxDecoration(
+                      color: AppColors.whiteColor,
+                      borderRadius: BorderRadius.circular(Dimensions.r(8)),
+                      border: Border.all(color: AppColors.primaryColor),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          AppStrings.deliveredOn.tr,
+                          style: AppTextStyles.body.copyWith(
+                            fontSize: Dimensions.fs(11),
+                            color: AppColors.greyColor,
+                          ),
+                        ),
+                        SizedBox(height: Dimensions.h(4)),
+                        Text(
+                          order.timeline?.deliveredAt ?? order.updatedAt ?? '',
+                          style: AppTextStyles.body.copyWith(
+                            fontWeight: FontWeight.w600,
+                            fontSize: Dimensions.fs(13),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                else if (currentStatus == 'CANCELLED')
+                  Container(
+                    width: double.infinity,
+                    padding: Dimensions.pSym(h: 16, v: 16),
+                    decoration: BoxDecoration(
+                      color: AppColors.whiteColor,
+                      borderRadius: BorderRadius.circular(Dimensions.r(8)),
+                      border: Border.all(color: Colors.red.withOpacity(0.5)),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Canceled On",
+                          style: AppTextStyles.body.copyWith(
+                            fontSize: Dimensions.fs(11),
+                            color: Colors.red.withOpacity(0.7),
+                          ),
+                        ),
+                        SizedBox(height: Dimensions.h(4)),
+                        Text(
+                          order.timeline?.cancelledAt ?? order.updatedAt ?? '',
+                          style: AppTextStyles.body.copyWith(
+                            fontWeight: FontWeight.w600,
+                            fontSize: Dimensions.fs(13),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                SizedBox(height: Dimensions.h(40)),
+              ],
+            ),
           ),
         );
       }),

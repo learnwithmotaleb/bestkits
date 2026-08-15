@@ -9,6 +9,7 @@ import '../../../../../widget/app_button.dart';
 import '../../../../../widget/app_bottom_sheet.dart';
 import '../../../../../widget/app_text_field.dart';
 import '../../../../../widget/app_alert.dart';
+import '../../../../../widget/app_loading.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'dart:io';
 import '../model/MyOrderModel.dart';
@@ -27,10 +28,8 @@ class MyOrderDetailsView extends StatelessWidget {
     return Obx(() {
       if (controller.isDetailLoading.value) {
         return const Center(
-          child: CircularProgressIndicator(
-            color: Color(0xFF1A1A1A),
-            strokeWidth: 2.5,
-          ),
+          child:
+              AppLoading(isFullPage: true, message: "Loading order details..."),
         );
       }
 
@@ -47,492 +46,516 @@ class MyOrderDetailsView extends StatelessWidget {
           order.seller?.email ??
           "";
 
+      final currentOrderId = detail?.id?.toString() ?? order.id.toString();
+
       return Column(
         children: [
           Expanded(
-            child: SingleChildScrollView(
-              padding: EdgeInsets.symmetric(horizontal: Dimensions.w(16)),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Header (Order ID and status)
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              '- ${AppStrings.orderIdLabel.tr}: ${currentDisplayId ?? ""}',
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 13,
-                                  fontStyle: FontStyle.italic),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              currentCreatedAt ?? "",
-                              style: TextStyle(
-                                  fontSize: 11,
-                                  color: Colors.grey[400],
-                                  fontStyle: FontStyle.italic),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: currentStatus == 'DELIVERED'
-                              ? Colors.green.withOpacity(0.1)
-                              : (currentStatus == 'CANCELLED'
-                                  ? Colors.red.withOpacity(0.1)
-                                  : Colors.blue.withOpacity(0.1)),
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: Text(
-                          currentStatusLabel ?? "",
-                          style: TextStyle(
-                            fontSize: 10,
-                            fontWeight: FontWeight.w700,
-                            color: currentStatus == 'DELIVERED'
-                                ? Colors.green
-                                : (currentStatus == 'CANCELLED'
-                                    ? Colors.red
-                                    : Colors.blue),
+            child: RefreshIndicator(
+              color: AppColors.primaryColor,
+              backgroundColor: Colors.white,
+              onRefresh: () async {
+                await controller.fetchOrderDetail(currentOrderId);
+              },
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                padding: EdgeInsets.symmetric(horizontal: Dimensions.w(16)),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Header (Order ID and status)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '- ${AppStrings.orderIdLabel.tr}: ${currentDisplayId ?? ""}',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 13,
+                                    fontStyle: FontStyle.italic),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                currentCreatedAt ?? "",
+                                style: TextStyle(
+                                    fontSize: 11,
+                                    color: Colors.grey[400],
+                                    fontStyle: FontStyle.italic),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-
-                  // Order Summary Container
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(14),
-                      border: Border.all(color: Colors.grey.withOpacity(0.1)),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              '- ${AppStrings.orderSummary.tr} ( $currentSellerName )',
-                              style: const TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w800,
-                                  fontStyle: FontStyle.italic),
+                        const SizedBox(width: 8),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: currentStatus == 'DELIVERED'
+                                ? Colors.green.withOpacity(0.1)
+                                : (currentStatus == 'CANCELLED'
+                                    ? Colors.red.withOpacity(0.1)
+                                    : Colors.blue.withOpacity(0.1)),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Text(
+                            currentStatusLabel ?? "",
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w700,
+                              color: currentStatus == 'DELIVERED'
+                                  ? Colors.green
+                                  : (currentStatus == 'CANCELLED'
+                                      ? Colors.red
+                                      : Colors.blue),
                             ),
-                          ],
+                          ),
                         ),
-                        const SizedBox(height: 6),
-                        Text(
-                          '${AppStrings.totalAmount.tr} :- €${currentTotal?.toStringAsFixed(2) ?? "0.00"}',
-                          style: const TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.grey),
-                        ),
-                        const SizedBox(height: 16),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
 
-                        // Items
-                        if (detail != null && detail.items != null)
-                          ...detail.items!.map((item) => Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    margin: const EdgeInsets.only(bottom: 12),
-                                    padding: const EdgeInsets.all(12),
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                          color: AppColors.greyColor
-                                              .withOpacity(0.2)),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                          width: 60,
-                                          height: 60,
-                                          decoration: BoxDecoration(
-                                            color: const Color(0xFFF5F5F5),
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            border: Border.all(
-                                                color: AppColors.primaryColor,
-                                                width: 1),
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(6),
-                                            child: Image.network(
-                                                ApiUrl.buildImageUrl(
-                                                    item.product?.imageUrl),
-                                                fit: BoxFit.contain,
-                                                errorBuilder: (c, e, s) =>
-                                                    const Icon(Icons.image,
-                                                        color: Colors.grey)),
-                                          ),
-                                        ),
-                                        const SizedBox(width: 12),
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                item.product?.name ?? "",
-                                                style: const TextStyle(
-                                                    fontSize: 13,
-                                                    fontWeight: FontWeight.w800,
-                                                    fontStyle:
-                                                        FontStyle.italic),
-                                              ),
-                                              const SizedBox(height: 4),
-                                              Text(
-                                                '${AppStrings.quantity.tr} :- ${item.quantity.toString().padLeft(2, '0')}',
-                                                style: TextStyle(
-                                                    fontSize: 11,
-                                                    color: Colors.grey[500]),
-                                              ),
-                                              const SizedBox(height: 4),
-                                              Text(
-                                                '€${item.price?.toStringAsFixed(2)}',
-                                                style: const TextStyle(
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        FontWeight.w800),
-                                              ),
-                                            ],
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  if (item.actions?.canReview == true) ...[
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: AppButton(
-                                            label: AppStrings.leaveAReview.tr,
-                                            onPressed: () =>
-                                                _showReviewBottomSheet(context,
-                                                    item.id.toString()),
-                                            backgroundColor: Colors.white,
-                                            textColor: AppColors.primaryColor,
-                                            borderSideColor:
-                                                AppColors.primaryColor,
-                                            leadingIcon: const Icon(
-                                                Icons.star_border,
-                                                color: AppColors.primaryColor,
-                                                size: 14),
-                                            height: 36,
-                                            borderRadius: 8,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 12),
-                                  ],
-                                  if (item.review != null) ...[
+                    // Order Summary Container
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(color: Colors.grey.withOpacity(0.1)),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                '- ${AppStrings.orderSummary.tr} ( $currentSellerName )',
+                                style: const TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w800,
+                                    fontStyle: FontStyle.italic),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            '${AppStrings.totalAmount.tr} :- €${currentTotal?.toStringAsFixed(2) ?? "0.00"}',
+                            style: const TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.grey),
+                          ),
+                          const SizedBox(height: 16),
+
+                          // Items
+                          if (detail != null && detail.items != null)
+                            ...detail.items!.map((item) => Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
                                     Container(
-                                      padding: const EdgeInsets.all(12),
                                       margin: const EdgeInsets.only(bottom: 12),
+                                      padding: const EdgeInsets.all(12),
                                       decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(10),
                                         border: Border.all(
-                                            color:
-                                                Colors.grey.withOpacity(0.1)),
+                                            color: AppColors.greyColor
+                                                .withOpacity(0.2)),
+                                        borderRadius: BorderRadius.circular(10),
                                       ),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                      child: Row(
                                         children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  Container(
-                                                    padding:
-                                                        const EdgeInsets.all(8),
-                                                    decoration: BoxDecoration(
-                                                      color: AppColors
-                                                          .primaryColor
-                                                          .withOpacity(0.1),
-                                                      shape: BoxShape.circle,
-                                                      border: Border.all(
-                                                          color: AppColors
-                                                              .primaryColor),
+                                          Container(
+                                            width: 60,
+                                            height: 60,
+                                            decoration: BoxDecoration(
+                                              color: const Color(0xFFF5F5F5),
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              border: Border.all(
+                                                  color: AppColors.primaryColor,
+                                                  width: 1),
+                                            ),
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(6),
+                                              child: Image.network(
+                                                  ApiUrl.buildImageUrl(
+                                                      item.product?.imageUrl),
+                                                  fit: BoxFit.contain,
+                                                  errorBuilder: (c, e, s) =>
+                                                      const Icon(Icons.image,
+                                                          color: Colors.grey)),
+                                            ),
+                                          ),
+                                          const SizedBox(width: 12),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  item.product?.name ?? "",
+                                                  style: const TextStyle(
+                                                      fontSize: 13,
+                                                      fontWeight:
+                                                          FontWeight.w800,
+                                                      fontStyle:
+                                                          FontStyle.italic),
+                                                ),
+                                                const SizedBox(height: 4),
+                                                Text(
+                                                  '${AppStrings.quantity.tr} :- ${item.quantity.toString().padLeft(2, '0')}',
+                                                  style: TextStyle(
+                                                      fontSize: 11,
+                                                      color: Colors.grey[500]),
+                                                ),
+                                                const SizedBox(height: 4),
+                                                Text(
+                                                  '€${item.price?.toStringAsFixed(2)}',
+                                                  style: const TextStyle(
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.w800),
+                                                ),
+                                              ],
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    if (item.actions?.canReview == true) ...[
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: AppButton(
+                                              label: AppStrings.leaveAReview.tr,
+                                              onPressed: () =>
+                                                  _showReviewBottomSheet(
+                                                      context,
+                                                      item.id.toString()),
+                                              backgroundColor: Colors.white,
+                                              textColor: AppColors.primaryColor,
+                                              borderSideColor:
+                                                  AppColors.primaryColor,
+                                              leadingIcon: const Icon(
+                                                  Icons.star_border,
+                                                  color: AppColors.primaryColor,
+                                                  size: 14),
+                                              height: 36,
+                                              borderRadius: 8,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 12),
+                                    ],
+                                    if (item.review != null) ...[
+                                      Container(
+                                        padding: const EdgeInsets.all(12),
+                                        margin:
+                                            const EdgeInsets.only(bottom: 12),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          border: Border.all(
+                                              color:
+                                                  Colors.grey.withOpacity(0.1)),
+                                        ),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    Container(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              8),
+                                                      decoration: BoxDecoration(
+                                                        color: AppColors
+                                                            .primaryColor
+                                                            .withOpacity(0.1),
+                                                        shape: BoxShape.circle,
+                                                        border: Border.all(
+                                                            color: AppColors
+                                                                .primaryColor),
+                                                      ),
+                                                      child: Text(
+                                                          (item
+                                                                      .review!
+                                                                      .user
+                                                                      ?.profile
+                                                                      ?.fullName ??
+                                                                  "U")
+                                                              .substring(0, 1)
+                                                              .toUpperCase(),
+                                                          style: const TextStyle(
+                                                              fontSize: 10,
+                                                              color: AppColors
+                                                                  .primaryColor,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold)),
                                                     ),
-                                                    child: Text(
-                                                        (item
+                                                    const SizedBox(width: 10),
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                            item
                                                                     .review!
                                                                     .user
                                                                     ?.profile
                                                                     ?.fullName ??
-                                                                "U")
-                                                            .substring(0, 1)
-                                                            .toUpperCase(),
-                                                        style: const TextStyle(
-                                                            fontSize: 10,
-                                                            color: AppColors
-                                                                .primaryColor,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold)),
-                                                  ),
-                                                  const SizedBox(width: 10),
-                                                  Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Text(
-                                                          item
-                                                                  .review!
-                                                                  .user
-                                                                  ?.profile
-                                                                  ?.fullName ??
-                                                              "User",
-                                                          style: const TextStyle(
-                                                              fontSize: 13,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w800,
-                                                              fontStyle:
-                                                                  FontStyle
-                                                                      .italic)),
-                                                      const SizedBox(height: 2),
-                                                      Row(
-                                                        children: [
-                                                          const Icon(Icons.star,
-                                                              color: AppColors
-                                                                  .primaryColor,
-                                                              size: 12),
-                                                          const SizedBox(
-                                                              width: 4),
-                                                          Text(
-                                                              item.review!
-                                                                      .rating
-                                                                      ?.toString() ??
-                                                                  "0",
-                                                              style: const TextStyle(
-                                                                  fontSize: 10,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w700)),
-                                                        ],
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                              Text(item.review!.createdAt ?? "",
+                                                                "User",
+                                                            style: const TextStyle(
+                                                                fontSize: 13,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w800,
+                                                                fontStyle:
+                                                                    FontStyle
+                                                                        .italic)),
+                                                        const SizedBox(
+                                                            height: 2),
+                                                        Row(
+                                                          children: [
+                                                            const Icon(
+                                                                Icons.star,
+                                                                color: AppColors
+                                                                    .primaryColor,
+                                                                size: 12),
+                                                            const SizedBox(
+                                                                width: 4),
+                                                            Text(
+                                                                item.review!
+                                                                        .rating
+                                                                        ?.toString() ??
+                                                                    "0",
+                                                                style: const TextStyle(
+                                                                    fontSize:
+                                                                        10,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w700)),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                                Text(
+                                                    item.review!.createdAt ??
+                                                        "",
+                                                    style: TextStyle(
+                                                        fontSize: 10,
+                                                        color:
+                                                            Colors.grey[400])),
+                                              ],
+                                            ),
+                                            const SizedBox(height: 8),
+                                            Text(
+                                              item.review!.review ?? "",
+                                              style: TextStyle(
+                                                  fontSize: 11,
+                                                  color: Colors.grey[600],
+                                                  fontStyle: FontStyle.italic,
+                                                  height: 1.5),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ]
+                                  ],
+                                ))
+                          else
+                            ...(order.previewItems ?? [])
+                                .map((item) => Container(
+                                      margin: const EdgeInsets.only(bottom: 12),
+                                      padding: const EdgeInsets.all(12),
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: AppColors.greyColor
+                                                .withOpacity(0.2)),
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                            width: 60,
+                                            height: 60,
+                                            decoration: BoxDecoration(
+                                              color: const Color(0xFFF5F5F5),
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              border: Border.all(
+                                                  color: AppColors.primaryColor,
+                                                  width: 1),
+                                            ),
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(6),
+                                              child: Image.network(
+                                                  ApiUrl.buildImageUrl(
+                                                      item.imageUrl),
+                                                  fit: BoxFit.contain,
+                                                  errorBuilder: (c, e, s) =>
+                                                      const Icon(Icons.image,
+                                                          color: Colors.grey)),
+                                            ),
+                                          ),
+                                          const SizedBox(width: 12),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  item.name ?? "",
+                                                  style: const TextStyle(
+                                                      fontSize: 13,
+                                                      fontWeight:
+                                                          FontWeight.w800,
+                                                      fontStyle:
+                                                          FontStyle.italic),
+                                                ),
+                                                const SizedBox(height: 4),
+                                                Text(
+                                                  '${AppStrings.quantity.tr} :- ${item.quantity.toString().padLeft(2, '0')}',
                                                   style: TextStyle(
-                                                      fontSize: 10,
-                                                      color: Colors.grey[400])),
-                                            ],
-                                          ),
-                                          const SizedBox(height: 8),
-                                          Text(
-                                            item.review!.review ?? "",
-                                            style: TextStyle(
-                                                fontSize: 11,
-                                                color: Colors.grey[600],
-                                                fontStyle: FontStyle.italic,
-                                                height: 1.5),
-                                          ),
+                                                      fontSize: 11,
+                                                      color: Colors.grey[500]),
+                                                ),
+                                                const SizedBox(height: 4),
+                                                Text(
+                                                  '€${item.price?.toStringAsFixed(2)}',
+                                                  style: const TextStyle(
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.w800),
+                                                ),
+                                              ],
+                                            ),
+                                          )
                                         ],
                                       ),
-                                    ),
-                                  ]
-                                ],
-                              ))
-                        else
-                          ...(order.previewItems ?? [])
-                              .map((item) => Container(
-                                    margin: const EdgeInsets.only(bottom: 12),
-                                    padding: const EdgeInsets.all(12),
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                          color: AppColors.greyColor
-                                              .withOpacity(0.2)),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                          width: 60,
-                                          height: 60,
-                                          decoration: BoxDecoration(
-                                            color: const Color(0xFFF5F5F5),
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            border: Border.all(
-                                                color: AppColors.primaryColor,
-                                                width: 1),
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(6),
-                                            child: Image.network(
-                                                ApiUrl.buildImageUrl(
-                                                    item.imageUrl),
-                                                fit: BoxFit.contain,
-                                                errorBuilder: (c, e, s) =>
-                                                    const Icon(Icons.image,
-                                                        color: Colors.grey)),
-                                          ),
-                                        ),
-                                        const SizedBox(width: 12),
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                item.name ?? "",
-                                                style: const TextStyle(
-                                                    fontSize: 13,
-                                                    fontWeight: FontWeight.w800,
-                                                    fontStyle:
-                                                        FontStyle.italic),
-                                              ),
-                                              const SizedBox(height: 4),
-                                              Text(
-                                                '${AppStrings.quantity.tr} :- ${item.quantity.toString().padLeft(2, '0')}',
-                                                style: TextStyle(
-                                                    fontSize: 11,
-                                                    color: Colors.grey[500]),
-                                              ),
-                                              const SizedBox(height: 4),
-                                              Text(
-                                                '€${item.price?.toStringAsFixed(2)}',
-                                                style: const TextStyle(
-                                                    fontSize: 14,
-                                                    fontWeight:
-                                                        FontWeight.w800),
-                                              ),
-                                            ],
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ))
-                              .toList(),
+                                    ))
+                                .toList(),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Delivery Address
+                    Text(
+                      '- ${AppStrings.deliveryAddress.tr}',
+                      style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w800,
+                          fontStyle: FontStyle.italic),
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF1A1A1A),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: const Icon(Icons.location_on_outlined,
+                              color: AppColors.primaryColor, size: 20),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                AppStrings.locationTag.tr,
+                                style: const TextStyle(
+                                    fontSize: 13, fontWeight: FontWeight.w800),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                detail?.deliveryAddress != null
+                                    ? detail!.deliveryAddress!.formatted
+                                    : "Delivery Address details hidden or not provided",
+                                style: TextStyle(
+                                    fontSize: 11, color: Colors.grey[500]),
+                              ),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
-                  ),
-                  const SizedBox(height: 16),
 
-                  // Delivery Address
-                  Text(
-                    '- ${AppStrings.deliveryAddress.tr}',
-                    style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w800,
-                        fontStyle: FontStyle.italic),
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+                    // Extra UI based on status
+                    if (currentStatus == 'CANCELLED') ...[
+                      const SizedBox(height: 10),
                       Container(
-                        padding: const EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF1A1A1A),
+                          color: Colors.white,
                           borderRadius: BorderRadius.circular(10),
+                          border:
+                              Border.all(color: Colors.grey.withOpacity(0.1)),
                         ),
-                        child: const Icon(Icons.location_on_outlined,
-                            color: AppColors.primaryColor, size: 20),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Text(
-                              AppStrings.locationTag.tr,
-                              style: const TextStyle(
-                                  fontSize: 13, fontWeight: FontWeight.w800),
+                            Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: Colors.red.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: const Icon(Icons.error_outline,
+                                  color: Colors.red, size: 20),
                             ),
-                            const SizedBox(height: 4),
-                            Text(
-                              detail?.deliveryAddress != null
-                                  ? detail!.deliveryAddress!.formatted
-                                  : "Delivery Address details hidden or not provided",
-                              style: TextStyle(
-                                  fontSize: 11, color: Colors.grey[500]),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                children: [
+                                  Text(
+                                    AppStrings.sellerCanceledOrder.tr,
+                                    style: const TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.red),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    '${AppStrings.onDate.tr} ${currentCreatedAt ?? ""}',
+                                    style: TextStyle(
+                                        fontSize: 10,
+                                        color: Colors.grey[500],
+                                        fontStyle: FontStyle.italic),
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),
                       ),
                     ],
-                  ),
 
-                  // Extra UI based on status
-                  if (currentStatus == 'CANCELLED') ...[
-                    const SizedBox(height: 10),
-                    Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Colors.grey.withOpacity(0.1)),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: Colors.red.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: const Icon(Icons.error_outline,
-                                color: Colors.red, size: 20),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Column(
-                              children: [
-                                Text(
-                                  AppStrings.sellerCanceledOrder.tr,
-                                  style: const TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w700,
-                                      color: Colors.red),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  '${AppStrings.onDate.tr} ${currentCreatedAt ?? ""}',
-                                  style: TextStyle(
-                                      fontSize: 10,
-                                      color: Colors.grey[500],
-                                      fontStyle: FontStyle.italic),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    const SizedBox(height: 30),
                   ],
-
-                  const SizedBox(height: 30),
-                ],
+                ),
               ),
             ),
           ),

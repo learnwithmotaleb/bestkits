@@ -22,7 +22,9 @@ class MyOrderController extends GetxController {
   final RxBool isDetailLoading = false.obs;
 
   final RxBool isLoading = false.obs;
+  final RxBool isMoreLoading = false.obs;
   final RxList<Data> orders = <Data>[].obs;
+  final ScrollController scrollController = ScrollController();
 
   int page = 1;
   int limit = 10;
@@ -39,20 +41,36 @@ class MyOrderController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    scrollController.addListener(_scrollListener);
     fetchOrders();
+  }
+
+  @override
+  void onClose() {
+    scrollController.dispose();
+    super.onClose();
+  }
+
+  void _scrollListener() {
+    if (scrollController.position.pixels >=
+            scrollController.position.maxScrollExtent - 200 &&
+        !isLoading.value &&
+        !isMoreLoading.value &&
+        hasNextPage) {
+      fetchOrders(isLoadMore: true);
+    }
   }
 
   Future<void> fetchOrders({bool isLoadMore = false, String? status}) async {
     if (isLoadMore) {
-      if (!hasNextPage) return;
+      if (!hasNextPage || isMoreLoading.value) return;
       page++;
+      isMoreLoading.value = true;
     } else {
       page = 1;
       hasNextPage = true;
       isLoading.value = true;
-      if (orders.isEmpty) {
-        // optionally clear but maybe we want to keep current orders until loaded
-      }
+      orders.clear();
     }
     
     if (status != null) {
@@ -62,9 +80,11 @@ class MyOrderController extends GetxController {
     try {
       // ACTIVE, COMPLETE, CANCELED
       String tabStr = "ACTIVE";
-      if (selectedTab.value == 1)
+      if (selectedTab.value == 1) {
         tabStr = "COMPLETE";
-      else if (selectedTab.value == 2) tabStr = "CANCELED";
+      } else if (selectedTab.value == 2) {
+        tabStr = "CANCELED";
+      }
 
       String url = "${ApiUrl.myOrder}?page=$page&limit=$limit&tab=$tabStr";
       if (currentStatus != null && currentStatus!.isNotEmpty) {
@@ -94,6 +114,7 @@ class MyOrderController extends GetxController {
       AppSnackBar.fail("An error occurred: $e");
     } finally {
       isLoading.value = false;
+      isMoreLoading.value = false;
     }
   }
 
@@ -223,6 +244,9 @@ class MyOrderController extends GetxController {
       );
 
       if (response.statusCode == 201 || response.statusCode == 200) {
+        if (Get.isBottomSheetOpen == true) {
+          Get.back();
+        }
         ShowAppSnackBar.success("Return request submitted successfully");
         clearReturnState();
         if (selectedOrder.value != null) {
@@ -251,9 +275,11 @@ class MyOrderController extends GetxController {
   }
 
   void changeTab(int index) {
+    if (selectedTab.value == index) return;
     selectedTab.value = index;
     selectedOrder.value = null;
     selectedOrderDetail.value = null;
+    orders.clear();
     fetchOrders();
   }
 
@@ -291,6 +317,9 @@ class MyOrderController extends GetxController {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
+        if (Get.isBottomSheetOpen == true) {
+          Get.back();
+        }
         ShowAppSnackBar.success("Order canceled successfully");
         cancelReasonController.clear();
         fetchOrders();

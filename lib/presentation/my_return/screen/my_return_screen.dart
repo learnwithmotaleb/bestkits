@@ -20,45 +20,55 @@ class _MyReturnScreenState extends State<MyReturnScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.backgroundColor,
-      appBar: CommonAppBar(
-        title: AppStrings.myReturns.tr,
-        onBack: () {
-          if (controller.selectedReturnDetail.value != null) {
+    return Obx(() {
+      final isInDetail = controller.selectedReturnDetail.value != null;
+      return PopScope(
+        canPop: !isInDetail,
+        onPopInvokedWithResult: (didPop, _) {
+          if (!didPop && isInDetail) {
             controller.backToList();
-          } else {
-            Get.back();
           }
         },
-      ),
-      body: Column(
-        children: [
-          SizedBox(height: Dimensions.h(20)),
-          _buildTabs(),
-          SizedBox(height: Dimensions.h(20)),
-          Expanded(
-            child: Obx(() {
-              // Show loading spinner while fetching details
-              if (controller.isDetailLoading.value) {
-                return const Center(
-                  child: CircularProgressIndicator(
-                    color: AppColors.primaryColor,
-                  ),
-                );
-              }
-
-              if (controller.selectedReturnDetail.value != null) {
-                return MyReturnDetailsView(
-                    returnDetail: controller.selectedReturnDetail.value!);
+        child: Scaffold(
+          backgroundColor: AppColors.backgroundColor,
+          appBar: CommonAppBar(
+            title: AppStrings.myReturns.tr,
+            onBack: () {
+              if (isInDetail) {
+                controller.backToList();
               } else {
-                return const MyReturnListView();
+                Get.back();
               }
-            }),
+            },
           ),
-        ],
-      ),
-    );
+          body: Column(
+            children: [
+              SizedBox(height: Dimensions.h(20)),
+              if (!isInDetail) _buildTabs(),
+              if (!isInDetail) SizedBox(height: Dimensions.h(20)),
+              Expanded(
+                child: Obx(() {
+                  if (controller.isDetailLoading.value) {
+                    return const Center(
+                      child: CircularProgressIndicator(
+                        color: AppColors.primaryColor,
+                      ),
+                    );
+                  }
+
+                  if (controller.selectedReturnDetail.value != null) {
+                    return MyReturnDetailsView(
+                        returnDetail: controller.selectedReturnDetail.value!);
+                  } else {
+                    return const MyReturnListView();
+                  }
+                }),
+              ),
+            ],
+          ),
+        ),
+      );
+    });
   }
 
   Widget _buildTabs() {

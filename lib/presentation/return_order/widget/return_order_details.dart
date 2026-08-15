@@ -7,7 +7,8 @@ import '../../../../utils/app_text_style/app_text_style.dart';
 import '../../../../utils/static_strings/static_strings.dart';
 import '../../../../service/api_url.dart';
 import '../../../../widget/app_button.dart';
-import '../../my_return/model/MyReturnDetailsModel.dart';
+import '../model/ReturnOrderDetailsModel.dart';
+import '../controller/return_order_controller.dart';
 
 class ReturnOrderDetails extends StatelessWidget {
   final Data returnDetail;
@@ -26,35 +27,52 @@ class ReturnOrderDetails extends StatelessWidget {
     final isRejected = status == 'REJECTED';
     final isProcessing = status == 'PROCESSING';
 
+    final canUpdateStatus = returnDetail.actions?.canUpdateStatus ?? false;
+
     return Column(
       children: [
         Expanded(
-          child: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(
-              horizontal: Dimensions.w(20),
-              vertical: Dimensions.h(10),
-            ),
-            child: Column(
-              children: [
-                _buildOrderInfoCard(),
-                SizedBox(height: Dimensions.h(16)),
-                _buildDeliveredOnCard(),
-                SizedBox(height: Dimensions.h(16)),
-                _buildReturnDetailsCard(),
-                if (isProcessing) ...[
+          child: RefreshIndicator(
+            onRefresh: () => Get.find<ReturnOrderController>()
+                .fetchReturnDetails(returnDetail.id.toString(),
+                    isRefresh: true),
+            color: AppColors.primaryColor,
+            backgroundColor: AppColors.whiteColor,
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: EdgeInsets.symmetric(
+                horizontal: Dimensions.w(20),
+                vertical: Dimensions.h(10),
+              ),
+              child: Column(
+                children: [
+                  _buildOrderInfoCard(),
                   SizedBox(height: Dimensions.h(16)),
-                  _buildReturnAddressCard(),
+                  if (returnDetail.order?.deliveredAt != null) ...[
+                    _buildDeliveredOnCard(returnDetail.order!.deliveredAt!),
+                    SizedBox(height: Dimensions.h(16)),
+                  ],
+                  _buildReturnDetailsCard(),
+                  if (returnDetail.returnAddress != null) ...[
+                    SizedBox(height: Dimensions.h(16)),
+                    _buildReturnAddressCard(),
+                  ],
+                  if (isCompleted) ...[
+                    SizedBox(height: Dimensions.h(16)),
+                    _buildCompletedCard(),
+                  ],
+                  if (isRejected &&
+                      returnDetail.sellerRejectionReason != null) ...[
+                    SizedBox(height: Dimensions.h(16)),
+                    _buildRejectedCard(),
+                  ],
+                  SizedBox(height: Dimensions.h(20)),
                 ],
-                if (isCompleted) ...[
-                  SizedBox(height: Dimensions.h(16)),
-                  _buildCompletedCard(),
-                ],
-                SizedBox(height: Dimensions.h(20)),
-              ],
+              ),
             ),
           ),
         ),
-        if (status != 'COMPLETED' && status != 'REJECTED')
+        if (canUpdateStatus)
           Container(
             padding: EdgeInsets.symmetric(
                 horizontal: Dimensions.w(20), vertical: Dimensions.h(24)),
@@ -88,12 +106,6 @@ class ReturnOrderDetails extends StatelessWidget {
     final orderId = returnDetail.order?.displayId ?? '';
     final total = returnDetail.order?.total ?? 0.0;
 
-    // Formatting the date roughly based on the design format, if it's not already formatted.
-    // The design shows: 27 Aug 2026 - 06:20 AM. We'll just display submittedOn for now or a formatted order createdAt.
-    final displayDate = (returnDetail.order?.createdAt != null)
-        ? _formatDate(returnDetail.order!.createdAt!)
-        : submittedOn;
-
     return Container(
       padding: EdgeInsets.all(Dimensions.w(16)),
       decoration: BoxDecoration(
@@ -122,7 +134,7 @@ class ReturnOrderDetails extends StatelessWidget {
                     ),
                     SizedBox(height: Dimensions.h(4)),
                     Text(
-                      displayDate,
+                      submittedOn,
                       style: AppTextStyles.body.copyWith(
                         fontSize: Dimensions.fs(10),
                         color: AppColors.greyColor,
@@ -139,7 +151,7 @@ class ReturnOrderDetails extends StatelessWidget {
                   borderRadius: BorderRadius.circular(Dimensions.r(12)),
                 ),
                 child: Text(
-                  "+ $statusLabel",
+                  "• $statusLabel",
                   style: AppTextStyles.body.copyWith(
                     fontSize: Dimensions.fs(10),
                     fontWeight: FontWeight.w700,
@@ -283,7 +295,7 @@ class ReturnOrderDetails extends StatelessWidget {
     );
   }
 
-  Widget _buildDeliveredOnCard() {
+  Widget _buildDeliveredOnCard(String deliveredAt) {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(Dimensions.w(16)),
@@ -305,7 +317,7 @@ class ReturnOrderDetails extends StatelessWidget {
           ),
           SizedBox(height: Dimensions.h(4)),
           Text(
-            "23 February 2026 at 6:39 PM", // Placeholder as per design unless API has it
+            deliveredAt,
             style: AppTextStyles.body.copyWith(
               fontWeight: FontWeight.w700,
               fontSize: Dimensions.fs(13),
@@ -317,13 +329,9 @@ class ReturnOrderDetails extends StatelessWidget {
   }
 
   Widget _buildReturnDetailsCard() {
-    final reason = returnDetail.reason ?? "Damage Product";
-    final msg = returnDetail.message?.toString() ??
-        "I recently noticed that I am unable to log into my account and received a notification that it has been blocked. I believe this may have been a misunderstanding. Could you please review my account and let me know the reason for the restriction? I would appreciate your assistance in resolving this matter as soon as possible.";
+    final reason = returnDetail.reason ?? "No reason provided";
+    final msg = returnDetail.message?.toString() ?? "";
     final images = returnDetail.images ?? [];
-
-    // Fallback images if empty, just to match the visual if requested "same to same"
-    // but the model has actual evidence so we'll use actual evidence if present.
 
     return Container(
       width: double.infinity,
@@ -378,9 +386,7 @@ class ReturnOrderDetails extends StatelessWidget {
                 ),
                 SizedBox(height: Dimensions.h(4)),
                 Text(
-                  returnDetail.submittedOn != null
-                      ? _formatDate(returnDetail.submittedOn!)
-                      : "Jul 13, 2026",
+                  returnDetail.submittedOn ?? '',
                   style: AppTextStyles.body.copyWith(
                     fontSize: Dimensions.fs(12),
                     color: AppColors.greyColor,
@@ -395,54 +401,60 @@ class ReturnOrderDetails extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: Dimensions.h(8)),
-                Wrap(
-                  spacing: Dimensions.w(8),
-                  runSpacing: Dimensions.h(8),
-                  children: (images.isNotEmpty
-                          ? images
-                          : ['/dummy1', '/dummy2', '/dummy3'])
-                      .map((imgUrl) {
-                    return Container(
-                      width: Dimensions.w(64),
-                      height: Dimensions.h(64),
-                      padding: EdgeInsets.all(Dimensions.w(4)),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(Dimensions.r(8)),
-                        border: Border.all(
-                            color: AppColors.greyColor.withOpacity(0.2)),
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(Dimensions.r(4)),
-                        child: Image.network(
-                          images.isNotEmpty
-                              ? ApiUrl.buildImageUrl(imgUrl)
-                              : 'https://placehold.co/100x100/png',
-                          fit: BoxFit.cover,
-                          errorBuilder: (_, __, ___) => const Icon(
-                              Icons.image_not_supported,
-                              color: AppColors.greyColor),
+                if (images.isEmpty)
+                  Text(
+                    'No evidence uploaded',
+                    style: AppTextStyles.body.copyWith(
+                      fontSize: Dimensions.fs(12),
+                      color: AppColors.greyColor,
+                    ),
+                  )
+                else
+                  Wrap(
+                    spacing: Dimensions.w(8),
+                    runSpacing: Dimensions.h(8),
+                    children: images.map((imgUrl) {
+                      return Container(
+                        width: Dimensions.w(64),
+                        height: Dimensions.h(64),
+                        padding: EdgeInsets.all(Dimensions.w(4)),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(Dimensions.r(8)),
+                          border: Border.all(
+                              color: AppColors.greyColor.withOpacity(0.2)),
                         ),
-                      ),
-                    );
-                  }).toList(),
-                ),
-                SizedBox(height: Dimensions.h(16)),
-                Text(
-                  AppStrings.message.tr,
-                  style: AppTextStyles.body.copyWith(
-                    fontWeight: FontWeight.w700,
-                    fontSize: Dimensions.fs(12),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(Dimensions.r(4)),
+                          child: Image.network(
+                            ApiUrl.buildImageUrl(imgUrl),
+                            fit: BoxFit.cover,
+                            errorBuilder: (_, __, ___) => const Icon(
+                                Icons.image_not_supported,
+                                color: AppColors.greyColor),
+                          ),
+                        ),
+                      );
+                    }).toList(),
                   ),
-                ),
-                SizedBox(height: Dimensions.h(4)),
-                Text(
-                  msg,
-                  style: AppTextStyles.body.copyWith(
-                    fontSize: Dimensions.fs(11),
-                    color: AppColors.greyColor,
-                    height: 1.5,
+                if (msg.isNotEmpty) ...[
+                  SizedBox(height: Dimensions.h(16)),
+                  Text(
+                    AppStrings.message.tr,
+                    style: AppTextStyles.body.copyWith(
+                      fontWeight: FontWeight.w700,
+                      fontSize: Dimensions.fs(12),
+                    ),
                   ),
-                ),
+                  SizedBox(height: Dimensions.h(4)),
+                  Text(
+                    msg,
+                    style: AppTextStyles.body.copyWith(
+                      fontSize: Dimensions.fs(11),
+                      color: AppColors.greyColor,
+                      height: 1.5,
+                    ),
+                  ),
+                ]
               ],
             ),
           ),
@@ -452,6 +464,20 @@ class ReturnOrderDetails extends StatelessWidget {
   }
 
   Widget _buildReturnAddressCard() {
+    final addr = returnDetail.returnAddress;
+    String addressText = 'No address provided';
+    if (addr is Map) {
+      final parts = <String>[];
+      if (addr['address'] != null) parts.add(addr['address'].toString());
+      if (addr['city'] != null) parts.add(addr['city'].toString());
+      if (addr['postal_code'] != null)
+        parts.add(addr['postal_code'].toString());
+      if (addr['country'] != null) parts.add(addr['country'].toString());
+      if (parts.isNotEmpty) addressText = parts.join(', ');
+    } else if (addr != null) {
+      addressText = addr.toString();
+    }
+
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -501,7 +527,7 @@ class ReturnOrderDetails extends StatelessWidget {
                       ),
                       SizedBox(height: Dimensions.h(4)),
                       Text(
-                        "25 'Ivan Vazov' Street, Plovdiv 4000, Bulgaria",
+                        addressText,
                         style: AppTextStyles.body.copyWith(
                           fontSize: Dimensions.fs(11),
                           color: AppColors.greyColor,
@@ -551,7 +577,7 @@ class ReturnOrderDetails extends StatelessWidget {
                 ),
                 SizedBox(height: Dimensions.h(4)),
                 Text(
-                  "On 27 Aug 2026 - 06:20 AM",
+                  "On ${returnDetail.completedAt ?? returnDetail.resolvedAt ?? returnDetail.submittedOn ?? ''}",
                   style: AppTextStyles.body.copyWith(
                     fontSize: Dimensions.fs(11),
                     color: AppColors.greyColor,
@@ -565,10 +591,84 @@ class ReturnOrderDetails extends StatelessWidget {
     );
   }
 
+  Widget _buildRejectedCard() {
+    return Container(
+      padding: EdgeInsets.all(Dimensions.w(16)),
+      decoration: BoxDecoration(
+        color: AppColors.whiteColor,
+        borderRadius: BorderRadius.circular(Dimensions.r(12)),
+        border: Border.all(color: AppColors.greyColor.withOpacity(0.15)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.red.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child:
+                    const Icon(Icons.info_outline, color: Colors.red, size: 20),
+              ),
+              SizedBox(width: Dimensions.w(12)),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "You Rejected This Return Request",
+                      style: AppTextStyles.body.copyWith(
+                        fontWeight: FontWeight.w700,
+                        fontSize: Dimensions.fs(13),
+                        color: AppColors.blackColor,
+                      ),
+                    ),
+                    SizedBox(height: Dimensions.h(4)),
+                    Text(
+                      "On ${returnDetail.resolvedAt ?? returnDetail.submittedOn ?? ''}",
+                      style: AppTextStyles.body.copyWith(
+                        fontSize: Dimensions.fs(11),
+                        color: AppColors.greyColor,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: Dimensions.h(16)),
+          Text(
+            "Reason For Rejection",
+            style: AppTextStyles.body.copyWith(
+              fontSize: Dimensions.fs(12),
+              fontWeight: FontWeight.w600,
+              color: AppColors.greyColor,
+              fontStyle: FontStyle.italic,
+            ),
+          ),
+          SizedBox(height: Dimensions.h(4)),
+          Text(
+            returnDetail.sellerRejectionReason ?? '',
+            style: AppTextStyles.body.copyWith(
+              fontSize: Dimensions.fs(12),
+              color: AppColors.blackColor,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   void _showUpdateStatusBottomSheet(
       BuildContext context, String currentStatus) {
     Get.bottomSheet(
-      _UpdateStatusBottomSheet(currentStatus: currentStatus),
+      _UpdateStatusBottomSheet(
+        currentStatus: currentStatus,
+        returnId: returnDetail.id.toString(),
+      ),
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
     );
@@ -577,9 +677,9 @@ class ReturnOrderDetails extends StatelessWidget {
   Color _statusBgColor(String status) {
     switch (status) {
       case 'PENDING':
+      case 'IN_REVIEW':
         return Colors.orange.withOpacity(0.12);
       case 'APPROVED':
-        return Colors.green.withOpacity(0.12);
       case 'PROCESSING':
         return Colors.blue.withOpacity(0.12);
       case 'COMPLETED':
@@ -594,9 +694,9 @@ class ReturnOrderDetails extends StatelessWidget {
   Color _statusTextColor(String status) {
     switch (status) {
       case 'PENDING':
+      case 'IN_REVIEW':
         return Colors.orange;
       case 'APPROVED':
-        return Colors.green;
       case 'PROCESSING':
         return Colors.blue;
       case 'COMPLETED':
@@ -607,20 +707,14 @@ class ReturnOrderDetails extends StatelessWidget {
         return Colors.orange;
     }
   }
-
-  String _formatDate(String dateStr) {
-    // Just a placeholder format logic if needed. The actual DateFormat would require intl package.
-    // For exact match to design, I am just returning the substring or the mock if it is an ISO string.
-    if (dateStr.contains("T")) {
-      return "27 Aug 2026 - 06:20 AM"; // mock formatting to match design
-    }
-    return dateStr;
-  }
 }
 
 class _UpdateStatusBottomSheet extends StatefulWidget {
   final String currentStatus;
-  const _UpdateStatusBottomSheet({required this.currentStatus});
+  final String returnId;
+
+  const _UpdateStatusBottomSheet(
+      {required this.currentStatus, required this.returnId});
 
   @override
   _UpdateStatusBottomSheetState createState() =>
@@ -628,20 +722,45 @@ class _UpdateStatusBottomSheet extends StatefulWidget {
 }
 
 class _UpdateStatusBottomSheetState extends State<_UpdateStatusBottomSheet> {
-  late String selectedStatus;
+  late String selectedStatusUI;
+
+  final TextEditingController _addressCtrl = TextEditingController();
+  final TextEditingController _rejectionCtrl = TextEditingController();
+
+  final List<String> statuses = [
+    'In review',
+    'Processing',
+    'Completed',
+    'Rejected'
+  ];
 
   @override
   void initState() {
     super.initState();
-    selectedStatus = _mapApiStatusToUI(widget.currentStatus);
+    selectedStatusUI = _mapApiStatusToUI(widget.currentStatus);
+  }
+
+  @override
+  void dispose() {
+    _addressCtrl.dispose();
+    _rejectionCtrl.dispose();
+    super.dispose();
   }
 
   String _mapApiStatusToUI(String status) {
     if (status == 'PENDING' || status == 'IN_REVIEW') return 'In review';
-    if (status == 'PROCESSING') return 'Processing';
+    if (status == 'APPROVED' || status == 'PROCESSING') return 'Processing';
     if (status == 'COMPLETED') return 'Completed';
     if (status == 'REJECTED') return 'Rejected';
     return 'In review';
+  }
+
+  String _mapUIToApiStatus(String statusUI) {
+    if (statusUI == 'In review') return 'PENDING';
+    if (statusUI == 'Processing') return 'PROCESSING';
+    if (statusUI == 'Completed') return 'COMPLETED';
+    if (statusUI == 'Rejected') return 'REJECTED';
+    return 'PENDING';
   }
 
   void _showServiceTypeSheet() {
@@ -671,11 +790,11 @@ class _UpdateStatusBottomSheetState extends State<_UpdateStatusBottomSheet> {
               ),
             ),
             SizedBox(height: Dimensions.h(16)),
-            ...['In review', 'Processing', 'Completed', 'Rejected']
+            ...statuses
                 .map((status) => InkWell(
                       onTap: () {
                         setState(() {
-                          selectedStatus = status;
+                          selectedStatusUI = status;
                         });
                         Get.back();
                       },
@@ -699,10 +818,10 @@ class _UpdateStatusBottomSheetState extends State<_UpdateStatusBottomSheet> {
                               ),
                             ),
                             Icon(
-                              selectedStatus == status
+                              selectedStatusUI == status
                                   ? Icons.radio_button_checked
                                   : Icons.radio_button_off,
-                              color: selectedStatus == status
+                              color: selectedStatusUI == status
                                   ? AppColors.blackColor
                                   : AppColors.greyColor,
                               size: 20,
@@ -787,7 +906,7 @@ class _UpdateStatusBottomSheetState extends State<_UpdateStatusBottomSheet> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(selectedStatus,
+                    Text(selectedStatusUI,
                         style: AppTextStyles.body
                             .copyWith(fontSize: Dimensions.fs(14))),
                     const Icon(Icons.keyboard_arrow_down,
@@ -797,7 +916,7 @@ class _UpdateStatusBottomSheetState extends State<_UpdateStatusBottomSheet> {
               ),
             ),
             SizedBox(height: Dimensions.h(20)),
-            if (selectedStatus == 'Processing') ...[
+            if (selectedStatusUI == 'Processing') ...[
               Text(
                 "Return Shipping Address",
                 style: AppTextStyles.body.copyWith(
@@ -807,6 +926,7 @@ class _UpdateStatusBottomSheetState extends State<_UpdateStatusBottomSheet> {
               ),
               SizedBox(height: Dimensions.h(8)),
               TextField(
+                controller: _addressCtrl,
                 decoration: InputDecoration(
                   hintText: "Enter The Warehouse Or Shop Address...",
                   hintStyle: AppTextStyles.body.copyWith(
@@ -827,7 +947,7 @@ class _UpdateStatusBottomSheetState extends State<_UpdateStatusBottomSheet> {
               ),
               SizedBox(height: Dimensions.h(20)),
             ],
-            if (selectedStatus == 'Rejected') ...[
+            if (selectedStatusUI == 'Rejected') ...[
               Text(
                 "Rejection Note",
                 style: AppTextStyles.body.copyWith(
@@ -837,6 +957,7 @@ class _UpdateStatusBottomSheetState extends State<_UpdateStatusBottomSheet> {
               ),
               SizedBox(height: Dimensions.h(8)),
               TextField(
+                controller: _rejectionCtrl,
                 maxLines: 4,
                 decoration: InputDecoration(
                   hintText:
@@ -881,10 +1002,10 @@ class _UpdateStatusBottomSheetState extends State<_UpdateStatusBottomSheet> {
   }
 
   String _getButtonLabel() {
-    if (selectedStatus == 'Processing') return 'Confirm & Send Instructions';
-    if (selectedStatus == 'Completed')
+    if (selectedStatusUI == 'Processing') return 'Confirm & Send Instructions';
+    if (selectedStatusUI == 'Completed')
       return 'Issue Refund & Completed Request';
-    if (selectedStatus == 'Rejected') return 'Confirm Rejection';
+    if (selectedStatusUI == 'Rejected') return 'Confirm Rejection';
     return 'Update status';
   }
 
@@ -947,21 +1068,29 @@ class _UpdateStatusBottomSheetState extends State<_UpdateStatusBottomSheet> {
                   ),
                   SizedBox(width: Dimensions.w(12)),
                   Expanded(
-                    child: ElevatedButton(
-                      onPressed: () => Get.back(),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.blackColor,
-                        padding:
-                            EdgeInsets.symmetric(vertical: Dimensions.h(14)),
-                        shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(Dimensions.r(8))),
-                      ),
-                      child: Text("Confirm",
-                          style: AppTextStyles.body.copyWith(
-                              color: AppColors.primaryColor,
-                              fontWeight: FontWeight.w600)),
-                    ),
+                    child: Obx(() => AppButton(
+                          label: "Confirm",
+                          isLoading: Get.find<ReturnOrderController>()
+                              .isUpdateLoading
+                              .value,
+                          onPressed: () async {
+                            final apiStatus =
+                                _mapUIToApiStatus(selectedStatusUI);
+                            await Get.find<ReturnOrderController>()
+                                .updateReturnStatus(
+                              id: widget.returnId,
+                              status: apiStatus,
+                              returnAddress: _addressCtrl.text,
+                              sellerRejectionReason: _rejectionCtrl.text,
+                            );
+                            Get.back(); // close dialog
+                            Get.back(); // close bottom sheet
+                          },
+                          backgroundColor: AppColors.blackColor,
+                          textColor: AppColors.primaryColor,
+                          height: 48,
+                          borderRadius: 8,
+                        )),
                   ),
                 ],
               ),

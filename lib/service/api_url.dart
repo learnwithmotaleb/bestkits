@@ -162,23 +162,30 @@ class ApiUrl {
   static String sellerEarning = '$baseUrl/seller/earnings'; //get method
 
 //=======================Order sections============================
+  //================buyer===============
   static String myOrder = '$baseUrl/orders'; //get met
   static String myOrderDetails(String id) => '$baseUrl/orders/$id'; //get met
   static String orderDeliveryItemReview(String orderItemId) =>
       '$baseUrl/orders/items/$orderItemId/review'; //get met
+
+  //==============seller============
   static String customerOrder = '$baseUrl/orders/seller/all'; //get method
-  static String orderDetails(String id) =>
-      '$baseUrl/orders/seller/$id'; //get method
+  static String orderDetails(String id) => '$baseUrl/orders/seller/$id'; //get method
+  static String updateOrderStatus(String id) => '$baseUrl/orders/seller/$id/status'; //Patch method
+
   static String returnRequest = '$baseUrl/returns'; //post method
-  static String cancelOrder(String id) =>
-      '$baseUrl/orders/$id/cancel'; //Patch method
+  static String cancelOrder(String id) => '$baseUrl/orders/$id/cancel'; //Patch method
 
 //=====================return===================
+  //=============buyer=======
   static String myReturn = '$baseUrl/returns'; //get method
   static String myReturnDetails(String id) =>
       '$baseUrl/returns/$id'; //get method
-  static String returnOrder =
-      '$baseUrl/returns/seller/all'; //get method for seller
+
+  //===============Seller===========
+  static String returnOrder = '$baseUrl/returns/seller/all'; //get method for seller
+  static String returnOrderDetails(String id) => '$baseUrl/returns/$id'; //get method
+  static String returnOrderStatusUpdate(String id) => '$baseUrl/returns/seller/$id/status'; //Patch method
 
 //notifications=============================
   static String notification = '$baseUrl/notifications'; //get method
