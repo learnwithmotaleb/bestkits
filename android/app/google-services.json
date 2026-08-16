@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1034471241738",
+    "project_id": "bestkit-2dc0b",
+    "storage_bucket": "bestkit-2dc0b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1034471241738:android:87da7efbadf85b406487f3",
+        "android_client_info": {
+          "package_name": "com.lwm.bestkits"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCTcza04jakvmY_bZzQpqnToKH-aWYCEh8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

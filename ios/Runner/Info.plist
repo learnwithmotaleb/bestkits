@@ -1,7 +1,12 @@
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+
+	<!-- ========================================================= -->
+	<!-- APP INFORMATION -->
+	<!-- ========================================================= -->
 
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
@@ -36,13 +41,23 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 
+
+	<!-- ========================================================= -->
+	<!-- LAUNCH SCREEN -->
+	<!-- ========================================================= -->
+
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 
-	<!-- Portrait & Landscape -->
+
+	<!-- ========================================================= -->
+	<!-- ORIENTATION -->
+	<!-- ========================================================= -->
+
+	<!-- iPhone -->
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
@@ -59,43 +74,92 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 
-	<!-- Smooth Rendering -->
+
+	<!-- ========================================================= -->
+	<!-- PERFORMANCE / INPUT -->
+	<!-- ========================================================= -->
+
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 
-	<!-- Keyboard / Mouse Support -->
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 
-	<!-- Camera Permission -->
+
+	<!-- ========================================================= -->
+	<!-- CAMERA -->
+	<!-- ========================================================= -->
+
 	<key>NSCameraUsageDescription</key>
-	<string>This app needs camera access to capture photos.</string>
+	<string>BestKid needs camera access to capture photos.</string>
 
-	<!-- Gallery Permission -->
+
+	<!-- ========================================================= -->
+	<!-- PHOTO LIBRARY -->
+	<!-- ========================================================= -->
+
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>This app needs photo library access to select images.</string>
+	<string>BestKid needs photo library access to select images.</string>
 
-	<!-- Save Image Permission -->
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>This app needs permission to save images.</string>
+	<string>BestKid needs permission to save images to your photo library.</string>
 
-	<!-- Internet Permission -->
+
+	<!-- ========================================================= -->
+	<!-- NETWORK / API -->
+	<!-- ========================================================= -->
+
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
 
-	<!-- Deep Link URL Scheme for Stripe callback -->
+
+	<!-- ========================================================= -->
+	<!-- FIREBASE / PUSH NOTIFICATIONS -->
+	<!-- ========================================================= -->
+
+	<!--
+		Push notification permission is requested at runtime
+		through Firebase Messaging / flutter_local_notifications.
+
+		Your Dart code already requests:
+		- Alert
+		- Badge
+		- Sound
+		- Critical Alert
+	-->
+
+	<!-- ========================================================= -->
+	<!-- STRIPE DEEP LINK -->
+	<!-- ========================================================= -->
+
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleURLName</key>
+			<string>com.lwm.bestkits.stripe</string>
+
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>bestkits</string>
 			</array>
 		</dict>
 	</array>
+
+
+	<!-- ========================================================= -->
+	<!-- FIREBASE SWIZZLING -->
+	<!-- ========================================================= -->
+
+	<!--
+		Firebase Messaging normally uses AppDelegate method swizzling
+		to handle APNs token and notification callbacks.
+
+		If you have disabled Firebase swizzling in AppDelegate,
+		this setting may need to be adjusted.
+	-->
 
 </dict>
 </plist>

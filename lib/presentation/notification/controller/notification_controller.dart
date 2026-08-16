@@ -6,6 +6,8 @@ import '../model/NotificationModel.dart' as nm;
 import '../model/UnreadCoundModel.dart';
 
 class NotificationController extends GetxController {
+  static NotificationController get to => Get.find();
+
   final notifications = <nm.Data>[].obs;
   final isLoading = false.obs;
   final unreadCount = 0.obs;
@@ -36,7 +38,7 @@ class NotificationController extends GetxController {
 
   Future<void> fetchUnreadCount() async {
     try {
-      final response = await ApiClient().get(url: ApiUrl.notificationUnreadCount(''), isToken: true);
+      final response = await ApiClient().get(url: ApiUrl.notificationUnreadCount, isToken: true);
       if (response.statusCode == 200) {
         final model = UnreadCoundModel.fromJson(response.body);
         unreadCount.value = (model.data?.count ?? 0).toInt();

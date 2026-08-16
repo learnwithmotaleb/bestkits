@@ -170,11 +170,14 @@ class ApiUrl {
 
   //==============seller============
   static String customerOrder = '$baseUrl/orders/seller/all'; //get method
-  static String orderDetails(String id) => '$baseUrl/orders/seller/$id'; //get method
-  static String updateOrderStatus(String id) => '$baseUrl/orders/seller/$id/status'; //Patch method
+  static String orderDetails(String id) =>
+      '$baseUrl/orders/seller/$id'; //get method
+  static String updateOrderStatus(String id) =>
+      '$baseUrl/orders/seller/$id/status'; //Patch method
 
   static String returnRequest = '$baseUrl/returns'; //post method
-  static String cancelOrder(String id) => '$baseUrl/orders/$id/cancel'; //Patch method
+  static String cancelOrder(String id) =>
+      '$baseUrl/orders/$id/cancel'; //Patch method
 
 //=====================return===================
   //=============buyer=======
@@ -183,22 +186,27 @@ class ApiUrl {
       '$baseUrl/returns/$id'; //get method
 
   //===============Seller===========
-  static String returnOrder = '$baseUrl/returns/seller/all'; //get method for seller
-  static String returnOrderDetails(String id) => '$baseUrl/returns/$id'; //get method
-  static String returnOrderStatusUpdate(String id) => '$baseUrl/returns/seller/$id/status'; //Patch method
+  static String returnOrder =
+      '$baseUrl/returns/seller/all'; //get method for seller
+  static String returnOrderDetails(String id) =>
+      '$baseUrl/returns/$id'; //get method
+  static String returnOrderStatusUpdate(String id) =>
+      '$baseUrl/returns/seller/$id/status'; //Patch method
 
 //notifications=============================
   static String notification = '$baseUrl/notifications'; //get method
   static String notificationDelete(String id) =>
       '$baseUrl/notifications/$id'; //delete method
-  static String notificationUnreadCount(String id) =>
+  static String notificationUnreadCount =
       '$baseUrl/notifications/unread-count'; //get method
   static String notificationRead(String id) =>
       '$baseUrl/notifications/$id/read'; //Patch method
   static String notificationReadAll =
       '$baseUrl/notifications/read-all'; //Patch method
 
-//===========================Cart====================//completed
+  static String updateFcmToken = ""; //post method
+
+  //===========================Cart====================//completed
   static String addToCart = '$baseUrl/cart/items'; //Post method
   static String getCart = '$baseUrl/cart'; //Get method
   static String deleteCartItem(String itemId) =>
@@ -223,8 +231,8 @@ class ApiUrl {
       '$baseUrl/legitgrails/categories'; //get method
   static String photoIndexForCategory(String categoryCode, String brandCode) =>
       '$baseUrl/legitgrails/photo-index?category_code=$categoryCode&brand_code=$brandCode'; //get method
-  static String uploadPhotoProductVerification =
-      '$baseUrl/legitgrails/photos'; //post method
+  static String uploadPhotoProductVerification = '$baseUrl/legitgrails/photos';
+
   static String authenticationSubmitAPI(String productId) =>
       '$baseUrl/products/$productId/authentication/submit'; //Post method
 

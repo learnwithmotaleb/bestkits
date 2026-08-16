@@ -28,6 +28,7 @@ class LoginController extends GetxController {
   Future<void> login() async {
     final email = emailController.text.trim();
     final password = passwordController.text;
+    final fcmToken = SharePrefsHelper.getFcmToken();
 
     if (email.isEmpty || !GetUtils.isEmail(email)) {
       AppSnackBar.fail("Please enter a valid email address");
@@ -45,6 +46,7 @@ class LoginController extends GetxController {
       final Map<String, dynamic> body = {
         "email": email,
         "password": password,
+        'fcmToken': fcmToken
       };
 
       final response = await _apiClient.post(

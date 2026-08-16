@@ -1,26 +1,86 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- ==================== NETWORK ==================== -->
+
     <!-- Internet -->
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
-    <!-- Network -->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <!-- Network state -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-    <!-- Camera -->
-    <uses-permission android:name="android.permission.CAMERA"/>
 
-    <!-- Storage (Android 12 and Below) -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <!-- ==================== CAMERA ==================== -->
+
+    <uses-permission android:name="android.permission.CAMERA" />
+
+
+    <!-- ==================== STORAGE ==================== -->
+
+    <!-- Android 12 and below -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <!-- Android 13+ -->
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+
+
+    <!-- ==================== NOTIFICATIONS ==================== -->
+
+    <!-- Android 13+ notification permission -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!-- Exact/scheduled alarms -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+
+    <!-- Reschedule notifications after device reboot -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <!-- Vibration -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <!-- Wake device for notifications -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <!-- Full-screen notifications.
+         Only keep this if your app legitimately needs
+         full-screen notification behavior. -->
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+
 
     <application
         android:label="BestKid"
         android:name="${applicationName}"
         android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher">
+
+
+        <!-- ================================================= -->
+        <!-- LOCAL NOTIFICATIONS - FLUTTER LOCAL NOTIFICATIONS -->
+        <!-- ================================================= -->
+
+        <!-- Scheduled notification receiver -->
+        <receiver
+            android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver"
+            android:exported="false" />
+
+        <!-- Reschedule notifications after reboot/update -->
+        <receiver
+            android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver"
+            android:exported="false">
+
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
+            </intent-filter>
+
+        </receiver>
+
+
+        <!-- ================================================= -->
+        <!-- MAIN ACTIVITY -->
+        <!-- ================================================= -->
 
         <activity
             android:name=".MainActivity"
@@ -35,21 +95,32 @@
             <!-- Flutter Normal Theme -->
             <meta-data
                 android:name="io.flutter.embedding.android.NormalTheme"
-                android:resource="@style/NormalTheme"/>
+                android:resource="@style/NormalTheme" />
 
+            <!-- App Launcher -->
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+
+            <!-- ================================================= -->
+            <!-- STRIPE DEEP LINK -->
+            <!-- ================================================= -->
 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="bestkits" android:host="stripe" />
+
+                <data
+                    android:scheme="bestkits"
+                    android:host="stripe" />
             </intent-filter>
 
         </activity>
+
 
         <!-- Flutter Embedding -->
         <meta-data
@@ -58,30 +129,40 @@
 
     </application>
 
-    <!-- Text Processing -->
+
+    <!-- ===================================================== -->
+    <!-- PACKAGE VISIBILITY -->
+    <!-- ===================================================== -->
+
     <queries>
+
+        <!-- Text Processing -->
         <intent>
-            <action android:name="android.intent.action.PROCESS_TEXT"/>
-            <data android:mimeType="text/plain"/>
+            <action android:name="android.intent.action.PROCESS_TEXT" />
+            <data android:mimeType="text/plain" />
         </intent>
+
 
         <!-- Browser -->
         <intent>
-            <action android:name="android.intent.action.VIEW"/>
-            <data android:scheme="https"/>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="https" />
         </intent>
+
 
         <!-- Phone -->
         <intent>
-            <action android:name="android.intent.action.DIAL"/>
-            <data android:scheme="tel"/>
+            <action android:name="android.intent.action.DIAL" />
+            <data android:scheme="tel" />
         </intent>
+
 
         <!-- Email -->
         <intent>
-            <action android:name="android.intent.action.SENDTO"/>
-            <data android:scheme="mailto"/>
+            <action android:name="android.intent.action.SENDTO" />
+            <data android:scheme="mailto" />
         </intent>
+
     </queries>
 
 </manifest>

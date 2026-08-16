@@ -9,4 +9,6 @@ class SharePrefsKeys {
   static const String postCategory = 'post_category';
   static const String userData = "user_data";
   static const String stripeCardNumber = "stripe_card_number";
+
+  static const String fcmToken = "fcm_token";
 }
