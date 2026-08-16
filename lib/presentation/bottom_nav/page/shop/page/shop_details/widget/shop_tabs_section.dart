@@ -309,7 +309,7 @@ class ShopTabsSection extends StatelessWidget {
         AppButton(
           label: 'Message Seller',
           onPressed: () {
-            Get.toNamed(RoutePath.message);
+            controller.messageSeller();
           },
           backgroundColor: const Color(0xFF1A1A1A),
           textColor: AppColors.primaryColor,

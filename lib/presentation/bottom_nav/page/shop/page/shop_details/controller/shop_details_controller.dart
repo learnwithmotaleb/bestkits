@@ -7,7 +7,11 @@ import 'package:get/get.dart';
 import 'package:bestkits/presentation/bottom_nav/page/shop/page/shop_details/model/shop_details_model.dart';
 import 'package:bestkits/service/api_service.dart';
 import 'package:bestkits/service/api_url.dart';
+import 'package:bestkits/presentation/message/page/chat/chat_screen/chat_screen.dart';
+import 'package:bestkits/presentation/message/controller/message_controller.dart';
 import 'package:bestkits/widget/show_snackbar.dart';
+import 'package:bestkits/presentation/message/page/chat/model/my_chat_room_model.dart'
+    as chat_room_model;
 
 class ShopDetailsController extends GetxController {
   // Product state
@@ -143,4 +147,62 @@ class ShopDetailsController extends GetxController {
   void selectImage(int index) => selectedImageIndex.value = index;
   void selectVariant(String variant) => selectedVariant.value = variant;
   void selectTab(int index) => selectedTabIndex.value = index;
+
+  Future<void> messageSeller() async {
+    final sellerId = productDetails.value?.user?.id;
+    if (sellerId == null) {
+      ShowAppSnackBar.fail("Seller information is not available.");
+      return;
+    }
+
+    try {
+      ShowAppSnackBar.success("Connecting to seller...");
+
+      final body = {
+        "sellerId": sellerId,
+      };
+
+      final response = await _apiClient.post(
+        url: ApiUrl.createChatRoom,
+        body: body,
+        isToken: true,
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final data = response.body['data'];
+        if (data != null && data['id'] != null) {
+          final roomId = data['id'].toString();
+
+          final seller = productDetails.value?.user;
+          String name = seller?.profile?.fullName ?? 'Unknown';
+          String initial = name.isNotEmpty ? name[0].toUpperCase() : '?';
+
+          // Use avatarUrl if available, otherwise fallback to initial
+          String avatar = seller?.profile?.avatarUrl ?? initial;
+
+          bool isProf = seller?.sellerTier == "PROFESSIONAL_SELLER";
+
+          final chatSummary = ChatSummary(
+            id: roomId,
+            name: name,
+            avatar: avatar,
+            lastMessage: 'No messages yet',
+            time: '',
+            isUnread: false,
+            unreadCount: 0,
+            isProfessional: isProf,
+          );
+
+          Get.to(() => ChatScreen(chatSummary: chatSummary));
+        } else {
+          ShowAppSnackBar.fail("Failed to create chat room.");
+        }
+      } else {
+        final msg = response.body?['message'] ?? "Failed to create chat room.";
+        ShowAppSnackBar.fail(msg.toString());
+      }
+    } catch (e) {
+      ShowAppSnackBar.fail("An error occurred: $e");
+    }
+  }
 }

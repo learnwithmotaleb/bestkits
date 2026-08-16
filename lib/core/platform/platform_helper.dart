@@ -2,30 +2,110 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class PlatformHelper {
-  // Android
+  // ============================================================
+  // ANDROID
+  // ============================================================
+
   static bool get isAndroid =>
       !kIsWeb && defaultTargetPlatform == TargetPlatform.android;
 
-  // iOS
+  // ============================================================
+  // IOS
+  // ============================================================
+
   static bool get isIOS =>
       !kIsWeb && defaultTargetPlatform == TargetPlatform.iOS;
 
-  // Mobile (Android or iOS)
+  // ============================================================
+  // MOBILE
+  // ============================================================
+
   static bool get isMobile => isAndroid || isIOS;
 
-  // Web
+  // ============================================================
+  // WEB
+  // ============================================================
+
   static bool get isWeb => kIsWeb;
 
-  // Desktop
+  // ============================================================
+  // DESKTOP
+  // ============================================================
+
   static bool get isDesktop =>
       !kIsWeb &&
           (defaultTargetPlatform == TargetPlatform.macOS ||
               defaultTargetPlatform == TargetPlatform.windows ||
               defaultTargetPlatform == TargetPlatform.linux);
 
-  // Tablet (optional: can be based on screen size)
+  // ============================================================
+  // PLATFORM NAME
+  // ============================================================
+
+  /// Returns the platform name for API requests.
+  ///
+  /// Android -> android
+  /// iOS     -> ios
+  /// Web     -> web
+  /// macOS   -> macos
+  /// Windows -> windows
+  /// Linux   -> linux
+  static String get platform {
+    if (isAndroid) {
+      return 'android';
+    }
+
+    if (isIOS) {
+      return 'ios';
+    }
+
+    if (isWeb) {
+      return 'web';
+    }
+
+    if (defaultTargetPlatform == TargetPlatform.macOS) {
+      return 'macos';
+    }
+
+    if (defaultTargetPlatform == TargetPlatform.windows) {
+      return 'windows';
+    }
+
+    if (defaultTargetPlatform == TargetPlatform.linux) {
+      return 'linux';
+    }
+
+    return 'unknown';
+  }
+
+  // ============================================================
+  // MOBILE PLATFORM
+  // ============================================================
+
+  /// Returns only Android/iOS.
+  ///
+  /// Android -> android
+  /// iOS     -> ios
+  /// Others  -> null
+  static String? get mobilePlatform {
+    if (isAndroid) {
+      return 'android';
+    }
+
+    if (isIOS) {
+      return 'ios';
+    }
+
+    return null;
+  }
+
+  // ============================================================
+  // TABLET
+  // ============================================================
+
   static bool isTablet(BuildContext context) {
     final shortestSide = MediaQuery.of(context).size.shortestSide;
+
     return shortestSide >= 600 && !isDesktop;
   }
 }

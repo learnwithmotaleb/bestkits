@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:bestkits/service/api_service.dart';
 import 'package:bestkits/service/api_url.dart';
-import '../../../../utils/static_strings/static_strings.dart';
 import '../model/CustomerOrderModel.dart';
 import '../model/CustomerOrderDetailsModel.dart' as details_model;
+import 'package:bestkits/presentation/message/page/chat/chat_screen/chat_screen.dart';
+import 'package:bestkits/presentation/message/controller/message_controller.dart';
+import 'package:bestkits/widget/show_snackbar.dart';
+import 'package:bestkits/presentation/message/page/chat/model/my_chat_room_model.dart' as chat_room_model;
+import '../../../../utils/static_strings/static_strings.dart';
 
 class CustomerOrderController extends GetxController {
   final List<String> tabs = [
@@ -145,6 +149,60 @@ class CustomerOrderController extends GetxController {
       debugPrint("Error fetching customer order details: $e");
     } finally {
       isDetailsLoading.value = false;
+    }
+  }
+
+  Future<void> messageBuyer() async {
+    final buyerId = selectedOrderDetails.value?.buyer?.id;
+    if (buyerId == null) {
+      ShowAppSnackBar.fail("Buyer information is not available.");
+      return;
+    }
+
+    try {
+      final body = {
+        "sellerId": buyerId, // As per API behavior, passing target user id
+      };
+
+      final response = await ApiClient().post(
+        url: ApiUrl.createChatRoom,
+        body: body,
+        isToken: true,
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final data = response.body['data'];
+        if (data != null && data['id'] != null) {
+          final roomId = data['id'].toString();
+
+          final buyer = selectedOrderDetails.value?.buyer;
+          String name = buyer?.profile?.fullName ?? 'Unknown';
+          String initial = name.isNotEmpty ? name[0].toUpperCase() : '?';
+          
+          // Use avatarUrl if available, otherwise fallback to initial
+          String avatar = buyer?.profile?.avatarUrl ?? initial;
+
+          final chatSummary = ChatSummary(
+            id: roomId,
+            name: name,
+            avatar: avatar,
+            lastMessage: 'No messages yet',
+            time: '', 
+            isUnread: false,
+            unreadCount: 0,
+            isProfessional: false, // Assuming buyer is not professional
+          );
+
+          Get.to(() => ChatScreen(chatSummary: chatSummary));
+        } else {
+          ShowAppSnackBar.fail("Failed to open chat.");
+        }
+      } else {
+        final msg = response.body?['message'] ?? "Failed to open chat.";
+        ShowAppSnackBar.fail(msg.toString());
+      }
+    } catch (e) {
+      ShowAppSnackBar.fail("An error occurred: $e");
     }
   }
 }

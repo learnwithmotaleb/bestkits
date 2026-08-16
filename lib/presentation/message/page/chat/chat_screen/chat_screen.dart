@@ -1,4 +1,5 @@
 import 'package:bestkits/presentation/message/controller/message_controller.dart';
+import 'package:bestkits/service/api_url.dart';
 import 'package:bestkits/utils/static_strings/static_strings.dart';
 import 'package:bestkits/widget/app_text_field.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,6 +12,7 @@ import '../../../../../../widget/app_button.dart';
 import '../../../../../../widget/app_bottom_sheet.dart';
 import '../../../../../../widget/app_alert.dart';
 import '../chat_controller/chat_controller.dart';
+import '../../../../../../widget/app_loading.dart';
 
 class ChatScreen extends StatefulWidget {
   final ChatSummary chatSummary;
@@ -26,7 +28,8 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void initState() {
     super.initState();
-    controller = Get.put(ChatController(), tag: widget.chatSummary.id);
+    controller = Get.put(ChatController(widget.chatSummary.id),
+        tag: widget.chatSummary.id);
   }
 
   @override
@@ -61,11 +64,28 @@ class _ChatScreenState extends State<ChatScreen> {
                 borderRadius: BorderRadius.circular(8),
               ),
               alignment: Alignment.center,
-              child: Text(
-                widget.chatSummary.avatar,
-                style: const TextStyle(
-                    color: AppColors.primaryColor, fontWeight: FontWeight.bold),
-              ),
+              clipBehavior: Clip.hardEdge,
+              child: widget.chatSummary.avatar.length > 2
+                  ? Image.network(
+                      ApiUrl.buildImageUrl(widget.chatSummary.avatar),
+                      fit: BoxFit.cover,
+                      width: 40,
+                      height: 40,
+                      errorBuilder: (_, __, ___) => Text(
+                        widget.chatSummary.name.isNotEmpty
+                            ? widget.chatSummary.name[0].toUpperCase()
+                            : '?',
+                        style: const TextStyle(
+                            color: AppColors.primaryColor,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    )
+                  : Text(
+                      widget.chatSummary.avatar,
+                      style: const TextStyle(
+                          color: AppColors.primaryColor,
+                          fontWeight: FontWeight.bold),
+                    ),
             ),
             SizedBox(width: Dimensions.w(12)),
             Expanded(
@@ -116,7 +136,15 @@ class _ChatScreenState extends State<ChatScreen> {
         children: [
           Expanded(
             child: Obx(() {
-              return ListView.builder(
+              if (controller.isLoading.value) {
+                return const AppLoading(isFullPage: true);
+              }
+              return RefreshIndicator(
+                onRefresh: () => controller.loadMessages(),
+                color: AppColors.primaryColor,
+                backgroundColor: Colors.white,
+                child: ListView.builder(
+                controller: controller.scrollController,
                 padding: EdgeInsets.symmetric(
                     horizontal: Dimensions.w(20), vertical: Dimensions.h(20)),
                 itemCount: controller.messages.length,
@@ -194,9 +222,26 @@ class _ChatScreenState extends State<ChatScreen> {
                           ),
                         ),
                       ),
+                      if (index == controller.messages.length - 1 &&
+                          controller.isPartnerTyping.value)
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Padding(
+                            padding: EdgeInsets.only(top: Dimensions.h(8)),
+                            child: Text(
+                              "Typing...",
+                              style: TextStyle(
+                                fontStyle: FontStyle.italic,
+                                color: Colors.grey[400],
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
+                        ),
                     ],
                   );
                 },
+              ),
               );
             }),
           ),
@@ -339,7 +384,6 @@ class _ChatScreenState extends State<ChatScreen> {
               child: AppTextField(
                 controller: controller.messageController,
                 hint: AppStrings.enterAMessage.tr,
-
               ),
             ),
           ),
@@ -375,7 +419,8 @@ class _ChatScreenState extends State<ChatScreen> {
               children: [
                 Text(
                   AppStrings.options.tr,
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.w800),
                 ),
                 GestureDetector(
                   onTap: () => Get.back(),
@@ -390,7 +435,8 @@ class _ChatScreenState extends State<ChatScreen> {
                 children: [
                   _buildOptionRow(
                     icon: blocked ? Icons.check_circle_outline : Icons.block,
-                    label: blocked ? AppStrings.unblock.tr : AppStrings.block.tr,
+                    label:
+                        blocked ? AppStrings.unblock.tr : AppStrings.block.tr,
                     onTap: () {
                       Get.back();
                       AppAlerts.warning(

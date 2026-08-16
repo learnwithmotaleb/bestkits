@@ -203,8 +203,7 @@ class ApiUrl {
       '$baseUrl/notifications/$id/read'; //Patch method
   static String notificationReadAll =
       '$baseUrl/notifications/read-all'; //Patch method
-
-  static String updateFcmToken = ""; //post method
+  static String updateFcmToken = "$baseUrl/notifications/device-tokens"; //Patch method
 
   //===========================Cart====================//completed
   static String addToCart = '$baseUrl/cart/items'; //Post method
@@ -233,8 +232,31 @@ class ApiUrl {
       '$baseUrl/legitgrails/photo-index?category_code=$categoryCode&brand_code=$brandCode'; //get method
   static String uploadPhotoProductVerification = '$baseUrl/legitgrails/photos';
 
-  static String authenticationSubmitAPI(String productId) =>
-      '$baseUrl/products/$productId/authentication/submit'; //Post method
+  static String authenticationSubmitAPI(String productId) => '$baseUrl/products/$productId/authentication/submit'; //Post method
+
+
+
+
+  //====================Chat/Messaging=====================
+  static String createChatRoom = '$baseUrl/chat/rooms'; //Post method
+  static String listChatRoom = '$baseUrl/chat/rooms'; //get method
+  static String messageList(String id) => '$baseUrl/chat/rooms/$id/messages'; //get method
+  static String messageRead(String id) => '$baseUrl/chat/rooms/$id/read'; //Patch method
+  static String messageBlock(String id) => '$baseUrl/chat/rooms/$id/block'; //Patch method
+  static String messageUnblock(String id) => '$baseUrl/chat/rooms/$id/unblock'; //Patch method
+  static String messageDelete(String id) => '$baseUrl/chat/rooms/$id';   //Delete method
+
+
+
+
+
+
+
+
+
+
+
+
 
   //======================Socket====================
   static String socketUrl({required String userID}) =>

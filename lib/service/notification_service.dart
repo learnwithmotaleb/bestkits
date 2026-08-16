@@ -259,15 +259,18 @@ class FirebaseNotificationService {
 
       // Check if user is logged in (auth token exists) and endpoint is valid
       final userToken = SharePrefsHelper.getToken();
+
       if (userToken != null &&
           userToken.isNotEmpty &&
           ApiUrl.updateFcmToken.isNotEmpty) {
         debugPrint('🌐 Sending updated FCM token to backend...');
         final response = await ApiClient().patch(
           url: ApiUrl.updateFcmToken,
-          body: {"fcmToken": token},
+          body: {"token": token,   "platform": PlatformHelper.platform},
+
           isToken: true,
         );
+
         if (response.statusCode == 200 || response.statusCode == 201) {
           debugPrint('✅ FCM token successfully updated on backend');
         } else {

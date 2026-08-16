@@ -1,4 +1,9 @@
+import 'package:bestkits/presentation/message/page/chat/model/my_chat_room_model.dart' as chat_room_model;
+import 'package:bestkits/service/api_service.dart';
+import 'package:bestkits/service/api_url.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class ChatSummary {
   final String id;
@@ -24,14 +29,65 @@ class ChatSummary {
 
 class MessageController extends GetxController {
   final RxString searchQuery = ''.obs;
+  final RxList<ChatSummary> chats = <ChatSummary>[].obs;
+  final RxBool isLoading = true.obs;
+  
+  final ApiClient _apiClient = ApiClient();
 
-  final List<ChatSummary> chats = [
-    ChatSummary(id: '1', name: 'Mayoral Reseller', avatar: 'M', lastMessage: 'Hi, I would like to check the payment sta...', time: '25 min ago', isUnread: true, isProfessional: true),
-    ChatSummary(id: '2', name: 'Junona Kids', avatar: 'J', lastMessage: 'Hi, I would like to check the payment sta...', time: '25 min ago', isUnread: true, unreadCount: 2),
-    ChatSummary(id: '3', name: 'Tochici', avatar: 'T', lastMessage: 'Hi, I would like to check the payment sta...', time: '04:45 PM'),
-    ChatSummary(id: '4', name: 'Chrisma', avatar: 'C', lastMessage: 'Hi, I would like to check the payment sta...', time: '04:55 PM'),
-    ChatSummary(id: '5', name: 'Chipolino', avatar: 'C', lastMessage: 'Hi, I would like to check the payment sta...', time: '02:45 AM'),
-  ];
+  @override
+  void onInit() {
+    super.onInit();
+    fetchChatRooms();
+  }
+
+  Future<void> fetchChatRooms() async {
+    isLoading.value = true;
+    try {
+      final response = await _apiClient.get(
+        url: ApiUrl.listChatRoom,
+        isToken: true,
+      );
+
+      if (response.statusCode == 200) {
+        final result = chat_room_model.MyChatRoomModel.fromJson(response.body);
+        final list = result.data ?? [];
+        
+        chats.clear();
+        for (var data in list) {
+          chats.add(_mapToChatSummary(data));
+        }
+      }
+    } catch (e) {
+      debugPrint("Failed to load chat rooms: $e");
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  ChatSummary _mapToChatSummary(chat_room_model.Data data) {
+    String name = data.partner?.profile?.fullName ?? 'Unknown';
+    String initial = name.isNotEmpty ? name[0].toUpperCase() : '?';
+    String avatar = data.partner?.profile?.avatarUrl ?? initial;
+    
+    String lastMsgText = data.lastMessage?.message ?? 'No messages yet';
+    int unread = data.unreadCount ?? 0;
+    
+    DateTime date = DateTime.tryParse(data.updatedAt ?? '')?.toLocal() ?? DateTime.now();
+    String formattedTime = DateFormat('hh:mm a').format(date);
+    
+    bool isProf = data.partner?.sellerTier == "PROFESSIONAL_SELLER";
+    
+    return ChatSummary(
+      id: data.id.toString(),
+      name: name,
+      avatar: avatar,
+      lastMessage: lastMsgText,
+      time: formattedTime,
+      isUnread: unread > 0,
+      unreadCount: unread,
+      isProfessional: isProf,
+    );
+  }
 
   List<ChatSummary> get filteredChats {
     if (searchQuery.value.isEmpty) return chats;

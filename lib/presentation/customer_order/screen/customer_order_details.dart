@@ -1,3 +1,4 @@
+import 'package:bestkits/core/routes/route_path.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -561,16 +562,21 @@ class _CustomerOrderDetailsState extends State<CustomerOrderDetails> {
                                 ],
                               ),
                             ),
-                            Container(
-                              padding: EdgeInsets.all(Dimensions.w(8)),
-                              decoration: BoxDecoration(
-                                color: AppColors.blackColor,
-                                borderRadius:
-                                    BorderRadius.circular(Dimensions.r(8)),
+                            GestureDetector(
+                              onTap: () {
+                                _ctrl.messageBuyer();
+                              },
+                              child: Container(
+                                padding: EdgeInsets.all(Dimensions.w(8)),
+                                decoration: BoxDecoration(
+                                  color: AppColors.blackColor,
+                                  borderRadius:
+                                      BorderRadius.circular(Dimensions.r(8)),
+                                ),
+                                child: Icon(Icons.chat_bubble_outline,
+                                    color: AppColors.primaryColor,
+                                    size: Dimensions.icon(16)),
                               ),
-                              child: Icon(Icons.chat_bubble_outline,
-                                  color: AppColors.primaryColor,
-                                  size: Dimensions.icon(16)),
                             ),
                           ],
                         ),

@@ -185,16 +185,17 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
                                 children: [
                                   Icon(Icons.circle,
                                       size: 6,
-                                      color:
-                                          _getStatusTextColor(order.status ?? '')),
+                                      color: _getStatusTextColor(
+                                          order.status ?? '')),
                                   SizedBox(width: Dimensions.w(4)),
                                   Text(
-                                    (order.statusLabel ?? order.status ?? '').tr,
+                                    (order.statusLabel ?? order.status ?? '')
+                                        .tr,
                                     style: AppTextStyles.body.copyWith(
                                       fontSize: Dimensions.fs(10),
                                       fontWeight: FontWeight.w600,
-                                      color:
-                                          _getStatusTextColor(order.status ?? ''),
+                                      color: _getStatusTextColor(
+                                          order.status ?? ''),
                                     ),
                                   ),
                                 ],
@@ -211,7 +212,8 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
                           label: AppStrings.viewDetails.tr,
                           onPressed: () {
                             if (order.id != null) {
-                              Get.to(() => CustomerOrderDetails(orderId: order.id.toString()));
+                              Get.to(() => CustomerOrderDetails(
+                                  orderId: order.id.toString()));
                             }
                           },
                           backgroundColor: AppColors.blackColor,
