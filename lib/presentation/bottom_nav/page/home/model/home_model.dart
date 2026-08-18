@@ -1,4 +1,5 @@
 import 'package:bestkits/data/model/product_model.dart';
+import 'package:bestkits/service/api_url.dart';
 
 class HomeModel {
   bool? success;
@@ -19,7 +20,7 @@ class HomeModel {
 class HomeData {
   List<CategoryData>? categories;
   List<ProductModel>? trending;
-  List<ProductModel>? promoted;
+  List<PromotedData>? promoted;
   List<ProductModel>? newArrivals;
   List<TrustCardData>? trustCards;
 
@@ -47,12 +48,12 @@ class HomeData {
       });
     }
     if (json['promoted'] != null) {
-      promoted = <ProductModel>[];
+      promoted = <PromotedData>[];
       json['promoted'].forEach((v) {
         try {
-          promoted!.add(ProductModel.fromJson(v));
+          promoted!.add(PromotedData.fromJson(v));
         } catch (e) {
-          print("Error parsing promoted product: \$e");
+          print("Error parsing promoted product: $e");
         }
       });
     }
@@ -129,5 +130,62 @@ class TrustCardData {
     key = json['key'];
     title = json['title'];
     tone = json['tone'];
+  }
+}
+
+class PromotedData {
+  int? id;
+  String? name;
+  num? originalPrice;
+  num? discountedPrice;
+  num? discountPercentage;
+  List<String>? imageUrls;
+  num? averageRating;
+  int? totalReviews;
+  String? condition;
+  bool? isAuthenticated;
+  num? effectivePrice;
+  bool? isWishlisted;
+  String? categoryName;
+
+  PromotedData({
+    this.id,
+    this.name,
+    this.originalPrice,
+    this.discountedPrice,
+    this.discountPercentage,
+    this.imageUrls,
+    this.averageRating,
+    this.totalReviews,
+    this.condition,
+    this.isAuthenticated,
+    this.effectivePrice,
+    this.isWishlisted,
+  });
+
+  PromotedData.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    originalPrice = json['original_price'];
+    discountedPrice = json['discounted_price'];
+    discountPercentage = json['discount_percentage'];
+    if (json['image_urls'] != null) {
+      imageUrls = List<String>.from(json['image_urls']);
+    }
+    averageRating = json['average_rating'];
+    totalReviews = json['total_reviews'];
+    condition = json['condition'];
+    isAuthenticated = json['is_authenticated'];
+    effectivePrice = json['effective_price'];
+    isWishlisted = json['is_wishlisted'];
+    if (json['category'] != null) {
+      categoryName = json['category']['name'];
+    }
+  }
+
+  String get formattedPrice => '€${(effectivePrice ?? 0).toStringAsFixed(2)}';
+  String get formattedOriginalPrice => '€${(originalPrice ?? 0).toStringAsFixed(2)}';
+  String get primaryImageUrl {
+    return (imageUrls != null && imageUrls!.isNotEmpty) ? ApiUrl.buildImageUrl(imageUrls!.first) : '';
   }
 }

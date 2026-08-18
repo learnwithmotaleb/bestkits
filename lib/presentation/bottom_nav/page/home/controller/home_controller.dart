@@ -8,6 +8,7 @@ import '../../../../../service/api_url.dart';
 import 'package:bestkits/data/model/product_model.dart';
 import '../model/home_model.dart' hide UserData;
 import '../model/recently_view_model.dart';
+import '../model/features_coupon_model.dart';
 
 class HomeController extends GetxController {
   // User Data
@@ -20,6 +21,7 @@ class HomeController extends GetxController {
     fetchUserProfile(); // Sync fresh profile on startup
     fetchHomeData();
     fetchRecentlyViewed();
+    fetchFeaturedCoupon();
   }
 
   void loadUserData() {
@@ -57,9 +59,13 @@ class HomeController extends GetxController {
   // Data from Home API
   final RxList<CategoryData> categories = <CategoryData>[].obs;
   final RxList<ProductModel> trendingProducts = <ProductModel>[].obs;
-  final RxList<ProductModel> promotedProducts = <ProductModel>[].obs;
+  final RxList<PromotedData> promotedProducts = <PromotedData>[].obs;
   final RxList<ProductModel> newArrivals = <ProductModel>[].obs;
   final RxList<TrustCardData> trustCards = <TrustCardData>[].obs;
+
+  // Featured Coupon
+  final Rxn<Data> featuredCoupon = Rxn<Data>();
+  final RxBool isLoadingFeaturedCoupon = false.obs;
 
   final RxBool isLoadingHome = false.obs;
   final ApiClient _apiClient = ApiClient();
@@ -112,6 +118,26 @@ class HomeController extends GetxController {
       print('Error fetching recently viewed: $e');
     } finally {
       isLoadingRecentlyViewed.value = false;
+    }
+  }
+
+  Future<void> fetchFeaturedCoupon() async {
+    isLoadingFeaturedCoupon.value = true;
+    try {
+      final response = await _apiClient.get(
+        url: ApiUrl.homeFeatureCoupon,
+        isToken: false,
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final model = FeatureCouponModel.fromJson(response.body);
+        if (model.success == true && model.data != null) {
+          featuredCoupon.value = model.data;
+        }
+      }
+    } catch (e) {
+      print('Error fetching featured coupon: $e');
+    } finally {
+      isLoadingFeaturedCoupon.value = false;
     }
   }
 }

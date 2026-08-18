@@ -1,3 +1,7 @@
+import 'package:bestkits/data/model/product_model.dart';
+
+import 'package:bestkits/data/model/product_model.dart';
+
 class ShopDetailsProductModel {
   bool? success;
   int? statusCode;
@@ -11,9 +15,7 @@ class ShopDetailsProductModel {
     success = json['success'];
     statusCode = json['statusCode'];
     message = json['message'];
-    data = json['data'] != null
-        ? ShopDetailsData.fromJson(json['data'])
-        : null;
+    data = json['data'] != null ? ShopDetailsData.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -95,23 +97,87 @@ class ShopDetailsData {
     this.relatedProducts,
   });
 
+  /// Seed [ShopDetailsData] from a [ProductModel] that came from the list API.
+  /// Extra fields like reviews / sellerOverview will be null until the detail
+  /// API call completes (or if it fails, we keep this data).
+  factory ShopDetailsData.fromProductModel(ProductModel p) {
+    return ShopDetailsData(
+      id: p.id,
+      name: p.name,
+      description: p.description,
+      brand: null,
+      originalPrice: p.originalPrice,
+      discountedPrice: p.discountedPrice,
+      discountPercentage: p.discountPercentage?.toInt(),
+      imageUrls: p.imageUrls,
+      categoryId: p.categoryId,
+      subCategoryId: p.subCategoryId,
+      userId: p.userId,
+      condition: p.condition,
+      status: p.status,
+      views: p.views,
+      totalReviews: p.totalReviews,
+      averageRating: p.averageRating.toInt(),
+      isAuthenticated: p.isAuthenticated,
+      authenticationStatus: p.authenticationStatus,
+      approvedAt: p.approvedAt,
+      rejectedAt: p.rejectedAt,
+      soldAt: null,
+      createdAt: p.createdAt,
+      updatedAt: p.updatedAt,
+      user: p.user != null
+          ? ShopDetailsUser(
+              id: p.user!.id,
+              profile: p.user!.profile != null
+                  ? ShopDetailsProfile(
+                      fullName: p.user!.profile!.fullName,
+                      avatarUrl: p.user!.profile!.avatarUrl,
+                      country: p.user!.profile!.country,
+                    )
+                  : null,
+            )
+          : null,
+      category: p.category != null
+          ? ShopDetailsCategory(
+              id: p.category!.id,
+              name: p.category!.name,
+              description: p.category!.description,
+              imageUrl: p.category!.imageUrl,
+            )
+          : null,
+      subCategory: p.subCategory != null
+          ? ShopDetailsSubCategory(
+              id: p.subCategory!.id,
+              name: p.subCategory!.name,
+              description: p.subCategory!.description,
+              categoryId: p.subCategory!.categoryId,
+            )
+          : null,
+      effectivePrice: p.effectivePrice,
+      isWishlisted: p.isWishlisted,
+      reviews: null,
+      sellerOverview: null,
+      relatedProducts: null,
+    );
+  }
+
   ShopDetailsData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
     description = json['description'];
     brand = json['brand'];
-    originalPrice = json['original_price'];
-    discountedPrice = json['discounted_price'];
-    discountPercentage = json['discount_percentage'];
+    originalPrice = json['original_price'] as num?;
+    discountedPrice = json['discounted_price'] as num?;
+    discountPercentage = (json['discount_percentage'] as num?)?.toInt();
     imageUrls = (json['image_urls'] as List?)?.cast<String>();
-    categoryId = json['categoryId'];
-    subCategoryId = json['subCategoryId'];
-    userId = json['userId'];
+    categoryId = (json['categoryId'] as num?)?.toInt();
+    subCategoryId = (json['subCategoryId'] as num?)?.toInt();
+    userId = (json['userId'] as num?)?.toInt();
     condition = json['condition'];
     status = json['status'];
-    views = json['views'];
-    totalReviews = json['total_reviews'];
-    averageRating = json['average_rating'];
+    views = (json['views'] as num?)?.toInt();
+    totalReviews = (json['total_reviews'] as num?)?.toInt();
+    averageRating = (json['average_rating'] as num?)?.toInt();
     isAuthenticated = json['is_authenticated'];
     authenticationStatus = json['authentication_status'];
     approvedAt = json['approved_at'];
@@ -119,9 +185,7 @@ class ShopDetailsData {
     soldAt = json['sold_at'];
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
-    user = json['user'] != null
-        ? ShopDetailsUser.fromJson(json['user'])
-        : null;
+    user = json['user'] != null ? ShopDetailsUser.fromJson(json['user']) : null;
     category = json['category'] != null
         ? ShopDetailsCategory.fromJson(json['category'])
         : null;
@@ -134,7 +198,7 @@ class ShopDetailsData {
         reviews!.add(ShopDetailsReview.fromJson(v));
       });
     }
-    effectivePrice = json['effective_price'];
+    effectivePrice = json['effective_price'] as num?;
     isWishlisted = json['is_wishlisted'];
     sellerOverview = json['seller_overview'] != null
         ? ShopDetailsSellerOverview.fromJson(json['seller_overview'])
@@ -484,10 +548,10 @@ class ShopDetailsSellerOverview {
   });
 
   ShopDetailsSellerOverview.fromJson(Map<String, dynamic> json) {
-    activeProducts = json['active_products'];
-    itemsSold = json['items_sold'];
-    averageRating = json['average_rating'];
-    totalReviews = json['total_reviews'];
+    activeProducts = (json['active_products'] as num?)?.toInt();
+    itemsSold = (json['items_sold'] as num?)?.toInt();
+    averageRating = (json['average_rating'] as num?)?.toInt();
+    totalReviews = (json['total_reviews'] as num?)?.toInt();
   }
 
   Map<String, dynamic> toJson() {
@@ -564,18 +628,18 @@ class ShopDetailsRelatedProduct {
     name = json['name'];
     description = json['description'];
     brand = json['brand'];
-    originalPrice = json['original_price'];
-    discountedPrice = json['discounted_price'];
-    discountPercentage = json['discount_percentage'];
+    originalPrice = json['original_price'] as num?;
+    discountedPrice = json['discounted_price'] as num?;
+    discountPercentage = (json['discount_percentage'] as num?)?.toInt();
     imageUrls = (json['image_urls'] as List?)?.cast<String>();
-    categoryId = json['categoryId'];
-    subCategoryId = json['subCategoryId'];
-    userId = json['userId'];
+    categoryId = (json['categoryId'] as num?)?.toInt();
+    subCategoryId = (json['subCategoryId'] as num?)?.toInt();
+    userId = (json['userId'] as num?)?.toInt();
     condition = json['condition'];
     status = json['status'];
-    views = json['views'];
-    totalReviews = json['total_reviews'];
-    averageRating = json['average_rating'];
+    views = (json['views'] as num?)?.toInt();
+    totalReviews = (json['total_reviews'] as num?)?.toInt();
+    averageRating = (json['average_rating'] as num?)?.toInt();
     isAuthenticated = json['is_authenticated'];
     authenticationStatus = json['authentication_status'];
     approvedAt = json['approved_at'];
@@ -589,7 +653,7 @@ class ShopDetailsRelatedProduct {
     subCategory = json['subCategory'] != null
         ? ShopDetailsSubCategory.fromJson(json['subCategory'])
         : null;
-    effectivePrice = json['effective_price'];
+    effectivePrice = json['effective_price'] as num?;
     isWishlisted = json['is_wishlisted'];
   }
 

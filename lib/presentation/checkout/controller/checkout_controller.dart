@@ -5,6 +5,7 @@ import '../../../service/api_service.dart';
 import '../../../service/api_url.dart';
 import '../../../utils/static_strings/static_strings.dart';
 import '../../../widget/show_snackbar.dart';
+import '../../../widget/open_url.dart';
 import '../../cart/controller/cart_controller.dart';
 import '../model/OrderSummaryModel.dart';
 
@@ -208,13 +209,8 @@ class CheckoutController extends GetxController {
           orderSummary.value?.data?.selectedSellerIds?.cast<int>() ?? [];
 
       final body = {
-        "shippingAddress": address.address ?? "",
-        "city": address.city ?? "",
-        "postalCode": address.postalCode ?? "",
-        "country": address.country ?? "",
-        "sellerIds": sellerIds.isNotEmpty
-            ? sellerIds.first
-            : 0, // Using the first seller ID based on the payload example
+        "successUrl": "https://app.bestkid.com/checkout/success",
+        "cancelUrl": "https://app.bestkid.com/checkout/cancel",
         "addressId": address.id,
         if (isCouponApplied.value && couponController.text.isNotEmpty)
           "couponCode": couponController.text.trim().toUpperCase(),
@@ -222,7 +218,7 @@ class CheckoutController extends GetxController {
       };
 
       final response = await _apiClient.post(
-        url: ApiUrl.orderCheckout,
+        url: ApiUrl.stripeCheckOutSession,
         body: body,
         isToken: true,
       );
@@ -230,16 +226,25 @@ class CheckoutController extends GetxController {
       if (response.statusCode == 200 || response.statusCode == 201) {
         final bodyData = response.body;
         if (bodyData != null && bodyData['success'] == true) {
-          Get.snackbar(
-            AppStrings.orderPlaced.tr,
-            AppStrings.orderPlacedSuccess.tr,
-            snackPosition: SnackPosition.TOP,
-            backgroundColor: const Color(0xFF1A1A1A),
-            colorText: AppColors.primaryColor,
-            borderRadius: 12,
-            margin: const EdgeInsets.all(16),
-            icon: Icon(Icons.check_circle, color: AppColors.primaryColor),
-          );
+          final data = bodyData['data'];
+          final String? checkoutUrl =
+              data is Map ? data['url'] : (data is String ? data : null);
+
+          if (checkoutUrl != null && checkoutUrl.isNotEmpty) {
+            await openExternalUrl(checkoutUrl);
+          } else {
+            Get.snackbar(
+              AppStrings.orderPlaced.tr,
+              AppStrings.orderPlacedSuccess.tr,
+              snackPosition: SnackPosition.TOP,
+              backgroundColor: const Color(0xFF1A1A1A),
+              colorText: AppColors.primaryColor,
+              borderRadius: 12,
+              margin: const EdgeInsets.all(16),
+              icon: Icon(Icons.check_circle, color: AppColors.primaryColor),
+            );
+          }
+
           cartController
               .emptyCart(); // Clear the local cart after successful checkout
           Get.offAllNamed(

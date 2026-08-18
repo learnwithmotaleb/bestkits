@@ -12,6 +12,7 @@ import '../widget/home_header.dart';
 import '../widget/product_card.dart';
 import '../widget/section_title.dart';
 import '../widget/seller_banner.dart';
+import '../widget/featured_coupon_banner.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -34,206 +35,207 @@ class _HomeScreenState extends State<HomeScreen> {
             await Future.wait([
               controller.fetchHomeData(),
               controller.fetchRecentlyViewed(),
+              controller.fetchFeaturedCoupon(),
             ]);
           },
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Dimensions.gapH(10),
-            // Header
-            const HomeHeader(),
-            Dimensions.gapH(20),
+              Dimensions.gapH(10),
+              // Header
+              const HomeHeader(),
+              Dimensions.gapH(20),
 
-            // Banner
-            const HomeBanner(),
-            Dimensions.gapH(30),
-
-            // Shop By Category
-            SectionTitle(
-              title: AppStrings.shopByCategory.tr,
-              onTapViewAll: () {
-                Get.toNamed(RoutePath.categoriesScreen);
-              },
-            ),
-            Dimensions.gapH(15),
-            Obx(() {
-              if (controller.isLoadingHome.value) {
-                return SizedBox(
-                  height: Dimensions.h(160),
-                  child: const Center(child: CircularProgressIndicator()),
-                );
-              }
-              if (controller.categories.isEmpty) {
-                return SizedBox(
-                  height: Dimensions.h(160),
-                  child: Center(
-                    child: Text(
-                      AppStrings.noMatchesFound.tr,
-                      style: AppTextStyles.bodyText,
+              // Banner
+              const HomeBanner(),
+              Dimensions.gapH(15),
+              // Shop By Category
+              SectionTitle(
+                title: AppStrings.shopByCategory.tr,
+                onTapViewAll: () {
+                  Get.toNamed(RoutePath.categoriesScreen);
+                },
+              ),
+              Dimensions.gapH(15),
+              Obx(() {
+                if (controller.isLoadingHome.value) {
+                  return SizedBox(
+                    height: Dimensions.h(160),
+                    child: const Center(child: CircularProgressIndicator()),
+                  );
+                }
+                if (controller.categories.isEmpty) {
+                  return SizedBox(
+                    height: Dimensions.h(160),
+                    child: Center(
+                      child: Text(
+                        AppStrings.noMatchesFound.tr,
+                        style: AppTextStyles.bodyText,
+                      ),
                     ),
-                  ),
-                );
-              }
-              return SizedBox(
-                height: Dimensions.h(160),
-                child: ListView.builder(
-                  padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
-                  scrollDirection: Axis.horizontal,
-                  itemCount: controller.categories.length,
-                  itemBuilder: (context, index) {
-                    final category = controller.categories[index];
-                    return CategoryCard(
-                      name: category.name ?? '',
-                      imageUrl: category.imageUrl,
-                      items:
-                          '${category.productCount ?? 0} ${AppStrings.itemsCountLabel.tr}',
-                      onTap: () {
-                        Get.toNamed(RoutePath.categoriesScreen,
-                            arguments: {'categoryId': category.id});
-                      },
-                    );
-                  },
-                ),
-              );
-            }),
-            Dimensions.gapH(30),
-
-            // Now Trending
-
-            SectionTitle(
-              title: AppStrings.nowTrending.tr,
-              onTapViewAll: () {
-                //  Get.toNamed(RoutePath.searchscreen);
-              },
-            ),
-            Dimensions.gapH(15),
-            Obx(() {
-              return SizedBox(
-                height: Dimensions.h(280),
-                child: ListView.builder(
-                  padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
-                  scrollDirection: Axis.horizontal,
-                  itemCount: controller.trendingProducts.length,
-                  itemBuilder: (context, index) {
-                    final product = controller.trendingProducts[index];
-                    return ProductCard(
-                      onTap: () {
-                        Get.toNamed(
-                          RoutePath.shopDetails,
-                          arguments: {
-                            'productId': product.id.toString(),
-                            'productModel': product,
-                          },
-                        );
-                      },
-                      product: product,
-                      width: Dimensions.w(160),
-                      margin: EdgeInsets.only(right: Dimensions.w(15)),
-                    );
-                  },
-                ),
-              );
-            }),
-            Dimensions.gapH(30),
-
-            // Recently Viewed
-            SectionTitle(
-              title: AppStrings.recentlyViewed.tr,
-              onTapViewAll: () {
-                 //Get.toNamed(RoutePath.searchscreen);
-              },
-            ),
-            Dimensions.gapH(15),
-            Obx(() {
-              if (controller.isLoadingRecentlyViewed.value) {
+                  );
+                }
                 return SizedBox(
-                  height: Dimensions.h(280),
-                  child: Center(child: CircularProgressIndicator()),
-                );
-              }
-              if (controller.recentlyViewed.isEmpty) {
-                return SizedBox.shrink(); // hide if empty
-              }
-              return SizedBox(
-                height: Dimensions.h(280),
-                child: ListView.builder(
-                  padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
-                  scrollDirection: Axis.horizontal,
-                  itemCount: controller.recentlyViewed.length,
-                  itemBuilder: (context, index) {
-                    final product = controller.recentlyViewed[index];
-                    return ProductCard(
-                      onTap: () {
-                        Get.toNamed(
-                          RoutePath.shopDetails,
-                          arguments: {
-                            'productId': product.id.toString(),
-                            'productModel': product,
-                          },
-                        );
-                      },
-                      product: product,
-                      width: Dimensions.w(160),
-                      margin: EdgeInsets.only(right: Dimensions.w(15)),
-                    );
-                  },
-                ),
-              );
-            }),
-            Dimensions.gapH(30),
-
-            // New Arrivals
-            SectionTitle(
-              title: AppStrings.newArrivals.tr,
-              onTapViewAll: () {
-                //  Get.toNamed(RoutePath.searchscreen);
-              },
-            ),
-            Dimensions.gapH(15),
-            Obx(() {
-              if (controller.isLoadingHome.value &&
-                  controller.newArrivals.isEmpty) {
-                return SizedBox(
-                  height: Dimensions.h(280),
-                  child: Center(child: CircularProgressIndicator()),
-                );
-              }
-              if (controller.newArrivals.isEmpty) {
-                return SizedBox.shrink(); // hide if empty
-              }
-              return SizedBox(
-                height: Dimensions.h(280),
-                child: ListView.builder(
-                  padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
-                  scrollDirection: Axis.horizontal,
-                  itemCount: controller.newArrivals.length,
-                  itemBuilder: (context, index) {
-                    final product = controller.newArrivals[index];
-                    return ProductCard( onTap: () {
-                      Get.toNamed(
-                        RoutePath.shopDetails,
-                        arguments: {
-                          'productId': product.id.toString(),
-                          'productModel': product,
+                  height: Dimensions.h(160),
+                  child: ListView.builder(
+                    padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
+                    scrollDirection: Axis.horizontal,
+                    itemCount: controller.categories.length,
+                    itemBuilder: (context, index) {
+                      final category = controller.categories[index];
+                      return CategoryCard(
+                        name: category.name ?? '',
+                        imageUrl: category.imageUrl,
+                        items:
+                            '${category.productCount ?? 0} ${AppStrings.itemsCountLabel.tr}',
+                        onTap: () {
+                          Get.toNamed(RoutePath.categoriesScreen,
+                              arguments: {'categoryId': category.id});
                         },
                       );
                     },
-                      product: product,
-                      width: Dimensions.w(160),
-                      margin: EdgeInsets.only(right: Dimensions.w(15)),
-                    );
-                  },
-                ),
-              );
-            }),
+                  ),
+                );
+              }),
+              Dimensions.gapH(30),
 
-            // Seller Banner
-            const SellerBanner(),
+              // Now Trending
 
-            Dimensions.gapH(20),
-          ]),
-        ),
+              SectionTitle(
+                title: AppStrings.nowTrending.tr,
+                onTapViewAll: () {
+                  //  Get.toNamed(RoutePath.searchscreen);
+                },
+              ),
+              Dimensions.gapH(15),
+              Obx(() {
+                return SizedBox(
+                  height: Dimensions.h(280),
+                  child: ListView.builder(
+                    padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
+                    scrollDirection: Axis.horizontal,
+                    itemCount: controller.trendingProducts.length,
+                    itemBuilder: (context, index) {
+                      final product = controller.trendingProducts[index];
+                      return ProductCard(
+                        onTap: () {
+                          Get.toNamed(
+                            RoutePath.shopDetails,
+                            arguments: {
+                              'productId': product.id.toString(),
+                              'productModel': product,
+                            },
+                          );
+                        },
+                        product: product,
+                        width: Dimensions.w(160),
+                        margin: EdgeInsets.only(right: Dimensions.w(15)),
+                      );
+                    },
+                  ),
+                );
+              }),
+              Dimensions.gapH(30),
+
+              // Recently Viewed
+              SectionTitle(
+                title: AppStrings.recentlyViewed.tr,
+                onTapViewAll: () {
+                  //Get.toNamed(RoutePath.searchscreen);
+                },
+              ),
+              Dimensions.gapH(15),
+              Obx(() {
+                if (controller.isLoadingRecentlyViewed.value) {
+                  return SizedBox(
+                    height: Dimensions.h(280),
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                }
+                if (controller.recentlyViewed.isEmpty) {
+                  return SizedBox.shrink(); // hide if empty
+                }
+                return SizedBox(
+                  height: Dimensions.h(280),
+                  child: ListView.builder(
+                    padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
+                    scrollDirection: Axis.horizontal,
+                    itemCount: controller.recentlyViewed.length,
+                    itemBuilder: (context, index) {
+                      final product = controller.recentlyViewed[index];
+                      return ProductCard(
+                        onTap: () {
+                          Get.toNamed(
+                            RoutePath.shopDetails,
+                            arguments: {
+                              'productId': product.id.toString(),
+                              'productModel': product,
+                            },
+                          );
+                        },
+                        product: product,
+                        width: Dimensions.w(160),
+                        margin: EdgeInsets.only(right: Dimensions.w(15)),
+                      );
+                    },
+                  ),
+                );
+              }),
+              Dimensions.gapH(30),
+
+              // New Arrivals
+              SectionTitle(
+                title: AppStrings.newArrivals.tr,
+                onTapViewAll: () {
+                  //  Get.toNamed(RoutePath.searchscreen);
+                },
+              ),
+              Dimensions.gapH(15),
+              Obx(() {
+                if (controller.isLoadingHome.value &&
+                    controller.newArrivals.isEmpty) {
+                  return SizedBox(
+                    height: Dimensions.h(280),
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                }
+                if (controller.newArrivals.isEmpty) {
+                  return SizedBox.shrink(); // hide if empty
+                }
+                return SizedBox(
+                  height: Dimensions.h(280),
+                  child: ListView.builder(
+                    padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
+                    scrollDirection: Axis.horizontal,
+                    itemCount: controller.newArrivals.length,
+                    itemBuilder: (context, index) {
+                      final product = controller.newArrivals[index];
+                      return ProductCard(
+                        onTap: () {
+                          Get.toNamed(
+                            RoutePath.shopDetails,
+                            arguments: {
+                              'productId': product.id.toString(),
+                              'productModel': product,
+                            },
+                          );
+                        },
+                        product: product,
+                        width: Dimensions.w(160),
+                        margin: EdgeInsets.only(right: Dimensions.w(15)),
+                      );
+                    },
+                  ),
+                );
+              }),
+
+              // Seller Banner
+              const SellerBanner(),
+
+              Dimensions.gapH(20),
+            ]),
+          ),
         ),
       ),
     );

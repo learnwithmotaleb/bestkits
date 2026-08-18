@@ -12,7 +12,9 @@ import '../model/shop_details_model.dart';
 import '../widget/shop_image_section.dart';
 import '../widget/shop_action_section.dart';
 import '../widget/shop_tabs_section.dart';
+import 'package:bestkits/data/model/product_model.dart';
 import 'package:bestkits/service/api_url.dart';
+import 'package:bestkits/presentation/favorite/controller/favourite_controller.dart';
 
 class ShopDetailsScreen extends StatefulWidget {
   const ShopDetailsScreen({super.key});
@@ -27,17 +29,23 @@ class _ShopDetailsScreenState extends State<ShopDetailsScreen> {
   @override
   void initState() {
     super.initState();
-    controller = Get.isRegistered<ShopDetailsController>()
-        ? Get.find<ShopDetailsController>()
-        : Get.put(ShopDetailsController());
+    // Always delete the old controller so we get a fresh fetch for each product
+    if (Get.isRegistered<ShopDetailsController>()) {
+      Get.delete<ShopDetailsController>(force: true);
+    }
+    controller = Get.put(ShopDetailsController());
 
     final args = Get.arguments;
     final Map<String, dynamic>? argsMap =
         args is Map<String, dynamic> ? args : null;
     final String productId = argsMap?['productId']?.toString() ?? '';
+    final dynamic productModel = argsMap?['productModel'];
 
     if (productId.isNotEmpty) {
-      controller.fetchProductDetails(productId);
+      controller.fetchProductDetails(
+        productId,
+        seedProduct: productModel is ProductModel ? productModel : null,
+      );
     }
   }
 
@@ -50,16 +58,28 @@ class _ShopDetailsScreenState extends State<ShopDetailsScreen> {
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 16.0),
-            child: GestureDetector(
-              onTap: () {
-                // Add to favorites logic
-              },
-              child: const Icon(
-                Icons.favorite,
-                color: AppColors.redColor,
-                size: 24,
-              ),
-            ),
+            child: Obx(() {
+              final product = controller.productDetails.value;
+              if (product == null) return const SizedBox.shrink();
+
+              final favController = Get.isRegistered<FavouriteController>()
+                  ? Get.find<FavouriteController>()
+                  : Get.put(FavouriteController());
+
+              final isFav = favController.isFavoriteById(product.id ?? 0);
+
+              return GestureDetector(
+                onTap: () {
+                  final pModel = ProductModel.fromJson(product.toJson());
+                  favController.toggleFavoriteProduct(pModel);
+                },
+                child: Icon(
+                  isFav ? Icons.favorite : Icons.favorite_border,
+                  color: isFav ? AppColors.redColor : Colors.grey,
+                  size: 24,
+                ),
+              );
+            }),
           )
         ],
       ),
@@ -139,7 +159,8 @@ class _ShopDetailsScreenState extends State<ShopDetailsScreen> {
                             onTap: () {
                               if (Get.isRegistered<BottomNavController>()) {
                                 Get.until((route) =>
-                                    route.settings.name == RoutePath.bottomNav ||
+                                    route.settings.name ==
+                                        RoutePath.bottomNav ||
                                     Get.currentRoute == RoutePath.bottomNav);
                                 Get.find<BottomNavController>().changeIndex(1);
                               } else {
@@ -194,8 +215,9 @@ class _RelatedProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final imageUrl = ApiUrl.buildImageUrl(
-        product.imageUrls?.isNotEmpty == true ? product.imageUrls!.first : null);
+    final imageUrl = ApiUrl.buildImageUrl(product.imageUrls?.isNotEmpty == true
+        ? product.imageUrls!.first
+        : null);
     final name = product.name ?? 'Unknown';
     final price = product.effectivePrice ?? product.discountedPrice ?? 0;
 
@@ -230,8 +252,8 @@ class _RelatedProductCard extends StatelessWidget {
                         ),
                       )
                     : const Center(
-                        child: Icon(Icons.image_not_supported,
-                            color: Colors.grey),
+                        child:
+                            Icon(Icons.image_not_supported, color: Colors.grey),
                       ),
               ),
             ),

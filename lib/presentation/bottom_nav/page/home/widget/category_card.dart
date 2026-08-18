@@ -26,36 +26,17 @@ class CategoryCard extends StatelessWidget {
         width: Dimensions.w(150),
         margin: EdgeInsets.only(right: Dimensions.w(15)),
         decoration: BoxDecoration(
-          color: const Color(0xFFF9F9F9),
+          color: Colors.white,
           borderRadius: BorderRadius.circular(Dimensions.r(15)),
-          border: Border.all(color: Colors.grey.withOpacity(0.1)),
+          border: Border.all(color: Colors.grey.withOpacity(0.2)),
         ),
         child: Stack(
           children: [
-            // Badge
-            Positioned(
-              top: Dimensions.h(10),
-              right: Dimensions.w(10),
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: Dimensions.w(6), vertical: Dimensions.h(2)),
-                decoration: BoxDecoration(
-                  color: AppColors.navBarColor,
-                  borderRadius: BorderRadius.circular(Dimensions.r(10)),
-                  border: Border.all(color: AppColors.primaryColor.withOpacity(0.3)),
-                ),
-                child: Text(
-                  items,
-                  style: TextStyle(
-                    color: AppColors.primaryColor,
-                    fontSize: Dimensions.fs(8),
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-            ),
+
             // Content
             Padding(
-              padding: EdgeInsets.all(Dimensions.w(10)),
+              padding: EdgeInsets.symmetric(
+                  horizontal: Dimensions.w(0), vertical: Dimensions.h(0)),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -65,40 +46,69 @@ class CategoryCard extends StatelessWidget {
                             ? Image.asset(
                                 imageUrl!,
                                 fit: BoxFit.contain,
-                                errorBuilder: (context, error, stackTrace) => const Icon(Icons.category, color: Colors.grey),
+                                errorBuilder: (context, error, stackTrace) =>
+                                    const Icon(Icons.category,
+                                        color: Colors.grey),
                               )
                             : Image.network(
                                 ApiUrl.buildImageUrl(imageUrl!),
                                 fit: BoxFit.contain,
-                                errorBuilder: (context, error, stackTrace) => const Icon(Icons.category, color: Colors.grey),
+                                errorBuilder: (context, error, stackTrace) =>
+                                    const Icon(Icons.category,
+                                        color: Colors.grey),
                               ))
-                        : const Icon(Icons.category, color: Colors.grey, size: 50),
+                        : const Icon(Icons.category,
+                            color: Colors.grey, size: 50),
                   ),
-                  Dimensions.gapH(10),
+                  Dimensions.gapH(15),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Container(
-                        width: Dimensions.w(10),
-                        height: 1,
-                        color: Colors.grey,
+                        width: Dimensions.w(15),
+                        height: 1.5,
+                        color: Colors.grey.shade600,
                       ),
-                      Dimensions.gapW(5),
+                      Dimensions.gapW(8),
                       Flexible(
                         child: Text(
                           name,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: AppTextStyles.bodyText.copyWith(
-                            fontSize: Dimensions.fs(12),
-                            fontWeight: FontWeight.w600,
+                            fontSize: Dimensions.fs(14),
+                            fontWeight: FontWeight.w700,
                             fontStyle: FontStyle.italic,
+                            color: Colors.grey.shade800,
                           ),
                         ),
                       ),
                     ],
                   ),
                 ],
+              ),
+            ),
+            // Badge
+            Positioned(
+              top: Dimensions.h(10),
+              right: Dimensions.w(10),
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                    horizontal: Dimensions.w(8), vertical: Dimensions.h(4)),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(Dimensions.r(20)),
+                  border: Border.all(color: AppColors.primaryColor, width: 1),
+                ),
+                child: Text(
+                  items,
+                  style: TextStyle(
+                    color: AppColors.primaryColor,
+                    fontSize: Dimensions.fs(10),
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ),
             ),
           ],

@@ -1,3 +1,4 @@
+import 'package:bestkits/core/routes/route_path.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -39,31 +40,37 @@ class CheckoutAddressSection extends StatelessWidget {
                   fontStyle: FontStyle.italic,
                 ),
               ),
-              Container(
-                padding:
-                const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF1A1A1A),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.location_on_outlined,
-                      color: AppColors.primaryColor,
-                      size: 14,
-                    ),
-                    const SizedBox(width: 5),
-                    Text(
-                      AppStrings.manageAddresses.tr,
-                      style: TextStyle(
+              GestureDetector(
+                onTap: () async {
+                  await Get.toNamed(RoutePath.myAddress);
+                  controller.fetchCheckoutSummary();
+                },
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF1A1A1A),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.location_on_outlined,
                         color: AppColors.primaryColor,
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
+                        size: 14,
                       ),
-                    ),
-                  ],
+                      const SizedBox(width: 5),
+                      Text(
+                        AppStrings.manageAddresses.tr,
+                        style: TextStyle(
+                          color: AppColors.primaryColor,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -127,15 +134,15 @@ class CheckoutAddressSection extends StatelessWidget {
                           ),
                           child: isSelected
                               ? Center(
-                            child: Container(
-                              width: 8,
-                              height: 8,
-                              decoration: const BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: AppColors.primaryColor,
-                              ),
-                            ),
-                          )
+                                  child: Container(
+                                    width: 8,
+                                    height: 8,
+                                    decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: AppColors.primaryColor,
+                                    ),
+                                  ),
+                                )
                               : null,
                         ),
 
@@ -144,8 +151,7 @@ class CheckoutAddressSection extends StatelessWidget {
                         /// Address Details
                         Expanded(
                           child: Column(
-                            crossAxisAlignment:
-                            CrossAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
                                 children: [
@@ -161,7 +167,6 @@ class CheckoutAddressSection extends StatelessWidget {
                                       ),
                                     ),
                                   ),
-
                                   if (address.addressName != null &&
                                       address.addressName!.isNotEmpty) ...[
                                     const SizedBox(width: 8),
@@ -186,9 +191,7 @@ class CheckoutAddressSection extends StatelessWidget {
                                   ],
                                 ],
                               ),
-
                               const SizedBox(height: 6),
-
                               Text(
                                 '${address.address ?? ''}, ${address.city ?? ''} ${address.postalCode ?? ''}, ${address.country ?? ''}',
                                 style: const TextStyle(

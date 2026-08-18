@@ -50,19 +50,19 @@ class ProductCard extends StatelessWidget {
                 children: [
                   Center(
                     child: Padding(
-                      padding: EdgeInsets.all(Dimensions.w(8)),
+                      padding: EdgeInsets.all(Dimensions.w(0)),
                       child: imageUrl.isNotEmpty
                           ? (imageUrl.contains('assets/')
                               ? Image.asset(
                                   product.imageUrls.first,
-                                  fit: BoxFit.contain,
+                                  fit: BoxFit.cover,
                                   errorBuilder: (_, __, ___) => const Icon(
                                       Icons.image_not_supported,
                                       color: Colors.grey),
                                 )
                               : Image.network(
                                   imageUrl,
-                                  fit: BoxFit.contain,
+                                  fit: BoxFit.cover,
                                   errorBuilder: (_, __, ___) => const Icon(
                                       Icons.image_not_supported,
                                       color: Colors.grey),
@@ -80,7 +80,7 @@ class ProductCard extends StatelessWidget {
                             horizontal: Dimensions.w(6),
                             vertical: Dimensions.h(2)),
                         decoration: BoxDecoration(
-                          color: AppColors.whiteColor.withValues(alpha: 0.5),
+                          color: AppColors.primaryColor.withValues(alpha: 0.1),
                           border: Border.all(
                               color: AppColors.primaryColor, width: 1),
                           borderRadius: BorderRadius.circular(Dimensions.r(20)),
@@ -151,15 +151,16 @@ class ProductCard extends StatelessWidget {
                       product.name,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: AppTextStyles.bodyText.copyWith(
-                        fontSize: Dimensions.fs(14),
-                        fontWeight: FontWeight.w700,
+                      style: AppTextStyles.h2.copyWith(
+                        fontSize: Dimensions.fs(16),
+                        fontWeight: FontWeight.w800,
                         fontStyle: FontStyle.italic,
+                        color: Colors.black87,
                       ),
                     ),
                     Container(
                       padding: EdgeInsets.symmetric(
-                          horizontal: Dimensions.w(8),
+                          horizontal: Dimensions.w(10),
                           vertical: Dimensions.h(3)),
                       decoration: BoxDecoration(
                         color: AppColors.primaryColor.withValues(alpha: 0.05),
@@ -175,8 +176,9 @@ class ProductCard extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           color: AppColors.primaryColor,
-                          fontSize: Dimensions.fs(10),
+                          fontSize: Dimensions.fs(11),
                           fontWeight: FontWeight.w500,
+                          fontStyle: FontStyle.italic,
                         ),
                       ),
                     ),
@@ -189,7 +191,7 @@ class ProductCard extends StatelessWidget {
                             child: Text(
                               product.formattedPrice,
                               style: AppTextStyles.h4.copyWith(
-                                fontSize: Dimensions.fs(16),
+                                fontSize: Dimensions.fs(20),
                                 fontWeight: FontWeight.w800,
                                 color: Colors.black,
                               ),
@@ -206,10 +208,10 @@ class ProductCard extends StatelessWidget {
                                 child: Text(
                                   product.formattedOriginalPrice,
                                   style: TextStyle(
-                                    fontSize: Dimensions.fs(11),
-                                    color: Colors.grey[500],
+                                    fontSize: Dimensions.fs(12),
+                                    color: Colors.grey.shade500,
                                     decoration: TextDecoration.lineThrough,
-                                    fontWeight: FontWeight.w500,
+                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
                               ),

@@ -1,3 +1,4 @@
+import 'package:bestkits/data/model/product_model.dart';
 import 'package:bestkits/presentation/cart/controller/cart_controller.dart';
 import 'package:bestkits/presentation/checkout/screen/checkout_screen.dart';
 import 'package:bestkits/presentation/my_address/controller/my_address_controller.dart';
@@ -39,15 +40,25 @@ class ShopDetailsController extends GetxController {
 
   final ApiClient _apiClient = ApiClient();
 
-  Future<void> fetchProductDetails(String id) async {
-    isLoading.value = true;
+  Future<void> fetchProductDetails(String id,
+      {ProductModel? seedProduct}) async {
+    // If we have a seed product, show it immediately so the screen isn't blank
+    // and if the detail fetch fails (e.g. 404 because it's sold), we still have this data.
+    if (seedProduct != null) {
+      productDetails.value = ShopDetailsData.fromProductModel(seedProduct);
+    }
+
+    // Only show loading if we don't have seed data
+    if (productDetails.value == null) {
+      isLoading.value = true;
+    }
     errorMessage.value = '';
     selectedImageIndex.value = 0;
 
     try {
       final response = await _apiClient.get(
         url: ApiUrl.detailsProduct(id),
-        isToken: true,
+        isToken: false,
       );
 
       if (response.statusCode == 200 &&
@@ -56,11 +67,16 @@ class ShopDetailsController extends GetxController {
         final dataJson = response.body['data'] as Map<String, dynamic>;
         productDetails.value = ShopDetailsData.fromJson(dataJson);
       } else {
-        errorMessage.value = response.body?['message']?.toString() ??
-            'Failed to load product (${response.statusCode})';
+        // Only set error if we don't have seed data to fall back on
+        if (productDetails.value == null) {
+          errorMessage.value = response.body?['message']?.toString() ??
+              'Failed to load product (${response.statusCode})';
+        }
       }
     } catch (e) {
-      errorMessage.value = 'Error: $e';
+      if (productDetails.value == null) {
+        errorMessage.value = 'Error: $e';
+      }
       debugPrint('Error fetching product details: $e');
     } finally {
       isLoading.value = false;
