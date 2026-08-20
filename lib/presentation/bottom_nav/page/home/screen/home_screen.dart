@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import '../../../../../core/responsive_layout/dimensions.dart';
 import '../../../../../utils/app_colors/app_colors.dart';
 import '../controller/home_controller.dart';
+import '../../../controller/bottom_nav_controller.dart';
 import '../widget/category_card.dart';
 import '../widget/home_banner.dart';
 import '../widget/home_header.dart';
@@ -105,7 +106,7 @@ class _HomeScreenState extends State<HomeScreen> {
               SectionTitle(
                 title: AppStrings.nowTrending.tr,
                 onTapViewAll: () {
-                  //  Get.toNamed(RoutePath.searchscreen);
+                  Get.find<BottomNavController>().changeIndex(1);
                 },
               ),
               Dimensions.gapH(15),
@@ -142,7 +143,7 @@ class _HomeScreenState extends State<HomeScreen> {
               SectionTitle(
                 title: AppStrings.recentlyViewed.tr,
                 onTapViewAll: () {
-                  //Get.toNamed(RoutePath.searchscreen);
+                  Get.find<BottomNavController>().changeIndex(1);
                 },
               ),
               Dimensions.gapH(15),
@@ -188,7 +189,7 @@ class _HomeScreenState extends State<HomeScreen> {
               SectionTitle(
                 title: AppStrings.newArrivals.tr,
                 onTapViewAll: () {
-                  //  Get.toNamed(RoutePath.searchscreen);
+                  Get.find<BottomNavController>().changeIndex(1);
                 },
               ),
               Dimensions.gapH(15),

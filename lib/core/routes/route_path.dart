@@ -44,6 +44,7 @@ class RoutePath {
   static const String customerOrderDetails = '/CustomerOrderDetails';
   static const String returnOrder = '/ReturnOrderScreen';
 
+  static const String shopPage = '/ShopScreen';
   static const String shopDetails = '/ShopDetailsScreen';
   static const String viewAllReview = '/ViewAllReviewScreen';
 
