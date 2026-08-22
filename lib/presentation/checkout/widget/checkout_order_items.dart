@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../service/api_url.dart';
+import 'package:bestkits/presentation/currency_preference/widget/currency_helper.dart';
 import '../../../../../utils/app_colors/app_colors.dart';
 import '../../../../../utils/static_strings/static_strings.dart';
 import '../controller/checkout_controller.dart';
@@ -48,7 +49,7 @@ class CheckoutOrderItems extends StatelessWidget {
                             fontStyle: FontStyle.italic),
                       ),
                       Text(
-                        '${AppStrings.totalAmount.tr} : €${subtotal.toStringAsFixed(2)}',
+                        '${AppStrings.totalAmount.tr} : ${CurrencyHelper.formatPrice(subtotal)}',
                         style: TextStyle(
                             fontSize: 11, color: AppColors.blackColor),
                       ),
@@ -123,7 +124,7 @@ class CheckoutOrderItems extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
-                                  'Unit Price: €${price.toStringAsFixed(2)}\nTotal: €${(price * quantity).toStringAsFixed(2)}',
+                                  'Unit Price: ${CurrencyHelper.formatPrice(price)}\nTotal: ${CurrencyHelper.formatPrice(price * quantity)}',
                                   style: const TextStyle(
                                       fontSize: 13,
                                       fontWeight: FontWeight.w800),
@@ -217,7 +218,7 @@ class CheckoutOrderItems extends StatelessWidget {
                                   ),
                                   const SizedBox(width: 8),
                                   Text(
-                                    '€${delivery.cost?.toStringAsFixed(2) ?? '0.00'}',
+                                    CurrencyHelper.formatPrice(delivery.cost ?? 0.00),
                                     style: const TextStyle(
                                       fontSize: 13,
                                       fontWeight: FontWeight.w800,

@@ -11,7 +11,6 @@ class SharePrefsHelper {
     _prefs ??= await SharedPreferences.getInstance();
   }
 
-
   static Future<void> clearPostCategory() async {
     await _prefs?.remove(SharePrefsKeys.postCategory);
   }
@@ -37,7 +36,7 @@ class SharePrefsHelper {
     if (value == null) return null;
 
     return AppRole.values.firstWhere(
-          (e) => e.name == value,
+      (e) => e.name == value,
       orElse: () => AppRole.CUSTOMER,
     );
   }
@@ -113,8 +112,8 @@ class SharePrefsHelper {
     final value = mode == ThemeMode.light
         ? 'light'
         : mode == ThemeMode.dark
-        ? 'dark'
-        : 'system';
+            ? 'dark'
+            : 'system';
 
     await _prefs?.setString(SharePrefsKeys.themeMode, value);
   }
@@ -145,7 +144,6 @@ class SharePrefsHelper {
     await _prefs?.clear();
   }
 
-
   // ================= FCM TOKEN =================
 
   static Future<void> saveFcmToken(String token) async {
@@ -155,13 +153,25 @@ class SharePrefsHelper {
   static String? getFcmToken() {
     return _prefs?.getString(SharePrefsKeys.fcmToken);
   }
+
   // ================= LOCAL NOTIFICATIONS =================
-  static Future<void> saveLocalNotifications(List<String> notificationsJsonList) async {
-    await _prefs?.setStringList('local_notifications_history', notificationsJsonList);
+  static Future<void> saveLocalNotifications(
+      List<String> notificationsJsonList) async {
+    await _prefs?.setStringList(
+        'local_notifications_history', notificationsJsonList);
   }
 
   static List<String> getLocalNotifications() {
     return _prefs?.getStringList('local_notifications_history') ?? [];
   }
 
+  // ================= CURRENCY =================
+
+  static Future<void> saveCurrency(String currencyCode) async {
+    await _prefs?.setString(SharePrefsKeys.currency, currencyCode);
+  }
+
+  static String? getCurrency() {
+    return _prefs?.getString(SharePrefsKeys.currency);
+  }
 }

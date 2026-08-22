@@ -111,6 +111,8 @@ class ApiUrl {
   static const String stripeOnboard = '$baseUrl/stripe/onboard'; //post method
   static const String stripeCheckOutSession =
       '$baseUrl/stripe/checkout-session'; //post method
+  static const String stripeBuyNowCheckOutSession =
+      '$baseUrl/stripe/buy-now-session'; //post method
   static const String stripeWebHook = '$baseUrl/stripe/webhook'; //post method
 
 //=================Delivery Options========================
@@ -122,11 +124,10 @@ class ApiUrl {
 
 //==================Home=====================
   static const String home = '$baseUrl/home'; //get method
-  static const String recentlyViewed = '$baseUrl/home/recently-viewed'; //get method
-  static const String homeFeatureCoupon = '$baseUrl/home/featured-coupon'; //get method
-
-
-
+  static const String recentlyViewed =
+      '$baseUrl/home/recently-viewed'; //get method
+  static const String homeFeatureCoupon =
+      '$baseUrl/home/featured-coupon'; //get method
 
   //========================================
   static const String getAccountAddress =

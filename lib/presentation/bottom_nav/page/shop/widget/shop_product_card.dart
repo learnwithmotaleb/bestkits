@@ -3,6 +3,7 @@ import '../../../../../utils/app_colors/app_colors.dart';
 import '../../../../../utils/app_text_style/app_text_style.dart';
 import 'package:get/get.dart';
 import 'package:bestkits/presentation/favorite/controller/favourite_controller.dart';
+import 'package:bestkits/widget/app_price_text.dart';
 
 import '../../sell/page/seller_product_details/screen/seller_product_details_screen.dart';
 
@@ -173,8 +174,8 @@ class ShopProductCard extends StatelessWidget {
                 // Price Row
                 Row(
                   children: [
-                    Text(
-                      '€${product['price']}',
+                    AppPriceText(
+                      price: product['price'],
                       style: AppTextStyles.h4.copyWith(
                         fontSize: 14,
                         fontWeight: FontWeight.w800,
@@ -182,8 +183,8 @@ class ShopProductCard extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 5),
-                    Text(
-                      product['oldPrice'],
+                    AppPriceText(
+                      price: product['oldPrice'].replaceAll(RegExp(r'[^0-9.]'), ''),
                       style: const TextStyle(
                         fontSize: 10,
                         color: Colors.grey,

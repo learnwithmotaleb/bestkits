@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../../../../../utils/app_colors/app_colors.dart';
 import '../../../../../utils/static_strings/static_strings.dart';
 
+import 'package:bestkits/presentation/currency_preference/widget/currency_helper.dart';
 import '../controller/checkout_controller.dart';
 
 class CheckoutPriceDetails extends StatelessWidget {
@@ -68,7 +69,7 @@ class CheckoutPriceDetails extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      '€${(price * quantity).toStringAsFixed(2)}',
+                      CurrencyHelper.formatPrice(price * quantity),
                       style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
                     ),
                   ],
@@ -80,15 +81,15 @@ class CheckoutPriceDetails extends StatelessWidget {
             const SizedBox(height: 12),
 
             // Subtotal
-            _row(AppStrings.subtotal.tr, null, '€${controller.subtotal.toStringAsFixed(2)}'),
+            _row(AppStrings.subtotal.tr, null, CurrencyHelper.formatPrice(controller.subtotal)),
             const SizedBox(height: 8),
-            _row(AppStrings.shippingFee.tr, 'x${groups.length}', '€${controller.shippingTotal.toStringAsFixed(2)}'),
+            _row(AppStrings.shippingFee.tr, 'x${groups.length}', CurrencyHelper.formatPrice(controller.shippingTotal)),
               if (controller.isCouponApplied.value) ...[
                 const SizedBox(height: 8),
                 _row(
                   'Discount',
                   controller.couponController.text.isNotEmpty ? '(${controller.couponController.text})' : null,
-                  '-€${controller.discountAmount.toStringAsFixed(2)}',
+                  '-${CurrencyHelper.formatPrice(controller.discountAmount)}',
                   isDiscount: true,
                 ),
               ],
@@ -102,7 +103,7 @@ class CheckoutPriceDetails extends StatelessWidget {
                 children: [
                   Text(AppStrings.total.tr, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800)),
                   Text(
-                    '€${controller.total.toStringAsFixed(2)}',
+                    CurrencyHelper.formatPrice(controller.total),
                     style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
                   ),
                 ],

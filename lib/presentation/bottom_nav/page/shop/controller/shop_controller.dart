@@ -181,7 +181,7 @@ class ShopController extends GetxController {
       final uri =
           Uri.parse(ApiUrl.getProducts).replace(queryParameters: queryParams);
 
-      final response = await apiClient.get(url: uri.toString());
+      final response = await apiClient.get(url: uri.toString(), isToken: true);
       if (response.statusCode == 200 &&
           response.body is Map &&
           response.body['data'] != null) {

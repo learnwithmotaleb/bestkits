@@ -11,4 +11,5 @@ class SharePrefsKeys {
   static const String stripeCardNumber = "stripe_card_number";
 
   static const String fcmToken = "fcm_token";
+  static const String currency = "app_currency";
 }

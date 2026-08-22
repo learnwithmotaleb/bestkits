@@ -42,7 +42,7 @@ class StripeConnectController extends GetxController {
 
     try {
       final response = await _apiClient.get(
-        url: ApiUrl.connectStripeAccountConnect,
+        url: ApiUrl.stripeStatus,
         isToken: true,
       );
 
@@ -58,9 +58,12 @@ class StripeConnectController extends GetxController {
         final model = StripeConnectModel.fromJson(body);
         if (model.success == true && model.data != null) {
           final data = model.data!;
-          if (data.accountId != null && data.accountId!.isNotEmpty) {
+          // Connected only when stripe_onboarding_complete is true
+          if (data.onboardingComplete == true) {
             connectionState.value = StripeConnectionState.connected;
-            cardNumber.value = data.accountId!;
+            if (data.accountId != null && data.accountId!.isNotEmpty) {
+              cardNumber.value = data.accountId!;
+            }
           } else {
             connectionState.value = StripeConnectionState.initial;
           }

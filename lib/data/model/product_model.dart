@@ -1,6 +1,7 @@
 // lib/data/model/product_model.dart
 
 import 'package:bestkits/service/api_url.dart';
+import 'package:bestkits/presentation/currency_preference/widget/currency_helper.dart';
 
 class ProductModel {
   final int id;
@@ -118,10 +119,10 @@ class ProductModel {
       imageUrls.map((url) => ApiUrl.buildImageUrl(url)).toList();
 
   /// Formatted effective price string.
-  String get formattedPrice => '€${effectivePrice.toStringAsFixed(2)}';
+  String get formattedPrice => CurrencyHelper.formatPrice(effectivePrice);
 
   /// Formatted original price string (for strikethrough).
-  String get formattedOriginalPrice => '€${originalPrice.toStringAsFixed(2)}';
+  String get formattedOriginalPrice => CurrencyHelper.formatPrice(originalPrice);
 
   /// Discount label, e.g. "17%" or null if no discount.
   String? get discountLabel =>

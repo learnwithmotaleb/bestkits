@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../../../utils/app_colors/app_colors.dart';
 import '../../../../../../../utils/app_text_style/app_text_style.dart';
+import 'package:bestkits/presentation/currency_preference/widget/currency_helper.dart';
 import '../controller/update_product_controller.dart';
 
 // ─── Status helpers ────────────────────────────────────────────────────────────
@@ -238,22 +239,24 @@ class ProductInfoSection extends StatelessWidget {
           Row(
             children: [
               Text(
-                '€$price',
-                style: AppTextStyles.h2.copyWith(
-                  fontSize: 24,
+                CurrencyHelper.formatPrice(price),
+                style: AppTextStyles.h4.copyWith(
+                  fontSize: 16,
                   fontWeight: FontWeight.w800,
+                  color: Colors.black,
                 ),
               ),
-              const SizedBox(width: 8),
-              if (oldPrice.isNotEmpty && oldPrice != '0' && oldPrice != '0.0')
+              if (oldPrice.isNotEmpty && oldPrice != '0' && oldPrice != '0.0' && oldPrice != price) ...[
+                const SizedBox(width: 8),
                 Text(
-                  '€$oldPrice',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey[400],
+                  CurrencyHelper.formatPrice(oldPrice),
+                  style:  TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey,
                     decoration: TextDecoration.lineThrough,
                   ),
                 ),
+              ],
               const SizedBox(width: 12),
               // Discount Badge
               if (discount.isNotEmpty && discount != '0%')

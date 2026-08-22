@@ -1,10 +1,9 @@
-import 'package:bestkits/utils/app_colors/app_colors.dart';
+import 'package:bestkits/widget/show_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../service/api_service.dart';
 import '../../../service/api_url.dart';
-import '../../../utils/static_strings/static_strings.dart';
-import '../../../widget/show_snackbar.dart';
+import '../../../helper/tost_message/show_snackbar.dart';
 import '../../../widget/open_url.dart';
 import '../../cart/controller/cart_controller.dart';
 import '../model/OrderSummaryModel.dart';
@@ -106,7 +105,7 @@ class CheckoutController extends GetxController {
         } else {
           final msg =
               body['message']?.toString() ?? "Failed to load checkout summary.";
-          ShowAppSnackBar.fail(msg);
+          AppSnackBar.fail(msg);
           Get.back();
         }
       } else {
@@ -114,11 +113,11 @@ class CheckoutController extends GetxController {
             response.statusText ??
             "Failed to load checkout summary.";
         final msg = raw is List ? raw.join(', ') : raw.toString();
-        ShowAppSnackBar.fail(msg);
+        AppSnackBar.fail(msg);
         Get.back();
       }
     } catch (e) {
-      ShowAppSnackBar.fail("Error fetching summary: $e");
+      AppSnackBar.fail("Error fetching summary: $e");
       Get.back();
     } finally {
       isLoading.value = false;
@@ -192,30 +191,44 @@ class CheckoutController extends GetxController {
 
   Future<void> placeOrder() async {
     if (!termsAgreed.value) {
-      ShowAppSnackBar.fail("Please accept terms and conditions");
+      AppSnackBar.fail("Please accept terms and conditions");
       return;
     }
 
     final addresses = orderSummary.value?.data?.addresses ?? [];
     if (addresses.isEmpty) {
-      ShowAppSnackBar.fail("Please select a delivery address");
+      AppSnackBar.fail("Please select a delivery address");
       return;
     }
 
     isSubmittingOrder.value = true;
     try {
       final address = addresses[selectedAddressIndex.value];
-      final sellerIds =
-          orderSummary.value?.data?.selectedSellerIds?.cast<int>() ?? [];
+      final sellerIds = (orderSummary.value?.data?.selectedSellerIds ?? [])
+          .map((e) => e.toInt())
+          .toList();
+      final cartItemIds = (orderSummary.value?.data?.selectedCartItemIds ?? [])
+          .map((e) => e.toInt())
+          .toList();
 
-      final body = {
+      final body = <String, dynamic>{
         "successUrl": "https://app.bestkid.com/checkout/success",
         "cancelUrl": "https://app.bestkid.com/checkout/cancel",
         "addressId": address.id,
-        if (isCouponApplied.value && couponController.text.isNotEmpty)
-          "couponCode": couponController.text.trim().toUpperCase(),
+        "shippingAddress": address.address ?? '',
+        "city": address.city ?? '',
+        "postalCode": address.postalCode ?? '',
+        "country": address.country ?? '',
+        "couponCode":
+            (isCouponApplied.value && couponController.text.isNotEmpty)
+                ? couponController.text.trim().toUpperCase()
+                : "",
         "acceptedTerms": termsAgreed.value,
       };
+
+      if (isBuyNow) {
+        body["productId"] = buyNowArgs?['productId'] ?? null;
+      }
 
       final response = await _apiClient.post(
         url: ApiUrl.stripeCheckOutSession,
@@ -231,54 +244,29 @@ class CheckoutController extends GetxController {
               data is Map ? data['url'] : (data is String ? data : null);
 
           if (checkoutUrl != null && checkoutUrl.isNotEmpty) {
+            // Open Stripe-hosted checkout page
             await openExternalUrl(checkoutUrl);
           } else {
-            Get.snackbar(
-              AppStrings.orderPlaced.tr,
-              AppStrings.orderPlacedSuccess.tr,
-              snackPosition: SnackPosition.TOP,
-              backgroundColor: const Color(0xFF1A1A1A),
-              colorText: AppColors.primaryColor,
-              borderRadius: 12,
-              margin: const EdgeInsets.all(16),
-              icon: Icon(Icons.check_circle, color: AppColors.primaryColor),
-            );
+            AppSnackBar.fail('Could not retrieve the checkout link.',
+                title: 'Error');
           }
-
-          cartController
-              .emptyCart(); // Clear the local cart after successful checkout
-          Get.offAllNamed(
-              '/home'); // Or whatever the appropriate back/success navigation is
         } else {
-          Get.snackbar(
-            'Error',
-            bodyData?['message'] ?? 'Checkout failed',
-            snackPosition: SnackPosition.TOP,
-            backgroundColor: Colors.red,
-            colorText: Colors.white,
-          );
+          final msg = bodyData?['message'];
+          final msgStr = msg is List
+              ? msg.join('\n')
+              : msg?.toString() ?? 'Checkout failed';
+          AppSnackBar.fail(msgStr, title: 'Error');
         }
       } else {
         final raw = response.body?['message'] ??
             response.statusText ??
             "Checkout failed";
         final msg = raw is List ? raw.join(', ') : raw.toString();
-        Get.snackbar(
-          'Error',
-          msg,
-          snackPosition: SnackPosition.TOP,
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-        );
+        AppSnackBar.fail(msg, title: 'Error');
       }
     } catch (e) {
-      Get.snackbar(
-        'Error',
-        'Something went wrong. Please try again.',
-        snackPosition: SnackPosition.TOP,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      AppSnackBar.fail('Something went wrong. Please try again.',
+          title: 'Error');
     } finally {
       isSubmittingOrder.value = false;
     }

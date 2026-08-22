@@ -4,20 +4,25 @@ import '../../../widget/app_alert.dart';
 import '../../../service/api_service.dart';
 import '../../../service/api_url.dart';
 import '../../../helper/tost_message/show_snackbar.dart';
+import '../../../helper/local_db/local_db.dart';
+import '../widget/currency_helper.dart';
 
 class CurrencyPreferenceController extends GetxController {
   final ApiClient _apiClient = ApiClient();
   final RxBool isLoading = false.obs;
 
-  final List<Map<String, String>> currencies = [
-    {'name': 'USD', 'symbol': '\$'},
-    {'name': 'EUR', 'symbol': '€'},
-    {'name': 'AED', 'symbol': 'د.إ'},
-    {'name': 'GBP', 'symbol': '£'},
-  ];
+  final List<Map<String, String>> currencies = CurrencyHelper.currencies;
 
   final RxString selectedCurrency = 'USD'.obs;
   String initialCurrency = 'USD';
+
+  @override
+  void onInit() {
+    super.onInit();
+    final savedCurrency = SharePrefsHelper.getCurrency() ?? 'USD';
+    initialCurrency = savedCurrency;
+    selectedCurrency.value = savedCurrency;
+  }
 
   void selectCurrency(String currency) {
     selectedCurrency.value = currency;
@@ -51,6 +56,7 @@ class CurrencyPreferenceController extends GetxController {
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       initialCurrency = selectedCurrency.value;
+      await SharePrefsHelper.saveCurrency(selectedCurrency.value);
       Get.back();
       AppSnackBar.success(AppStrings.currencyUpdatedSuccess.tr);
     } else {

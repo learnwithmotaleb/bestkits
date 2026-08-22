@@ -5,6 +5,8 @@ import '../../../../../../../utils/app_icons/app_icons.dart';
 import '../../../../../../../core/responsive_layout/dimensions.dart';
 import '../../../../../../../utils/app_colors/app_colors.dart';
 import 'package:get/get.dart';
+import 'package:bestkits/presentation/bottom_nav/page/sell/page/update_product/controller/update_product_controller.dart';
+import 'package:bestkits/presentation/currency_preference/widget/currency_helper.dart';
 import 'package:bestkits/presentation/favorite/controller/favourite_controller.dart';
 import 'package:bestkits/data/model/product_model.dart';
 import '../../../model/SellerMyModel.dart' as sellerModel;
@@ -255,7 +257,7 @@ class UpdateProductCard extends StatelessWidget {
                           child: FittedBox(
                             fit: BoxFit.scaleDown,
                             child: Text(
-                              '\$$price',
+                              CurrencyHelper.formatPrice(price),
                               style: AppTextStyles.h4.copyWith(
                                 fontSize: Dimensions.fs(16),
                                 fontWeight: FontWeight.w800,
@@ -272,7 +274,7 @@ class UpdateProductCard extends StatelessWidget {
                               child: Padding(
                                 padding: const EdgeInsets.only(bottom: 2),
                                 child: Text(
-                                  '\$$oldPrice',
+                                  CurrencyHelper.formatPrice(oldPrice),
                                   style: TextStyle(
                                     fontSize: Dimensions.fs(11),
                                     color: Colors.grey[500],

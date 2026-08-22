@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../../../core/responsive_layout/dimensions.dart';
 import '../../../../../../../utils/app_colors/app_colors.dart';
@@ -6,6 +6,7 @@ import '../../../../../../../utils/app_text_style/app_text_style.dart';
 import '../../../../../../../utils/static_strings/static_strings.dart';
 import '../../../../../../../widget/app_alert.dart';
 import '../../../../../../../widget/custom_appbar.dart';
+import 'package:bestkits/presentation/currency_preference/widget/currency_helper.dart';
 import '../controller/product_order_controller.dart';
 import '../model/ProductOrderModel.dart';
 
@@ -776,7 +777,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                 ),
                 Dimensions.gapH(5),
                 Text(
-                  '\$${item.price ?? 0}.00',
+                  CurrencyHelper.formatPrice(item.price ?? 0),
                   style: TextStyle(
                     fontSize: Dimensions.fs(13),
                     fontWeight: FontWeight.w800,

@@ -3,6 +3,7 @@ import 'package:bestkits/utils/app_colors/app_colors.dart';
 import 'package:bestkits/utils/app_text_style/app_text_style.dart';
 import 'package:bestkits/utils/static_strings/static_strings.dart';
 import 'package:bestkits/presentation/bottom_nav/page/shop/page/shop_details/model/shop_details_model.dart';
+import 'package:bestkits/widget/app_price_text.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 
 // ─── Status Helpers ────────────────────────────────────────────────────────────
@@ -247,8 +248,8 @@ class ShopProductInfoSection extends StatelessWidget {
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(
-              '\$$effectivePrice',
+            AppPriceText(
+              price: effectivePrice,
               style: AppTextStyles.h2.copyWith(
                 fontSize: 24,
                 fontWeight: FontWeight.w800,
@@ -256,8 +257,8 @@ class ShopProductInfoSection extends StatelessWidget {
             ),
             if (hasDiscount) ...[
               const SizedBox(width: 8),
-              Text(
-                '\$$originalPrice',
+              AppPriceText(
+                price: originalPrice,
                 style: TextStyle(
                   fontSize: 13,
                   color: Colors.grey[400],
