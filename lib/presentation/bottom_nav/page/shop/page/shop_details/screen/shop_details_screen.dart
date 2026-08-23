@@ -224,7 +224,7 @@ class _RelatedProductCard extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        Get.toNamed(
+        Get.offNamed(
           RoutePath.shopDetails,
           preventDuplicates: false,
           arguments: {

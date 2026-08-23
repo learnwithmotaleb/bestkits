@@ -209,138 +209,140 @@ class _HomeBannerState extends State<HomeBanner> {
                 horizontal: Dimensions.w(16),
                 vertical: Dimensions.h(16),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // Category pill
-                  if (categoryName.isNotEmpty)
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: Dimensions.w(10),
-                        vertical: Dimensions.h(4),
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.transparent,
-                        borderRadius: BorderRadius.circular(Dimensions.r(20)),
-                        border: Border.all(
-                          color: AppColors.primaryColor,
-                          width: 1,
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // Category pill
+                    if (categoryName.isNotEmpty)
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: Dimensions.w(10),
+                          vertical: Dimensions.h(4),
                         ),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            width: 5,
-                            height: 5,
-                            decoration: const BoxDecoration(
-                              color: AppColors.primaryColor,
-                              shape: BoxShape.circle,
-                            ),
+                        decoration: BoxDecoration(
+                          color: Colors.transparent,
+                          borderRadius: BorderRadius.circular(Dimensions.r(20)),
+                          border: Border.all(
+                            color: AppColors.primaryColor,
+                            width: 1,
                           ),
-                          const SizedBox(width: 6),
-                          Flexible(
-                            child: Text(
-                              categoryName,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              width: 5,
+                              height: 5,
+                              decoration: const BoxDecoration(
                                 color: AppColors.primaryColor,
-                                fontSize: Dimensions.fs(11),
-                                fontWeight: FontWeight.w400,
-                                fontStyle: FontStyle.italic,
+                                shape: BoxShape.circle,
                               ),
                             ),
-                          ),
-                        ],
+                            const SizedBox(width: 6),
+                            Flexible(
+                              child: Text(
+                                categoryName,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  color: AppColors.primaryColor,
+                                  fontSize: Dimensions.fs(11),
+                                  fontWeight: FontWeight.w400,
+                                  fontStyle: FontStyle.italic,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  Dimensions.gapH(8),
-
-                  // "Get X% OFF" title
-                  RichText(
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: prefix,
-                          style: AppTextStyles.h2.copyWith(
-                            fontSize: Dimensions.fs(20),
-                            color: Colors.black,
-                            fontWeight: FontWeight.w800,
-                            fontStyle: FontStyle.italic,
-                          ),
-                        ),
-                        TextSpan(
-                          text: discount,
-                          style: AppTextStyles.h2.copyWith(
-                            fontSize: Dimensions.fs(20),
-                            color: AppColors.primaryColor,
-                            fontWeight: FontWeight.w800,
-                            fontStyle: FontStyle.italic,
-                          ),
-                        ),
-                        TextSpan(
-                          text: ' OFF',
-                          style: AppTextStyles.h2.copyWith(
-                            fontSize: Dimensions.fs(20),
-                            color: Colors.black,
-                            fontWeight: FontWeight.w800,
-                            fontStyle: FontStyle.italic,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  Dimensions.gapH(6),
-
-                  // "Use Code: KIDS10"
-                  if (code.isNotEmpty)
+                    Dimensions.gapH(8),
+                
+                    // "Get X% OFF" title
                     RichText(
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       text: TextSpan(
                         children: [
                           TextSpan(
-                            text: 'Use Code: ',
-                            style: TextStyle(
-                              fontSize: Dimensions.fs(13),
-                              color: Colors.grey.shade700,
-                              fontWeight: FontWeight.w400,
+                            text: prefix,
+                            style: AppTextStyles.h2.copyWith(
+                              fontSize: Dimensions.fs(20),
+                              color: Colors.black,
+                              fontWeight: FontWeight.w800,
+                              fontStyle: FontStyle.italic,
                             ),
                           ),
                           TextSpan(
-                            text: code,
-                            style: TextStyle(
-                              fontSize: Dimensions.fs(13),
+                            text: discount,
+                            style: AppTextStyles.h2.copyWith(
+                              fontSize: Dimensions.fs(20),
+                              color: AppColors.primaryColor,
+                              fontWeight: FontWeight.w800,
+                              fontStyle: FontStyle.italic,
+                            ),
+                          ),
+                          TextSpan(
+                            text: ' OFF',
+                            style: AppTextStyles.h2.copyWith(
+                              fontSize: Dimensions.fs(20),
                               color: Colors.black,
-                              fontWeight: FontWeight.w700,
+                              fontWeight: FontWeight.w800,
                               fontStyle: FontStyle.italic,
                             ),
                           ),
                         ],
                       ),
                     ),
-
-                  Dimensions.gapH(6),
-
-                  // Description
-                  if (campaignReason.isNotEmpty)
-                    Text(
-                      'Enjoy exclusive savings on all $categoryName items. Offer valid for a limited time. Apply the coupon code at checkout.',
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: Dimensions.fs(9),
-                        color: Colors.grey.shade500,
-                        fontStyle: FontStyle.italic,
-                        height: 1.3,
+                
+                    Dimensions.gapH(6),
+                
+                    // "Use Code: KIDS10"
+                    if (code.isNotEmpty)
+                      RichText(
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: 'Use Code: ',
+                              style: TextStyle(
+                                fontSize: Dimensions.fs(13),
+                                color: Colors.grey.shade700,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                            TextSpan(
+                              text: code,
+                              style: TextStyle(
+                                fontSize: Dimensions.fs(13),
+                                color: Colors.black,
+                                fontWeight: FontWeight.w700,
+                                fontStyle: FontStyle.italic,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                ],
+                
+                    Dimensions.gapH(6),
+                
+                    // Description
+                    if (campaignReason.isNotEmpty)
+                      Text(
+                        'Enjoy exclusive savings on all $categoryName items. Offer valid for a limited time. Apply the coupon code at checkout.',
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: Dimensions.fs(9),
+                          color: Colors.grey.shade500,
+                          fontStyle: FontStyle.italic,
+                          height: 1.3,
+                        ),
+                      ),
+                  ],
+                ),
               ),
             ),
           ),
