@@ -18,8 +18,8 @@ class StripeConnectProfileScreen extends StatefulWidget {
       _StripeConnectProfileScreenState();
 }
 
-class _StripeConnectProfileScreenState
-    extends State<StripeConnectProfileScreen> with WidgetsBindingObserver {
+class _StripeConnectProfileScreenState extends State<StripeConnectProfileScreen>
+    with WidgetsBindingObserver {
   late final StripeConnectController controller;
 
   @override
@@ -123,8 +123,7 @@ class _StripeConnectProfileScreenState
               decoration: BoxDecoration(
                 color: AppColors.whiteColor,
                 borderRadius: BorderRadius.circular(Dimensions.r(16)),
-                border:
-                    Border.all(color: AppColors.greyColor.withOpacity(0.2)),
+                border: Border.all(color: AppColors.greyColor.withOpacity(0.2)),
                 boxShadow: [
                   BoxShadow(
                     color: AppColors.greyColor.withOpacity(0.05),
@@ -189,26 +188,6 @@ class _StripeConnectProfileScreenState
                       ],
                     ),
                   ),
-
-                  // Edit button
-                  GestureDetector(
-                    onTap: () => _showEditBottomSheet(context),
-                    child: Container(
-                      height: Dimensions.w(36),
-                      width: Dimensions.w(36),
-                      decoration: const BoxDecoration(
-                        color: AppColors.blackColor,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Center(
-                        child: Icon(
-                          Icons.edit,
-                          color: AppColors.primaryColor,
-                          size: Dimensions.icon(16),
-                        ),
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),
@@ -241,8 +220,7 @@ class _StripeConnectProfileScreenState
               // Stripe "S" logo
               Container(
                 padding: EdgeInsets.symmetric(
-                    horizontal: Dimensions.w(16),
-                    vertical: Dimensions.w(10)),
+                    horizontal: Dimensions.w(16), vertical: Dimensions.w(10)),
                 decoration: BoxDecoration(
                   color: AppColors.primaryColor,
                   borderRadius: BorderRadius.circular(16),
@@ -272,21 +250,21 @@ class _StripeConnectProfileScreenState
               // Subtitle
               Text(
                 AppStrings.connectStripeSubtitle.tr,
-                style:
-                    AppTextStyles.body.copyWith(color: AppColors.greyColor),
+                style: AppTextStyles.body.copyWith(color: AppColors.greyColor),
               ),
               SizedBox(height: Dimensions.h(32)),
 
               // Feature list
-              _buildFeatureTile(Icons.security_outlined,
+              _buildFeatureTile(
+                  Icons.security_outlined,
                   AppStrings.securePayments.tr,
                   AppStrings.securePaymentsSubtitle.tr),
-              _buildFeatureTile(Icons.account_balance_outlined,
+              _buildFeatureTile(
+                  Icons.account_balance_outlined,
                   AppStrings.directBankPayouts.tr,
                   AppStrings.directBankPayoutsSubtitle.tr),
               _buildFeatureTile(Icons.offline_bolt_outlined,
-                  AppStrings.fastSetup.tr,
-                  AppStrings.fastSetupSubtitle.tr),
+                  AppStrings.fastSetup.tr, AppStrings.fastSetupSubtitle.tr),
 
               SizedBox(height: Dimensions.h(16)),
 
@@ -296,15 +274,13 @@ class _StripeConnectProfileScreenState
                 decoration: BoxDecoration(
                   color: AppColors.whiteColor,
                   borderRadius: BorderRadius.circular(12),
-                  border:
-                      Border.all(color: Colors.green.shade300, width: 1.5),
+                  border: Border.all(color: Colors.green.shade300, width: 1.5),
                 ),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Icon(Icons.info_outline,
-                        color: Colors.green.shade400,
-                        size: Dimensions.w(20)),
+                        color: Colors.green.shade400, size: Dimensions.w(20)),
                     SizedBox(width: Dimensions.w(12)),
                     Expanded(
                       child: Column(
@@ -374,13 +350,12 @@ class _StripeConnectProfileScreenState
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(Icons.pending_actions,
-                          color: Colors.orange,
-                          size: Dimensions.w(20)),
+                          color: Colors.orange, size: Dimensions.w(20)),
                       SizedBox(width: Dimensions.w(8)),
                       Text(
                         'Onboarding Started',
-                        style: AppTextStyles.button
-                            .copyWith(color: Colors.orange),
+                        style:
+                            AppTextStyles.button.copyWith(color: Colors.orange),
                       ),
                     ],
                   ),
@@ -464,8 +439,8 @@ class _StripeConnectProfileScreenState
               color: AppColors.blackColor,
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(icon, color: AppColors.primaryColor,
-                size: Dimensions.w(24)),
+            child: Icon(icon,
+                color: AppColors.primaryColor, size: Dimensions.w(24)),
           ),
           SizedBox(width: Dimensions.w(16)),
           Expanded(
@@ -485,66 +460,6 @@ class _StripeConnectProfileScreenState
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  void _showEditBottomSheet(BuildContext context) {
-    final TextEditingController cardController =
-        TextEditingController(text: controller.cardNumber.value);
-
-    AppBottomSheet(
-      child: Padding(
-        padding: EdgeInsets.only(
-          left: Dimensions.w(20),
-          right: Dimensions.w(20),
-          bottom:
-              MediaQuery.of(context).viewInsets.bottom + Dimensions.h(20),
-          top: Dimensions.h(20),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Container(
-                width: Dimensions.w(40),
-                height: Dimensions.h(4),
-                decoration: BoxDecoration(
-                  color: AppColors.greyColor.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(Dimensions.r(2)),
-                ),
-              ),
-            ),
-            SizedBox(height: Dimensions.h(20)),
-            Text(
-              'Edit Card Number',
-              style: TextStyle(
-                fontFamily: 'Nunito',
-                fontSize: Dimensions.fs(18),
-                fontWeight: FontWeight.bold,
-                color: AppColors.blackColor,
-              ),
-            ),
-            SizedBox(height: Dimensions.h(20)),
-            AppTextField(
-              controller: cardController,
-              label: 'Card Number',
-              hint: 'Enter card number',
-              keyboardType: TextInputType.number,
-            ),
-            SizedBox(height: Dimensions.h(30)),
-            AppButton(
-              label: 'Save',
-              onPressed: () {
-                if (cardController.text.isNotEmpty) {
-                  controller.saveCardNumber(cardController.text);
-                  Get.back();
-                }
-              },
-            ),
-          ],
-        ),
       ),
     );
   }
