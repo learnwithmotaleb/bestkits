@@ -26,6 +26,8 @@ import 'package:bestkits/presentation/bottom_nav/page/sell/page/add_product/cont
 import 'package:bestkits/presentation/bottom_nav/page/sell/screen/sell_screen.dart';
 import 'package:bestkits/presentation/bottom_nav/page/shop/page/shop_details/controller/shop_details_controller.dart';
 import 'package:bestkits/presentation/bottom_nav/page/shop/page/shop_details/screen/shop_details_screen.dart';
+import 'package:bestkits/presentation/delivery_options/page/add_delivery_option/controller/add_delivery_option_controller.dart';
+import 'package:bestkits/presentation/delivery_options/page/add_delivery_option/screen/add_delivery_option_screen.dart';
 import 'package:bestkits/presentation/view_all_review/controller/view_all_review_controller.dart';
 import 'package:bestkits/presentation/view_all_review/screen/view_all_review_screen.dart';
 import 'package:bestkits/presentation/bottom_nav/screen/bottom_nav_screen.dart';
@@ -454,6 +456,15 @@ class AppRouter {
     GetPage(
       name: RoutePath.stripeWebview,
       page: () => const StripeWebPageLoadScreen(),
+      transition: Transition.rightToLeft,
+    ),
+
+    GetPage(
+      name: RoutePath.addDeliveryOption,
+      page: () => const AddDeliveryOptionScreen(),
+      binding: BindingsBuilder(() {
+        Get.put(AddDeliveryOptionController());
+      }),
       transition: Transition.rightToLeft,
     ),
   ];

@@ -15,6 +15,7 @@ import '../widget/shop_tabs_section.dart';
 import 'package:bestkits/data/model/product_model.dart';
 import 'package:bestkits/service/api_url.dart';
 import 'package:bestkits/presentation/favorite/controller/favourite_controller.dart';
+import 'package:bestkits/presentation/currency_preference/widget/currency_helper.dart';
 
 class ShopDetailsScreen extends StatefulWidget {
   const ShopDetailsScreen({super.key});
@@ -224,8 +225,12 @@ class _RelatedProductCard extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Get.toNamed(
-          '/shop-details',
-          arguments: {'productId': product.id?.toString() ?? ''},
+          RoutePath.shopDetails,
+          preventDuplicates: false,
+          arguments: {
+            'productId': product.id?.toString() ?? '',
+            'productModel': product,
+          },
         );
       },
       child: Container(
@@ -273,7 +278,7 @@ class _RelatedProductCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    '\$$price',
+                    CurrencyHelper.formatPrice(price),
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w800,

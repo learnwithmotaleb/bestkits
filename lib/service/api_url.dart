@@ -116,11 +116,10 @@ class ApiUrl {
   static const String stripeWebHook = '$baseUrl/stripe/webhook'; //post method
 
 //=================Delivery Options========================
-  static const String deliveryMeInternation =
-      '$baseUrl/delivery/me/international'; //put method
-  static const String deliveryMeDomestic =
-      '$baseUrl/delivery/me/domestic'; //put method
+  static const String deliveryMeInternation = '$baseUrl/delivery/me/international'; //put method
+  static const String deliveryMeDomestic = '$baseUrl/delivery/me/domestic'; //put method
   static const String deliveryGetAll = '$baseUrl/delivery/me'; //get method
+  static const String addDeliveryOption = '$baseUrl/delivery/me'; //Put method
 
 //==================Home=====================
   static const String home = '$baseUrl/home'; //get method

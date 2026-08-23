@@ -455,7 +455,7 @@ Map<String, String> bulgarian = {
   AppStrings.enterDeliveryPartner:
       "Въведете партньор за доставка (напр. местен куриер)",
   AppStrings.deliveryCost: "Цена за доставка",
-  AppStrings.deliveryCostEuro: "Цена за доставка (€)",
+  AppStrings.deliveryCostEuro: "Цена за доставка",
   AppStrings.enterDeliveryCost: "Въведете цена за доставка",
   AppStrings.estimatedDeliveryTime: "Очаквано време за доставка",
   AppStrings.eg24BusinessDays: "напр. 2-4 работни дни",
@@ -682,7 +682,7 @@ Map<String, String> bulgarian = {
   AppStrings.enterDeliveryPartner:
       "Въведете партньор за доставка (напр. местен куриер)",
   AppStrings.deliveryCost: "Цена за доставка",
-  AppStrings.deliveryCostEuro: "Цена за доставка (€)",
+  AppStrings.deliveryCostEuro: "Цена за доставка",
   AppStrings.enterDeliveryCost: "Въведете цена за доставка",
   AppStrings.estimatedDeliveryTime: "Очаквано време за доставка",
   AppStrings.eg24BusinessDays: "напр. 2-4 работни дни",
@@ -887,4 +887,19 @@ Map<String, String> bulgarian = {
   AppStrings.basicSeller: "Основен продавач",
   AppStrings.professionalSellerTier: "Професионален продавач",
   AppStrings.premiumSellerTier: "Премиум продавач",
+
+  // Add Delivery Option
+  AppStrings.addDeliveryOption: "Добавяне на опция за доставка",
+  AppStrings.addDeliveryOptionInfoBanner:
+      "Задайте вашите вътрешни и международни данни за доставка. Те важат за всички ваши продукти.",
+  AppStrings.saveDeliveryOptionAlertTitle: "Запазване на опциите за доставка?",
+  AppStrings.saveDeliveryOptionAlertSubtitle:
+      "Сигурни ли сте, че искате да запазите информацията за опцията за доставка?",
+  AppStrings.deliveryOptionSavedSuccess:
+      "Опциите за доставка са запазени успешно!",
+  AppStrings.deliveryPartnerHint: "напр. Български пощи, FedEx",
+  AppStrings.deliveryCostHint: "напр. 4.99",
+  AppStrings.minDaysHint: "Мин. (напр. 2)",
+  AppStrings.maxDaysHint: "Макс. (напр. 4)",
+  AppStrings.estimatedDeliveryDays: "Приблизителни дни за доставка",
 };

@@ -405,7 +405,7 @@ Map<String, String> english = {
   AppStrings.makeChangesDeliveryOptions: "Make changes to your delivery options below",
   AppStrings.enterDeliveryPartner: "Enter delivery partner (e.g. Local courier)",
   AppStrings.deliveryCost: "Delivery Cost",
-  AppStrings.deliveryCostEuro: "Delivery Cost (€)",
+  AppStrings.deliveryCostEuro: "Delivery Cost",
   AppStrings.enterDeliveryCost: "Enter delivery cost",
   AppStrings.estimatedDeliveryTime: "Estimated Delivery Time",
   AppStrings.eg24BusinessDays: "e.g. 2-4 business days",
@@ -581,5 +581,19 @@ Map<String, String> english = {
   AppStrings.basicSeller: "Basic Seller",
   AppStrings.professionalSellerTier: "Professional Seller",
   AppStrings.premiumSellerTier: "Premium Seller",
+
+  // Add Delivery Option
+  AppStrings.addDeliveryOption: "Add Delivery Option",
+  AppStrings.addDeliveryOptionInfoBanner:
+      "Set your domestic and international delivery details. These apply to all your products.",
+  AppStrings.saveDeliveryOptionAlertTitle: "Save Delivery Options?",
+  AppStrings.saveDeliveryOptionAlertSubtitle:
+      "Are you sure you want to save your Product Delivery Option information?",
+  AppStrings.deliveryOptionSavedSuccess: "Delivery options saved successfully!",
+  AppStrings.deliveryPartnerHint: "e.g. Bulgarian Post, FedEx",
+  AppStrings.deliveryCostHint: "e.g. 4.99",
+  AppStrings.minDaysHint: "Min (e.g. 2)",
+  AppStrings.maxDaysHint: "Max (e.g. 4)",
+  AppStrings.estimatedDeliveryDays: "Estimated Delivery Days",
 };
 

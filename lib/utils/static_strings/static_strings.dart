@@ -496,7 +496,7 @@ class AppStrings {
   static const String enterDeliveryPartner =
       "Enter delivery partner (e.g. Local courier)";
   static const String deliveryCost = "Delivery Cost";
-  static const String deliveryCostEuro = "Delivery Cost (€)";
+  static const String deliveryCostEuro = "Delivery Cost";
   static const String enterDeliveryCost = "Enter delivery cost";
   static const String estimatedDeliveryTime = "Estimated Delivery Time";
   static const String eg24BusinessDays = "e.g. 2-4 business days";
@@ -686,4 +686,19 @@ class AppStrings {
   static const String noReturnOrdersFound = "No Return Orders Found";
   static const String returnOrdersTitle = "Return Orders";
   static const String sellerProfile = "Seller Profile";
+
+  // Add Delivery Option
+  static const String addDeliveryOption = "Add Delivery Option";
+  static const String addDeliveryOptionInfoBanner =
+      "Set your domestic and international delivery details. These apply to all your products.";
+  static const String saveDeliveryOptionAlertTitle = "Save Delivery Options?";
+  static const String saveDeliveryOptionAlertSubtitle =
+      "Are you sure you want to save your Product Delivery Option information?";
+  static const String deliveryOptionSavedSuccess =
+      "Delivery options saved successfully!";
+  static const String deliveryPartnerHint = "e.g. Bulgarian Post, FedEx";
+  static const String deliveryCostHint = "e.g. 4.99";
+  static const String minDaysHint = "Min (e.g. 2)";
+  static const String maxDaysHint = "Max (e.g. 4)";
+  static const String estimatedDeliveryDays = "Estimated Delivery Days";
 }

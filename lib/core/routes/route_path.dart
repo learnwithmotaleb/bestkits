@@ -51,4 +51,5 @@ class RoutePath {
   static const String earning = '/EarningScreen';
   static const String deliveryOption = '/DeliveryOptionsScreen';
   static const String stripeWebview = '/StripeWebviewScreen';
+  static const String addDeliveryOption = '/AddDeliveryOptionScreen';
 }

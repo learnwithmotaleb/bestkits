@@ -58,7 +58,7 @@ class ShopDetailsController extends GetxController {
     try {
       final response = await _apiClient.get(
         url: ApiUrl.detailsProduct(id),
-        isToken: false,
+        isToken: true,
       );
 
       if (response.statusCode == 200 &&

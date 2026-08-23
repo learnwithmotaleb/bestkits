@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../core/responsive_layout/dimensions.dart';
+import '../../../core/routes/route_path.dart';
 import '../../../utils/app_colors/app_colors.dart';
 import '../../../utils/app_text_style/app_text_style.dart';
 import '../../../widget/app_alert.dart';
@@ -236,6 +237,18 @@ class _DeliveryOptionsScreenState extends State<DeliveryOptionsScreen> {
           },
         );
       }),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          final result =
+              await Get.toNamed(RoutePath.addDeliveryOption);
+          if (result == true) {
+            _ctrl.fetchDeliveryOptions();
+          }
+        },
+        backgroundColor: const Color(0xFF1A1A1A),
+        shape: const CircleBorder(),
+        child: Icon(Icons.add, color: AppColors.primaryColor),
+      ),
     );
   }
 }

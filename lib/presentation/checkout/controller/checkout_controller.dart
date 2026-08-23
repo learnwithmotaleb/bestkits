@@ -142,9 +142,38 @@ class CheckoutController extends GetxController {
     couponSuccess.value = '';
 
     try {
+      // Build the address info from the currently selected address
+      final addresses = orderSummary.value?.data?.addresses ?? [];
+      final address =
+          addresses.isNotEmpty ? addresses[selectedAddressIndex.value] : null;
+      final addressId = address?.id?.toInt() ?? 0;
+      final country = address?.country ?? '';
+
+      final Map<String, dynamic> body = {
+        "couponCode": code,
+        "addressId": addressId,
+        "country": country,
+      };
+
+      if (isBuyNow) {
+        // Direct "Buy Now" flow — send productId only (no sellerIds / cartItemIds)
+        body["productId"] = buyNowArgs?['productId'] ?? 0;
+      } else {
+        // Cart flow — send sellerIds + cartItemIds (no productId)
+        final sellerIds = (orderSummary.value?.data?.selectedSellerIds ?? [])
+            .map((e) => e.toInt())
+            .toList();
+        final cartItemIds =
+            (orderSummary.value?.data?.selectedCartItemIds ?? [])
+                .map((e) => e.toInt())
+                .toList();
+        body["sellerIds"] = sellerIds;
+        body["cartItemIds"] = cartItemIds;
+      }
+
       final response = await _apiClient.post(
         url: ApiUrl.applyCouponCode,
-        body: {"couponCode": code},
+        body: body,
         isToken: true,
       );
 
