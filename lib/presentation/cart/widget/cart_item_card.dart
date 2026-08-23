@@ -6,6 +6,7 @@ import '../../../../../utils/app_colors/app_colors.dart';
 import '../../../../../utils/app_text_style/app_text_style.dart';
 import '../controller/cart_controller.dart';
 import '../model/CartModel.dart';
+import 'package:bestkits/presentation/currency_preference/widget/currency_helper.dart';
 
 class CartItemCard extends StatelessWidget {
   final Items item;
@@ -111,7 +112,7 @@ class CartItemCard extends StatelessWidget {
           Row(
             children: [
               Text(
-                '€${item.price ?? 0}',
+                CurrencyHelper.formatPrice(item.price ?? 0),
                 style: AppTextStyles.h3.copyWith(
                   fontSize: 20,
                   fontWeight: FontWeight.w800,
