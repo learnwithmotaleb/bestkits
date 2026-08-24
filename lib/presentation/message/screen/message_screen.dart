@@ -114,7 +114,11 @@ class _MessageScreenState extends State<MessageScreen> {
                     final chat = items[index];
                     final isUnread = chat.isUnread;
                     return GestureDetector(
-                      onTap: () => Get.to(() => ChatScreen(chatSummary: chat)),
+                      onTap: () async {
+                        controller.markAsReadLocally(chat.id);
+                        await Get.to(() => ChatScreen(chatSummary: chat));
+                        controller.fetchChatRooms(showLoader: false);
+                      },
                       child: Container(
                         margin: EdgeInsets.only(bottom: Dimensions.h(12)),
                         padding: EdgeInsets.all(Dimensions.w(16)),
