@@ -40,8 +40,10 @@ class MessageController extends GetxController {
     fetchChatRooms();
   }
 
-  Future<void> fetchChatRooms() async {
-    isLoading.value = true;
+  Future<void> fetchChatRooms({bool showLoader = true}) async {
+    if (showLoader) {
+      isLoading.value = true;
+    }
     try {
       final response = await _apiClient.get(
         url: ApiUrl.listChatRoom,
@@ -60,7 +62,26 @@ class MessageController extends GetxController {
     } catch (e) {
       debugPrint("Failed to load chat rooms: $e");
     } finally {
-      isLoading.value = false;
+      if (showLoader) {
+        isLoading.value = false;
+      }
+    }
+  }
+
+  void markAsReadLocally(String id) {
+    final index = chats.indexWhere((c) => c.id == id);
+    if (index != -1) {
+      final old = chats[index];
+      chats[index] = ChatSummary(
+        id: old.id,
+        name: old.name,
+        avatar: old.avatar,
+        lastMessage: old.lastMessage,
+        time: old.time,
+        isUnread: false,
+        unreadCount: 0,
+        isProfessional: old.isProfessional,
+      );
     }
   }
 

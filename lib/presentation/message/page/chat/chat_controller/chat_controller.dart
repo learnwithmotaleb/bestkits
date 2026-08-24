@@ -85,6 +85,7 @@ class ChatController extends GetxController {
 
     // Setup listeners
     SocketApi.on('new_message', _handleNewMessage);
+    SocketApi.on('receive_message', _handleNewMessage);
     SocketApi.on('messages_read', _handleMessagesRead);
     SocketApi.on('user_typing', _handleTyping);
     SocketApi.on('error', _handleSocketError);
@@ -102,9 +103,17 @@ class ChatController extends GetxController {
         final result = msg_model.MessageListModel.fromJson(response.body);
         final list = result.data ?? [];
 
+        // Sort by createdAt ascending (oldest first)
+        list.sort((a, b) {
+          final dateA = DateTime.tryParse(a.createdAt ?? '') ??
+              DateTime.fromMillisecondsSinceEpoch(0);
+          final dateB = DateTime.tryParse(b.createdAt ?? '') ??
+              DateTime.fromMillisecondsSinceEpoch(0);
+          return dateA.compareTo(dateB);
+        });
+
         messages.clear();
-        for (var data in list.reversed) {
-          // Reverse to show oldest first if API sends newest first, adjust as needed based on actual API
+        for (var data in list) {
           messages.add(_mapToChatMessage(data));
         }
         _scrollToBottom();
@@ -131,11 +140,22 @@ class ChatController extends GetxController {
   }
 
   void _handleNewMessage(dynamic data) {
-    debugPrint("📥 new_message: $data");
+    debugPrint("📥 new_message/receive_message: $data");
     try {
       final msgData = msg_model.Data.fromJson(data as Map<String, dynamic>);
-      messages.add(_mapToChatMessage(msgData));
-      _scrollToBottom();
+      final newMsg = _mapToChatMessage(msgData);
+
+      // Remove optimistic message if this is a real message from the server that echoes back
+      if (newMsg.isMine) {
+        messages.removeWhere(
+            (m) => m.id.startsWith('temp_') && m.text == newMsg.text);
+      }
+
+      // Add if not already present
+      if (!messages.any((m) => m.id == newMsg.id)) {
+        messages.add(newMsg);
+        _scrollToBottom();
+      }
 
       SocketApi.emit('mark_read', {
         'chatRoomId': int.tryParse(chatRoomId) ?? 0,
@@ -165,6 +185,16 @@ class ChatController extends GetxController {
     final text = messageController.text.trim();
     if (text.isEmpty) return;
 
+    // Optimistically show the message on sender's screen instantly
+    final tempMsg = ChatMessage(
+      id: "temp_${DateTime.now().millisecondsSinceEpoch}",
+      text: text,
+      isMine: true,
+      time: DateFormat('hh:mm a').format(DateTime.now()),
+    );
+    messages.add(tempMsg);
+    _scrollToBottom();
+
     SocketApi.emit("send_message", {
       "chatRoomId": int.tryParse(chatRoomId) ?? 0,
       "message": text,
@@ -172,7 +202,6 @@ class ChatController extends GetxController {
     });
 
     messageController.clear();
-    _scrollToBottom();
   }
 
   void _scrollToBottom() {
@@ -240,6 +269,7 @@ class ChatController extends GetxController {
     });
 
     SocketApi.off('new_message');
+    SocketApi.off('receive_message');
     SocketApi.off('messages_read');
     SocketApi.off('user_typing');
     SocketApi.off('error');

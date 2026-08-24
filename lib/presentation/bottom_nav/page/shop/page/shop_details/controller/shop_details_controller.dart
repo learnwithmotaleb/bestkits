@@ -189,14 +189,32 @@ class ShopDetailsController extends GetxController {
         if (data != null && data['id'] != null) {
           final roomId = data['id'].toString();
 
+          // Try to get partner info from chat room response
+          String? partnerName;
+          String? partnerAvatar;
+          bool partnerIsProf = false;
+
+          if (data['partner'] != null) {
+            final partner = data['partner'];
+            partnerName = partner['profile']?['full_name'];
+            partnerAvatar = partner['profile']?['avatar_url'];
+            partnerIsProf = partner['seller_tier'] == "PROFESSIONAL_SELLER";
+          }
+
           final seller = productDetails.value?.user;
-          String name = seller?.profile?.fullName ?? 'Unknown';
-          String initial = name.isNotEmpty ? name[0].toUpperCase() : '?';
+          String name = partnerName ?? seller?.profile?.fullName ?? 'Unknown';
+          if (name.isEmpty) name = 'Unknown';
+
+          String initial = name != 'Unknown' && name.isNotEmpty
+              ? name[0].toUpperCase()
+              : '?';
 
           // Use avatarUrl if available, otherwise fallback to initial
-          String avatar = seller?.profile?.avatarUrl ?? initial;
+          String avatar =
+              partnerAvatar ?? seller?.profile?.avatarUrl ?? initial;
 
-          bool isProf = seller?.sellerTier == "PROFESSIONAL_SELLER";
+          bool isProf =
+              partnerIsProf || (seller?.sellerTier == "PROFESSIONAL_SELLER");
 
           final chatSummary = ChatSummary(
             id: roomId,
