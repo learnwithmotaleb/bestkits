@@ -16,4 +16,9 @@ class AppImages {
   static const String onboard3 = "$_basePath/onboard3.png";
   static const String homeBannerImage = "$_basePath/home_banner_image.png";
   static const String profileImage = "$_basePath/motaleb.png";
+
+  static const String visa = "$_basePath/visa.png";
+  static const String mastercard = "$_basePath/master_card.png";
+  static const String tbi = "$_basePath/tbi.png";
+  static const String amex = "$_basePath/amex.png";
 }

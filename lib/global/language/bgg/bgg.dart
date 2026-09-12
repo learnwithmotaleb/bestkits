@@ -371,6 +371,17 @@ Map<String, String> bulgarian = {
       "Сигурни ли сте, че искате да запазите този нов адрес?",
   AppStrings.addressUpdatedSuccess: "Адресът е актуализиран успешно",
   AppStrings.addressSavedSuccess: "Адресът е запазен успешно",
+
+  // Checkout — Payment Plan (Pay in Full / Installment Plan)
+  AppStrings.payInFull: "Пълно плащане",
+  AppStrings.installmentPlan: "Разсрочено плащане",
+  AppStrings.oneTimePayment: "Еднократно плащане",
+  AppStrings.monthsUnit: "Месеца",
+  AppStrings.aprLabel: "ГПР",
+  AppStrings.perMonthSuffix: "/ месец",
+  AppStrings.supportedPaymentCountries:
+      "Франция • Обединеното кралство • САЩ • Германия • Испания • Италия",
+
   AppStrings.professionalSeller: "Професионален продавач",
   AppStrings.blockedSellerTitle: "Блокирали сте този продавач",
   AppStrings.blockedSellerSubtitle:

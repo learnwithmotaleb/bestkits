@@ -22,6 +22,12 @@ class AppColors {
   static const Color applyCouponCodeColor = Color(0xFF22C55E);
   static const Color greenColor = Color(0xFF22C55E);
 
+  // Checkout — Payment Plan (Pay in Full / Installment Plan)
+  static const Color darkColor = Color(0xFF1A1A1A);
+  static const Color creamHighlightColor = Color(0xFFFFFDF6);
+  static const Color discountGreenColor = Color(0xFF2E7D32);
+  static const Color lightBorderColor = Color(0xFFE0E0E0);
+
   // Status Colors
   static const Color statusUnderReview = Color(0xFFFFB000);
   static const Color statusUnderReviewBg = Color(0xFFFFF8E1);

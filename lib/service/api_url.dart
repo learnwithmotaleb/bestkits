@@ -9,7 +9,8 @@ class ApiUrl {
 
   /// Change only this domain when switching servers.
   // static const String _mainDomain = "https://helena-sedimentological-emily.ngrok-free.dev";
-  static const String _mainDomain = "https://wj0qph4g-5050.inc1.devtunnels.ms";
+  // static const String _mainDomain = "https://wj0qph4g-5050.inc1.devtunnels.ms";
+  static const String _mainDomain = "https://api.bestkid.eu";
 
   static const String baseUrl = _mainDomain;
 
@@ -251,8 +252,17 @@ class ApiUrl {
       '$baseUrl/chat/rooms/$id/block'; //Patch method
   static String messageUnblock(String id) =>
       '$baseUrl/chat/rooms/$id/unblock'; //Patch method
-  static String messageDelete(String id) =>
-      '$baseUrl/chat/rooms/$id'; //Delete method
+
+  static String messageDelete(String id) => '$baseUrl/chat/rooms/$id'; //Delete method
+
+
+  //================TBI=======================
+  static String tbiCalculations = '$baseUrl/tbi-credit/calculations'; //get method
+  static String tbiCheckoutSession = '$baseUrl/tbi-credit/checkout-session'; //Post method
+
+
+
+
 
   //======================Socket====================
   static String socketUrl({required String userID}) =>

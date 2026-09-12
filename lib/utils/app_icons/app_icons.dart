@@ -34,4 +34,9 @@ class AppIcons {
   static const String earningIcon = '$_basePath/earning_icon.svg';
   static const String deliveryOption = '$_basePath/delivery_option.svg';
   static const String offer = '$_basePath/offer.svg';
+  static const String cartIcon = '$_basePath/cart_icons.svg';
+  static const String visa = "$_basePath/visa.png";
+  static const String mastercard = "$_basePath/master_card.png";
+  static const String tbi = "$_basePath/tbi.png";
+  static const String amex = "$_basePath/amex.png";
 }

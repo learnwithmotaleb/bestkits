@@ -335,6 +335,17 @@ Map<String, String> english = {
   AppStrings.saveAddressAlertSubtitle: "Are you sure you want to save this new address?",
   AppStrings.addressUpdatedSuccess: "Address updated successfully",
   AppStrings.addressSavedSuccess: "Address saved successfully",
+
+  // Checkout — Payment Plan (Pay in Full / Installment Plan)
+  AppStrings.payInFull: "Pay in Full",
+  AppStrings.installmentPlan: "Installment Plan",
+  AppStrings.oneTimePayment: "One-time payment",
+  AppStrings.monthsUnit: "Months",
+  AppStrings.aprLabel: "APR",
+  AppStrings.perMonthSuffix: "/ month",
+  AppStrings.supportedPaymentCountries:
+      "France • United Kingdom • United States • Germany • Spain • Italy",
+
   AppStrings.professionalSeller: "Professional Seller",
   AppStrings.blockedSellerTitle: "You have blocked this seller",
   AppStrings.blockedSellerSubtitle: "You can't send or receive messages in this conversation.",

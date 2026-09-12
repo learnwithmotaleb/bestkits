@@ -4,13 +4,13 @@ import '../../../core/responsive_layout/dimensions.dart';
 import '../../../utils/app_colors/app_colors.dart';
 import '../../../utils/app_text_style/app_text_style.dart';
 import '../../../utils/static_strings/static_strings.dart';
-import '../../../widget/app_button.dart';
 import '../../../widget/custom_appbar.dart';
 import '../controller/checkout_controller.dart';
 import '../widget/checkout_address_section.dart';
 import '../widget/checkout_coupon_section.dart';
 import '../widget/checkout_order_items.dart';
 import '../widget/checkout_price_details.dart';
+import '../widget/checkout_payment_plan_section.dart';
 
 class CheckoutScreen extends StatefulWidget {
   const CheckoutScreen({super.key});
@@ -203,23 +203,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           CheckoutCouponSection(controller: controller),
                           const SizedBox(height: 20),
 
+                          // Payment Plan (Pay in Full / Installment Plan) +
                           // Proceed To Pay button
-                          Obx(() => AppButton(
-                                label: AppStrings.proceedToPay.tr,
-                                isLoading: controller.isSubmittingOrder.value,
-                                onPressed: controller.termsAgreed.value
-                                    ? () {
-                                        controller.placeOrder();
-                                      }
-                                    : null,
-                                backgroundColor: const Color(0xFF1A1A1A),
-                                textColor: AppColors.primaryColor,
-                                borderSideColor: const Color(0xFF1A1A1A),
-                                leadingIcon: Icon(Icons.sell,
-                                    color: AppColors.primaryColor, size: 18),
-                                borderRadius: 12,
-                                height: 52,
-                              )),
+                          CheckoutPaymentPlanSection(controller: controller),
                           const SizedBox(height: 40),
                         ],
                       ),

@@ -117,8 +117,8 @@ class HomeHeader extends GetView<HomeController> {
                       color: AppColors.navBarColor,
                       shape: BoxShape.circle,
                     ),
-                    child: Icon(
-                      Icons.shopping_bag_outlined,
+                    child: AppSvg(
+                      path: AppIcons.cartIcon,
                       color: AppColors.primaryColor,
                       size: Dimensions.icon(24),
                     ),

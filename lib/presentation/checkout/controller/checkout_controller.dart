@@ -7,6 +7,27 @@ import '../../../helper/tost_message/show_snackbar.dart';
 import '../../../widget/open_url.dart';
 import '../../cart/controller/cart_controller.dart';
 import '../model/OrderSummaryModel.dart';
+import '../model/TbiCalculationModel.dart';
+
+/// Selected payment plan on the checkout screen.
+enum PaymentPlanType { full, installment }
+
+/// UI-only model for an installment plan option.
+/// TODO: Replace [CheckoutController.installmentPlanOptions] static list with
+/// data coming from the installment plans GET API once it is provided.
+class InstallmentPlanOption {
+  final int months;
+  final double monthlyAmount;
+  final double totalAmount;
+  final double aprPercent;
+
+  const InstallmentPlanOption({
+    required this.months,
+    required this.monthlyAmount,
+    required this.totalAmount,
+    required this.aprPercent,
+  });
+}
 
 class CheckoutController extends GetxController {
   final CartController cartController = Get.isRegistered<CartController>()
@@ -42,6 +63,109 @@ class CheckoutController extends GetxController {
 
   bool isBuyNow = false;
   Map<String, dynamic>? buyNowArgs;
+
+  // ── Payment Plan (Pay in Full / Installment Plan) — design only ────────
+  // NOTE: Only the UI is being wired up here. "Pay in Full" keeps using the
+  // existing Stripe checkout flow (placeOrder) unchanged.
+  final Rx<PaymentPlanType> paymentPlanType = PaymentPlanType.full.obs;
+  final RxInt selectedInstallmentIndex = 0.obs;
+
+  // Installment plan options, populated from GET ApiUrl.tbiCalculations.
+  final RxList<InstallmentPlanOption> installmentPlanOptions =
+      <InstallmentPlanOption>[].obs;
+  final RxBool isLoadingInstallmentPlans = false.obs;
+
+  void selectPaymentPlanType(PaymentPlanType type) {
+    paymentPlanType.value = type;
+    // Lazily fetch the installment schemes the first time this tab is opened.
+    if (type == PaymentPlanType.installment &&
+        installmentPlanOptions.isEmpty &&
+        !isLoadingInstallmentPlans.value) {
+      fetchInstallmentPlans();
+    }
+  }
+
+  void selectInstallmentOption(int index) =>
+      selectedInstallmentIndex.value = index;
+
+  /// GET ApiUrl.tbiCalculations — TBI Fusion Pay installment schemes for the
+  /// current checkout selection (Buy Now product, or the selected cart
+  /// sellers/items), scoped to the selected address and any applied coupon.
+  Future<void> fetchInstallmentPlans() async {
+    isLoadingInstallmentPlans.value = true;
+    try {
+      final Map<String, dynamic> queryParams = {};
+
+      final addresses = orderSummary.value?.data?.addresses ?? [];
+      final address = addresses.isNotEmpty &&
+              selectedAddressIndex.value < addresses.length
+          ? addresses[selectedAddressIndex.value]
+          : null;
+      if (address?.id != null) {
+        queryParams['addressId'] = address!.id!.toInt().toString();
+      }
+      if (address?.country != null && address!.country!.isNotEmpty) {
+        queryParams['country'] = address.country!;
+      }
+
+      if (isBuyNow) {
+        final productId = buyNowArgs?['productId'];
+        if (productId != null) {
+          queryParams['productId'] = productId.toString();
+        }
+      } else {
+        final sellerIds = (orderSummary.value?.data?.selectedSellerIds ?? [])
+            .map((e) => e.toString())
+            .toList();
+        final cartItemIds =
+            (orderSummary.value?.data?.selectedCartItemIds ?? [])
+                .map((e) => e.toString())
+                .toList();
+        if (sellerIds.isNotEmpty) queryParams['sellerIds'] = sellerIds;
+        if (cartItemIds.isNotEmpty) queryParams['cartItemIds'] = cartItemIds;
+      }
+
+      if (isCouponApplied.value && couponController.text.isNotEmpty) {
+        queryParams['couponCode'] = couponController.text.trim().toUpperCase();
+      }
+
+      // Fallback: no product/cart identifiers resolved — finance the current
+      // order total directly.
+      if (!queryParams.containsKey('productId') &&
+          !queryParams.containsKey('cartItemIds') &&
+          total > 0) {
+        queryParams['amount'] = total.toString();
+      }
+
+      final uri = Uri.parse(ApiUrl.tbiCalculations)
+          .replace(queryParameters: queryParams);
+      final response = await _apiClient.get(url: uri.toString(), isToken: true);
+
+      if (response.statusCode == 200 &&
+          response.body is Map &&
+          response.body['success'] == true) {
+        final model = TbiCalculationModel.fromJson(response.body);
+        installmentPlanOptions.assignAll(model.schemes.map((s) =>
+            InstallmentPlanOption(
+              months: s.months,
+              monthlyAmount: s.monthlyAmount,
+              totalAmount: s.totalAmount,
+              aprPercent: s.aprPercent,
+            )));
+        selectedInstallmentIndex.value = 0;
+      } else {
+        final raw = response.body?['message'] ??
+            response.statusText ??
+            "Failed to load installment plans.";
+        final msg = raw is List ? raw.join(', ') : raw.toString();
+        AppSnackBar.fail(msg);
+      }
+    } catch (e) {
+      AppSnackBar.fail('Something went wrong while loading installment plans.');
+    } finally {
+      isLoadingInstallmentPlans.value = false;
+    }
+  }
 
   @override
   void onInit() {
@@ -299,6 +423,21 @@ class CheckoutController extends GetxController {
     } finally {
       isSubmittingOrder.value = false;
     }
+  }
+
+  // TODO: Wire this up to the dedicated Installment Plan checkout API once
+  // it is provided. For now this is a design-only placeholder so the
+  // "Proceed To Pay" button on the Installment Plan tab has somewhere to go
+  // without touching the existing Stripe flow used by placeOrder().
+  Future<void> placeInstallmentOrder() async {
+    if (!termsAgreed.value) {
+      AppSnackBar.fail("Please accept terms and conditions");
+      return;
+    }
+    AppSnackBar.info(
+      'Installment payment is coming soon.',
+      title: 'Installment Plan',
+    );
   }
 
   double get subtotal {

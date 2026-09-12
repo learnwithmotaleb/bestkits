@@ -404,6 +404,16 @@ class AppStrings {
   static const String addressUpdatedSuccess = "Address updated successfully";
   static const String addressSavedSuccess = "Address saved successfully";
 
+  // Checkout — Payment Plan (Pay in Full / Installment Plan)
+  static const String payInFull = "Pay in Full";
+  static const String installmentPlan = "Installment Plan";
+  static const String oneTimePayment = "One-time payment";
+  static const String monthsUnit = "Months";
+  static const String aprLabel = "APR";
+  static const String perMonthSuffix = "/ month";
+  static const String supportedPaymentCountries =
+      "France • United Kingdom • United States • Germany • Spain • Italy";
+
   // Messages & Chat
   static const String professionalSeller = "Professional Seller";
   static const String blockedSellerTitle = "You have blocked this seller";
