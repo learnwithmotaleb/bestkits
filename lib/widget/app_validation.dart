@@ -1,6 +1,7 @@
 
 // lib/utils/app_validators.dart
 import 'package:flutter/material.dart';
+import '../global/language/localize_message.dart';
 
 /// Alias matches Flutter's FormFieldValidator signature.
 typedef Validator = String? Function(String? value);
@@ -26,7 +27,7 @@ class AppValidators {
   // --------------------------
   static Validator required({String message = 'This field cannot be empty'}) {
     return (String? value) {
-      if (value == null || value.trim().isEmpty) return message;
+      if (value == null || value.trim().isEmpty) return localizeMessage(message);
       return null;
     };
   }
@@ -34,7 +35,7 @@ class AppValidators {
   static Validator minLength(int min, {String? message}) {
     return (String? value) {
       if ((value ?? '').length < min) {
-        return message ?? 'Must be at least $min characters';
+        return localizeMessage(message ?? 'Must be at least $min characters');
       }
       return null;
     };
@@ -43,7 +44,7 @@ class AppValidators {
   static Validator maxLength(int max, {String? message}) {
     return (String? value) {
       if ((value ?? '').length > max) {
-        return message ?? 'Must be at most $max characters';
+        return localizeMessage(message ?? 'Must be at most $max characters');
       }
       return null;
     };
@@ -51,7 +52,7 @@ class AppValidators {
 
   static Validator pattern(RegExp regex, {required String message}) {
     return (String? value) {
-      if (value == null || !regex.hasMatch(value)) return message;
+      if (value == null || !regex.hasMatch(value)) return localizeMessage(message);
       return null;
     };
   }
@@ -60,7 +61,7 @@ class AppValidators {
   static Validator exactLength(int len, {String? message}) {
     return (String? value) {
       if ((value ?? '').length != len) {
-        return message ?? 'Must be exactly $len characters';
+        return localizeMessage(message ?? 'Must be exactly $len characters');
       }
       return null;
     };
@@ -129,11 +130,11 @@ class AppValidators {
     String message = 'Enter a valid number',
   }) {
     return (String? value) {
-      if (value == null) return message;
+      if (value == null) return localizeMessage(message);
       final v = value.trim();
-      if (v.isEmpty) return message;
+      if (v.isEmpty) return localizeMessage(message);
       final parsed = num.tryParse(v);
-      if (parsed == null) return message;
+      if (parsed == null) return localizeMessage(message);
       return null;
     };
   }
@@ -146,14 +147,14 @@ class AppValidators {
     String parseMessage = 'Enter a valid number',
   }) {
     return (String? value) {
-      if (value == null || value.trim().isEmpty) return parseMessage;
+      if (value == null || value.trim().isEmpty) return localizeMessage(parseMessage);
       final parsed = num.tryParse(value.trim());
-      if (parsed == null) return parseMessage;
+      if (parsed == null) return localizeMessage(parseMessage);
       if (min != null && parsed < min) {
-        return minMessage ?? 'Must be ≥ $min';
+        return localizeMessage(minMessage ?? 'Must be ≥ $min');
       }
       if (max != null && parsed > max) {
-        return maxMessage ?? 'Must be ≤ $max';
+        return localizeMessage(maxMessage ?? 'Must be ≤ $max');
       }
       return null;
     };
@@ -195,9 +196,9 @@ class AppValidators {
       final endStr = endSupplier();
       final start = _parse(startStr);
       final end = _parse(endStr);
-      if (start == null || end == null) return parseMessage;
+      if (start == null || end == null) return localizeMessage(parseMessage);
       if (!end.isAfter(start) && !end.isAtSameMomentAs(start)) {
-        return orderMessage;
+        return localizeMessage(orderMessage);
       }
       return null;
     };
@@ -213,8 +214,8 @@ class AppValidators {
   }) {
     return (String? value) {
       final current = value ?? '';
-      if (current.isEmpty) return emptyMessage;
-      if (current != otherSupplier()) return mismatchMessage;
+      if (current.isEmpty) return localizeMessage(emptyMessage);
+      if (current != otherSupplier()) return localizeMessage(mismatchMessage);
       return null;
     };
   }
@@ -226,8 +227,8 @@ class AppValidators {
   }) {
     return (String? value) {
       final current = value ?? '';
-      if (current.isEmpty) return emptyMessage;
-      if (current == otherSupplier()) return message;
+      if (current.isEmpty) return localizeMessage(emptyMessage);
+      if (current == otherSupplier()) return localizeMessage(message);
       return null;
     };
   }
@@ -288,9 +289,9 @@ class AppValidators {
   }) {
     return (String? value) {
       final confirm = value ?? '';
-      if (confirm.isEmpty) return emptyMessage;
+      if (confirm.isEmpty) return localizeMessage(emptyMessage);
       final original = passwordSupplier();
-      if (confirm != original) return mismatchMessage;
+      if (confirm != original) return localizeMessage(mismatchMessage);
       return null;
     };
   }

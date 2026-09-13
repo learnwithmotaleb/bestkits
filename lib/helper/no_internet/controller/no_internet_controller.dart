@@ -1,51 +1,90 @@
-import 'dart:async';
+﻿import 'dart:async';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
-class InternetController extends GetxController {
-  final RxBool isConnected = true.obs;
-  StreamSubscription<InternetStatus>? _subscription;
-  static InternetController get to => Get.find<InternetController>();
+class InternetController extends GetxController with WidgetsBindingObserver {
+  InternetController({InternetConnection? checker})
+      : _checker = checker ?? InternetConnection.createInstance();
 
-  // ✅ Custom checker — multiple addresses
-  final InternetConnection _checker = InternetConnection.createInstance(
-    customCheckOptions: [
-      InternetCheckOption(uri: Uri.parse('https://google.com')),
-      InternetCheckOption(uri: Uri.parse('https://cloudflare.com')),
-      InternetCheckOption(uri: Uri.parse('https://apple.com')),
-      InternetCheckOption(uri: Uri.parse('https://amazon.com')),
-    ],
-    useDefaultOptions: false,
-  );
+  final RxBool isConnected = true.obs;
+  final RxBool isChecking = false.obs;
+  final InternetConnection _checker;
+  StreamSubscription<InternetStatus>? _subscription;
+  Timer? _offlineTimer;
+  int _revision = 0;
+  bool _closed = false;
+
+  static InternetController get to => Get.find<InternetController>();
 
   @override
   void onInit() {
     super.onInit();
-    _initConnection();
+    WidgetsBinding.instance.addObserver(this);
+    _subscription = _checker.onStatusChange.listen((status) {
+      if (status == InternetStatus.connected) {
+        setConnected();
+      } else {
+        _scheduleOffline();
+      }
+    });
+    retryConnection();
   }
 
-  void _initConnection() {
-    _checkInitialConnection();
-
-    _subscription = _checker.onStatusChange.listen((status) {
-      // ✅ 2 সেকেন্ড debounce — momentary drop ignore করবে
-      Future.delayed(const Duration(seconds: 2), () {
-        isConnected.value = status == InternetStatus.connected;
-      });
+  // Ignore short drops and cancel stale offline events when connectivity returns.
+  void _scheduleOffline() {
+    if (_closed) return;
+    final revision = ++_revision;
+    _offlineTimer?.cancel();
+    _offlineTimer = Timer(const Duration(seconds: 2), () {
+      if (!_closed && revision == _revision) isConnected.value = false;
     });
   }
 
-  Future<void> _checkInitialConnection() async {
-    final status = await _checker.hasInternetAccess;
-    isConnected.value = status;
+  Future<void> retryConnection() async {
+    if (_closed || isChecking.value) return;
+    isChecking.value = true;
+    final revision = ++_revision;
+    _offlineTimer?.cancel();
+    try {
+      final connected = await _checker.hasInternetAccess
+          .timeout(const Duration(seconds: 8));
+      if (!_closed && revision == _revision) {
+        if (connected) {
+          setConnected();
+        } else {
+          _scheduleOffline();
+        }
+      }
+    } catch (_) {
+      if (!_closed && revision == _revision) _scheduleOffline();
+    } finally {
+      if (!_closed) isChecking.value = false;
+    }
   }
 
-  void setConnected() => isConnected.value = true;
-  void setDisconnected() => isConnected.value = false;
+  void setConnected() {
+    if (_closed) return;
+    ++_revision;
+    _offlineTimer?.cancel();
+    isConnected.value = true;
+  }
+
+  // A failed API host does not necessarily mean the device is offline.
+  void setDisconnected() => unawaited(retryConnection());
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) retryConnection();
+  }
 
   @override
   void onClose() {
+    _closed = true;
+    ++_revision;
+    _offlineTimer?.cancel();
     _subscription?.cancel();
+    WidgetsBinding.instance.removeObserver(this);
     super.onClose();
   }
 }

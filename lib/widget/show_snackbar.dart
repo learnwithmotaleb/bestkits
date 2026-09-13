@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../utils/app_colors/app_colors.dart';
+import '../global/language/localize_message.dart';
 
 class ShowAppSnackBar {
   ShowAppSnackBar._();
@@ -48,6 +49,8 @@ class ShowAppSnackBar {
         required Color textColor,
         Duration duration = const Duration(seconds: 3),
       }) {
+    message = localizeMessage(message);
+    title = title == null ? null : localizeMessage(title);
     Get.snackbar(
       title ?? '',
       message,

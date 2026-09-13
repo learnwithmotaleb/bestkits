@@ -11,12 +11,7 @@ import '../controller/checkout_controller.dart';
 /// "Pay in Full" / "Installment Plan" section shown right above the final
 /// Proceed To Pay button on the checkout screen.
 ///
-/// NOTE (design only for now):
-/// - "Pay in Full" keeps using the existing Stripe checkout flow
-///   (CheckoutController.placeOrder) — nothing about that API call changed.
-/// - The Installment Plan options shown here are static placeholder data;
-///   the real list will come from a GET API later, and its own
-///   "Proceed To Pay" will call a new API once provided.
+/// Installment options are loaded from the calculations GET API.
 class CheckoutPaymentPlanSection extends StatelessWidget {
   final CheckoutController controller;
 
@@ -226,6 +221,14 @@ class _PayInFullCard extends StatelessWidget {
   }
 }
 
+String _formatInstallmentAmount(double amount, String currency) {
+  final symbol = CurrencyHelper.currencies.firstWhere(
+    (entry) => entry['name'] == currency,
+    orElse: () => {'symbol': '$currency '},
+  )['symbol']!;
+  return '$symbol${amount.toStringAsFixed(2)}';
+}
+
 class _InstallmentPlanList extends StatelessWidget {
   final CheckoutController controller;
 
@@ -236,119 +239,104 @@ class _InstallmentPlanList extends StatelessWidget {
     return Obx(() {
       final options = controller.installmentPlanOptions;
       final selectedIndex = controller.selectedInstallmentIndex.value;
-
       if (controller.isLoadingInstallmentPlans.value && options.isEmpty) {
         return const Padding(
           padding: EdgeInsets.symmetric(vertical: 24),
           child: Center(child: CircularProgressIndicator()),
         );
       }
-
+      if (options.isEmpty) {
+        return const Padding(
+          padding: EdgeInsets.symmetric(vertical: 24),
+          child: Text('No installment plans available.'),
+        );
+      }
       return Column(
         children: List.generate(options.length, (index) {
           final option = options[index];
-          final isSelected = index == selectedIndex;
-
-          return GestureDetector(
-            onTap: () => controller.selectInstallmentOption(index),
-            child: Container(
-              margin:
-                  EdgeInsets.only(bottom: index == options.length - 1 ? 0 : 10),
-              padding: const EdgeInsets.all(14),
-              decoration: BoxDecoration(
-                color: isSelected
-                    ? AppColors.creamHighlightColor
-                    : AppColors.whiteColor,
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(
-                  color: isSelected
-                      ? AppColors.primaryColor
-                      : AppColors.greyColor.withOpacity(0.2),
-                  width: isSelected ? 1.5 : 1,
+          final selected = index == selectedIndex;
+          return Semantics(
+            selected: selected,
+            button: true,
+            child: GestureDetector(
+              onTap: () => controller.selectInstallmentOption(index),
+              child: Container(
+                width: double.infinity,
+                margin: EdgeInsets.only(bottom: index == options.length - 1 ? 0 : 12),
+                clipBehavior: Clip.antiAlias,
+                decoration: BoxDecoration(
+                  color: selected ? const Color(0xFFFAF8EE) : const Color(0xFFF2F2F2),
+                  borderRadius: BorderRadius.circular(18),
+                  border: Border.all(
+                    color: selected ? AppColors.primaryColor : Colors.transparent,
+                  ),
                 ),
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(top: 2),
-                    width: 16,
-                    height: 16,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: isSelected
-                            ? AppColors.primaryColor
-                            : AppColors.greyColor,
-                        width: 2,
+                child: Stack(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(14),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            width: 15,
+                            height: 15,
+                            margin: const EdgeInsets.only(top: 1),
+                            padding: const EdgeInsets.all(2),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(color: selected ? AppColors.primaryColor : AppColors.greyColor),
+                            ),
+                            child: DecoratedBox(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: selected ? AppColors.primaryColor : Colors.transparent,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 76),
+                                  child: Text('${option.months} ${AppStrings.monthsUnit.tr}',
+                                    style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400)),
+                                ),
+                                const SizedBox(height: 6),
+                                Text(
+                                  '${_formatInstallmentAmount(option.monthlyAmount, option.currency)} ${AppStrings.perMonthSuffix.tr}',
+                                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800, fontStyle: FontStyle.italic),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  '${AppStrings.total.tr} ${_formatInstallmentAmount(option.totalAmount, option.currency)}',
+                                  style: TextStyle(fontSize: 12, color: AppColors.greyColor),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    child: isSelected
-                        ? Center(
-                            child: Container(
-                              width: 8,
-                              height: 8,
-                              decoration: const BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: AppColors.primaryColor,
-                              ),
-                            ),
-                          )
-                        : null,
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              '${option.months} ${AppStrings.monthsUnit.tr}',
-                              style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w800,
-                              ),
-                            ),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 3),
-                              decoration: BoxDecoration(
-                                color: AppColors.statusLiveBg,
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              child: Text(
-                                '${AppStrings.aprLabel.tr} ${option.aprPercent.toStringAsFixed(1)}%',
-                                style: TextStyle(
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w700,
-                                  color: AppColors.discountGreenColor,
-                                ),
-                              ),
-                            ),
-                          ],
+                    Positioned(
+                      top: 0,
+                      right: 0,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        decoration: const BoxDecoration(
+                          color: Color(0xFFDFF1ED),
+                          borderRadius: BorderRadius.only(bottomLeft: Radius.circular(12)),
                         ),
-                        const SizedBox(height: 6),
-                        Text(
-                          '${CurrencyHelper.formatPrice(option.monthlyAmount)} ${AppStrings.perMonthSuffix.tr}',
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w800,
-                          ),
+                        child: Text(
+                          '${AppStrings.aprLabel.tr} ${option.aprPercent}%',
+                          style: TextStyle(fontSize: 10, color: AppColors.discountGreenColor),
                         ),
-                        const SizedBox(height: 2),
-                        Text(
-                          '${AppStrings.total.tr} ${CurrencyHelper.formatPrice(option.totalAmount)}',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: AppColors.greyColor,
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           );
@@ -357,7 +345,6 @@ class _InstallmentPlanList extends StatelessWidget {
     });
   }
 }
-
 class _PaymentMethodsCard extends StatelessWidget {
   const _PaymentMethodsCard();
 

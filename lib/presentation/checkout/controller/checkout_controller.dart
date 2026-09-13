@@ -12,20 +12,20 @@ import '../model/TbiCalculationModel.dart';
 /// Selected payment plan on the checkout screen.
 enum PaymentPlanType { full, installment }
 
-/// UI-only model for an installment plan option.
-/// TODO: Replace [CheckoutController.installmentPlanOptions] static list with
-/// data coming from the installment plans GET API once it is provided.
+/// Installment option returned by the calculations GET API.
 class InstallmentPlanOption {
   final int months;
   final double monthlyAmount;
   final double totalAmount;
   final double aprPercent;
+  final String currency;
 
   const InstallmentPlanOption({
     required this.months,
     required this.monthlyAmount,
     required this.totalAmount,
     required this.aprPercent,
+    this.currency = 'EUR',
   });
 }
 
@@ -70,16 +70,15 @@ class CheckoutController extends GetxController {
   final Rx<PaymentPlanType> paymentPlanType = PaymentPlanType.full.obs;
   final RxInt selectedInstallmentIndex = 0.obs;
 
-  // Installment plan options, populated from GET ApiUrl.tbiCalculations.
+  // Installment plan options, populated live from GET ApiUrl.tbiCalculations.
   final RxList<InstallmentPlanOption> installmentPlanOptions =
       <InstallmentPlanOption>[].obs;
   final RxBool isLoadingInstallmentPlans = false.obs;
 
   void selectPaymentPlanType(PaymentPlanType type) {
     paymentPlanType.value = type;
-    // Lazily fetch the installment schemes the first time this tab is opened.
+    // Fetch the installment schemes the first time this tab is opened.
     if (type == PaymentPlanType.installment &&
-        installmentPlanOptions.isEmpty &&
         !isLoadingInstallmentPlans.value) {
       fetchInstallmentPlans();
     }
@@ -92,7 +91,9 @@ class CheckoutController extends GetxController {
   /// current checkout selection (Buy Now product, or the selected cart
   /// sellers/items), scoped to the selected address and any applied coupon.
   Future<void> fetchInstallmentPlans() async {
+    if (isLoadingInstallmentPlans.value) return;
     isLoadingInstallmentPlans.value = true;
+    installmentPlanOptions.clear();
     try {
       final Map<String, dynamic> queryParams = {};
 
@@ -125,15 +126,26 @@ class CheckoutController extends GetxController {
         if (cartItemIds.isNotEmpty) queryParams['cartItemIds'] = cartItemIds;
       }
 
+      final categoryIds = (orderSummary.value?.data?.sellerGroups ?? [])
+          .expand((group) => group.items ?? <Items>[])
+          .map((item) => item.product?.categoryId?.toInt())
+          .whereType<int>()
+          .toSet();
+      final categoryId = buyNowArgs?['categoryId'] ??
+          (categoryIds.length == 1 ? categoryIds.single : null);
+      if (categoryId != null) {
+        queryParams['categoryId'] = categoryId.toString();
+      }
+
       if (isCouponApplied.value && couponController.text.isNotEmpty) {
         queryParams['couponCode'] = couponController.text.trim().toUpperCase();
       }
 
-      // Fallback: no product/cart identifiers resolved — finance the current
-      // order total directly.
-      if (!queryParams.containsKey('productId') &&
-          !queryParams.containsKey('cartItemIds') &&
-          total > 0) {
+      // Always send the current order total as the amount to finance —
+      // alongside the product/cart identifiers above — so the schemes match
+      // exactly what the customer will pay regardless of how the backend
+      // resolves the cart on its side.
+      if (total > 0) {
         queryParams['amount'] = total.toString();
       }
 
@@ -145,12 +157,14 @@ class CheckoutController extends GetxController {
           response.body is Map &&
           response.body['success'] == true) {
         final model = TbiCalculationModel.fromJson(response.body);
-        installmentPlanOptions.assignAll(model.schemes.map((s) =>
+        final schemes = model.data?.schemes ?? [];
+        installmentPlanOptions.assignAll(schemes.map((s) =>
             InstallmentPlanOption(
-              months: s.months,
-              monthlyAmount: s.monthlyAmount,
-              totalAmount: s.totalAmount,
-              aprPercent: s.aprPercent,
+              months: s.raw?.period ?? s.period ?? 0,
+              monthlyAmount: s.installment ?? 0.0,
+              totalAmount: s.totalDue ?? 0.0,
+              aprPercent: s.raw?.apr ?? s.apr ?? 0.0,
+              currency: s.raw?.currency ?? model.data?.currency ?? 'EUR',
             )));
         selectedInstallmentIndex.value = 0;
       } else {
@@ -425,19 +439,129 @@ class CheckoutController extends GetxController {
     }
   }
 
-  // TODO: Wire this up to the dedicated Installment Plan checkout API once
-  // it is provided. For now this is a design-only placeholder so the
-  // "Proceed To Pay" button on the Installment Plan tab has somewhere to go
-  // without touching the existing Stripe flow used by placeOrder().
+  /// POST ApiUrl.tbiCheckoutSession — creates a TBI Credit application for
+  /// the current cart selection using the chosen installment plan, then
+  /// opens the returned application URL (mirrors placeOrder's Stripe flow).
   Future<void> placeInstallmentOrder() async {
+    if (isSubmittingOrder.value) return;
+    if (isLoadingInstallmentPlans.value) {
+      AppSnackBar.fail("Please wait for installment plans to load");
+      return;
+    }
+
     if (!termsAgreed.value) {
       AppSnackBar.fail("Please accept terms and conditions");
       return;
     }
-    AppSnackBar.info(
-      'Installment payment is coming soon.',
-      title: 'Installment Plan',
-    );
+
+    final addresses = orderSummary.value?.data?.addresses ?? [];
+    if (addresses.isEmpty ||
+        selectedAddressIndex.value < 0 ||
+        selectedAddressIndex.value >= addresses.length) {
+      AppSnackBar.fail("Please select a delivery address");
+      return;
+    }
+
+    if (installmentPlanOptions.isEmpty ||
+        selectedInstallmentIndex.value < 0 ||
+        selectedInstallmentIndex.value >= installmentPlanOptions.length) {
+      AppSnackBar.fail("Please select an installment plan");
+      return;
+    }
+
+    if (installmentPlanOptions[selectedInstallmentIndex.value].months <= 0) {
+      AppSnackBar.fail("Please select a valid installment plan");
+      return;
+    }
+
+    isSubmittingOrder.value = true;
+    try {
+      final address = addresses[selectedAddressIndex.value];
+      final sellerIds = (orderSummary.value?.data?.selectedSellerIds ?? [])
+          .map((e) => e.toInt())
+          .toList();
+      final cartItemIds = (orderSummary.value?.data?.selectedCartItemIds ?? [])
+          .map((e) => e.toInt())
+          .toList();
+      final selectedPlan =
+          installmentPlanOptions[selectedInstallmentIndex.value];
+
+      if (cartItemIds.isEmpty && sellerIds.isEmpty) {
+        AppSnackBar.fail("Please select cart items for installment checkout");
+        return;
+      }
+
+      final body = <String, dynamic>{
+        "successUrl": "https://www.bestkid.eu/payment/success",
+        "failUrl": "https://www.bestkid.eu/payment/failed",
+        // TBI accepts one selection method; prefer the exact selected items.
+        if (cartItemIds.isNotEmpty)
+          "cartItemIds": cartItemIds
+        else
+          "sellerIds": sellerIds,
+        "addressId": address.id,
+        "shippingAddress": address.address ?? '',
+        "city": address.city ?? '',
+        "postalCode": address.postalCode ?? '',
+        "country": (address.country ?? '').trim().toLowerCase() == 'bulgaria'
+            ? 'BG'
+            : (address.country ?? '').trim(),
+        "couponCode": isCouponApplied.value ? couponController.text.trim() : "",
+        "period": selectedPlan.months,
+        "bnpl": true,
+        "acceptedTerms": termsAgreed.value,
+      };
+
+      final response = await _apiClient.post(
+        url: ApiUrl.tbiCheckoutSession,
+        body: body,
+        isToken: true,
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final bodyData = response.body;
+        if (bodyData != null && bodyData['success'] == true) {
+          final data = bodyData['data'];
+          // NOTE: The Swagger example for this endpoint only shows a
+          // generic placeholder ({"id":..., "createdAt":...}), not the real
+          // "TBI application URL" field name — try the common spellings
+          // defensively until the backend confirms the exact key.
+          final String? applicationUrl = data is Map
+              ? (data['url'] ??
+                      data['applicationUrl'] ??
+                      data['redirectUrl'] ??
+                      data['checkoutUrl'] ??
+                      data['link'])
+                  ?.toString()
+              : (data is String ? data : null);
+
+          if (applicationUrl != null && applicationUrl.isNotEmpty) {
+            // Open TBI-hosted application page
+            await openExternalUrl(applicationUrl);
+          } else {
+            AppSnackBar.fail('Could not retrieve the TBI application link.',
+                title: 'Error');
+          }
+        } else {
+          final msg = bodyData?['message'];
+          final msgStr = msg is List
+              ? msg.join('\n')
+              : msg?.toString() ?? 'Installment checkout failed';
+          AppSnackBar.fail(msgStr, title: 'Error');
+        }
+      } else {
+        final raw = response.body?['message'] ??
+            response.statusText ??
+            "Installment checkout failed";
+        final msg = raw is List ? raw.join(', ') : raw.toString();
+        AppSnackBar.fail(msg, title: 'Error');
+      }
+    } catch (e) {
+      AppSnackBar.fail('Something went wrong. Please try again.',
+          title: 'Error');
+    } finally {
+      isSubmittingOrder.value = false;
+    }
   }
 
   double get subtotal {

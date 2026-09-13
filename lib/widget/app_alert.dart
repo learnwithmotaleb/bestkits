@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../global/language/localize_message.dart';
 import '../utils/app_colors/app_colors.dart';
 import '../core/responsive_layout/dimensions.dart';
 
 class AppAlerts {
   static void success({required String message}) {
+    message = localizeMessage(message);
     Get.dialog(
       _AlertWrapper(
         child: Column(
@@ -36,6 +38,7 @@ class AppAlerts {
   }
 
   static void error({required String message}) {
+    message = localizeMessage(message);
     Get.dialog(
       _AlertWrapper(
         child: Column(

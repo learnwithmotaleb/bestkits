@@ -117,8 +117,10 @@ class ApiUrl {
   static const String stripeWebHook = '$baseUrl/stripe/webhook'; //post method
 
 //=================Delivery Options========================
-  static const String deliveryMeInternation = '$baseUrl/delivery/me/international'; //put method
-  static const String deliveryMeDomestic = '$baseUrl/delivery/me/domestic'; //put method
+  static const String deliveryMeInternation =
+      '$baseUrl/delivery/me/international'; //put method
+  static const String deliveryMeDomestic =
+      '$baseUrl/delivery/me/domestic'; //put method
   static const String deliveryGetAll = '$baseUrl/delivery/me'; //get method
   static const String addDeliveryOption = '$baseUrl/delivery/me'; //Put method
 
@@ -253,16 +255,14 @@ class ApiUrl {
   static String messageUnblock(String id) =>
       '$baseUrl/chat/rooms/$id/unblock'; //Patch method
 
-  static String messageDelete(String id) => '$baseUrl/chat/rooms/$id'; //Delete method
-
+  static String messageDelete(String id) =>
+      '$baseUrl/chat/rooms/$id'; //Delete method
 
   //================TBI=======================
-  static String tbiCalculations = '$baseUrl/tbi-credit/calculations'; //get method
-  static String tbiCheckoutSession = '$baseUrl/tbi-credit/checkout-session'; //Post method
-
-
-
-
+  static String tbiCalculations =
+      '$baseUrl/tbi-credit/calculations'; //get method
+  static String tbiCheckoutSession =
+      '$baseUrl/tbi-credit/checkout-session'; //Post method
 
   //======================Socket====================
   static String socketUrl({required String userID}) =>

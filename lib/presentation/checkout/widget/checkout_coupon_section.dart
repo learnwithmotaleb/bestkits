@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../../global/language/localize_message.dart';
 import '../../../../utils/app_colors/app_colors.dart';
 import '../../../../widget/app_text_field.dart';
 import '../../../../widget/app_validation.dart';
@@ -110,7 +111,7 @@ class _CheckoutCouponSectionState extends State<CheckoutCouponSection> {
                       const SizedBox(width: 6),
                       Expanded(
                         child: Text(
-                          widget.controller.couponSuccess.value,
+                          localizeMessage(widget.controller.couponSuccess.value),
                           style: const TextStyle(
                             color: AppColors.applyCouponCodeColor,
                             fontSize: 14,
@@ -134,7 +135,7 @@ class _CheckoutCouponSectionState extends State<CheckoutCouponSection> {
                       const SizedBox(width: 6),
                       Expanded(
                         child: Text(
-                          widget.controller.couponError.value,
+                          localizeMessage(widget.controller.couponError.value),
                           style: TextStyle(
                             color: AppColors.redColor,
                             fontSize: 11,
