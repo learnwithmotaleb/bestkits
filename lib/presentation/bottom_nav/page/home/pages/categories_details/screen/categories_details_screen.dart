@@ -49,18 +49,19 @@ class _CategoriesDetailsScreenState extends State<CategoriesDetailsScreen> {
                       ),
                     ),
                   ),
-                  const Spacer(),
-                  Obx(() => Text(
-                        controller.category.value?.name ??
-                            AppStrings.categories.tr,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: AppTextStyles.h3.copyWith(
-                          fontSize: Dimensions.fs(20),
-                          fontWeight: FontWeight.w700,
-                        ),
-                      )),
-                  const Spacer(),
+                  Expanded(
+                    child: Obx(() => Text(
+                          controller.category.value?.name ??
+                              AppStrings.categories.tr,
+                          textAlign: TextAlign.center,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppTextStyles.h3.copyWith(
+                            fontSize: Dimensions.fs(20),
+                            fontWeight: FontWeight.w700,
+                          ),
+                        )),
+                  ),
                   SizedBox(width: Dimensions.w(40)),
                 ],
               ),
@@ -99,12 +100,16 @@ class _CategoriesDetailsScreenState extends State<CategoriesDetailsScreen> {
                       Dimensions.gapH(24),
                       Row(
                         children: [
-                          Text(
-                            AppStrings.subCategories.tr,
-                            style: AppTextStyles.h4.copyWith(
-                              fontSize: Dimensions.fs(16),
-                              fontWeight: FontWeight.w700,
-                              fontStyle: FontStyle.italic,
+                          Flexible(
+                            child: Text(
+                              AppStrings.subCategories.tr,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppTextStyles.h4.copyWith(
+                                fontSize: Dimensions.fs(16),
+                                fontWeight: FontWeight.w700,
+                                fontStyle: FontStyle.italic,
+                              ),
                             ),
                           ),
                           Dimensions.gapW(8),
@@ -132,8 +137,8 @@ class _CategoriesDetailsScreenState extends State<CategoriesDetailsScreen> {
                       Dimensions.gapH(16),
                       if (subCategories.isEmpty)
                         Padding(
-                          padding: EdgeInsets.symmetric(
-                              vertical: Dimensions.h(40)),
+                          padding:
+                              EdgeInsets.symmetric(vertical: Dimensions.h(40)),
                           child: Center(
                             child: Text(
                               AppStrings.noMatchesFound.tr,
@@ -263,6 +268,8 @@ class _CategoryBanner extends StatelessWidget {
                     ),
                     child: Text(
                       '${category.productCount ?? 0} ${AppStrings.itemsCountLabel.tr}',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         color: AppColors.primaryColor,
                         fontSize: Dimensions.fs(11),
@@ -332,6 +339,8 @@ class _SubCategoryTile extends StatelessWidget {
             ),
             child: Text(
               '${subCategory.productCount ?? 0} ${AppStrings.itemsCountLabel.tr}',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 color: AppColors.primaryColor,
                 fontSize: Dimensions.fs(10),
