@@ -10,6 +10,7 @@ class RoutePath {
   static const String accountBlock = '/AccountBlockScreen';
   static const String bottomNav = '/BottomNavScreen';
   static const String categoriesScreen = '/CategoriesScreen';
+  static const String categoryDetails = '/CategoryDetailsScreen';
   static const String productDetail = '/ProductDetailsScreen';
   static const String myReturn = '/MyReturnScreen';
   static const String message = '/MessageScreen';

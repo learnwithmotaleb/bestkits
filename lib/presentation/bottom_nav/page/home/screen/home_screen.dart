@@ -91,7 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         items:
                             '${category.productCount ?? 0} ${AppStrings.itemsCountLabel.tr}',
                         onTap: () {
-                          Get.toNamed(RoutePath.categoriesScreen,
+                          Get.toNamed(RoutePath.categoryDetails,
                               arguments: {'categoryId': category.id});
                         },
                       );

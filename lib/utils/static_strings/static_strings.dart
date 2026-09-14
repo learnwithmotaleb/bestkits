@@ -14,6 +14,7 @@ class AppStrings {
   static const String pufferJackets = "Puffer Jackets";
   static const String shortsAndSkirts = "Shorts & Skirts";
   static const String moreLabel = "More";
+  static const String subCategories = "Sub Categories";
   static const String kidsShorts = "Kid's Shorts";
   static const String kidsAccessories = "Kids Accessories";
   static const String kidsCollection = "Kids Collection";

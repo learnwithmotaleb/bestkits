@@ -6,8 +6,10 @@ import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
 import 'package:logger/logger.dart';
+import '../core/routes/route_path.dart';
 import '../helper/local_db/local_db.dart';
 import '../helper/no_internet/controller/no_internet_controller.dart';
+import '../helper/tost_message/show_snackbar.dart';
 
 final log = Logger();
 
@@ -15,6 +17,10 @@ typedef ApiResult = Response;
 
 class ApiClient {
   static const defaultTimeout = Duration(seconds: 30);
+
+  // Guard so a burst of parallel 401 responses only triggers one
+  // session-expired redirect instead of clearing/navigating repeatedly.
+  static bool _isHandlingSessionExpiry = false;
 
   Future<Map<String, String>> _headers({
     bool isBasic = false,
@@ -56,6 +62,7 @@ class ApiClient {
     required String url,
     String method = "GET",
     bool checkInternet = true,
+    bool isToken = false,
   }) async {
     try {
       // Optional: check internet before request
@@ -73,7 +80,7 @@ class ApiClient {
         Get.find<InternetController>().setConnected();
       }
 
-      return _handleResponse(response);
+      return _handleResponse(response, isToken: isToken);
     }
 
     // No internet
@@ -101,7 +108,12 @@ class ApiClient {
   }
 
   /// ---------------- Response Handler ---------------------------
-  ApiResult _handleResponse(http.Response response) {
+  ApiResult _handleResponse(http.Response response, {bool isToken = false}) {
+    // Token expired / invalid on an authenticated request → force re-login.
+    if (isToken && response.statusCode == 401) {
+      _handleSessionExpired();
+    }
+
     dynamic decoded;
     try {
       decoded = jsonDecode(response.body);
@@ -136,6 +148,32 @@ class ApiClient {
   ApiResult _handleException(String message) {
     log.e("\n✖ API ERROR: $message");
     return Response(statusCode: 400, body: {}, statusText: message);
+  }
+
+  /// ---------------- Session Expired Handler ----------------------
+  /// Called when an authenticated request comes back 401 (token
+  /// expired/invalid). Clears the saved session and sends the user
+  /// back to the login screen so they can log in again.
+  void _handleSessionExpired() {
+    if (_isHandlingSessionExpiry) return;
+
+    // Already logged out / already on the login screen — nothing to do.
+    final token = SharePrefsHelper.getToken();
+    if (token == null || token.isEmpty) return;
+    if (Get.currentRoute == RoutePath.login) return;
+
+    _isHandlingSessionExpiry = true;
+    log.e("\n✖ SESSION EXPIRED: token invalid/expired, redirecting to login");
+
+    Future(() async {
+      try {
+        await SharePrefsHelper.clearAll();
+        AppSnackBar.fail("Your session has expired. Please log in again.");
+        Get.offAllNamed(RoutePath.login);
+      } finally {
+        _isHandlingSessionExpiry = false;
+      }
+    });
   }
 
   /// ---------------- Logging -------------------------------------
@@ -180,6 +218,7 @@ class ApiClient {
       () async => http.get(Uri.parse(url), headers: headers),
       url: url,
       method: "GET",
+      isToken: isToken,
     );
   }
 
@@ -206,6 +245,7 @@ class ApiClient {
       ),
       url: url,
       method: "POST",
+      isToken: isToken,
     );
   }
 
@@ -232,6 +272,7 @@ class ApiClient {
       ),
       url: url,
       method: "PUT",
+      isToken: isToken,
     );
   }
 
@@ -258,6 +299,7 @@ class ApiClient {
       ),
       url: url,
       method: "PATCH",
+      isToken: isToken,
     );
   }
 
@@ -287,6 +329,7 @@ class ApiClient {
       },
       url: url,
       method: "DELETE",
+      isToken: isToken,
     );
   }
 
@@ -351,7 +394,7 @@ class ApiClient {
       log.i("Multipart Response Status: ${response.statusCode}");
       log.i("Multipart Response Body: ${response.body}");
 
-      return _handleResponse(response);
+      return _handleResponse(response, isToken: isToken);
     } catch (e) {
       log.e("Multipart Error: $e");
       return _handleException("Multipart Error: $e");
@@ -417,7 +460,7 @@ class ApiClient {
       final streamed = await request.send().timeout(defaultTimeout);
       final response = await http.Response.fromStream(streamed);
 
-      return _handleResponse(response);
+      return _handleResponse(response, isToken: isToken);
     } catch (e) {
       return _handleException("PATCH Multipart Error: $e");
     }

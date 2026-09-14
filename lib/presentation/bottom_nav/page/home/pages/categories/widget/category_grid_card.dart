@@ -19,9 +19,9 @@ class CategoryGridCard extends StatelessWidget {
     final imageUrl = category.imageUrl as String?;
 
     return GestureDetector(
-        onTap: () => Get.toNamed(RoutePath.categoriesScreen, arguments: {
+        onTap: () => Get.toNamed(RoutePath.categoryDetails, arguments: {
               'categoryId': category.id
-            }), // Note: you might want to route to products list here based on category
+            }),
         child: Container(
           decoration: BoxDecoration(
             color: Colors.white,

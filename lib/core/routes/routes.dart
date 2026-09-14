@@ -13,6 +13,7 @@ import 'package:bestkits/presentation/auth/signup/screen/signup_screen.dart';
 import 'package:bestkits/presentation/bottom_nav/controller/bottom_nav_controller.dart';
 import 'package:bestkits/presentation/bottom_nav/page/home/pages/categories/controller/categories_controller.dart';
 import 'package:bestkits/presentation/bottom_nav/page/home/pages/categories/screen/categories_screen.dart';
+import 'package:bestkits/presentation/bottom_nav/page/home/pages/categories_details/screen/categories_details_screen.dart';
 import 'package:bestkits/presentation/bottom_nav/page/sell/controller/sell_controller.dart';
 import 'package:bestkits/presentation/bottom_nav/page/sell/page/product_verification/controller/product_verification_controller.dart';
 import 'package:bestkits/presentation/bottom_nav/page/sell/page/product_verification/screen/product_verification_screen.dart';
@@ -179,6 +180,11 @@ class AppRouter {
       binding: BindingsBuilder(() {
         Get.put(CategoriesController());
       }),
+    ),
+    GetPage(
+      name: RoutePath.categoryDetails,
+      page: () => const CategoriesDetailsScreen(),
+      transition: Transition.rightToLeft,
     ),
     GetPage(
       name: RoutePath.productDetail,
