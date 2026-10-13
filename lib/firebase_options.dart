@@ -52,21 +52,19 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyCTcza04jakvmY_bZzQpqnToKH-aWYCEh8',
-    appId: '1:1034471241738:android:87da7efbadf85b406487f3',
+    appId: '1:1034471241738:android:d05062912b4ece9b6487f3',
     messagingSenderId: '1034471241738',
     projectId: 'bestkit-2dc0b',
     storageBucket: 'bestkit-2dc0b.firebasestorage.app',
   );
-
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyCUt6sBiXh0lQR_nIce7YQ18QrEb97rbBg',
-    appId: '1:1034471241738:ios:8debfb7d25feea146487f3',
+    appId: '1:1034471241738:ios:115570fe00801d2e6487f3',
     messagingSenderId: '1034471241738',
     projectId: 'bestkit-2dc0b',
     storageBucket: 'bestkit-2dc0b.firebasestorage.app',
-    iosBundleId: 'com.lwm.bestkits',
+    iosBundleId: 'com.velvetevent.bestkit',
   );
-
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyCUt6sBiXh0lQR_nIce7YQ18QrEb97rbBg',
     appId: '1:1034471241738:ios:8debfb7d25feea146487f3',

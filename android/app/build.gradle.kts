@@ -23,7 +23,7 @@ plugins {
 }
 
 android {
-    namespace = "com.lwm.bestkits"
+    namespace = "com.velvetevent.bestkid"
 
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
@@ -49,7 +49,7 @@ android {
     // =========================================================
 
     defaultConfig {
-        applicationId = "com.lwm.bestkits"
+        applicationId = "com.velvetevent.bestkid"
 
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion

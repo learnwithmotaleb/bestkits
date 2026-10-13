@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1034471241738:android:87da7efbadf85b406487f3",
+        "mobilesdk_app_id": "1:1034471241738:android:32e5e113510ca2ab6487f3",
         "android_client_info": {
-          "package_name": "com.lwm.bestkits"
+          "package_name": "com.velvetevent.bestkid"
         }
       },
       "oauth_client": [],

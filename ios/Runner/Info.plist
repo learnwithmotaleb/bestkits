@@ -1,71 +1,74 @@
-```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-
-	<!-- ========================================================= -->
-	<!-- APP INFORMATION -->
-	<!-- ========================================================= -->
-
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
-
 	<key>CFBundleDisplayName</key>
 	<string>BestKid</string>
-
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
-
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
-
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
-
 	<key>CFBundleName</key>
 	<string>bestkits</string>
-
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
-
 	<key>CFBundleShortVersionString</key>
 	<string>$(FLUTTER_BUILD_NAME)</string>
-
 	<key>CFBundleSignature</key>
 	<string>????</string>
-
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>com.lwm.bestkits.stripe</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>bestkits</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
-
+	<key>FirebaseAppDelegateProxyEnabled</key>
+	<false/>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-
-
-	<!-- ========================================================= -->
-	<!-- LAUNCH SCREEN -->
-	<!-- ========================================================= -->
-
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>BestKid needs camera access to capture photos.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>BestKid needs permission to save images to your photo library.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>BestKid needs photo library access to select images.</string>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
-
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
-
-
-	<!-- ========================================================= -->
-	<!-- ORIENTATION -->
-	<!-- ========================================================= -->
-
-	<!-- iPhone -->
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-
-	<!-- iPad -->
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
@@ -73,93 +76,5 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-
-
-	<!-- ========================================================= -->
-	<!-- PERFORMANCE / INPUT -->
-	<!-- ========================================================= -->
-
-	<key>CADisableMinimumFrameDurationOnPhone</key>
-	<true/>
-
-	<key>UIApplicationSupportsIndirectInputEvents</key>
-	<true/>
-
-
-	<!-- ========================================================= -->
-	<!-- CAMERA -->
-	<!-- ========================================================= -->
-
-	<key>NSCameraUsageDescription</key>
-	<string>BestKid needs camera access to capture photos.</string>
-
-
-	<!-- ========================================================= -->
-	<!-- PHOTO LIBRARY -->
-	<!-- ========================================================= -->
-
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>BestKid needs photo library access to select images.</string>
-
-	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>BestKid needs permission to save images to your photo library.</string>
-
-
-	<!-- ========================================================= -->
-	<!-- NETWORK / API -->
-	<!-- ========================================================= -->
-
-	<key>NSAppTransportSecurity</key>
-	<dict>
-		<key>NSAllowsArbitraryLoads</key>
-		<true/>
-	</dict>
-
-
-	<!-- ========================================================= -->
-	<!-- FIREBASE / PUSH NOTIFICATIONS -->
-	<!-- ========================================================= -->
-
-	<!--
-		Push notification permission is requested at runtime
-		through Firebase Messaging / flutter_local_notifications.
-
-		Your Dart code already requests:
-		- Alert
-		- Badge
-		- Sound
-		- Critical Alert
-	-->
-
-	<!-- ========================================================= -->
-	<!-- STRIPE DEEP LINK -->
-	<!-- ========================================================= -->
-
-	<key>CFBundleURLTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleURLName</key>
-			<string>com.lwm.bestkits.stripe</string>
-
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>bestkits</string>
-			</array>
-		</dict>
-	</array>
-
-
-	<!-- ========================================================= -->
-	<!-- FIREBASE SWIZZLING -->
-	<!-- ========================================================= -->
-
-	<!--
-		Firebase Messaging normally uses AppDelegate method swizzling
-		to handle APNs token and notification callbacks.
-
-		If you have disabled Firebase swizzling in AppDelegate,
-		this setting may need to be adjusted.
-	-->
-
 </dict>
 </plist>

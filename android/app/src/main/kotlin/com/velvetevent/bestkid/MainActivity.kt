@@ -1,4 +1,4 @@
-package com.lwm.bestkits
+package com.velvetevent.bestkid
 
 import io.flutter.embedding.android.FlutterActivity
 
