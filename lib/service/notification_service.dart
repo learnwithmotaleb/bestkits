@@ -373,7 +373,7 @@ class FirebaseNotificationService {
     final notification = message.notification;
     final data = message.data;
 
-    final title = notification?.title ?? data['title'] ?? 'JeebJab';
+    final title = notification?.title ?? data['title'] ?? 'BestKid';
     final body = notification?.body ?? data['body'] ?? '';
     final channelId = _getChannelId(data['type']);
 
@@ -395,14 +395,14 @@ class FirebaseNotificationService {
     if (notification != null) {
       // Still save it to local history!
       await _saveNotification(
-        title: notification.title ?? 'JeebJab',
+        title: notification.title ?? 'BestKid',
         body: notification.body ?? '',
         data: data,
       );
       return;
     }
 
-    final title = data['title'] ?? 'JeebJab';
+    final title = data['title'] ?? 'BestKid';
     final body = data['body'] ?? '';
 
     await _localNotifications.show(
@@ -420,7 +420,6 @@ class FirebaseNotificationService {
           enableVibration: true,
           playSound: true,
           visibility: NotificationVisibility.public, // Lock screen visible
-          fullScreenIntent: true, // Wake up the screen
           category: AndroidNotificationCategory.message,
         ),
         iOS: const DarwinNotificationDetails(
