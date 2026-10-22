@@ -4,6 +4,7 @@ import 'package:bestkits/core/routes/route_path.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../core/responsive_layout/dimensions.dart';
+import '../../../../../helper/local_db/local_db.dart';
 import '../../../../../utils/app_colors/app_colors.dart';
 import '../controller/home_controller.dart';
 import '../../../controller/bottom_nav_controller.dart';
@@ -27,6 +28,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final token = SharePrefsHelper.getToken();
+    final isGuest = token == null || token.isEmpty;
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -139,7 +143,8 @@ class _HomeScreenState extends State<HomeScreen> {
               }),
               Dimensions.gapH(30),
 
-              // Recently Viewed
+              // Recently Viewed (logged-in users only)
+              if (!isGuest) ...[
               SectionTitle(
                 title: AppStrings.recentlyViewed.tr,
                 onTapViewAll: () {
@@ -184,6 +189,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 );
               }),
               Dimensions.gapH(30),
+              ],
 
               // New Arrivals
               SectionTitle(

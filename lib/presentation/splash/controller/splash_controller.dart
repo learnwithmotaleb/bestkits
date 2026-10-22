@@ -27,8 +27,8 @@ class SplashController extends GetxController {
             // First launch → show onboarding
             Get.offAllNamed(RoutePath.onboard);
           } else {
-            // Returning user, not logged in → go to login
-            Get.offAllNamed(RoutePath.login);
+            // Returning user, not logged in → browse as guest
+            Get.offAllNamed(RoutePath.bottomNav);
           }
         }
       },
