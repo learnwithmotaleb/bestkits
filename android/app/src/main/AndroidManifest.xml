@@ -16,12 +16,11 @@
 
     <!-- ==================== STORAGE ==================== -->
 
-    <!-- Android 12 and below -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
-    <!-- Android 13+ -->
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <!-- Android 12 and below. Android 13+ uses the system photo picker,
+         which needs no storage permission. -->
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
 
 
     <!-- ==================== NOTIFICATIONS ==================== -->
@@ -41,10 +40,6 @@
     <!-- Wake device for notifications -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
-    <!-- Full-screen notifications.
-         Only keep this if your app legitimately needs
-         full-screen notification behavior. -->
-    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
 
 
     <application
