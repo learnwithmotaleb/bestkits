@@ -47,7 +47,7 @@ class OnboardController extends GetxController {
   Future<void> _finishOnboarding() async {
     // Mark onboarding as seen so it never shows again
     await SharePrefsHelper.setOnboardSeen(true);
-    Get.offAllNamed(RoutePath.login);
+    Get.offAllNamed(RoutePath.bottomNav);
   }
 
   @override

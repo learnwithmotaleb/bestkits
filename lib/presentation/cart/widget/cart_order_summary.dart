@@ -1,6 +1,8 @@
 import 'package:bestkits/utils/static_strings/static_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../core/routes/route_path.dart';
+import '../../../helper/local_db/local_db.dart';
 import '../../../../../utils/app_colors/app_colors.dart';
 import '../../../../../widget/app_button.dart';
 import '../../../../../../presentation/checkout/screen/checkout_screen.dart';
@@ -125,7 +127,14 @@ class CartOrderSummary extends StatelessWidget {
             // Proceed to Checkout
             AppButton(
               label: AppStrings.proceedToCheckout.tr,
-              onPressed: () => Get.to(() => const CheckoutScreen()),
+              onPressed: () {
+                final token = SharePrefsHelper.getToken();
+                if (token == null || token.isEmpty) {
+                  Get.toNamed(RoutePath.login);
+                  return;
+                }
+                Get.to(() => const CheckoutScreen());
+              },
               backgroundColor: const Color(0xFF1A1A1A),
               textColor: AppColors.primaryColor,
               borderSideColor: const Color(0xFF1A1A1A),

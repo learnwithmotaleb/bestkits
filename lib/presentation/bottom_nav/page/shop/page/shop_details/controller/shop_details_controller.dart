@@ -1,4 +1,6 @@
+import 'package:bestkits/core/routes/route_path.dart';
 import 'package:bestkits/data/model/product_model.dart';
+import 'package:bestkits/helper/local_db/local_db.dart';
 import 'package:bestkits/presentation/cart/controller/cart_controller.dart';
 import 'package:bestkits/presentation/checkout/screen/checkout_screen.dart';
 import 'package:bestkits/presentation/my_address/controller/my_address_controller.dart';
@@ -83,8 +85,17 @@ class ShopDetailsController extends GetxController {
     }
   }
 
+  /// Guests can browse; cart, buy-now and chat require login.
+  bool _requireLogin() {
+    final token = SharePrefsHelper.getToken();
+    if (token != null && token.isNotEmpty) return true;
+    Get.toNamed(RoutePath.login);
+    return false;
+  }
+
   Future<void> addToCart() async {
     if (productDetails.value == null) return;
+    if (!_requireLogin()) return;
 
     isAddingToCart.value = true;
     try {
@@ -119,6 +130,7 @@ class ShopDetailsController extends GetxController {
 
   Future<void> orderNow() async {
     if (productDetails.value == null) return;
+    if (!_requireLogin()) return;
 
     isOrderingNow.value = true;
     try {
@@ -165,6 +177,7 @@ class ShopDetailsController extends GetxController {
   void selectTab(int index) => selectedTabIndex.value = index;
 
   Future<void> messageSeller() async {
+    if (!_requireLogin()) return;
     final sellerId = productDetails.value?.user?.id;
     if (sellerId == null) {
       ShowAppSnackBar.fail("Seller information is not available.");

@@ -1,4 +1,8 @@
 import 'package:get/get.dart';
+import '../../../core/routes/route_path.dart';
+import '../../../helper/local_db/local_db.dart';
+import '../../../utils/static_strings/static_strings.dart';
+import '../../../widget/app_alert.dart';
 import '../page/home/screen/home_screen.dart';
 import '../../favorite/screen/favourite_screen.dart';
 import '../page/profile/screen/profile_screen.dart';
@@ -19,6 +23,22 @@ class BottomNavController extends GetxController {
   ];
 
   void changeIndex(int index) {
+    // Sell, Favourite & Profile tabs require login → ask guest to log in or sign up
+    if (index == 2 || index == 3 || index == 4) {
+      final token = SharePrefsHelper.getToken();
+      if (token == null || token.isEmpty) {
+        AppAlerts.confirm(
+          title: AppStrings.logIn.tr,
+          message: AppStrings.loginSubtitle.tr,
+          confirmLabel: AppStrings.logIn.tr,
+          cancelLabel: AppStrings.createAccount.tr,
+          onConfirm: () => Get.toNamed(RoutePath.login),
+          onCancel: () => Get.toNamed(RoutePath.signup),
+        );
+        return;
+      }
+    }
+
     currentIndex.value = index;
 
     // Refresh Home Data when navigating back to the Home Tab
