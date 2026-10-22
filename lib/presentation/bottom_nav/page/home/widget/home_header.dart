@@ -3,6 +3,7 @@ import 'package:bestkits/utils/static_strings/static_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../core/responsive_layout/dimensions.dart';
+import '../../../../../helper/local_db/local_db.dart';
 import '../../../../../utils/app_colors/app_colors.dart';
 import '../../../../../utils/app_text_style/app_text_style.dart';
 import '../../../../../core/widgets/app_svg.dart';
@@ -37,16 +38,73 @@ class HomeHeader extends GetView<HomeController> {
         ? Get.find<CartController>()
         : Get.put(CartController());
 
+    final token = SharePrefsHelper.getToken();
+    final isGuest = token == null || token.isEmpty;
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
       child: Row(
         children: [
+          // Guest → login prompt instead of avatar + name
+          if (isGuest) ...[
+            Container(
+              width: Dimensions.w(45),
+              height: Dimensions.h(45),
+              decoration: BoxDecoration(
+                color: AppColors.navBarColor,
+                borderRadius: BorderRadius.circular(Dimensions.r(10)),
+              ),
+              alignment: Alignment.center,
+              child: Icon(
+                Icons.person_outline,
+                color: AppColors.primaryColor,
+                size: Dimensions.icon(24),
+              ),
+            ),
+            Dimensions.gapW(12),
+            Expanded(
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () => Get.toNamed(RoutePath.login),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          AppStrings.logIn.tr,
+                          style: AppTextStyles.h3.copyWith(
+                            fontSize: Dimensions.fs(18),
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        Icon(
+                          Icons.chevron_right,
+                          color: AppColors.primaryColor,
+                          size: Dimensions.icon(22),
+                        ),
+                      ],
+                    ),
+                    Text(
+                      AppStrings.loginSubtitle.tr,
+                      style: AppTextStyles.bodyText.copyWith(
+                        fontSize: Dimensions.fs(12),
+                        color: Colors.grey,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ] else ...[
           // Profile Avatar
           Obx(() {
             final user = controller.userData.value;
             final avatarUrl = user?.profile.avatarUrl;
             final hasImage = avatarUrl != null && avatarUrl.isNotEmpty;
-            final name = user?.profile.fullName ?? 'Roberts Junior';
+            final name = user?.profile.fullName ?? '';
 
             return Container(
               width: Dimensions.w(45),
@@ -76,7 +134,7 @@ class HomeHeader extends GetView<HomeController> {
           Expanded(
             child: Obx(() {
               final user = controller.userData.value;
-              final name = user?.profile.fullName ?? 'Roberts Junior';
+              final name = user?.profile.fullName ?? '';
 
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -101,6 +159,7 @@ class HomeHeader extends GetView<HomeController> {
               );
             }),
           ),
+          ],
           // Cart Icon
           GestureDetector(
             onTap: () {

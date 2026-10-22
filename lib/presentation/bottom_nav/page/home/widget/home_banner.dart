@@ -6,6 +6,7 @@ import '../../../../../service/api_url.dart';
 import '../../../../../utils/app_colors/app_colors.dart';
 import '../../../../../utils/app_text_style/app_text_style.dart';
 import '../../../../../utils/assets_image/app_images.dart';
+import '../../../../../utils/static_strings/static_strings.dart';
 import '../controller/home_controller.dart';
 import '../model/features_coupon_model.dart';
 import '../model/home_model.dart';
@@ -83,8 +84,21 @@ class _HomeBannerState extends State<HomeBanner> {
         );
       }
 
+      // No coupon / promoted products (e.g. guest user) → static banner
       if (totalSlides == 0) {
-        return const SizedBox.shrink();
+        return Container(
+          margin: EdgeInsets.symmetric(horizontal: Dimensions.w(20)),
+          height: Dimensions.h(180),
+          width: double.infinity,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(Dimensions.r(15)),
+            border: Border.all(color: Colors.grey.withOpacity(0.1)),
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(Dimensions.r(15)),
+            child: _buildStaticSlide(),
+          ),
+        );
       }
 
       return Container(
@@ -176,6 +190,70 @@ class _HomeBannerState extends State<HomeBanner> {
     }
 
     return const SizedBox.shrink();
+  }
+
+  // ── Static Slide (fallback when API has no banner data) ────────────────────
+  Widget _buildStaticSlide() {
+    return Container(
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage(AppImages.homeBannerImage),
+          fit: BoxFit.cover,
+        ),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: Dimensions.w(16),
+                vertical: Dimensions.h(16),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    AppStrings.onboardingTitle1.tr,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyles.h2.copyWith(
+                      fontSize: Dimensions.fs(20),
+                      color: Colors.black,
+                      fontWeight: FontWeight.w800,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                  Dimensions.gapH(6),
+                  Text(
+                    AppStrings.onboardingSubtitle1.tr,
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: Dimensions.fs(11),
+                      color: Colors.grey.shade700,
+                      fontStyle: FontStyle.italic,
+                      height: 1.3,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.all(Dimensions.w(12)),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(Dimensions.r(15)),
+              child: Image.asset(
+                AppImages.onboard1,
+                width: Dimensions.w(100),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   // ── Featured Coupon Slide ──────────────────────────────────────────────────
